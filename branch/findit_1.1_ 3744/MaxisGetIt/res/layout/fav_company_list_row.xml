@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cl_row_viewgroup"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    
+    
+    <LinearLayout
+        android:id="@+id/cl_row_base_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_home_list_item_bg"
+        android:paddingBottom="5dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp" >
+
+        <!--
+                 android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+        -->
+ <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="5dp" />
+        <ImageView
+            android:id="@+id/cl_company_image"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/comp_list_loading" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:orientation="vertical"
+            android:paddingLeft="5dp" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/cl_comp_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:singleLine="true"
+                    android:textSize="@dimen/sp_13"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/cl_company_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/cl_comp_distance"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/head_title_col"
+                    android:textSize="@dimen/sp_13"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/cl_company_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/app_txt"
+                android:textSize="@dimen/sp_12" />
+
+            <TextView
+                android:id="@+id/cl_comp_addi_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="@color/app_txt"
+                android:textSize="@dimen/sp_12" />
+
+            <TextView
+                android:id="@+id/cl_comp_addi_info2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="@color/app_txt"
+                android:textSize="@dimen/sp_12" />
+            <!--
+                 <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            -->
+
+            <RatingBar
+                android:id="@+id/cl_comp_rating"
+                style="@style/customFeedbackRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:rating="0"
+                android:stepSize="0.5" />
+            <!-- </RelativeLayout> -->
+        </LinearLayout>
+    </LinearLayout>
+
+   
+
+</RelativeLayout>
