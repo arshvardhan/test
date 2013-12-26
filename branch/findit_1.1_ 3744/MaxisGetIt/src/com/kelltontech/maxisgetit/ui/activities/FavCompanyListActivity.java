@@ -47,12 +47,13 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 	private ListView mCompanyList;
 	private FavCompanyListAdapter mCompListAdapter;
 	private TextView mRecordsFoundView;
-	private TextView markall;
+	private static TextView markall;
 	private TextView mRefineSearchView;
 	// private TextView mMoreLinkView;
 	private TextView mDealBtnView;
 	private TextView mViewAllOnMap;
 	public static boolean isEdit;
+	public static boolean isSingleChecked;
 	
 	boolean isAllchecked = false;
 	// private Button[] mPaginationButtons;
@@ -248,7 +249,8 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 				
 			}
 		});
-
+		
+		
 		// initNavigationButton(mClResponse.getPagesCount());
 		ArrayList<CompanyDesc> compListData = mClResponse.getCompanyArrayList();
 		
@@ -693,4 +695,16 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 		isModifySearchDialogOpen = false;
 		super.onNegativeDialogbutton(id);
 	}
+	public static void textChange(boolean ischeck)
+	{
+	if(ischeck)
+	{
+		markall.setText("UnmarkAll");
+	}
+	else
+	{
+		markall.setText("Mark All");
+	}
+	}
+
 }

@@ -32,6 +32,7 @@ public class FavCompanyListAdapter extends BaseAdapter {
 	private Drawable dummyDrawable;
 	private Drawable errorDrawable;
 	private boolean isCompanyListing;
+	int count = 0;
 
 	public FavCompanyListAdapter(Context context, boolean isCompanyType) {
 		mContext = context;
@@ -224,13 +225,29 @@ public class FavCompanyListAdapter extends BaseAdapter {
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView,
 						boolean isChecked) {
+					if (isChecked) {
+						count++;
+					} else {
+						count--;
+					}
 
 					list.get(position).setIschecked(isChecked);
+				
+				if(count>0)
+				{
+					FavCompanyListActivity.textChange(true);
 				}
+				else
+				{
+					FavCompanyListActivity.textChange(false);
+				}
+				}
+				
 			});
 
 			model.box.setChecked(list.get(position).isIschecked());
 
+			
 		}
 		return convertView;
 	}
