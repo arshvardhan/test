@@ -344,12 +344,12 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 				if(!isShown&&mCompanyList.getLastVisiblePosition()==mCompanyList.getAdapter().getCount()-1)
 				{
 					isShown = true;
-					if(record>10&&compListData.size()!=record)
+					if(record>10&&compListData.size()<record)
 					{
 					if (compListData.size() < 10) {
 						loadPageData(mClResponse.getPageNumber());
 					} else {
-						if(record-(mCompanyList.getAdapter().getCount()-1)>0)
+						if(record > mCompanyList.getAdapter().getCount())
 						loadPageData(mClResponse.getPageNumber() + 1);
 					}
 					}
@@ -890,7 +890,7 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 
 		mCompListAdapter.notifyDataSetChanged();
 
-		if (compListData.size() > 0) {
+		if (compListData.size() > 0 || mClResponse.getTotalrecordFound() > 0) {
 			if (isRemovedFromCompanyDetail) {
 				record = record - 1;
 				mRecordsFoundView.setText(record + " " + getResources().getString(R.string.fav_companies_found));
