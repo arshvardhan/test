@@ -28,10 +28,10 @@ public class CompanyListResponse extends MaxisResponse implements IModel,
 		{
 		HashMap<String, Object> noDuplicates = new HashMap<String, Object>();
 		for (CompanyDesc companyDesc : companyArrayList) {
-			noDuplicates.put(companyDesc.getTitle(), companyDesc);
+			noDuplicates.put(companyDesc.getCompId_catId(), companyDesc);
 		}
 		for (CompanyDesc companyDesc : compList) {
-			noDuplicates.put(companyDesc.getTitle(), companyDesc);
+			noDuplicates.put(companyDesc.getCompId_catId(), companyDesc);
 		}
 		companyArrayList.removeAll(companyArrayList);
 		for (String key : noDuplicates.keySet()) {
