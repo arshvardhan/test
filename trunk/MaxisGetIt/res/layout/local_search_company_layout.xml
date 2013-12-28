@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+	<View 
+	    android:layout_width="match_parent"
+	    android:layout_height="1dp"
+	    android:layout_marginTop="10dp"
+	    android:background="@color/black"/>
+	 <com.kelltontech.maxisgetit.ui.widgets.FlowLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" >
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/company_details"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sp_13"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/lscl_title"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AB Sons"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sp_13"
+        android:textStyle="bold" />
+    </com.kelltontech.maxisgetit.ui.widgets.FlowLayout>
+
+    <com.kelltontech.maxisgetit.ui.widgets.FlowLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" >
+
+        <TextView
+            android:id="@+id/lscl_edit_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:paddingRight="5dp"
+            android:text="@string/edit_underline"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+			android:textColor="@color/blue"
+			android:textStyle="bold"
+			android:textSize="@dimen/sp_14"
+            android:text="|" />
+
+        <TextView
+            android:id="@+id/lscl_remove_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="@string/req_to_remove_under"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+			android:textColor="@color/blue"
+			android:textStyle="bold"
+			android:textSize="@dimen/sp_14"
+            android:text="|" />
+
+        <TextView
+            android:id="@+id/lscl_view_lead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:paddingLeft="5dp"
+            android:text="@string/view_lead_underline"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold" />
+    </com.kelltontech.maxisgetit.ui.widgets.FlowLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/current_list_type"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_13" />
+
+        <TextView
+            android:id="@+id/lscl_listing_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:text="@string/free"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/lscl_upgrade_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape_green_curved_box"
+        android:clickable="true"
+        android:text="@string/upgrade_to_prem"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_13"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/lscl_contact_channel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/contact_channels"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/billing_number"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_13" />
+
+            <TextView
+                android:id="@+id/lscl_bill_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text="--"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_13"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/forward_comm_to"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_13" />
+
+            <TextView
+                android:id="@+id/lscl_fwd_comm_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text="--"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_13"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/emai_id"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_13" />
+
+            <TextView
+                android:id="@+id/lscl_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text="--"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_13"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+	
+</LinearLayout>

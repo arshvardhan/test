@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/map_base_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bg_base_col"
+    android:orientation="vertical" >
+    <include
+        android:id="@+id/header_base_activity"
+        layout="@layout/header_with_popdown_search" />
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header_base_activity" 
+        android:layout_above="@+id/footerLayout">
+        <fragment
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            class="com.google.android.gms.maps.SupportMapFragment" />
+        <View
+            android:id="@+id/trans_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+   
+        <LinearLayout 
+            android:id="@+id/footerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:layout_alignParentBottom="true"
+            >
+            <ImageView 
+                android:id="@+id/map_driving"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/driving"
+                android:layout_weight="0.5"/>
+             <ImageView 
+                 android:id="@+id/map_walking"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/walking"
+                android:layout_weight="0.5"/>
+        </LinearLayout>
+         <TextView
+        android:id="@+id/fm_switch_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/header_base_activity"
+        android:padding="5dp"
+        android:text="@string/map_driving_mode"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sp_17"
+        android:visibility="gone" /> 
+</RelativeLayout>
