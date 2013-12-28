@@ -78,6 +78,7 @@ public class CompanyListParser extends AbstractSAXParser {
 			clResponse.setServerMessage(getNodeValue());
 		}
 		if (localName.equalsIgnoreCase(COMPANY_ROOT) || localName.equalsIgnoreCase(DEAL_ROOT) || localName.equalsIgnoreCase(DEAL_ROOT2)) {
+			compDesc.setCompId_catId();
 			clResponse.addCompanyDescription(compDesc);
 		} else if (localName.equalsIgnoreCase(RECORD_PER_PAGE)) {
 			clResponse.setRecordsPerPage(getInt(getNodeValue(), 0));

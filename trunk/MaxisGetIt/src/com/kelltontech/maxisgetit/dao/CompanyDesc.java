@@ -2,8 +2,11 @@ package com.kelltontech.maxisgetit.dao;
 
 import java.util.ArrayList;
 
+import com.kelltontech.framework.utils.StringUtil;
+
 import android.os.Parcel;
 import android.os.Parcelable;
+
 
 public class CompanyDesc implements Parcelable {
 	private String iconUrl;
@@ -23,6 +26,7 @@ public class CompanyDesc implements Parcelable {
 	private String contactNo;
 	private ArrayList<AttributeGroup> attrGroups=new ArrayList<AttributeGroup>();
 	private String cat_id;
+	private String compId_catId;
 	
 	private boolean isChecked;
 
@@ -40,6 +44,22 @@ public class CompanyDesc implements Parcelable {
 
 	public void setCat_id(String cat_id) {
 		this.cat_id = cat_id;
+	}
+	
+	/**
+	 * @return the compId_catId
+	 */
+	public String getCompId_catId() {
+		return compId_catId;
+	}
+
+	/**
+	 * @param compId_catId the compId_catId to set
+	 */
+	public void setCompId_catId() {
+		if(!StringUtil.isNullOrEmpty(compId) && !StringUtil.isNullOrEmpty(cat_id)) {
+		this.compId_catId = compId + "-" + cat_id;
+		}
 	}
 
 	public CompanyDesc() {
@@ -62,7 +82,8 @@ public class CompanyDesc implements Parcelable {
 		locality = in.readString();
 		pincode = in.readString();
 		contactNo = in.readString();
-				cat_id = in.readString();
+		cat_id = in.readString();
+		compId_catId = in.readString();
 		in.readTypedList(attrGroups, AttributeGroup.CREATOR);
 	}
 
@@ -181,6 +202,7 @@ public class CompanyDesc implements Parcelable {
 		dest.writeString(pincode);
 		dest.writeString(contactNo);
 		dest.writeString(cat_id);
+		dest.writeString(compId_catId);
 		dest.writeTypedList(attrGroups);
 	}
 
@@ -375,5 +397,6 @@ public class CompanyDesc implements Parcelable {
 			return false;
 		return true;
 	}
+
 
 }
