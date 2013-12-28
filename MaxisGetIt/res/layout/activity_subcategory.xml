@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/subcat_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/header_base_activity"
+        layout="@layout/header_with_popdown_search" />
+    
+    <include
+        android:id="@+id/footer_base_screen"
+        layout="@layout/footer_home_screen" />
+
+    <LinearLayout
+        android:id="@+id/root_category_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_base_activity"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/vertical_line_seprator" />
+
+            <TextView
+                android:id="@+id/parent_title_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:singleLine="true"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_13"
+                android:textStyle="bold"
+                android:background="@drawable/shape_bg_green_grey_stroke" 
+                />
+        <!-- </LinearLayout> -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/vertical_line_seprator" />
+    </LinearLayout>
+	<ListView
+        android:id="@+id/grid_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/root_category_title"
+        android:layout_above="@id/footer_base_screen"
+        android:divider="@drawable/single_line_seprator"
+        >
+        </ListView>
+
+</RelativeLayout>
