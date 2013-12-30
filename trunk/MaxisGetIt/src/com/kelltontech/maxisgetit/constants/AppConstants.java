@@ -4,14 +4,14 @@ public interface AppConstants {
 	
 	String API_VERSION = "1.1";
 	
-    String BASE_SERVER = "http://192.168.13.3/newfms/trunk/"; // local Aaditya
+//    String BASE_SERVER = "http://192.168.13.3/newfms/trunk/"; // local Aaditya
 	// String BASE_SERVER = "http://192.168.12.224/trunk/"; // local Ankesh
 	// String BASE_SERVER = "http://192.168.12.224/trunk/"; // local Diwakar
 	// String BASE_SERVER = "http://test.kelltontech.com/getitfms/"; //live dev
 	// String BASE_SERVER = "http://test.kelltontech.com/getitfms_qa/"; //QA
 	// String BASE_SERVER = "https://staging.findit.com.my/";// staging new
 	// String BASE_SERVER = "http://203.115.222.57:8070/"; //staging 8070
-	// String BASE_SERVER = "http://203.115.222.57/"; //staging
+	 String BASE_SERVER = "http://203.115.222.57/"; //staging
 	// String BASE_SERVER = "http://203.115.222.75/";// Production
 	// String BASE_SERVER = "https://webservice.findit.com.my/";// Production new
 
