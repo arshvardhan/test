@@ -61,17 +61,17 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 	private ListView mCompanyList;
 	private FavCompanyListAdapter mCompListAdapter;
 	private TextView mRecordsFoundView;
-	private TextView mRefineSearchView;
+	// private TextView mRefineSearchView;
 	//	private TextView mMoreLinkView;
-	private TextView mDealBtnView;
-	private TextView mViewAllOnMap;
+	// private TextView mDealBtnView;
+	//  private TextView mViewAllOnMap;
 	//	private Button[] mPaginationButtons;
 	//	private int[] mNavigationButtonIds = { R.id.col_page_btn_1, R.id.col_page_btn_2, R.id.col_page_btn_3, R.id.col_page_btn_4, R.id.col_page_btn_5 };
 
 	private String mCategoryThumbUrl;
 
-	private LinearLayout mSearchContainer;
-	private ImageView mSearchToggler;
+	// private LinearLayout mSearchContainer;
+	// private ImageView mSearchToggler;
 	private TextView mHeaderTitle;
 
 	private ImageView mSearchBtn;
@@ -145,14 +145,14 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 		mHeaderBackButton.setOnClickListener(this);
 		mHomeIconView = (ImageView) findViewById(R.id.goto_home_icon);
 		mHomeIconView.setOnClickListener(this);
-		mViewAllOnMap = (TextView) findViewById(R.id.col_view_on_map);
-		mViewAllOnMap.setOnClickListener(this);
+//		mViewAllOnMap = (TextView) findViewById(R.id.col_view_on_map);
+//		mViewAllOnMap.setOnClickListener(this);
 		userId = getIntent().getExtras().getString("UserID");
-		findViewById(R.id.col_view_on_map1).setOnClickListener(this);
+//		findViewById(R.id.col_view_on_map1).setOnClickListener(this);
 
-		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
-		mSearchBtn.setOnClickListener(FavCompanyListActivity.this);
-		mSearchEditText = (EditText) findViewById(R.id.search_box);
+//		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
+//		mSearchBtn.setOnClickListener(FavCompanyListActivity.this);
+//		mSearchEditText = (EditText) findViewById(R.id.search_box);
 		//		mDealsFooter = (LinearLayout) findViewById(R.id.cl_deals_footer);
 		//		mListFooter = (LinearLayout) findViewById(R.id.cl_company_list_footer);
 
@@ -161,10 +161,10 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 		//		if (mClRequest != null && !StringUtil.isNullOrEmpty(mClRequest.getCategoryTitle()))
 		mHeaderTitle.setText(Html.fromHtml(getResources().getString(R.string.acc_my_fav)));
 		//		mCategoryThumbUrl = mClRequest.getParentThumbUrl();
-		mRefineSearchView = (TextView) findViewById(R.id.col_refine_search);
-		mRefineSearchView.setOnClickListener(this);
+		// 		mRefineSearchView = (TextView) findViewById(R.id.col_refine_search);
+		//		mRefineSearchView.setOnClickListener(this);
 
-		findViewById(R.id.col_refine_search1).setOnClickListener(this);
+//		findViewById(R.id.col_refine_search1).setOnClickListener(this);
 
 		mClResponse = bundle.getParcelable(AppConstants.COMP_LIST_DATA);
 		record = mClResponse.getTotalrecordFound();
@@ -201,8 +201,8 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 		mRecordsFoundView = (TextView) findViewById(R.id.fav_company__record_found);
 		//		mMoreLinkView = (TextView) findViewById(R.id.col_more_option);
 		//		mMoreLinkView.setOnClickListener(this);
-		mDealBtnView = (TextView) findViewById(R.id.col_deal_btn);
-		mDealBtnView.setOnClickListener(this);
+		//		mDealBtnView = (TextView) findViewById(R.id.col_deal_btn);
+		//		mDealBtnView.setOnClickListener(this);
 		//		if (mClRequest.isCompanyListing()) {
 		//mDealBtnView.setOnClickListener(this);
 		//			mDealsFooter.setVisibility(View.GONE);
@@ -305,9 +305,9 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 		mCompanyList = (ListView) findViewById(R.id.col_company_list);
 		mCompListAdapter = new FavCompanyListAdapter(FavCompanyListActivity.this, true , this );
 		mCompListAdapter.setData(compListData);
-		mSearchContainer = (LinearLayout) findViewById(R.id.search_box_container);
-		mSearchToggler = (ImageView) findViewById(R.id.search_toggler);
-		mSearchToggler.setOnClickListener(this);
+		//		mSearchContainer = (LinearLayout) findViewById(R.id.search_box_container);
+		//		mSearchToggler = (ImageView) findViewById(R.id.search_toggler);
+		//		mSearchToggler.setOnClickListener(this);
 		mCompanyList.setAdapter(mCompListAdapter);
 		mCompanyList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -538,12 +538,12 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 				mClResponse.setCompanyList(oldResponse.getCompanyArrayList());
 				//				TODO append result set in existing
 				//				changeNavigationButtonState(mClResponse.getPagesCount(), mClResponse.getPageNumber());
-				if (mClResponse.getPageNumber() == 10 || mClResponse.getTotalrecordFound() == mClResponse.getCompanyArrayList().size()) {
+/*				if (mClResponse.getPageNumber() == 10 || mClResponse.getTotalrecordFound() == mClResponse.getCompanyArrayList().size()) {
 					//Add one blank record.
-					CompanyDesc desc = new CompanyDesc();
-					desc.setCompId("-1");
-					mClResponse.getCompanyArrayList().add(desc);
-				}
+//					CompanyDesc desc = new CompanyDesc();
+//					desc.setCompId("-1");
+//					mClResponse.getCompanyArrayList().add(desc);
+				}*/
 				compListData = mClResponse.getCompanyArrayList();
 				mCompListAdapter.setData(compListData);
 				mCompListAdapter.notifyDataSetChanged();
@@ -564,7 +564,7 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 				showInfoDialog((String) msg.obj);
 			} else {
 				Toast.makeText(FavCompanyListActivity.this, getString(R.string.selected_company_remove_from_fav), Toast.LENGTH_SHORT).show();
-				if (compListData.size() > 0) {
+				if (record - (record - compListData.size()) > 0) {
 					if (isDeleteAllPressed) {
 						record = record - favList.size();
 						mRecordsFoundView.setText(record + " " + getResources().getString(R.string.fav_companies_found));
@@ -578,13 +578,13 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 					mEditButton.setVisibility(View.GONE);
 					mEditFunLayout.setVisibility(View.VISIBLE);
 					mDeleteFunLayout.setVisibility(View.GONE);
-					FavouriteController mfController = new FavouriteController(FavCompanyListActivity.this, Events.COMBIND_LISTING_PAGINATION);
-					startSppiner();
-					mListRequest = new FavCompanyListRequest();
-					mListRequest.setUserId(userId);
-					mListRequest.setPageNumber(1);
-					mfController.requestService(mListRequest);
 				}
+				FavouriteController mfController = new FavouriteController(FavCompanyListActivity.this, Events.COMBIND_LISTING_PAGINATION);
+				startSppiner();
+				mListRequest = new FavCompanyListRequest();
+				mListRequest.setUserId(userId);
+				mListRequest.setPageNumber(1);
+				mfController.requestService(mListRequest);
 			}
 			stopSppiner();
 		}
@@ -669,14 +669,14 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.search_toggler:
+	/*	case R.id.search_toggler:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SEARCH_CLICK);
 			if (mSearchContainer.getVisibility() == View.VISIBLE) {
 				mSearchContainer.setVisibility(View.GONE);
 			} else {
 				mSearchContainer.setVisibility(View.VISIBLE);
 			}
-			break;
+			break;*/
 		case R.id.header_btn_back:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.BACK_CLICK);
 			AnalyticsHelper.endTimedEvent(FlurryEventsConstants.APPLICATION_COMBINED_LIST);
@@ -899,7 +899,7 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 				mRecordsFoundView.setText(mClResponse.getTotalrecordFound() + " " + getResources().getString(R.string.fav_companies_found));
 			}
 		} else {
-			mRecordsFoundView.setText(getResources().getString(R.string.fav_companies__no_found));
+			 mRecordsFoundView.setText(getResources().getString(R.string.fav_companies__no_found));
 			 mDeleteFunLayout.setVisibility(View.GONE);
 			 mEditFunLayout.setVisibility(View.VISIBLE);
 			 mEditButton.setVisibility(View.GONE);

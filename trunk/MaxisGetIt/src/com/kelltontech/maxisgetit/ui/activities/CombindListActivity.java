@@ -273,6 +273,13 @@ public class CombindListActivity extends MaxisMainActivity {
 		
         });
 		
+		if (mClResponse.getTotalrecordFound() <= 10) {
+			//Add one blank record.
+			CompanyDesc desc = new CompanyDesc();
+			desc.setCompId("-1");
+			mClResponse.getCompanyArrayList().add(desc);
+		}
+		
 	}
 
 	/*private void initNavigationButton(int pages) {

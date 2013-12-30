@@ -151,7 +151,7 @@
     </LinearLayout>
     <!-- android:listSelector="@drawable/selector_home_list_item_bg" -->
 
-    <LinearLayout
+  <!--   <LinearLayout
         android:id="@+id/cl_company_list_footer"
         android:layout_width="match_parent"
         android:layout_height="30dp"
@@ -208,7 +208,7 @@
             android:textColor="@color/transparent_white"
             android:textSize="@dimen/sp_14"
             android:textStyle="bold" />
-        <!--
+        
         <ImageView
             android:id="@+id/col_deal_btn"
             android:layout_width="0dp"
@@ -233,10 +233,10 @@
             android:clickable="true"
             android:scaleType="fitXY"
             android:src="@drawable/group_view_on_map" />
-        -->
+       
     </LinearLayout>
-
-    <LinearLayout
+ -->
+ <!--    <LinearLayout
         android:id="@+id/cl_deals_footer"
         android:layout_width="match_parent"
         android:layout_height="30dp"
@@ -294,5 +294,5 @@
             android:textSize="@dimen/sp_14"
             android:textStyle="bold" />
     </LinearLayout>
-
+ -->
 </RelativeLayout>
