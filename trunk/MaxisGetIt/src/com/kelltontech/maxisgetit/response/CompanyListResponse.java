@@ -1,7 +1,8 @@
 package com.kelltontech.maxisgetit.response;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -26,7 +27,7 @@ public class CompanyListResponse extends MaxisResponse implements IModel,
 		
 		if(isFromFavList)
 		{
-		HashMap<String, Object> noDuplicates = new HashMap<String, Object>();
+		LinkedHashMap<String, Object> noDuplicates = new LinkedHashMap<String, Object>();
 		for (CompanyDesc companyDesc : companyArrayList) {
 			noDuplicates.put(companyDesc.getCompId_catId(), companyDesc);
 		}

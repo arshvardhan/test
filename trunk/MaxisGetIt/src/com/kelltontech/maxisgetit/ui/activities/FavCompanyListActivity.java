@@ -113,6 +113,7 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 	private boolean isDeleteAllPressed = false;
 	public static boolean isRemovedFromCompanyDetail = false;
 	private int record;
+	private int favListSize;
 	boolean isShown;
 
 	/*
@@ -275,6 +276,7 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 					}
 				}
 				if (favList.size() > 0) {
+					favListSize = favList.size();
 					showConfirmationDialog(CustomDialog.DELETE_CONFIRMATION_DIALOG, getString(R.string.fav_companies_remove_confirmation));
 				} else {
 					Toast.makeText(getApplicationContext(), getString(R.string.fav_companies_plz_select), Toast.LENGTH_SHORT).show();
@@ -564,7 +566,7 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 				showInfoDialog((String) msg.obj);
 			} else {
 				Toast.makeText(FavCompanyListActivity.this, getString(R.string.selected_company_remove_from_fav), Toast.LENGTH_SHORT).show();
-				if (record - (record - compListData.size()) > 0) {
+				if (record - (record - compListData.size()) > 0 || record - (record - favListSize) > 0) {
 					if (isDeleteAllPressed) {
 						record = record - favList.size();
 						mRecordsFoundView.setText(record + " " + getResources().getString(R.string.fav_companies_found));
@@ -812,6 +814,7 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 	}
 
 	private void removeFromFav(ArrayList<CompanyDesc> favList) {
+		
 		compListData.removeAll(favList);
 		mCompListAdapter.notifyDataSetChanged();
 		String compCatIdToCom;

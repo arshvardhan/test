@@ -11,7 +11,7 @@ public interface AppConstants {
 	// String BASE_SERVER = "http://test.kelltontech.com/getitfms_qa/"; //QA
 	// String BASE_SERVER = "https://staging.findit.com.my/";// staging new
 	// String BASE_SERVER = "http://203.115.222.57:8070/"; //staging 8070
-	 String BASE_SERVER = "http://203.115.222.57/"; //staging
+	String BASE_SERVER = "http://203.115.222.57/"; //staging
 	// String BASE_SERVER = "http://203.115.222.75/";// Production
 	// String BASE_SERVER = "https://webservice.findit.com.my/";// Production new
 
