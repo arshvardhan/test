@@ -70,8 +70,8 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 
 	private String mCategoryThumbUrl;
 
-	// private LinearLayout mSearchContainer;
-	// private ImageView mSearchToggler;
+	private LinearLayout mSearchContainer;
+	private ImageView mSearchToggler;
 	private TextView mHeaderTitle;
 
 	private ImageView mSearchBtn;
@@ -151,9 +151,9 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 		userId = getIntent().getExtras().getString("UserID");
 //		findViewById(R.id.col_view_on_map1).setOnClickListener(this);
 
-//		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
-//		mSearchBtn.setOnClickListener(FavCompanyListActivity.this);
-//		mSearchEditText = (EditText) findViewById(R.id.search_box);
+		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
+		mSearchBtn.setOnClickListener(FavCompanyListActivity.this);
+		mSearchEditText = (EditText) findViewById(R.id.search_box);
 		//		mDealsFooter = (LinearLayout) findViewById(R.id.cl_deals_footer);
 		//		mListFooter = (LinearLayout) findViewById(R.id.cl_company_list_footer);
 
@@ -307,9 +307,9 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 		mCompanyList = (ListView) findViewById(R.id.col_company_list);
 		mCompListAdapter = new FavCompanyListAdapter(FavCompanyListActivity.this, true , this );
 		mCompListAdapter.setData(compListData);
-		//		mSearchContainer = (LinearLayout) findViewById(R.id.search_box_container);
-		//		mSearchToggler = (ImageView) findViewById(R.id.search_toggler);
-		//		mSearchToggler.setOnClickListener(this);
+		mSearchContainer = (LinearLayout) findViewById(R.id.search_box_container);
+		mSearchToggler = (ImageView) findViewById(R.id.search_toggler);
+		mSearchToggler.setOnClickListener(this);
 		mCompanyList.setAdapter(mCompListAdapter);
 		mCompanyList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -566,7 +566,7 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 				showInfoDialog((String) msg.obj);
 			} else {
 				Toast.makeText(FavCompanyListActivity.this, getString(R.string.selected_company_remove_from_fav), Toast.LENGTH_SHORT).show();
-				if (record - (record - compListData.size()) > 0 || record - (record - favListSize) > 0) {
+				if (compListData != null && compListData.size() > 0) {
 					if (isDeleteAllPressed) {
 						record = record - favList.size();
 						mRecordsFoundView.setText(record + " " + getResources().getString(R.string.fav_companies_found));
@@ -671,14 +671,14 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-	/*	case R.id.search_toggler:
+		case R.id.search_toggler:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SEARCH_CLICK);
 			if (mSearchContainer.getVisibility() == View.VISIBLE) {
 				mSearchContainer.setVisibility(View.GONE);
 			} else {
 				mSearchContainer.setVisibility(View.VISIBLE);
 			}
-			break;*/
+			break;
 		case R.id.header_btn_back:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.BACK_CLICK);
 			AnalyticsHelper.endTimedEvent(FlurryEventsConstants.APPLICATION_COMBINED_LIST);
