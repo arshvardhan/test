@@ -124,14 +124,16 @@
                             android:textColor="@color/black"
                             android:textSize="@dimen/sp_13" />
 
-                        <!-- <TextView
+                        <!--
+                             <TextView
                             android:id="@+id/adp_company_name_txt_v"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:textColor="@color/black"
                             android:textSize="@dimen/sp_13"
-                            android:visibility="gone" /> -->
+                            android:visibility="gone" />
+                        -->
                     </LinearLayout>
                 </LinearLayout>
 
@@ -421,14 +423,116 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/adp_deal_image"
-                    android:layout_width="200dp"
-                    android:layout_height="210dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:clickable="true"
-                    android:padding="5dp"
-                    android:src="@drawable/upload_photo_icon" />
+                    android:gravity="center"
+                    android:orientation="horizontal" >
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" >
+
+                        <ImageView
+                            android:id="@+id/adp_deal_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:clickable="true"
+                            android:src="@drawable/upload_photo_icon" />
+
+                        <ImageView
+                            android:id="@+id/adp_deal_image_cross"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="5dp"
+                            android:clickable="true"
+                            android:src="@drawable/cat_thumb_cross" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" >
+
+                        <ImageView
+                            android:id="@+id/adp_deal_image2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:clickable="true"
+                            android:src="@drawable/upload_photo_icon" />
+
+                        <ImageView
+                            android:id="@+id/adp_deal_image_cross2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="5dp"
+                            android:clickable="true"
+                            android:src="@drawable/cat_thumb_cross" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal" >
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" >
+
+                        <ImageView
+                            android:id="@+id/adp_deal_image3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:clickable="true"
+                            android:src="@drawable/upload_photo_icon" />
+
+                        <ImageView
+                            android:id="@+id/adp_deal_image_cross3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="5dp"
+                            android:clickable="true"
+                            android:src="@drawable/cat_thumb_cross" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" >
+
+                        <ImageView
+                            android:id="@+id/adp_deal_image4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:clickable="true"
+                            android:src="@drawable/upload_photo_icon" />
+
+                        <ImageView
+                            android:id="@+id/adp_deal_image_cross4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="5dp"
+                            android:clickable="true"
+                            android:src="@drawable/cat_thumb_cross" />
+                    </FrameLayout>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/adp_submit"

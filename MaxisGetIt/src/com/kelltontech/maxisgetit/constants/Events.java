@@ -47,5 +47,8 @@ public class Events {
 	public static final int	COMPANY_DETAIL_ADD_FAV				= 41;
 	public static final int	COMPANY_DETAIL_REMOVE_FAV			= 42;
 	public final static int FAV_COMP_LIST                       = 43;
+	
+	public final static int POST_IMAGE_EVENT                    = 44;
+	public static final int	DEALCATEGORY_EVENT					= 45;
 }
 
