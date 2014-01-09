@@ -42,6 +42,7 @@ public class GenralRequest extends MaxisBaseRequest {
 	public static final String COMPANY_DETAIL_ADD_FAV_METHOD ="saveUserFavoriteCompany.xml";
 	public static final String COMPANY_DETAIL_REMOVE_FAV_METHOD ="removeFavoriteCompany.xml";
 		public static final String FAV_COMP_LIST = "userFavoriteCompanyList.xml";
+		public static final String POST_IMAGE_METHOD = "saveImage.xml";
 	
 	
 	private static final String KEY_APP_CODE = "app_code";

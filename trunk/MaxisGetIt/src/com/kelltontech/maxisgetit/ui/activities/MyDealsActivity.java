@@ -277,17 +277,17 @@ public class MyDealsActivity extends MaxisMainActivity {
 			onProfileClick();
 			break;
 		case R.id.amd_post_deal_btn:
-			CityTable cityTable=new CityTable((MyApplication) MyDealsActivity.this.getApplication());
-			ArrayList<CityOrLocality> cityList=cityTable.getAllCitiesList();
-			if(cityList==null || cityList.size()<1){
-				CityAreaListController clController=new CityAreaListController(MyDealsActivity.this, Events.CITY_LISTING);
-				startSppiner();
-				clController.requestService(null);
-			}else{
+//			CityTable cityTable=new CityTable((MyApplication) MyDealsActivity.this.getApplication());
+//			ArrayList<CityOrLocality> cityList=cityTable.getAllCitiesList();
+//			if(cityList==null || cityList.size()<1){
+//				CityAreaListController clController=new CityAreaListController(MyDealsActivity.this, Events.CITY_LISTING);
+//				startSppiner();
+//				clController.requestService(null);
+//			}else{
 				Intent dealPostIntent = new Intent(MyDealsActivity.this, DealPostActivity.class);
 				dealPostIntent.putExtra(AppConstants.MY_DEALS_RESPONSE, mMyDealsResponse);
 				startActivityForResult(dealPostIntent,0);
-			}
+//			}
 //			MyDealsController mdController = new MyDealsController(MyDealsActivity.this, Events.DEAL_CATEGORIES_LIST);
 //			startSppiner();
 //			mdController.requestService(userId);

@@ -190,13 +190,13 @@ public class HomeActivity extends MaxisMainActivity {
 		if (cat.getMgroupType().trim()
 				.equalsIgnoreCase(AppConstants.GROUP_TYPE_CATEGORY)) {
 			if (cat.getmGroupActionType().trim()
-					.equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_DEAL)
-					|| cat.getmGroupActionType()
-							.trim()
-							.equalsIgnoreCase(
-									AppConstants.GROUP_ACTION_TYPE_LIST)) {
+					.equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_LIST)) {
 				// showDealListing(cat);
 				showSubcategories(cat);
+			} else if (cat.getmGroupActionType().trim()
+					.equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_DEAL)) {
+				//TODO : for Hot Deals.
+				showDealcategories(cat);
 			} else if (cat
 					.getmGroupActionType()
 					.trim()
@@ -395,8 +395,23 @@ public class HomeActivity extends MaxisMainActivity {
 				showInfoDialog((String) msg.obj);
 			} else {
 				SubCategoryResponse categoriesResp = (SubCategoryResponse) msg.obj;
+
 				Intent intent = new Intent(HomeActivity.this,
 						SubCategoryListActivity.class);
+				intent.putExtra(AppConstants.DATA_SUBCAT_RESPONSE,
+						categoriesResp);
+				startActivity(intent);
+			}
+			stopSppiner();
+		} else if (msg.arg2 == Events.DEALCATEGORY_EVENT) {
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+			} else {
+				SubCategoryResponse categoriesResp = (SubCategoryResponse) msg.obj;
+
+				// TODO TEMPORARY :: change for hot deals
+				Intent intent = new Intent(HomeActivity.this,
+						DealsActivity.class);
 				intent.putExtra(AppConstants.DATA_SUBCAT_RESPONSE,
 						categoriesResp);
 				startActivity(intent);
@@ -488,6 +503,13 @@ public class HomeActivity extends MaxisMainActivity {
 	protected void showSubcategories(CategoryGroup cat) {
 		SubCategoryController controller = new SubCategoryController(
 				HomeActivity.this, Events.SUBCATEGORY_EVENT);
+		controller.requestService(cat);
+		startSppiner();
+	}
+
+	protected void showDealcategories(CategoryGroup cat) {
+		SubCategoryController controller = new SubCategoryController(
+				HomeActivity.this, Events.DEALCATEGORY_EVENT);
 		controller.requestService(cat);
 		startSppiner();
 	}
