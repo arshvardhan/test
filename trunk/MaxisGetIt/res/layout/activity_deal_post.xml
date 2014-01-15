@@ -33,7 +33,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:paddingLeft="10dp"
-                    android:text="Post Deal"
+                    android:text="@string/post_deal"
                     android:textColor="@color/maxis_green"
                     android:textSize="@dimen/sp_17"
                     android:textStyle="bold" />
@@ -69,9 +69,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight=".42"
                         android:padding="5dp"
+                        android:drawableRight="@drawable/required_icon"
                         android:text="@string/deal_title"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sp_13" />
+                    
 
                     <EditText
                         android:id="@+id/adp_title_text"
@@ -89,6 +91,35 @@
                 <!-- android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ " -->
 
                 <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:weightSum="1" >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".42"
+                        android:padding="5dp"
+                        android:drawableRight="@drawable/required_icon"
+                        android:text="@string/deal_desc"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp_13" />
+
+                    <EditText
+                        android:id="@+id/adp_desc_txt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".58"
+                        android:background="@drawable/text_field"
+                        android:inputType="textMultiLine"
+                        android:minLines="2"
+                        android:padding="5dp"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp_13" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/adp_comp_chooser_spinner_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -100,6 +131,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight=".42"
                         android:padding="5dp"
+                        android:drawableRight="@drawable/required_icon"
                         android:text="@string/choose_company"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sp_13" />
@@ -123,17 +155,6 @@
                             android:paddingTop="5dp"
                             android:textColor="@color/black"
                             android:textSize="@dimen/sp_13" />
-
-                        <!--
-                             <TextView
-                            android:id="@+id/adp_company_name_txt_v"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/sp_13"
-                            android:visibility="gone" />
-                        -->
                     </LinearLayout>
                 </LinearLayout>
 
@@ -141,7 +162,7 @@
                     android:id="@+id/adp_category_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="5dp"
                     android:weightSum="1" >
 
                     <TextView
@@ -149,6 +170,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight=".42"
                         android:padding="5dp"
+                        android:drawableRight="@drawable/required_icon"
                         android:text="@string/choose_category"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sp_13" />
@@ -167,92 +189,147 @@
                         android:textSize="@dimen/sp_13" />
                 </LinearLayout>
 
-                <LinearLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="0dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="5dp"
+                    android:text="@string/deal_applicable_in"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_13" />
+
+                <RadioGroup
+                    android:id="@+id/adp_deal_applicable_in_RG"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal"
                     android:weightSum="1" >
 
-                    <TextView
-                        android:layout_width="0dp"
+                    <RadioButton
+                        android:id="@+id/adp_entire_malaysia"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".42"
-                        android:padding="5dp"
-                        android:text="City"
-                        android:textColor="@color/black"
+                        android:layout_weight=".38"
+                        android:checked="true"
+                        android:text="@string/entire_malaysia"
                         android:textSize="@dimen/sp_13" />
 
-                    <Spinner
-                        android:id="@+id/adp_city_chooser"
-                        android:layout_width="0dp"
+                    <RadioButton
+                        android:id="@+id/adp_in_selective_cities"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".58"
-                        android:background="@drawable/dropdown_box"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="13dp"
-                        android:paddingTop="5dp"
-                        android:textColor="@color/black"
+                        android:layout_weight=".62"
+                        android:text="@string/selective_cities"
                         android:textSize="@dimen/sp_13" />
-                </LinearLayout>
+                </RadioGroup>
 
                 <LinearLayout
-                    android:id="@+id/locality_chooser_container"
+                    android:id="@+id/city_locality_chooser_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:visibility="gone"
-                    android:weightSum="1" >
+                    android:orientation="vertical"
+                    android:visibility="gone" >
 
-                    <TextView
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:id="@+id/city_chooser_container"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".42"
-                        android:padding="5dp"
-                        android:text="Locality"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/sp_13" />
+                        android:layout_marginBottom="10dp"
+                        android:weightSum="1" >
 
-                    <Spinner
-                        android:id="@+id/adp_locality_chooser"
-                        android:layout_width="0dp"
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".42"
+                            android:padding="5dp"
+                            android:drawableRight="@drawable/required_icon"
+                            android:text="@string/city"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_13" />
+
+                        <com.kelltontech.maxisgetit.ui.widgets.MultiSelectSpinner
+                            android:id="@+id/adp_city_chooser"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".58"
+                            android:background="@drawable/dropdown_box"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="13dp"
+                            android:paddingTop="5dp"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_13" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/locality_chooser_container"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".58"
-                        android:background="@drawable/dropdown_box"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="13dp"
-                        android:paddingTop="5dp"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/sp_13" />
+                        android:layout_marginBottom="5dp"
+                        android:weightSum="1" >
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".42"
+                            android:padding="5dp"
+                            android:drawableRight="@drawable/required_icon"
+                            android:text="@string/locality"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_13" />
+
+                        <com.kelltontech.maxisgetit.ui.widgets.MultiSelectSpinner
+                            android:id="@+id/adp_locality_chooser"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".58"
+                            android:background="@drawable/dropdown_box"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="13dp"
+                            android:paddingTop="5dp"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_13" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="0dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="5dp"
+                    android:text="@string/type_of_deal"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_13" />
+
+                <RadioGroup
+                    android:id="@+id/adp_type_of_deal_RG"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal"
                     android:weightSum="1" >
 
-                    <TextView
-                        android:layout_width="0dp"
+                    <RadioButton
+                        android:id="@+id/adp_informative"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".42"
-                        android:padding="5dp"
-                        android:text="@string/deal_desc"
-                        android:textColor="@color/black"
+                        android:layout_weight=".38"
+                        android:checked="true"
+                        android:text="@string/informative"
                         android:textSize="@dimen/sp_13" />
 
-                    <EditText
-                        android:id="@+id/adp_desc_txt"
-                        android:layout_width="0dp"
+                    <RadioButton
+                        android:id="@+id/adp_voucher"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".58"
-                        android:background="@drawable/text_field"
-                        android:minLines="2"
-                        android:padding="5dp"
-                        android:textColor="@color/black"
+                        android:layout_weight=".62"
+                        android:text="@string/voucher"
                         android:textSize="@dimen/sp_13" />
-                </LinearLayout>
+                </RadioGroup>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -274,6 +351,37 @@
                         android:layout_height="wrap_content"
                         android:layout_weight=".42"
                         android:padding="5dp"
+                        android:drawableRight="@drawable/required_icon"
+                        android:text="@string/start_date"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp_13" />
+
+                    <TextView
+                        android:id="@+id/adp_startdate_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".58"
+                        android:background="@drawable/text_field"
+                        android:clickable="true"
+                        android:padding="5dp"
+                        android:text="@string/date_format"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp_13" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:weightSum="1" >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".42"
+                        android:padding="5dp"
+                        android:drawableRight="@drawable/required_icon"
                         android:text="@string/end_date"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sp_13" />
@@ -292,7 +400,8 @@
                         android:textSize="@dimen/sp_13" />
                 </LinearLayout>
 
-                <LinearLayout
+                <!--
+                     <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
@@ -327,18 +436,68 @@
                             android:layout_height="wrap_content"
                             android:text="@string/no" />
                     </RadioGroup>
-                </LinearLayout>
+                </LinearLayout>  -->
 
                 <LinearLayout
                     android:id="@+id/adp_voucher_detail_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:orientation="vertical"
+                    android:visibility="gone" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="0dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:paddingTop="5dp"
+                            android:text="@string/voucher"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_13" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
+                        android:weightSum="1" >
+
+                        <RadioGroup
+                            android:id="@+id/adp_voucher_RG"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:weightSum="1" >
+
+                            <RadioButton
+                                android:id="@+id/adp_specific_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".38"
+                                android:checked="true"
+                                android:text="@string/specific_count"
+                                android:textSize="@dimen/sp_13" />
+
+                            <RadioButton
+                                android:id="@+id/adp_unlimited_codes"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".62"
+                                android:text="@string/unlimited_codes"
+                                android:textSize="@dimen/sp_13" />
+                        </RadioGroup>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/adp_voucher_count_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
                         android:weightSum="1" >
 
                         <TextView
@@ -346,7 +505,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".42"
                             android:padding="5dp"
-                            android:text="@string/count_of_voucher"
+                            android:drawableRight="@drawable/required_icon"
+                            android:text="@string/count"
                             android:textColor="@color/black"
                             android:textSize="@dimen/sp_13" />
 
@@ -357,14 +517,111 @@
                             android:layout_weight=".58"
                             android:background="@drawable/text_field"
                             android:digits="1234567890"
-                            android:inputType="number"
-                            android:maxLength="15"
+                            android:inputType="numberDecimal"
+                            android:maxLength="5"
                             android:padding="5dp"
                             android:singleLine="true"
                             android:textColor="@color/black"
                             android:textSize="@dimen/sp_13" />
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="1" >
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".42"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:paddingTop="15dp"
+                            android:text="@string/voucher_type"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_13" />
+
+                        <RadioGroup
+                            android:id="@+id/adp_voucher_type_RG"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".58"
+                            android:orientation="vertical" >
+
+                            <RadioButton
+                                android:id="@+id/adp_single_code"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="true"
+                                android:text="@string/single_code"
+                                android:textSize="@dimen/sp_13" />
+
+                            <RadioButton
+                                android:id="@+id/adp_system_generated"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/system_generated"
+                                android:textSize="@dimen/sp_13" />
+
+                            <RadioButton
+                                android:id="@+id/adp_provided_by_sme"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/provided_by_sme"
+                                android:textSize="@dimen/sp_13" />
+                        </RadioGroup>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/adp_single_code_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:weightSum="1" >
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".42"
+                            android:padding="5dp"
+                            android:drawableRight="@drawable/required_icon"
+                            android:text="@string/voucher_code"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_13" />
+
+                        <EditText
+                            android:id="@+id/adp_single_code_edit_txt"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".58"
+                            android:background="@drawable/text_field"
+                            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+                            android:inputType="text"
+                            android:maxLength="10"
+                            android:padding="5dp"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_13" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/adp_provided_by_sme_email_alert_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:visibility="gone" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/provided_by_sme_email_alert"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_13" />
+                    </LinearLayout>
+
+                    <!--
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -420,61 +677,71 @@
                             android:singleLine="true"
                             android:textColor="@color/black"
                             android:textSize="@dimen/sp_13" />
-                    </LinearLayout>
+                    </LinearLayout>    -->
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:baselineAligned="false"
                     android:gravity="center"
                     android:orientation="horizontal" >
 
                     <FrameLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginRight="2dp" >
 
                         <ImageView
                             android:id="@+id/adp_deal_image"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_gravity="right"
+                            android:background="@drawable/upload_photo_icon_bg"
                             android:clickable="true"
+                            android:contentDescription="@string/cover_image"
                             android:src="@drawable/upload_photo_icon" />
 
                         <ImageView
                             android:id="@+id/adp_deal_image_cross"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="5dp"
+                            android:layout_gravity="right|top"
                             android:clickable="true"
-                            android:src="@drawable/cat_thumb_cross" />
+                            android:contentDescription="@string/close_cover_image"
+                            android:src="@drawable/cross_icon"
+                            android:visibility="gone" />
                     </FrameLayout>
 
                     <FrameLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginRight="2dp" >
 
                         <ImageView
                             android:id="@+id/adp_deal_image2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="5dp"
+                            android:layout_gravity="left"
+                            android:background="@drawable/upload_photo_icon_bg"
                             android:clickable="true"
+                            android:contentDescription="@string/first_image"
                             android:src="@drawable/upload_photo_icon" />
 
                         <ImageView
                             android:id="@+id/adp_deal_image_cross2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="5dp"
+                            android:layout_gravity="right|top"
                             android:clickable="true"
-                            android:src="@drawable/cat_thumb_cross" />
+                            android:contentDescription="@string/close_first_image"
+                            android:src="@drawable/cross_icon"
+                            android:visibility="gone" />
                     </FrameLayout>
                 </LinearLayout>
 
@@ -482,55 +749,64 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="10dp"
+                    android:baselineAligned="false"
                     android:gravity="center"
                     android:orientation="horizontal" >
 
                     <FrameLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginRight="2dp" >
 
                         <ImageView
                             android:id="@+id/adp_deal_image3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_gravity="right"
+                            android:background="@drawable/upload_photo_icon_bg"
                             android:clickable="true"
+                            android:contentDescription="@string/second_image"
                             android:src="@drawable/upload_photo_icon" />
 
                         <ImageView
                             android:id="@+id/adp_deal_image_cross3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="5dp"
+                            android:layout_gravity="right|top"
                             android:clickable="true"
-                            android:src="@drawable/cat_thumb_cross" />
+                            android:contentDescription="@string/close_second_image"
+                            android:src="@drawable/cross_icon"
+                            android:visibility="gone" />
                     </FrameLayout>
 
                     <FrameLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginRight="2dp" >
 
                         <ImageView
                             android:id="@+id/adp_deal_image4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="5dp"
+                            android:layout_gravity="left"
+                            android:background="@drawable/upload_photo_icon_bg"
                             android:clickable="true"
+                            android:contentDescription="@string/third_image"
                             android:src="@drawable/upload_photo_icon" />
 
                         <ImageView
                             android:id="@+id/adp_deal_image_cross4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="5dp"
+                            android:layout_gravity="right|top"
                             android:clickable="true"
-                            android:src="@drawable/cat_thumb_cross" />
+                            android:contentDescription="@string/close_third_image"
+                            android:src="@drawable/cross_icon"
+                            android:visibility="gone" />
                     </FrameLayout>
                 </LinearLayout>
 
@@ -543,7 +819,7 @@
                     android:layout_marginTop="30dp"
                     android:background="@drawable/shape_green_curved_box"
                     android:clickable="true"
-                    android:text="@string/submit"
+                    android:text="@string/post_deal"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
             </LinearLayout>

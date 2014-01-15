@@ -191,7 +191,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
-        </activity>
+        </activity>
         -->
         <activity
             android:name="com.kelltontech.maxisgetit.ui.activities.ClassifiedScrollActivity"
@@ -339,6 +339,12 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
+            android:name="com.kelltontech.maxisgetit.ui.activities.SaleTemplateTypeActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
+        </activity>
+        <activity
             android:name="com.kelltontech.maxisgetit.ui.activities.FavCompanyListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
@@ -350,8 +356,8 @@
         </activity>
         <activity
             android:name="com.kelltontech.maxisgetit.ui.activities.DealsActivity"
-          android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar">
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
     </application>
 

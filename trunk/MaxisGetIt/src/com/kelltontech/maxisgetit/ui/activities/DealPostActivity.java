@@ -1,11 +1,10 @@
 package com.kelltontech.maxisgetit.ui.activities;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.json.JSONArray;
@@ -15,20 +14,20 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -37,67 +36,72 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kelltontech.maxisgetit.R;
-import com.kelltontech.maxisgetit.R.drawable;
-import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.utils.StringUtil;
+import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
-import com.kelltontech.maxisgetit.controllers.CityAreaListController;
+import com.kelltontech.maxisgetit.controllers.PostDealCityLocalityListController;
 import com.kelltontech.maxisgetit.controllers.PostDealController;
 import com.kelltontech.maxisgetit.controllers.PostImageController;
+import com.kelltontech.maxisgetit.controllers.RemovePostDealImgController;
 import com.kelltontech.maxisgetit.dao.CategoryWithCharge;
-import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.CompanyCategory;
 import com.kelltontech.maxisgetit.dao.MaxisStore;
-import com.kelltontech.maxisgetit.db.CityTable;
+import com.kelltontech.maxisgetit.dao.PostDealCityOrLoc;
+import com.kelltontech.maxisgetit.requests.PostDealCityLocalityRequest;
 import com.kelltontech.maxisgetit.response.DealsListResponse;
-import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.response.ImageDataResponse;
+import com.kelltontech.maxisgetit.response.PostDealCityLocListResponse;
+import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
+import com.kelltontech.maxisgetit.ui.widgets.MultiSelectSpinner;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 import com.kelltontech.maxisgetit.utils.BitmapCalculation;
 import com.kelltontech.maxisgetit.utils.UiUtils;
 
 public class DealPostActivity extends MaxisMainActivity {
+	public static final int START_DATE_PICKER_DIALOG = 1122;
 	public static final int END_DATE_PICKER_DIALOG = 1123;
-	public static final int REDEEM_DATE_PICKER_DIALOG = 1124;
 	private static final int IMAGE_PICK = 1001;
-
-	private ImageView mHomeIconView, mProfileIconView;
-	private DealsListResponse mMyDealResp;
 	private ArrayAdapter<CategoryWithCharge> mCategoryAdapter;
-	private TextView mDealPostBtn, mEndDateBtn, mRedeemDateBtn;
-	private Spinner mCatChooser, mCompanyChooser;
-	private LinearLayout mCategorySpinnerContainer, mLocalityContainer;
-	private EditText mDealTitle, mDealDesc, mVoucherCount, mRedeemPrice;
-	// private ImageView mDealImageV, mDealImageV2, mDealImageV3, mDealImageV4;
-	private ImageView imgView[];
-	private MaxisStore mStore;
-	private String mImagePath;
-	private Bitmap mBitmap;
-	// private DatePicker endDate, voucherRedeemDate;
+	private ArrayAdapter<CompanyCategory> mCompanyAdapter;
+	private TextView mDealPostBtn, mStartDateBtn, mEndDateBtn;
+	private EditText mDealTitle, mDealDesc, mVoucherCount, mVoucherCode;
+	private LinearLayout mCityLocalityChooserSpinnerContainer;
+	private LinearLayout mCategorySpinnerContainer;
+	private LinearLayout mLocalityChooserSpinnerContainer;
 	private LinearLayout mVoucherDetailContainer;
-	private RadioGroup mVoucherApplicableGroup;
-	private Spinner mCityDropDown;
-	private Spinner mLocalityDropDown;
-	private int mYear1;
-	private int mMonth1;
-	private int mDay1;
-	private int mYear2;
-	private int mMonth2;
-	private int mDay2;
-	private boolean mIsSingalCompany;
-	private CompanyCategory mSingalCompCat;
-
-	ArrayList<String> imageNames = new ArrayList<String>();
+	private LinearLayout mVoucherCountContainer;
+	private LinearLayout mSingleCodeContainer;
+	private LinearLayout mEmailAlertContainer;
+	private ImageView mHomeIconView, mProfileIconView;
+	private ImageView imgView[], removeImgView[];
+	private RadioGroup mDealApplicableInGroup, mTypeOfDealGroup;
+	private RadioGroup mVoucherGroup, mVoucherTypeGroup;
+	private RadioButton mSingleCodeRadioBtn, mProvidedBySMERadioBtn;
+	private Spinner mCatChooser, mCompanyChooser;
+	private MultiSelectSpinner mCityDropDown, mLocalityDropDown;
+	private CompanyCategory mSingalCompCat, selectedComp;
+	private DealsListResponse mMyDealResp;
+	private MaxisStore mStore;
+	private Bitmap mBitmap;
+	// String imageNameForRemoval;
+	// private int imageToRemove;
+	private int removeImageIndex;
+	private int mStartYear, mStartMonth, mStartDay, mEndYear, mEndMonth,
+			mEndDay;
+	private boolean mIsSingleCompany;
+	private ArrayList<String> imageNames = new ArrayList<String>();
+	private List<String> selectedCities = new ArrayList<String>();
+	private List<String> selectedLocalities = new ArrayList<String>();
+	private boolean booleanFirstTime = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,27 +109,106 @@ public class DealPostActivity extends MaxisMainActivity {
 		setContentView(R.layout.activity_deal_post);
 		UiUtils.hideKeyboardOnTappingOutside(
 				findViewById(R.id.adp_root_layout), this);
+
 		mStore = MaxisStore.getStore(DealPostActivity.this);
+
 		mHomeIconView = (ImageView) findViewById(R.id.goto_home_icon);
 		mHomeIconView.setOnClickListener(this);
 		mProfileIconView = (ImageView) findViewById(R.id.show_profile_icon);
 		mProfileIconView.setOnClickListener(this);
 		final Calendar c = Calendar.getInstance();
-		mYear1 = mYear2 = c.get(Calendar.YEAR);
-		mMonth1 = mMonth2 = c.get(Calendar.MONTH);
-		mDay1 = mDay2 = c.get(Calendar.DAY_OF_MONTH);
-		mLocalityContainer = (LinearLayout) findViewById(R.id.locality_chooser_container);
+		mStartYear = mEndYear = c.get(Calendar.YEAR);
+		mStartMonth = mEndMonth = c.get(Calendar.MONTH);
+		mStartDay = mEndDay = c.get(Calendar.DAY_OF_MONTH);
+		mCityLocalityChooserSpinnerContainer = (LinearLayout) findViewById(R.id.city_locality_chooser_container);
+		mLocalityChooserSpinnerContainer = (LinearLayout) findViewById(R.id.locality_chooser_container);
 		mCategorySpinnerContainer = (LinearLayout) findViewById(R.id.adp_category_container);
 		mVoucherDetailContainer = (LinearLayout) findViewById(R.id.adp_voucher_detail_container);
-		mVoucherApplicableGroup = (RadioGroup) findViewById(R.id.adp_voucher_applicable_RG);
-		mVoucherApplicableGroup
+		mVoucherCountContainer = (LinearLayout) findViewById(R.id.adp_voucher_count_container);
+		mSingleCodeContainer = (LinearLayout) findViewById(R.id.adp_single_code_container);
+		mEmailAlertContainer = (LinearLayout) findViewById(R.id.adp_provided_by_sme_email_alert_container);
+		mDealApplicableInGroup = (RadioGroup) findViewById(R.id.adp_deal_applicable_in_RG);
+		mDealApplicableInGroup
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(RadioGroup group, int checkedId) {
-						if (checkedId == R.id.adp_voucher_not_applicable) {
+						if (checkedId == R.id.adp_entire_malaysia) {
+							mCityLocalityChooserSpinnerContainer
+									.setVisibility(View.GONE);
+						} else if (checkedId == R.id.adp_in_selective_cities) {
+							PostDealCityLocalityRequest request = new PostDealCityLocalityRequest();
+							if (mCompanyChooser.getSelectedItemPosition() != 0
+									&& mCompanyChooser.getSelectedItem() != null) {
+								if (mMyDealResp.getCompCategoryList().size() == 2) {
+									request.setCompanyId(mSingalCompCat
+											.getCompanyId());
+									request.setCategoryId(mSingalCompCat
+											.getCategoryList().get(1)
+											.getCategoryId());
+								} else {
+									request.setCompanyId(selectedComp
+											.getCompanyId());
+									request.setCategoryId(selectedComp
+											.getCategoryList().get(1)
+											.getCategoryId());
+								}
+							}
+							PostDealCityLocalityListController clController = new PostDealCityLocalityListController(
+									DealPostActivity.this,
+									Events.POST_DEAL_CITY_LISTING);
+							startSppiner();
+							request.setUserId(mStore.getUserID());
+							clController.requestService(request);
+
+							mCityLocalityChooserSpinnerContainer
+									.setVisibility(View.VISIBLE);
+						}
+					}
+				});
+		mTypeOfDealGroup = (RadioGroup) findViewById(R.id.adp_type_of_deal_RG);
+		mTypeOfDealGroup
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(RadioGroup group, int checkedId) {
+						if (checkedId == R.id.adp_informative) {
 							mVoucherDetailContainer.setVisibility(View.GONE);
-						} else if (checkedId == R.id.adp_voucher_applicable) {
+						} else if (checkedId == R.id.adp_voucher) {
 							mVoucherDetailContainer.setVisibility(View.VISIBLE);
+						}
+					}
+				});
+		mVoucherGroup = (RadioGroup) findViewById(R.id.adp_voucher_RG);
+		mSingleCodeRadioBtn = (RadioButton) findViewById(R.id.adp_single_code);
+		mProvidedBySMERadioBtn = (RadioButton) findViewById(R.id.adp_provided_by_sme);
+		mVoucherGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				if (checkedId == R.id.adp_specific_count) {
+					mVoucherCountContainer.setVisibility(View.VISIBLE);
+					mProvidedBySMERadioBtn.setVisibility(View.VISIBLE);
+					mSingleCodeRadioBtn.setChecked(true);
+
+				} else if (checkedId == R.id.adp_unlimited_codes) {
+					mVoucherCountContainer.setVisibility(View.GONE);
+					mProvidedBySMERadioBtn.setVisibility(View.GONE);
+					mSingleCodeRadioBtn.setChecked(true);
+				}
+			}
+		});
+		mVoucherTypeGroup = (RadioGroup) findViewById(R.id.adp_voucher_type_RG);
+		mVoucherTypeGroup
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(RadioGroup group, int checkedId) {
+						if (checkedId == R.id.adp_single_code) {
+							mSingleCodeContainer.setVisibility(View.VISIBLE);
+							mEmailAlertContainer.setVisibility(View.GONE);
+						} else if (checkedId == R.id.adp_system_generated) {
+							mSingleCodeContainer.setVisibility(View.GONE);
+							mEmailAlertContainer.setVisibility(View.GONE);
+						} else if (checkedId == R.id.adp_provided_by_sme) {
+							mSingleCodeContainer.setVisibility(View.GONE);
+							mEmailAlertContainer.setVisibility(View.VISIBLE);
 						}
 					}
 				});
@@ -144,33 +227,46 @@ public class DealPostActivity extends MaxisMainActivity {
 		FrameLayout.LayoutParams vp = new FrameLayout.LayoutParams(getSize(),
 				getSize());
 		imgView[0].setLayoutParams(vp);
-		// mDealImageV.setScaleType(ImageView.ScaleType.CENTER_CROP);
 		imgView[1].setLayoutParams(vp);
 		imgView[2].setLayoutParams(vp);
 		imgView[3].setLayoutParams(vp);
 
+		removeImgView = new ImageView[4];
+		removeImgView[0] = (ImageView) findViewById(R.id.adp_deal_image_cross);
+		removeImgView[0].setOnClickListener(this);
+		removeImgView[1] = (ImageView) findViewById(R.id.adp_deal_image_cross2);
+		removeImgView[1].setOnClickListener(this);
+		removeImgView[2] = (ImageView) findViewById(R.id.adp_deal_image_cross3);
+		removeImgView[2].setOnClickListener(this);
+		removeImgView[3] = (ImageView) findViewById(R.id.adp_deal_image_cross4);
+		removeImgView[3].setOnClickListener(this);
+
 		mCompanyChooser = (Spinner) findViewById(R.id.adp_company_chooser);
 		mCatChooser = (Spinner) findViewById(R.id.adp_category_chooser);
-		mCityDropDown = (Spinner) findViewById(R.id.adp_city_chooser);
-		mLocalityDropDown = (Spinner) findViewById(R.id.adp_locality_chooser);
-		// cat_chooser.setVisibility(View.GONE);
-		mCategorySpinnerContainer.setVisibility(View.GONE);
-		// catChooser.setEnabled(false);
+		mCityDropDown = (MultiSelectSpinner) findViewById(R.id.adp_city_chooser);
+		mLocalityDropDown = (MultiSelectSpinner) findViewById(R.id.adp_locality_chooser);
+
 		if (mMyDealResp.getCompCategoryList().size() == 2) {
-			mIsSingalCompany = true;
+			mIsSingleCompany = true;
 			mSingalCompCat = mMyDealResp.getCompCategoryList().get(1);
-			findViewById(R.id.adp_comp_chooser_spinner_container)
-					.setVisibility(View.GONE);
+			mCompanyAdapter = new ArrayAdapter<CompanyCategory>(
+					DealPostActivity.this, R.layout.spinner_item,
+					mMyDealResp.getCompCategoryList());
+			mCompanyChooser.setAdapter(mCompanyAdapter);
+			mCompanyChooser.setSelection(1, true);
+			mCompanyChooser.setEnabled(false);
 			mCategoryAdapter = new ArrayAdapter<CategoryWithCharge>(
 					DealPostActivity.this, R.layout.spinner_item,
 					mSingalCompCat.getCategoryList());
 			mCatChooser.setAdapter(mCategoryAdapter);
-			mCategorySpinnerContainer.setVisibility(View.VISIBLE);
+			mCatChooser.setSelection(1, true);
+			mCatChooser.setEnabled(false);
 		} else {
-			ArrayAdapter<CompanyCategory> compCatAdp = new ArrayAdapter<CompanyCategory>(
+			mCompanyAdapter = new ArrayAdapter<CompanyCategory>(
 					DealPostActivity.this, R.layout.spinner_item,
 					mMyDealResp.getCompCategoryList());
-			mCompanyChooser.setAdapter(compCatAdp);
+			mCompanyChooser.setEnabled(true);
+			mCompanyChooser.setAdapter(mCompanyAdapter);
 			mCompanyChooser
 					.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -178,21 +274,19 @@ public class DealPostActivity extends MaxisMainActivity {
 						public void onItemSelected(AdapterView<?> parent,
 								View view, int position, long id) {
 							if (position == 0) {
-								// catChooser.setEnabled(false);
 								mCategorySpinnerContainer
 										.setVisibility(View.GONE);
 							} else {
-								CompanyCategory selectedComp = (CompanyCategory) parent
+								selectedComp = (CompanyCategory) parent
 										.getItemAtPosition(position);
 								mCategoryAdapter = new ArrayAdapter<CategoryWithCharge>(
 										DealPostActivity.this,
 										R.layout.spinner_item, selectedComp
 												.getCategoryList());
+								mCatChooser.setEnabled(true);
 								mCatChooser.setAdapter(mCategoryAdapter);
 								mCategorySpinnerContainer
 										.setVisibility(View.VISIBLE);
-								// catChooser.setEnabled(true);//
-								// Visibility(View.VISIBLE);
 							}
 						}
 
@@ -205,42 +299,167 @@ public class DealPostActivity extends MaxisMainActivity {
 		mDealTitle = (EditText) findViewById(R.id.adp_title_text);
 		mDealDesc = (EditText) findViewById(R.id.adp_desc_txt);
 		mVoucherCount = (EditText) findViewById(R.id.adp_count_voucher);
-		mRedeemPrice = (EditText) findViewById(R.id.adp_voucher_redeem_price);
+		mVoucherCode = (EditText) findViewById(R.id.adp_single_code_edit_txt);
+		mStartDateBtn = (TextView) findViewById(R.id.adp_startdate_btn);
+		mStartDateBtn.setOnClickListener(this);
 		mEndDateBtn = (TextView) findViewById(R.id.adp_enddate_btn);
 		mEndDateBtn.setOnClickListener(this);
-		mRedeemDateBtn = (TextView) findViewById(R.id.adp_voucher_redeem_dt_btn);
-		mRedeemDateBtn.setOnClickListener(this);
-		// captcha = (EditText) findViewById(R.id.adp_captcha_txt);
 		mDealPostBtn = (TextView) findViewById(R.id.adp_submit);
 		mDealPostBtn.setOnClickListener(this);
-		CityTable cityTable = new CityTable((MyApplication) getApplication());
-		ArrayList<CityOrLocality> cityList = cityTable.getAllCitiesList();
-		addDefaultSelect(cityList);
-		ArrayAdapter<CityOrLocality> cityAdp = new ArrayAdapter<CityOrLocality>(
-				DealPostActivity.this, R.layout.spinner_item, cityList);
-		mCityDropDown.setAdapter(cityAdp);
-		mCityDropDown.setOnItemSelectedListener(new OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> adapter, View arg1,
-					int position, long arg3) {
-				if (position == 0) {
-					mLocalityContainer.setVisibility(View.GONE);
-				} else {
-					CityOrLocality city = (CityOrLocality) adapter
-							.getItemAtPosition(position);
-					CityAreaListController clController = new CityAreaListController(
-							DealPostActivity.this, Events.LOCALITY_LISTING);
-					startSppiner();
-					clController.requestService(city.getId() + "");
+
+		// mCityDropDown.setOnItemSelectedListener(new OnItemSelectedListener()
+		// {
+		// @Override
+		// public void onItemSelected(AdapterView<?> adapter, View arg1,
+		// int position, long arg3) {
+		// // if (position == 0) {
+		// // mLocalityChooserSpinnerContainer.setVisibility(View.GONE);
+		// // } else {
+		//
+		// //
+		// if(mCityDropDown.getSelectedStrings().size() > 0) {
+		// selectedCities = mCityDropDown.getSelectedStrings();
+		//
+		//
+		// PostDealCityLocalityListController clController = new
+		// PostDealCityLocalityListController(
+		// DealPostActivity.this,
+		// Events.POST_DEAL_LOCALITY_LISTING);
+		// startSppiner();
+		//
+		// JSONObject postJsaon = new JSONObject();
+		// JSONArray jArray = new JSONArray();
+		// try {
+		// for (String string : selectedCities) {
+		// jArray.put(string);
+		// }
+		// postJsaon.put("cities", jArray);
+		// } catch (JSONException e) {
+		// showAlertDialog(getResources().getString(
+		// R.string.internal_error));
+		// AnalyticsHelper
+		// .onError(FlurryEventsConstants.DATA_VALIDATION_ERR,
+		// "DealPostActivity : "
+		// + AppConstants.DATA_VALIDATION_ERROR_MSG, e);
+		// }
+		// clController.requestService(postJsaon);
+		// }
+		//
+		//
+		//
+		//
+		// //
+		// /* PostDealCityOrLoc city = (PostDealCityOrLoc) adapter
+		// .getItemAtPosition(position);
+		// PostDealCityLocalityListController clController = new
+		// PostDealCityLocalityListController(
+		// DealPostActivity.this,
+		// Events.POST_DEAL_LOCALITY_LISTING);
+		// startSppiner();
+		//
+		// JSONObject postJsaon = new JSONObject();
+		// JSONArray jArray = new JSONArray();
+		// try {
+		// String namwe = city.getName();
+		// jArray.put(namwe);
+		// postJsaon.put("cities", jArray);
+		// } catch (JSONException e) {
+		// showAlertDialog(getResources().getString(
+		// R.string.internal_error));
+		// AnalyticsHelper
+		// .onError(
+		// FlurryEventsConstants.DATA_VALIDATION_ERR,
+		// "DealPostActivity : "
+		// + AppConstants.DATA_VALIDATION_ERROR_MSG,
+		// e);
+		// }
+		// clController.requestService(postJsaon);*/
+		// }
+		// // }
+		//
+		// @Override
+		// public void onNothingSelected(AdapterView<?> arg0) {
+		//
+		// }
+		// });
+
+//		mLocalityChooserSpinnerContainer
+//				.setOnClickListener(new OnClickListener() {
+//
+//					@Override
+//					public void onClick(View v) {
+//						// TODO Auto-generated method stub
+//						if (mCityDropDown.getSelectedStrings().size() > 0) {
+//							selectedCities = mCityDropDown.getSelectedStrings();
+//							PostDealCityLocalityListController clController = new PostDealCityLocalityListController(
+//									DealPostActivity.this,
+//									Events.POST_DEAL_LOCALITY_LISTING);
+//							startSppiner();
+//
+//							JSONObject postJsaon = new JSONObject();
+//							JSONArray jArray = new JSONArray();
+//							try {
+//								for (String string : selectedCities) {
+//									jArray.put(string);
+//								}
+//								postJsaon.put("cities", jArray);
+//							} catch (JSONException e) {
+//								showAlertDialog(getResources().getString(
+//										R.string.internal_error));
+//								AnalyticsHelper
+//										.onError(
+//												FlurryEventsConstants.DATA_VALIDATION_ERR,
+//												"DealPostActivity : "
+//														+ AppConstants.DATA_VALIDATION_ERROR_MSG,
+//												e);
+//							}
+//							clController.requestService(postJsaon);
+//						}
+//					}
+//				});
+
+mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
+	
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		// TODO Auto-generated method stub
+		if(!booleanFirstTime)
+		{
+			booleanFirstTime =  true;
+
+			// TODO Auto-generated method stub
+			if (mCityDropDown.getSelectedStrings().size() > 0) {
+				selectedCities = mCityDropDown.getSelectedStrings();
+				PostDealCityLocalityListController clController = new PostDealCityLocalityListController(
+						DealPostActivity.this,
+						Events.POST_DEAL_LOCALITY_LISTING);
+				startSppiner();
+
+				JSONObject postJsaon = new JSONObject();
+				JSONArray jArray = new JSONArray();
+				try {
+					for (String string : selectedCities) {
+						jArray.put(string);
+					}
+					postJsaon.put("cities", jArray);
+				} catch (JSONException e) {
+					showAlertDialog(getResources().getString(
+							R.string.internal_error));
+					AnalyticsHelper
+							.onError(
+									FlurryEventsConstants.DATA_VALIDATION_ERR,
+									"DealPostActivity : "
+											+ AppConstants.DATA_VALIDATION_ERROR_MSG,
+									e);
 				}
+				clController.requestService(postJsaon);
 			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-
-			}
-		});
-
+			
+		}
+		
+		return false;
+	}
+});
 	}
 
 	@Override
@@ -291,7 +510,6 @@ public class DealPostActivity extends MaxisMainActivity {
 					}
 					postJson.put("image", array);
 				} catch (Throwable e) {
-					// showInfoDialog("Image size too large to upload");
 					AnalyticsHelper
 							.onError(
 									FlurryEventsConstants.IMAGE_SIZE_TOO_LARGE_ERR,
@@ -306,11 +524,11 @@ public class DealPostActivity extends MaxisMainActivity {
 					DealPostActivity.this, Events.POST_DEAL_EVENT);
 			dealController.requestService(postJson);
 			break;
+		case R.id.adp_startdate_btn:
+			showDialog(START_DATE_PICKER_DIALOG);
+			break;
 		case R.id.adp_enddate_btn:
 			showDialog(END_DATE_PICKER_DIALOG);
-			break;
-		case R.id.adp_voucher_redeem_dt_btn:
-			showDialog(REDEEM_DATE_PICKER_DIALOG);
 			break;
 		case R.id.adp_deal_image:
 			uploadImage();
@@ -324,11 +542,39 @@ public class DealPostActivity extends MaxisMainActivity {
 		case R.id.adp_deal_image4:
 			uploadImage();
 			break;
-
+		case R.id.adp_deal_image_cross:
+			removeImageIndex = 0;
+			showConfirmationDialog(CustomDialog.CONFIRMATION_DIALOG,
+					getString(R.string.remove_image_confirmation));
+			break;
+		case R.id.adp_deal_image_cross2:
+			removeImageIndex = 1;
+			showConfirmationDialog(CustomDialog.CONFIRMATION_DIALOG,
+					getString(R.string.remove_image_confirmation));
+			break;
+		case R.id.adp_deal_image_cross3:
+			removeImageIndex = 2;
+			showConfirmationDialog(CustomDialog.CONFIRMATION_DIALOG,
+					getString(R.string.remove_image_confirmation));
+			break;
+		case R.id.adp_deal_image_cross4:
+			removeImageIndex = 3;
+			showConfirmationDialog(CustomDialog.CONFIRMATION_DIALOG,
+					getString(R.string.remove_image_confirmation));
+			break;
 		default:
 			break;
 		}
 
+	}
+
+	@Override
+	public void onPositiveDialogButton(int id) {
+		if (id == CustomDialog.CONFIRMATION_DIALOG) {
+			removeImage(removeImageIndex);
+		} else {
+			super.onPositiveDialogButton(id);
+		}
 	}
 
 	private JSONObject validateData() throws JSONException {
@@ -338,7 +584,7 @@ public class DealPostActivity extends MaxisMainActivity {
 			userId = mStore.getUserID();
 		}
 		if (StringUtil.isNullOrEmpty(userId)) {
-			showAlertDialog("Please Login again to post a deal");
+			showAlertDialog("Please Login again to post a deal.");
 			return null;
 		} else {
 			jArray.put("uid", userId);
@@ -346,16 +592,25 @@ public class DealPostActivity extends MaxisMainActivity {
 		String dealTitleStr = mDealTitle.getText().toString().trim();
 		mDealTitle.setText(dealTitleStr);
 		if (StringUtil.isNullOrEmpty(dealTitleStr)) {
-			showAlertDialog("Please Enter the Deal title");
+			showAlertDialog("Please Enter the Deal title.");
 			return null;
 		}
 		jArray.put("title", dealTitleStr);
+
+		String dealDescStr = mDealDesc.getText().toString().trim();
+		mDealDesc.setText(dealDescStr);
+		if (StringUtil.isNullOrEmpty(dealDescStr)) {
+			showAlertDialog("Please Enter the Deal Description.");
+			return null;
+		}
+		jArray.put("description", dealDescStr);
+
 		String compId = null;
 		String categoryId = null;
-		if (mIsSingalCompany) {
+		if (mIsSingleCompany) {
 			jArray.put("cid", mSingalCompCat.getCompanyId());
 			if (mCatChooser.getSelectedItemPosition() == 0) {
-				showAlertDialog("Please select a category");
+				showAlertDialog("Please select a category.");
 				return null;
 			} else {
 				CategoryWithCharge catChTemp = (CategoryWithCharge) mCatChooser
@@ -365,7 +620,7 @@ public class DealPostActivity extends MaxisMainActivity {
 			}
 		} else {
 			if (mCompanyChooser.getSelectedItemPosition() == 0) {
-				showAlertDialog("Please select a company");
+				showAlertDialog("Please select a company.");
 				return null;
 			} else {
 				CompanyCategory compCatTemp = (CompanyCategory) mCompanyChooser
@@ -373,7 +628,7 @@ public class DealPostActivity extends MaxisMainActivity {
 				compId = compCatTemp.getCompanyId();
 				jArray.put("cid", compId);
 				if (mCatChooser.getSelectedItemPosition() == 0) {
-					showAlertDialog("Please select a category");
+					showAlertDialog("Please select a category.");
 					return null;
 				} else {
 					CategoryWithCharge catChTemp = (CategoryWithCharge) mCatChooser
@@ -383,96 +638,131 @@ public class DealPostActivity extends MaxisMainActivity {
 				}
 			}
 		}
-		String cityId = null;
-		String localityId = null;
-		if (mCityDropDown.getSelectedItemPosition() == 0) {
-			showAlertDialog("Please select a City");
-			return null;
-		} else {
-			CityOrLocality city = (CityOrLocality) mCityDropDown
-					.getSelectedItem();
-			cityId = city.getId() + "";
-			jArray.put("city_id", cityId);
-			if (mLocalityDropDown.getSelectedItemPosition() == 0) {
-				showAlertDialog("Please select a Locality");
+
+		if (mDealApplicableInGroup.getCheckedRadioButtonId() == R.id.adp_entire_malaysia) {
+			jArray.put("applicable_in", "0");
+		} else if (mDealApplicableInGroup.getCheckedRadioButtonId() == R.id.adp_in_selective_cities) {
+			jArray.put("applicable_in", "1");
+			/* String cityId = null; */
+			/* String localityId = null; */
+			/* if (mCityDropDown.getSelectedItemPosition() == 0) { */
+			if (mCityDropDown.getSelectedIndicies().size() == 0) {
+				showAlertDialog("Please select a City.");
 				return null;
 			} else {
-				CityOrLocality locality = (CityOrLocality) mLocalityDropDown
-						.getSelectedItem();
-				localityId = locality.getId() + "";
-				jArray.put("locality_id", localityId);
+				/*
+				 * PostDealCityOrLoc city = (PostDealCityOrLoc) mCityDropDown
+				 * .getSelectedItem();
+				 */
+				/* cityId = city.getId() + ""; */
+				/* jArray.put("city_id", cityId); */
+				JSONArray cityArray = new JSONArray();
+				for (String string : selectedCities) {
+					cityArray.put(string);
+				}
+
+				jArray.put("city_name", cityArray);
+				selectedLocalities = mLocalityDropDown.getSelectedStrings();
+				/* if (mLocalityDropDown.getSelectedItemPosition() == 0) { */
+				if (mLocalityDropDown.getSelectedIndicies().size() == 0) {
+					showAlertDialog("Please select a Locality.");
+					return null;
+				} else {
+					/*
+					 * PostDealCityOrLoc locality = (PostDealCityOrLoc)
+					 * mLocalityDropDown .getSelectedItem();
+					 */
+					/*
+					 * localityId = locality.getId() + "";
+					 * jArray.put("locality_id", localityId);
+					 */
+					JSONArray localityArray = new JSONArray();
+
+					for (String string : selectedLocalities) {
+
+						localityArray.put(string);
+					}
+
+					jArray.put("locality_name", localityArray);
+				}
 			}
 		}
-		String dealDescStr = mDealDesc.getText().toString().trim();
-		mDealDesc.setText(dealDescStr);
-		if (StringUtil.isNullOrEmpty(dealDescStr)) {
-			showAlertDialog("Please Enter the Deal Description");
+
+		String startDateStr = mStartDateBtn.getText().toString();
+		if (startDateStr.equals(getResources().getString(R.string.date_format))) {
+			showAlertDialog("Please select Start Date.");
 			return null;
 		}
-		jArray.put("description", dealDescStr);
+		Calendar calStartDate = Calendar.getInstance(TimeZone
+				.getTimeZone("UTC"));
+		calStartDate.set(mStartYear, mStartMonth, mStartDay);
+		if (calStartDate.getTime().getTime() <= System.currentTimeMillis()) {
+			showAlertDialog("Please select a future Start Date.");
+			return null;
+		}
+		jArray.put("start_date", (calStartDate.getTime().getTime() / 1000));
+
 		String endDateStr = mEndDateBtn.getText().toString();
 		if (endDateStr.equals(getResources().getString(R.string.date_format))) {
-			showAlertDialog("Please Select End Date");
+			showAlertDialog("Please Select End Date.");
 			return null;
 		}
 		Calendar calEndDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-		calEndDate.set(mYear1, mMonth1, mDay1);
-		if (calEndDate.getTime().getTime() < System.currentTimeMillis()) {
-			showAlertDialog("Please Select a future End Date");
+		calEndDate.set(mEndYear, mEndMonth, mEndDay);
+		if (calEndDate.getTime().getTime() <= System.currentTimeMillis()) {
+			showAlertDialog("Please Select a future End Date.");
 			return null;
 		}
-
-		// Date endDt = new Date(year1, month1, day1);
-		jArray.put("end_date", (calEndDate.getTime().getTime() / 1000));
-		if (mVoucherApplicableGroup.getCheckedRadioButtonId() == R.id.adp_voucher_applicable) {
-			jArray.put("voc_applicable", "1");
-			long voucherCountInt = 0;
-			try {
-				voucherCountInt = Long.parseLong(mVoucherCount.getText()
-						.toString());
-			} catch (Exception e) {
-				AnalyticsHelper.onError(
-						FlurryEventsConstants.VOUCHER_COUNT_ERR,
-						"DealPostActivity : "
-								+ AppConstants.VOUCHER_COUNT_ERROR_MSG, e);
-			}
-			if (voucherCountInt == 0) {
-				showAlertDialog("Please Enter a valid Voucher Count");
-				return null;
-			}
-			jArray.put("no_of_voc", "" + voucherCountInt);
-			String redeemDateStr = mRedeemDateBtn.getText().toString();
-			if (redeemDateStr.equals(getResources().getString(
-					R.string.date_format))) {
-				showAlertDialog("Please Select Voucher Redemption Date");
-				return null;
-			}
-			Calendar calRedeemdDt = Calendar.getInstance(TimeZone
-					.getTimeZone("UTC"));
-			calRedeemdDt.set(mYear2, mMonth2, mDay2);
-			if (calRedeemdDt.compareTo(calEndDate) < 0) {
-				showAlertDialog("You can't select the Voucher Redemption Date prior to End Date, Please verify End Date and Voucher Redemption Date");
-				return null;
-			}
-			// Date redeemdDt = new Date(year2, month2, day2);
-			jArray.put("voc_redem_date", ""
-					+ (calRedeemdDt.getTime().getTime() / 1000));
-			double redeemPriceVal = 0;
-			try {
-				redeemPriceVal = Double.parseDouble(mRedeemPrice.getText()
-						.toString());
-			} catch (Exception e) {
-				AnalyticsHelper.onError(FlurryEventsConstants.REDEEM_PRICE_ERR,
-						"DealPostActivity : "
-								+ AppConstants.REDEEM_PRICE_ERROR_MSG, e);
-			}
-			if (redeemPriceVal == 0) {
-				showAlertDialog("Please Enter valid Voucher Price");
-				return null;
-			}
-			jArray.put("voc_redem_price", mRedeemPrice.getText().toString());
+		if (!startDateStr
+				.equals(getResources().getString(R.string.date_format))
+				&& calStartDate.after(calEndDate)) {
+			showAlertDialog("Please select End Date later than Start Date.");
+			return null;
 		} else {
-			jArray.put("voc_applicable", "0");
+			jArray.put("end_date", (calEndDate.getTime().getTime() / 1000));
+		}
+
+		if (mTypeOfDealGroup.getCheckedRadioButtonId() == R.id.adp_voucher) {
+			jArray.put("type_of_deal", "1");
+
+			if (mVoucherGroup.getCheckedRadioButtonId() == R.id.adp_specific_count) {
+				jArray.put("voc_applicable", "0");
+				long voucherCountInt = 0;
+				try {
+					voucherCountInt = Long.parseLong(mVoucherCount.getText()
+							.toString());
+				} catch (Exception e) {
+					AnalyticsHelper.onError(
+							FlurryEventsConstants.VOUCHER_COUNT_ERR,
+							"DealPostActivity : "
+									+ AppConstants.VOUCHER_COUNT_ERROR_MSG, e);
+				}
+				if (voucherCountInt == 0) {
+					showAlertDialog("Please Enter a valid Voucher Count.");
+					return null;
+				}
+				jArray.put("no_of_voc", "" + voucherCountInt);
+			} else if (mVoucherGroup.getCheckedRadioButtonId() == R.id.adp_unlimited_codes) {
+				jArray.put("voc_applicable", "1");
+			}
+
+			if (mVoucherTypeGroup.getCheckedRadioButtonId() == R.id.adp_single_code) {
+				jArray.put("voucher_type", "0");
+				String voucherCode = mVoucherCode.getText().toString();
+				if (!StringUtil.isNullOrEmpty(voucherCode)) {
+					jArray.put("voucher_code", voucherCode);
+				} else {
+					showAlertDialog("Please Enter a valid Voucher Code.");
+					return null;
+				}
+			} else if (mVoucherTypeGroup.getCheckedRadioButtonId() == R.id.adp_system_generated) {
+				jArray.put("voucher_type", "1");
+			} else if (mVoucherTypeGroup.getCheckedRadioButtonId() == R.id.adp_provided_by_sme) {
+				jArray.put("voucher_type", "2");
+			}
+
+		} else if (mTypeOfDealGroup.getCheckedRadioButtonId() == R.id.adp_informative) {
+			jArray.put("type_of_deal", "0");
 		}
 		return jArray;
 	}
@@ -488,52 +778,102 @@ public class DealPostActivity extends MaxisMainActivity {
 				showInfoDialog((String) msg.obj);
 			} else {
 				setResult(RESULT_OK);
-				showFinalDialog("your Deal has successfully be posted");
+				showFinalDialog("Your Deal has been posted successfully.");
 			}
-		} else if (msg.arg2 == Events.LOCALITY_LISTING) {
+		} else if (msg.arg2 == Events.POST_DEAL_CITY_LISTING) {
 			stopSppiner();
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 				mLocalityDropDown.setSelection(0);
-				mLocalityContainer.setVisibility(View.GONE);
 			} else {
-				GenralListResponse glistRes = (GenralListResponse) msg.obj;
-				ArrayList<CityOrLocality> localityList = glistRes
+				booleanFirstTime = false;
+				PostDealCityLocListResponse generalListRes = (PostDealCityLocListResponse) msg.obj;
+				ArrayList<PostDealCityOrLoc> cityList = generalListRes
 						.getCityOrLocalityList();
-				addDefaultSelect(localityList);
-				ArrayAdapter<CityOrLocality> localityAdp = new ArrayAdapter<CityOrLocality>(
+				// addDefaultSelect(cityList);
+				ArrayAdapter<PostDealCityOrLoc> cityListAdp = new ArrayAdapter<PostDealCityOrLoc>(
+						DealPostActivity.this, R.layout.spinner_item, cityList);
+				/* mCityDropDown.setAdapter(cityListAdp); */
+
+				ArrayList<String> items = new ArrayList<String>();
+				for (PostDealCityOrLoc postDealCityOrLoc : cityList) {
+					items.add(postDealCityOrLoc.getName());
+				}
+				mCityDropDown.setItems(items);
+				mLocalityChooserSpinnerContainer.setVisibility(View.VISIBLE);
+			}
+		} else if (msg.arg2 == Events.POST_DEAL_LOCALITY_LISTING) {
+			stopSppiner();
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+				mLocalityDropDown.setSelection(0);
+				mLocalityChooserSpinnerContainer.setVisibility(View.GONE);
+
+			} else {
+				PostDealCityLocListResponse glistRes = (PostDealCityLocListResponse) msg.obj;
+				ArrayList<PostDealCityOrLoc> localityList = glistRes
+						.getCityOrLocalityList();
+				Log.e("gg", "listSiz+" + localityList.size());
+				// addDefaultSelect(localityList);
+				ArrayAdapter<PostDealCityOrLoc> localityAdp = new ArrayAdapter<PostDealCityOrLoc>(
 						DealPostActivity.this, R.layout.spinner_item,
 						localityList);
-				mLocalityDropDown.setAdapter(localityAdp);
-				mLocalityContainer.setVisibility(View.VISIBLE);
-			}
-		}
+				// mLocalityDropDown.setAdapter(localityAdp);
+				ArrayList<String> localityItems = new ArrayList<String>();
+				for (PostDealCityOrLoc postDealCityOrLoc : localityList) {
+					localityItems.add(postDealCityOrLoc.getName());
+				}
 
-		else if (msg.arg2 == Events.POST_IMAGE_EVENT) {
+				mLocalityDropDown.setItems(localityItems);
+				mLocalityChooserSpinnerContainer.setVisibility(View.VISIBLE);
+			}
+		} else if (msg.arg2 == Events.POST_IMAGE_EVENT) {
 			stopSppiner();
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
 				ImageDataResponse response = (ImageDataResponse) msg.obj;
-
 				imageNames.add(response.getImagename());
 				setImageView(mBitmap);
-				Toast.makeText(getApplicationContext(),
-						"uploaded successfully " + response.getImagename(),
-						Toast.LENGTH_LONG).show();
+				showInfoDialog("Image has been successfully saved.");
+				// Toast.makeText(getApplicationContext(),
+				// "Image has been successfully saved.",
+				// Toast.LENGTH_LONG).show();
+			}
+		} else if (msg.arg2 == Events.REMOVE_IMAGE_EVENT) {
+			stopSppiner();
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+			} else {
+				/*
+				 * MaxisResponse response = (MaxisResponse) msg.obj;
+				 * removeImage(removeImageIndex);
+				 */// resetImageView(mBitmap);
+				replaceImageView(removeImageIndex);
+				removeImgView[removeImageIndex].setVisibility(View.GONE);
+				// imgView[removeImageIndex].setPadding(10, 10, 10, 10);
+				imageNames.remove(removeImageIndex);
+				showInfoDialog("Image has been successfully removed.");
+				// Toast.makeText(getApplicationContext(),
+				// "Image has been successfully removed.",
+				// Toast.LENGTH_LONG).show();
 			}
 		}
 	}
 
-	private void addDefaultSelect(ArrayList<CityOrLocality> cityOrLocalityList) {
-		if (cityOrLocalityList != null) {
-			CityOrLocality temp = new CityOrLocality();
-			temp.setId(-1);
-			temp.setName("Select");
-			cityOrLocalityList.add(0, temp);
-		}
-	}
+	/*
+	 * private void addDefaultSelect( ArrayList<PostDealCityOrLoc>
+	 * cityOrLocalityList) { if (cityOrLocalityList != null) { PostDealCityOrLoc
+	 * temp = new PostDealCityOrLoc(); temp.setName("Select");
+	 * cityOrLocalityList.add(0, temp); } }
+	 */
 
+	/*
+	 * private void addDefaultSelect( List<String> selectedCities
+	 * cityOrLocalityList { if (cityOrLocalityList != null) { PostDealCityOrLoc
+	 * temp = new PostDealCityOrLoc(); temp.setName("Select");
+	 * cityOrLocalityList.add(0, temp); } }
+	 */
 	@Override
 	public void setScreenData(Object screenData, int event, long time) {
 		if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE
@@ -542,9 +882,13 @@ public class DealPostActivity extends MaxisMainActivity {
 			return;
 		} else if (event == Events.POST_DEAL_EVENT) {
 			handler.sendMessage((Message) screenData);
-		} else if (event == Events.LOCALITY_LISTING) {
+		} else if (event == Events.POST_DEAL_CITY_LISTING) {
+			handler.sendMessage((Message) screenData);
+		} else if (event == Events.POST_DEAL_LOCALITY_LISTING) {
 			handler.sendMessage((Message) screenData);
 		} else if (event == Events.POST_IMAGE_EVENT) {
+			handler.sendMessage((Message) screenData);
+		} else if (event == Events.REMOVE_IMAGE_EVENT) {
 			handler.sendMessage((Message) screenData);
 		}
 
@@ -552,42 +896,44 @@ public class DealPostActivity extends MaxisMainActivity {
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		if (id == END_DATE_PICKER_DIALOG) {
+		if (id == START_DATE_PICKER_DIALOG) {
 			return new DatePickerDialog(DealPostActivity.this,
-					datePickerListener, mYear1, mMonth1, mDay1);
-		} else if (id == REDEEM_DATE_PICKER_DIALOG) {
+					startDatePickerListener, mStartYear, mStartMonth, mStartDay);
+		} else if (id == END_DATE_PICKER_DIALOG) {
 			return new DatePickerDialog(DealPostActivity.this,
-					redeemDatePickerListener, mYear2, mMonth2, mDay2);
+					endDatePickerListener, mEndYear, mEndMonth, mEndDay);
 		} else
 			return super.onCreateDialog(id);
 	}
 
-	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+	private DatePickerDialog.OnDateSetListener startDatePickerListener = new DatePickerDialog.OnDateSetListener() {
 
 		// when dialog box is closed, below method will be called.
 		public void onDateSet(DatePicker view, int selectedYear,
 				int selectedMonth, int selectedDay) {
-			mYear1 = selectedYear;
-			mMonth1 = selectedMonth;
-			mDay1 = selectedDay;
+			mStartYear = selectedYear;
+			mStartMonth = selectedMonth;
+			mStartDay = selectedDay;
 
-			// set selected date into textview
-			mEndDateBtn.setText(new StringBuilder().append(mMonth1 + 1)
-					.append("-").append(mDay1).append("-").append(mYear1)
-					.append(" "));
+			// set selected date into text view
+			mStartDateBtn.setText(new StringBuilder().append(mStartMonth + 1)
+					.append("-").append(mStartDay).append("-")
+					.append(mStartYear).append(" "));
 		}
 	};
-	private DatePickerDialog.OnDateSetListener redeemDatePickerListener = new DatePickerDialog.OnDateSetListener() {
+
+	private DatePickerDialog.OnDateSetListener endDatePickerListener = new DatePickerDialog.OnDateSetListener() {
 
 		// when dialog box is closed, below method will be called.
 		public void onDateSet(DatePicker view, int selectedYear,
 				int selectedMonth, int selectedDay) {
-			mYear2 = selectedYear;
-			mMonth2 = selectedMonth;
-			mDay2 = selectedDay;
-			// set selected date into textview
-			mRedeemDateBtn.setText(new StringBuilder().append(mMonth2 + 1)
-					.append("-").append(mDay2).append("-").append(mYear2)
+			mEndYear = selectedYear;
+			mEndMonth = selectedMonth;
+			mEndDay = selectedDay;
+
+			// set selected date into text view
+			mEndDateBtn.setText(new StringBuilder().append(mEndMonth + 1)
+					.append("-").append(mEndDay).append("-").append(mEndYear)
 					.append(" "));
 		}
 	};
@@ -611,7 +957,6 @@ public class DealPostActivity extends MaxisMainActivity {
 								e);
 				return;
 			}
-
 			mBitmap = BitmapCalculation.decodeSampledBitmapFromPath(imagePath,
 					getSize(), (int) (getSize() * (1.3)));
 			// BitmapFactory.Options options = new BitmapFactory.Options() ;
@@ -629,7 +974,10 @@ public class DealPostActivity extends MaxisMainActivity {
 			// mImagePath=getRealPathFromURI(selectedImage);
 			// System.out.println("real file path by URI"+mImagePath);
 			// dealImageV.setImageDrawable(fetchImageFromGallery());
-		}
+		} /*
+		 * else if (requestCode == IMAGE_REMOVE) { if (data == null ||
+		 * data.getData() == null) return; removeImageFromServer(mBitmap); }
+		 */
 	};
 
 	public String getRealPathFromURI(Uri contentUri) {
@@ -642,7 +990,7 @@ public class DealPostActivity extends MaxisMainActivity {
 	}
 
 	public String getFileNameByUri(Uri uri) {
-		String fileName = "unknown";// default fileName
+		String fileName = "unknown"; // default fileName
 		Uri filePathUri = uri;
 		if (uri.getScheme().toString().compareTo("content") == 0) {
 			Cursor cursor = getContentResolver().query(uri, null, null, null,
@@ -661,39 +1009,33 @@ public class DealPostActivity extends MaxisMainActivity {
 		return fileName;
 	}
 
-	private Drawable fetchImageFromGallery() {
-		File imgFile = new File(mImagePath);
-		if (imgFile.exists()) {
-			Display display = getWindowManager().getDefaultDisplay();
-			int width = display.getWidth(); // deprecated
-			int height = display.getHeight();
-			Bitmap myBitmap = BitmapCalculation.decodeSampledBitmapFromPath(
-					imgFile.getAbsolutePath(), width, height);
-			mBitmap = myBitmap;
-			// Log.e("Image Size",(sizeOf(myBitmap)/1024)+"");
-
-			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-			/*
-			 * byte[] imageInByte = stream.toByteArray(); long lengthbmp =
-			 * imageInByte.length;
-			 */
-			// Log.e("***Image Size",(sizeOf(myBitmap)/1024)+"");
-
-			return new BitmapDrawable(getResources(), myBitmap);
-		}
-		return null;
-	}
-
+	/*
+	 * private Drawable fetchImageFromGallery() { File imgFile = new
+	 * File(mImagePath); if (imgFile.exists()) { Display display =
+	 * getWindowManager().getDefaultDisplay(); int width = display.getWidth();
+	 * // deprecated int height = display.getHeight(); Bitmap myBitmap =
+	 * BitmapCalculation.decodeSampledBitmapFromPath( imgFile.getAbsolutePath(),
+	 * width, height); mBitmap = myBitmap; //
+	 * Log.e("Image Size",(sizeOf(myBitmap)/1024)+"");
+	 * 
+	 * ByteArrayOutputStream stream = new ByteArrayOutputStream();
+	 * myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+	 * 
+	 * byte[] imageInByte = stream.toByteArray(); long lengthbmp =
+	 * imageInByte.length;
+	 * 
+	 * // Log.e("***Image Size",(sizeOf(myBitmap)/1024)+"");
+	 * 
+	 * return new BitmapDrawable(getResources(), myBitmap); } return null; }
+	 */
 	public void uploadImage() {
-
 		if (imageNames.size() < 4) {
 			Intent imagePicker = new Intent(Intent.ACTION_GET_CONTENT);
 			imagePicker.setType("image/*");
 			startActivityForResult(imagePicker, IMAGE_PICK);
 		} else {
 			Toast.makeText(getApplicationContext(),
-					"Please select a image to Delete", Toast.LENGTH_LONG)
+					"Please select an image to Delete", Toast.LENGTH_LONG)
 					.show();
 		}
 	}
@@ -701,11 +1043,8 @@ public class DealPostActivity extends MaxisMainActivity {
 	public int getSize() {
 		Display mDisplay = this.getWindowManager().getDefaultDisplay();
 		int width = mDisplay.getWidth();
-		int height = mDisplay.getHeight();
 		width = width - 30;
 		width = width / 2;
-		// height = (int) (width * (1.3));
-
 		return width;
 	}
 
@@ -716,17 +1055,52 @@ public class DealPostActivity extends MaxisMainActivity {
 		FrameLayout.LayoutParams vp = new FrameLayout.LayoutParams(getSize(),
 				getSize());
 		imgView[imageNames.size() - 1].setLayoutParams(vp);
-		imgView[imageNames.size() - 1].setPadding(5, 5, 5, 5);
+		imgView[imageNames.size() - 1].setPadding(10, 10, 10, 10);
+		removeImgView[imageNames.size() - 1].setVisibility(View.VISIBLE);
+	}
 
+	public void removeImage(int imageIndex) {
+		String imageNameForRemoval = null;
+		switch (imageIndex) {
+		case 0:
+			imageNameForRemoval = imageNames.get(0);
+			break;
+		case 1:
+			imageNameForRemoval = imageNames.get(1);
+			break;
+		case 2:
+			imageNameForRemoval = imageNames.get(2);
+			break;
+		case 3:
+			imageNameForRemoval = imageNames.get(3);
+			break;
+		default:
+			break;
+		}
+
+		if (!StringUtil.isNullOrEmpty(imageNameForRemoval)) {
+			RemovePostDealImgController controller = new RemovePostDealImgController(
+					DealPostActivity.this, Events.REMOVE_IMAGE_EVENT);
+			controller.requestService(imageNameForRemoval);
+			startSppiner();
+		}
 	}
 
 	public void replaceImageView(int index) {
 		if (index != 3) {
 			for (int i = index; i < 3; i++) {
 				imgView[i].setImageDrawable(imgView[i + 1].getDrawable());
-
+				// removeImgView[i].setImageDrawable(removeImgView[i +
+				// 1].getDrawable());
+				removeImgView[i].setVisibility(removeImgView[i + 1]
+						.getVisibility());
+				// imgView[i].setPadding(0, 0, 0, 0);
+				/* removeImgView[i].setVisibility(View.GONE); */
 			}
-			imgView[3].setBackgroundResource(R.drawable.upload_photo_icon);
+			// imgView[3].setBackgroundResource(R.drawable.upload_photo_icon);
+			imgView[3].setImageResource(R.drawable.upload_photo_icon);
+			imgView[3].setPadding(0, 0, 0, 0);
+			removeImgView[3].setVisibility(View.GONE);
 		}
 	}
 
@@ -754,4 +1128,5 @@ public class DealPostActivity extends MaxisMainActivity {
 		startSppiner();
 
 	}
+
 }

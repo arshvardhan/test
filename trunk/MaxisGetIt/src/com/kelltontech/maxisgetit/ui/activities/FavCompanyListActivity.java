@@ -893,7 +893,7 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 
 		mCompListAdapter.notifyDataSetChanged();
 
-		if (compListData.size() > 0 || mClResponse.getTotalrecordFound() > 0) {
+		if (compListData != null && compListData.size() > 0) {
 			if (isRemovedFromCompanyDetail) {
 				record = record - 1;
 				mRecordsFoundView.setText(record + " " + getResources().getString(R.string.fav_companies_found));
