@@ -30,7 +30,8 @@ public class GenralRequest extends MaxisBaseRequest {
 	public static final String LOGIN_METHOD = "login.xml";
 	public static final String USER_DETAIL_METHOD = "userDetail.xml";
 	public static final String POST_CLASSIFIED_METHOD = "postClassified.xml";
-	public static final String POST_DEAL_METHOD = "postDeal.xml";
+	//public static final String POST_DEAL_METHOD = "postDeal.xml";
+	public static final String POST_DEAL_METHOD = "saveDeal.xml";
 	public static final String EDIT_PROFILE_METHOD="editProfile.xml";
 	public static final String APP_ACTIVATION_METHOD="getAppActivationCode.xml";
 	public static final String APP_ACTIVATION_VERIFICATION_METHOD = "appActivation.xml";
@@ -41,8 +42,12 @@ public class GenralRequest extends MaxisBaseRequest {
 	public static final String FORGET_PASSWORD="forgotPassword.xml";
 	public static final String COMPANY_DETAIL_ADD_FAV_METHOD ="saveUserFavoriteCompany.xml";
 	public static final String COMPANY_DETAIL_REMOVE_FAV_METHOD ="removeFavoriteCompany.xml";
-		public static final String FAV_COMP_LIST = "userFavoriteCompanyList.xml";
-		public static final String POST_IMAGE_METHOD = "saveImage.xml";
+	public static final String FAV_COMP_LIST = "userFavoriteCompanyList.xml";
+	public static final String POST_IMAGE_METHOD = "saveImage.xml";
+		
+	public static final String	POST_DEAL_CITY_LIST_METHOD			= "getCityBYCatandCompanyID.xml";
+	public static final String	POST_DEAL_LOCALITY_LIST_METHOD		= "getLiocalityNameByCityName.xml";
+	public static final String	REMOVE_POST_IMAGE_METHOD			= "deleteDealImage.xml";
 	
 	
 	private static final String KEY_APP_CODE = "app_code";
@@ -83,6 +88,20 @@ public class GenralRequest extends MaxisBaseRequest {
 		ht.put(KEY_USER_ID, userId);
 		ht.put(KEY_COMPANY_ID, companyId);
 		ht.put(KEY_CATEGORY_ID, categoryId);
+		return ht;
+	}
+	
+	public Hashtable<String, String> getPostDealCityListHeader(String userId, String companyId, String categoryId) {
+		Hashtable<String, String> ht = getDefaultHeadersWithGPS();
+		ht.put(KEY_UID, userId);
+		ht.put(KEY_COMP_ID, companyId);
+		ht.put(KEY_POST_DEAL_CATEGORY_ID, categoryId);
+		return ht;
+	}
+	
+	public Hashtable<String, String> getPostDealRemoveImgHeader(String imageName) {
+		Hashtable<String, String> ht = getDefaultHeadersWithGPS();
+		ht.put(KEY_POST_DEAL_REMOVE_IMG_NAME, imageName);
 		return ht;
 	}
 

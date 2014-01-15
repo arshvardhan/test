@@ -17,8 +17,8 @@
 	import com.kelltontech.framework.utils.NativeHelper;
 	import com.kelltontech.maxisgetit.constants.AppConstants;
 	import com.kelltontech.maxisgetit.parsers.GenralResponseParser;
-import com.kelltontech.maxisgetit.parsers.ImageDataParser;
-import com.kelltontech.maxisgetit.requests.GenralRequest;
+	import com.kelltontech.maxisgetit.parsers.ImageDataParser;
+	import com.kelltontech.maxisgetit.requests.GenralRequest;
 
 	public class PostImageController extends BaseServiceController {
 		private Context mActivity;

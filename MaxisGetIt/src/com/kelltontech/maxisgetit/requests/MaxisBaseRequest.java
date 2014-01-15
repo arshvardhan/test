@@ -41,6 +41,8 @@ public abstract class MaxisBaseRequest {
 	public static final String KEY_REVIEW = "review";
 	public static final String KEY_RATING = "rating";
 	public static final String KEY_TEMPLATE_TYPE = "template_type";
+	public static final String KEY_POST_DEAL_CATEGORY_ID = "catid";
+	public static final String KEY_POST_DEAL_REMOVE_IMG_NAME = "image";
 			
 	private Context mContext;
 	protected String mLocaleCode;

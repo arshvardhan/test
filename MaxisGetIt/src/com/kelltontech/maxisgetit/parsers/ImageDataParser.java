@@ -8,21 +8,20 @@ import org.xml.sax.SAXException;
 import android.util.Log;
 
 import com.kelltontech.framework.model.IModel;
-import com.kelltontech.framework.model.MaxisResponse;
 import com.kelltontech.framework.parser.AbstractSAXParser;
 import com.kelltontech.maxisgetit.response.ImageDataResponse;
-import com.kelltontech.maxisgetit.response.SendSmsResponse;
 
 public class ImageDataParser extends AbstractSAXParser {
-	public static final String TAG_IMAGENAME = "Imagename";
+	public static final String TAG_IMAGENAME = "Image_name";
 	
-	private ImageDataResponse imResponse = new ImageDataResponse();
+	private ImageDataResponse imResponse;
 
 	@Override
 	public IModel parse(String payload) throws Exception {
 		init();
 		imResponse = new ImageDataResponse();
 		saxParser.parse(new ByteArrayInputStream(payload.getBytes()), ImageDataParser.this);
+		Log.d("maxis", "XML " + payload);
 		return imResponse;
 	}
 

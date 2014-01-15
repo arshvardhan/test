@@ -5,6 +5,8 @@ import java.io.ByteArrayInputStream;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import android.util.Log;
+
 import com.kelltontech.framework.model.IModel;
 import com.kelltontech.framework.parser.AbstractSAXParser;
 import com.kelltontech.maxisgetit.dao.CategoryWithCharge;
@@ -40,6 +42,7 @@ public class DealsListParser extends AbstractSAXParser {
 		init();
 		saxParser.parse(new ByteArrayInputStream(payload.getBytes()), DealsListParser.this);
 		myDealsResponse.setLatestDeal(latestDeal);
+		Log.d("maxis", "XML " + payload);
 		return myDealsResponse;
 	}
 
