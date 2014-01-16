@@ -27,7 +27,25 @@ public class CompanyDesc implements Parcelable {
 	private ArrayList<AttributeGroup> attrGroups=new ArrayList<AttributeGroup>();
 	private String cat_id;
 	private String compId_catId;
+	private String end_date;
+	private String valid_in;
 	
+	public String getValid_in() {
+		return valid_in;
+	}
+
+	public void setValid_in(String valid_in) {
+		this.valid_in = valid_in;
+	}
+
+	public String getEnd_date() {
+		return end_date;
+	}
+
+	public void setEnd_date(String end_date) {
+		this.end_date = end_date;
+	}
+
 	private boolean isChecked;
 
 	public boolean isChecked() {
@@ -84,6 +102,8 @@ public class CompanyDesc implements Parcelable {
 		contactNo = in.readString();
 		cat_id = in.readString();
 		compId_catId = in.readString();
+		end_date = in.readString();
+		valid_in = in.readString();
 		in.readTypedList(attrGroups, AttributeGroup.CREATOR);
 	}
 
@@ -203,6 +223,8 @@ public class CompanyDesc implements Parcelable {
 		dest.writeString(contactNo);
 		dest.writeString(cat_id);
 		dest.writeString(compId_catId);
+		dest.writeString(end_date);
+		dest.writeString(valid_in);
 		dest.writeTypedList(attrGroups);
 	}
 

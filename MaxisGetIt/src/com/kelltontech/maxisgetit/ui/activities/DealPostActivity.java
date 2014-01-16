@@ -138,7 +138,8 @@ public class DealPostActivity extends MaxisMainActivity {
 						} else if (checkedId == R.id.adp_in_selective_cities) {
 							PostDealCityLocalityRequest request = new PostDealCityLocalityRequest();
 							if (mCompanyChooser.getSelectedItemPosition() != 0
-									&& mCompanyChooser.getSelectedItem() != null) {
+							         && !mCompanyChooser.getSelectedItem().equals("Select") && mCategorySpinnerContainer.getVisibility() == 0 && mCatChooser.getSelectedItemPosition() != 0
+							           && !mCatChooser.getSelectedItem().equals("Select")) {
 								if (mMyDealResp.getCompCategoryList().size() == 2) {
 									request.setCompanyId(mSingalCompCat
 											.getCompanyId());

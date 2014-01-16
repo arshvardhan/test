@@ -38,7 +38,63 @@ public class CompanyDetail extends MaxisResponse implements Parcelable,IModel{
 	private ArrayList<CompanyReview> companyReviewList =  new ArrayList<CompanyReview>();
 	private String recordType;
 	
+	private String validDate;
+	private String validIn;
+	private ArrayList<IconUrl> iconUrl = new ArrayList<IconUrl>(); 
+	private ArrayList<NearOutLets> nearoutlets = new ArrayList<NearOutLets>();
+	private String cid;
+	private String termsNdCondition;
+	
+	
+	public String getTermsNdCondition() {
+		return termsNdCondition;
+	}
 
+	public void setTermsNdCondition(String termsNdCondition) {
+		this.termsNdCondition = termsNdCondition;
+	}
+
+	public String getCid() {
+		return cid;
+	}
+
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+
+	public String getValidDate() {
+		return validDate;
+	}
+
+	public ArrayList<NearOutLets> getNearoutlets() {
+		return nearoutlets;
+	}
+
+	public void setNearoutlets(ArrayList<NearOutLets> nearoutlets) {
+		this.nearoutlets = nearoutlets;
+	}
+
+	public void setValidDate(String validDate) {
+		this.validDate = validDate;
+	}
+
+	public String getValidIn() {
+		return validIn;
+	}
+
+	public void setValidIn(String validIn) {
+		this.validIn = validIn;
+	}
+
+	public ArrayList<IconUrl> getIconUrl() {
+		return iconUrl;
+	}
+
+	public void setIconUrl(ArrayList<IconUrl> iconUrl) {
+		this.iconUrl = iconUrl;
+	}
+
+	
 	public ArrayList<CompanyReview> getCompanyReviewList() {
 		/*if(companyReviewList == null)
 			companyReviewList = new ArrayList<CompanyReview>();*/
@@ -119,6 +175,13 @@ public class CompanyDetail extends MaxisResponse implements Parcelable,IModel{
 		in.readTypedList(companyReviewList, CompanyReview.CREATOR);
 		totalReviewCount = in.readInt();
 		recordType = in.readString();
+		validDate = in.readString();
+		validIn = in.readString();
+		in.readTypedList(iconUrl, IconUrl.CREATOR);
+		in.readTypedList(nearoutlets, NearOutLets.CREATOR);
+		cid =  in.readString();
+		termsNdCondition= in.readString();
+		
 	}
 
 	public static final Creator<CompanyDetail> CREATOR = new Creator<CompanyDetail>() {
@@ -256,7 +319,13 @@ public class CompanyDetail extends MaxisResponse implements Parcelable,IModel{
 		dest.writeTypedList(companyReviewList);
 		dest.writeInt(totalReviewCount);
 		dest.writeString(recordType);
-	}
+		dest.writeString(validDate);
+		dest.writeString(validIn);
+		dest.writeTypedList(iconUrl);
+		dest.writeTypedList(nearoutlets);
+		dest.writeString(cid);
+		dest.writeString(termsNdCondition);
+		}
 
 	public ArrayList<AttributeGroup> getAttrGroups() {
 		return attrGroups;

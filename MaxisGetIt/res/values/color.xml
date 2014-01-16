@@ -36,6 +36,8 @@
     <color name="text_light_grey">#676767</color>
     <color name="bar_light_grey">#c6c6c6</color>
     <color name="cd_name_header">#32598a</color>
+    
+    <color name="green">#7bc978</color>
 
     <!-- Country Code TextView color -->
     <color name="grey_country_code">#494949</color>

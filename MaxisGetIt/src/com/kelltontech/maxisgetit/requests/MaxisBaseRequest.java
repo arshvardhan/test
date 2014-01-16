@@ -43,6 +43,9 @@ public abstract class MaxisBaseRequest {
 	public static final String KEY_TEMPLATE_TYPE = "template_type";
 	public static final String KEY_POST_DEAL_CATEGORY_ID = "catid";
 	public static final String KEY_POST_DEAL_REMOVE_IMG_NAME = "image";
+	
+	public static final String KEY_DEAL_ID = "deal_id";
+	public static final String KEY_NUMBER = "phone_no";
 			
 	private Context mContext;
 	protected String mLocaleCode;

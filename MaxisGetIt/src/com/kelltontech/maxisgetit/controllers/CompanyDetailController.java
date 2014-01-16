@@ -17,7 +17,8 @@ import com.kelltontech.maxisgetit.requests.DetailRequest;
 
 public class CompanyDetailController extends BaseServiceController {
 	private Activity mActivity;
-//	private DetailRequest mDetailRequest;
+	// private DetailRequest mDetailRequest;
+	private boolean isDeal;
 
 	public CompanyDetailController(IActionController screen, int eventType) {
 		super(screen, eventType);
@@ -34,32 +35,38 @@ public class CompanyDetailController extends BaseServiceController {
 	@Override
 	public void requestService(Object requestData) {
 
-		try{
+		try {
 			if (!NativeHelper.isDataConnectionAvailable(mActivity)) {
 				Response res = new Response();
 				res.setErrorCode(101);
-				res.setErrorText(mActivity.getResources().getString(R.string.network_unavailable));
+				res.setErrorText(mActivity.getResources().getString(
+						R.string.network_unavailable));
 				responseService(res);
 				return;
 			}
-			
+
 			ServiceRequest serviceRq = new ServiceRequest();
 			serviceRq.setRequestData(requestData);
 			serviceRq.setServiceController(this);
 			serviceRq.setDataType(mEventType);
 			serviceRq.setPriority(HttpClientConnection.PRIORITY.LOW);
-			serviceRq.setHttpHeaders( API_HEADER_NAMES_ARRAY_2, getApiHeaderValuesArray2());
+			serviceRq.setHttpHeaders(API_HEADER_NAMES_ARRAY_2,
+					getApiHeaderValuesArray2());
 			serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
-			
+
 			DetailRequest detailRequest = (DetailRequest) requestData;
+			isDeal = detailRequest.isDeal;
 			String url = AppConstants.BASE_URL + detailRequest.getMethodName();
-			
+
 			Log.d("maxis", "url " + url);
-			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, detailRequest.getRequestHeaders()));
+			serviceRq.setUrl(HttpHelper.getURLWithPrams(url,
+					detailRequest.getRequestHeaders()));
 			HttpClientConnection.getInstance().addRequest(serviceRq);
 		} catch (Exception e) {
 			logRequestException(e, "CompanyDetailsController");
-			Response res = getErrorResponse(mActivity.getResources().getString(R.string.internal_error) , 111);
+			Response res = getErrorResponse(
+					mActivity.getResources().getString(R.string.internal_error),
+					111);
 			responseService(res);
 		}
 
@@ -67,11 +74,18 @@ public class CompanyDetailController extends BaseServiceController {
 
 	@Override
 	public void responseService(Object object) {
-		
+
 		Response response = (Response) object;
-		if( !response.isError()){
+		if (!response.isError()) {
 			try {
-				response.setPayload(new CompanyDetailParser().parse(response.getResponseText()));
+				if (isDeal) {
+					
+					response.setPayload(new CompanyDetailParser().parse(response.getResponseText()));
+
+				} else {
+					response.setPayload(new CompanyDetailParser()
+							.parse(response.getResponseText()));
+				}
 			} catch (Exception e) {
 				handleException(e);
 				logResponseException(e, "CompanyDetailsController");

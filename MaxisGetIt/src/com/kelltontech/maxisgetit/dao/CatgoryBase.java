@@ -1,12 +1,12 @@
 package com.kelltontech.maxisgetit.dao;
 
 public class CatgoryBase {
-	protected String mCategoryId;
-	protected String mCategoryTitle;
-	protected String mIconUrl;
-	protected String mThumbUrl;
-	protected String mGroupActionType;
-	protected String mGroupType;
+	protected String mCategoryId="";
+	protected String mCategoryTitle="";
+	protected String mIconUrl="";
+	protected String mThumbUrl="";
+	protected String mGroupActionType="";
+	protected String mGroupType="";
 
 	public String getCategoryId() {
 		return mCategoryId;
