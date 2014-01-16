@@ -13,12 +13,20 @@ import com.kelltontech.framework.parser.AbstractSAXParser;
 import com.kelltontech.maxisgetit.dao.AttributeGroup;
 import com.kelltontech.maxisgetit.dao.CompanyDetail;
 import com.kelltontech.maxisgetit.dao.CompanyReview;
+import com.kelltontech.maxisgetit.dao.IconUrl;
+import com.kelltontech.maxisgetit.dao.NearOutLets;
+import com.kelltontech.maxisgetit.dao.OutLetsinDetail;
 
 public class CompanyDetailParser extends AbstractSAXParser {
 	private CompanyDetail compdDetail = new CompanyDetail();
+	private NearOutLets nearLets;
 	CompanyReview compReview;
 	private AttributeGroup attrGroup;
 	private ArrayList<String> contactList;
+	private ArrayList<NearOutLets> nearOutLets;
+	private ArrayList<IconUrl> urls;
+	private IconUrl iconUrl;
+
 	public static final String TAG_ERROR_CODE = "Error_Code";
 	public static final String TAG_ERROR_MESSAGE = "Error_Message";
 	private static final String TAG_CID = "Company_ID";
@@ -45,8 +53,8 @@ public class CompanyDetailParser extends AbstractSAXParser {
 	private static final String TAG_CALL_NUMBER = "Call_Number";
 	private static final String TAG_SMS_NUMBER = "Sms_Number";
 	private static final String TAG_BILLING_NUMBER = "Billing_Number";
-	private static final String TAG_IS_PAID="Is_Paid";
-	private static final String TAG_CONTACT_CHANNEL="Contact_Chanel";
+	private static final String TAG_IS_PAID = "Is_Paid";
+	private static final String TAG_CONTACT_CHANNEL = "Contact_Chanel";
 	private static final String TAG_DISTANCE = "Distance";
 	private static final String TAG_RATING = "rating";
 	private static final String TAG_RATED_USER_COUNT = "ratedUserCount";
@@ -64,130 +72,185 @@ public class CompanyDetailParser extends AbstractSAXParser {
 	private static final String TAG_CREATED = "Created";
 	private static final String TAG_TOTAL_REVIEW_COUNT = "Total_Reviews";
 	private static final String TAG_RECORD_TYPE = "Record_Type";
-	
-	
+
+	private static final String TAG_VALID_IN = "ValidIn";
+	private static final String TAG_TILL_DATE = "Till_Date";
+	private static final String TAG_ICON_URL = "Icon_Url";
+	private static final String TAG_DEAL_ICON_URL = "Deal_Icon_Url";
+	private static final String TAG_OUTLETS = "Outlets";
+	private static final String TAG_NEAR_OUTLET = "NearOutlet";
+	private static final String TAG_NEAR_OUTLET_LAT = "Outlet_Latitude";
+	private static final String TAG_NEAR_OUTLET_LONG = "Outlet_Longitude";
+	private static final String TAG_COMP_ID = "Cid";
+	private static final String TAG_TERMS_ND_CON = "TermsCondition";
+
 	private boolean isReviewRating = false;
-	
+
 	@Override
 	public IModel parse(String payload) throws Exception {
 		init();
 		Log.d("maxis", "XML " + payload);
-		saxParser.parse(new ByteArrayInputStream(payload.getBytes()), CompanyDetailParser.this);
+		saxParser.parse(new ByteArrayInputStream(payload.getBytes()),
+				CompanyDetailParser.this);
 		return compdDetail;
 	}
 
 	@Override
-	public void onStartElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException, IllegalArgumentException {
+	public void onStartElement(String namespaceURI, String localName,
+			String qName, Attributes atts) throws SAXException,
+			IllegalArgumentException {
 		if (localName.equalsIgnoreCase(TAG_CONTACTS)) {
 			contactList = new ArrayList<String>();
-		}if(localName.equalsIgnoreCase(TAG_GROUP_VAL)){
-			attrGroup=new AttributeGroup();
-		}else if(localName.equalsIgnoreCase(TAG_CONTACT_CHANNEL)){
+		}
+		if (localName.equalsIgnoreCase(TAG_GROUP_VAL)) {
+			attrGroup = new AttributeGroup();
+		} else if (localName.equalsIgnoreCase(TAG_CONTACT_CHANNEL)) {
 			compdDetail.setContactChannelExists(true);
-		}else if (localName.equalsIgnoreCase(TAG_REVIEW)) {
+		} else if (localName.equalsIgnoreCase(TAG_REVIEW)) {
 			Log.d("maxis", getNodeValue());
 			compReview = new CompanyReview();
 			isReviewRating = true;
+		} else if (localName.equalsIgnoreCase(TAG_OUTLETS)) {
+			nearOutLets = new ArrayList<NearOutLets>();
+		} else if (localName.equalsIgnoreCase(TAG_NEAR_OUTLET)) {
+			nearLets = new NearOutLets();
+		} else if (localName.equalsIgnoreCase(TAG_ICON_URL)) {
+			urls = new ArrayList<IconUrl>();
+		} else if (localName.equalsIgnoreCase(TAG_DEAL_ICON_URL)) {
+			iconUrl = new IconUrl();
 		}
 	}
 
 	@Override
-	public void onEndElement(String namespaceURI, String localName, String qName) throws SAXException {
+	public void onEndElement(String namespaceURI, String localName, String qName)
+			throws SAXException {
 		if (localName.equalsIgnoreCase(TAG_ERROR_CODE)) {
 			Log.d("maxis", getNodeValue());
-			compdDetail.setErrorCode(getInt(getNodeValue(),0));
+			compdDetail.setErrorCode(getInt(getNodeValue(), 0));
 		} else if (localName.equalsIgnoreCase(TAG_ERROR_MESSAGE)) {
 			Log.d("maxis", getNodeValue());
 			compdDetail.setServerMessage(getNodeValue());
-		}else if (localName.equalsIgnoreCase(TAG_CID)||localName.equalsIgnoreCase(TAG_ID)) {
+		} else if (localName.equalsIgnoreCase(TAG_CID)
+				|| localName.equalsIgnoreCase(TAG_ID)) {
 			compdDetail.setId(getNodeValue());
-		}if (localName.equalsIgnoreCase(TAG_TITLE)||localName.equalsIgnoreCase(TAG_CTITLE)) {
+		}
+		if (localName.equalsIgnoreCase(TAG_TITLE)
+				|| localName.equalsIgnoreCase(TAG_CTITLE)) {
 			compdDetail.setTitle(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_CONTACTS)) {
 			compdDetail.setContacts(contactList);
 		} else if (localName.equalsIgnoreCase(TAG_CONTACT_NUMBER)) {
-			String number=getNodeValue();
-			if(number.trim().length()>0)
+			String number = getNodeValue();
+			if (number.trim().length() > 0)
 				contactList.add(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_EMAIL_ID)) {
 			compdDetail.setMailId(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_WEBSITE)) {
 			compdDetail.setWebsite(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_LATITUDE)) {
-			compdDetail.setLatitude(getDouble(getNodeValue(),0));
+			compdDetail.setLatitude(getDouble(getNodeValue(), 0));
 		} else if (localName.equalsIgnoreCase(TAG_LONGITUDE)) {
-			compdDetail.setLongitude(getDouble(getNodeValue(),0));
+			compdDetail.setLongitude(getDouble(getNodeValue(), 0));
 		} else if (localName.equalsIgnoreCase(TAG_DESC)) {
 			compdDetail.setDescription(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_IMAGE_URL)) {
 			compdDetail.setImageUrl(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_SHARE_TEXT)) {
 			compdDetail.setSharingText(getNodeValue());
-		}else if (localName.equalsIgnoreCase(TAG_LOCALITY)) {
+		} else if (localName.equalsIgnoreCase(TAG_LOCALITY)) {
 			compdDetail.setLocality(getNodeValue());
-		}else if (localName.equalsIgnoreCase(TAG_CITY)) {
+		} else if (localName.equalsIgnoreCase(TAG_CITY)) {
 			compdDetail.setCity(getNodeValue());
-		}else if (localName.equalsIgnoreCase(TAG_PIN)) {
+		} else if (localName.equalsIgnoreCase(TAG_PIN)) {
 			compdDetail.setPincode(getNodeValue());
-		}else if (localName.equalsIgnoreCase(TAG_ATTR_NAME)) {
+		} else if (localName.equalsIgnoreCase(TAG_ATTR_NAME)) {
 			attrGroup.setLable(getNodeValue());
-		}else if (localName.equalsIgnoreCase(TAG_ATTR_VAL)) {
+		} else if (localName.equalsIgnoreCase(TAG_ATTR_VAL)) {
 			attrGroup.addValue(getNodeValue());
-		}else if(localName.equalsIgnoreCase(TAG_GROUP_VAL)){
+		} else if (localName.equalsIgnoreCase(TAG_GROUP_VAL)) {
 			compdDetail.addAttrGroups(attrGroup);
-		}else if(localName.equalsIgnoreCase(TAG_CALL_NUMBER)){
+		} else if (localName.equalsIgnoreCase(TAG_CALL_NUMBER)) {
 			compdDetail.setCallNumber(getNodeValue());
-		}else if(localName.equalsIgnoreCase(TAG_SMS_NUMBER)){
+		} else if (localName.equalsIgnoreCase(TAG_SMS_NUMBER)) {
 			compdDetail.setSmsNumber(getNodeValue());
-		}else if(localName.equalsIgnoreCase(TAG_BILLING_NUMBER)){
+		} else if (localName.equalsIgnoreCase(TAG_BILLING_NUMBER)) {
 			compdDetail.setBillingNumber(getNodeValue());
-		}else if(localName.equalsIgnoreCase(TAG_IS_PAID)){
+		} else if (localName.equalsIgnoreCase(TAG_IS_PAID)) {
 			compdDetail.setPaid(getInt(getNodeValue(), 0));
-		}else if(localName.equalsIgnoreCase(TAG_DISTANCE)){
+		} else if (localName.equalsIgnoreCase(TAG_DISTANCE)) {
 			compdDetail.setDistance(getNodeValue());
-		}else if(localName.equalsIgnoreCase(TAG_RATING)){
-			if(isReviewRating)
-			{
+		} else if (localName.equalsIgnoreCase(TAG_RATING)) {
+			if (isReviewRating) {
 				compReview.setRating(getFloat(getNodeValue(), 0));
-			}
-			else
-			{
+			} else {
 				compdDetail.setRating(getFloat(getNodeValue(), 0));
 			}
-		}else if(localName.equalsIgnoreCase(TAG_RATED_USER_COUNT)){
-			compdDetail.setRatedUserCount(getInt(getNodeValue(),0));
-		}else if(localName.equalsIgnoreCase(TAG_STATE)){
+		} else if (localName.equalsIgnoreCase(TAG_RATED_USER_COUNT)) {
+			compdDetail.setRatedUserCount(getInt(getNodeValue(), 0));
+		} else if (localName.equalsIgnoreCase(TAG_STATE)) {
 			compdDetail.setState(getNodeValue());
-		}else if(localName.equalsIgnoreCase(TAG_BUILD)){
+		} else if (localName.equalsIgnoreCase(TAG_BUILD)) {
 			compdDetail.setBuilding(getNodeValue());
-		}else if(localName.equalsIgnoreCase(TAG_LANDMARK)){
+		} else if (localName.equalsIgnoreCase(TAG_LANDMARK)) {
 			compdDetail.setLandmark(getNodeValue());
-		}else if(localName.equalsIgnoreCase(TAG_SUB_LOCALITY)){
+		} else if (localName.equalsIgnoreCase(TAG_SUB_LOCALITY)) {
 			compdDetail.setSubLocality(getNodeValue());
-		}else if(localName.equalsIgnoreCase(TAG_STREET)){
+		} else if (localName.equalsIgnoreCase(TAG_STREET)) {
 			compdDetail.setStreet(getNodeValue());
-		}else if(localName.equalsIgnoreCase(TAG_CAT_ID)){
+		} else if (localName.equalsIgnoreCase(TAG_CAT_ID)) {
 			compdDetail.setCatId(getNodeValue());
-		}else if(localName.equalsIgnoreCase(TAG_RECORD_TYPE)){
+		} else if (localName.equalsIgnoreCase(TAG_RECORD_TYPE)) {
 			compdDetail.setRecordType(getNodeValue());
-		}else if (localName.equalsIgnoreCase(TAG_USER_NAME)) {
+		} else if (localName.equalsIgnoreCase(TAG_USER_NAME)) {
 			Log.d("maxis", getNodeValue());
 			compReview.setUserName(getNodeValue());
-		}else if (localName.equalsIgnoreCase(TAG_REVIEW_DESC)) {
+		} else if (localName.equalsIgnoreCase(TAG_REVIEW_DESC)) {
 			Log.d("maxis", getNodeValue());
 			compReview.setReviewDesc(getNodeValue());
-		}else if (localName.equalsIgnoreCase(TAG_CREATED)) {
+		} else if (localName.equalsIgnoreCase(TAG_CREATED)) {
 			Log.d("maxis", getNodeValue());
 			compReview.setReportedOn(getNodeValue());
-		}else if (localName.equalsIgnoreCase(TAG_REVIEW)) {
+		} else if (localName.equalsIgnoreCase(TAG_REVIEW)) {
 			Log.d("maxis", getNodeValue());
 			compdDetail.getCompanyReviewList().add(compReview);
 			isReviewRating = false;
-		}else if (localName.equalsIgnoreCase(TAG_TOTAL_REVIEW_COUNT)) {
+		} else if (localName.equalsIgnoreCase(TAG_TOTAL_REVIEW_COUNT)) {
 			Log.d("maxis", getNodeValue());
 			compdDetail.setTotalReviewCount(getInt(getNodeValue(), 0));
+		} else if (localName.equalsIgnoreCase(TAG_VALID_IN)) {
+			Log.d("maxis", getNodeValue());
+			compdDetail.setValidIn(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_TILL_DATE)) {
+			Log.d("maxis", getNodeValue());
+			compdDetail.setValidDate(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_NEAR_OUTLET_LAT)) {
+			Log.d("maxis", getNodeValue());
+			nearLets.setOutLetLat(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_NEAR_OUTLET_LONG)) {
+			Log.d("maxis", getNodeValue());
+			nearLets.setOutLetLong(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_NEAR_OUTLET)) {
+			Log.d("maxis", getNodeValue());
+			nearOutLets.add(nearLets);
+		} else if (localName.equalsIgnoreCase(TAG_OUTLETS)) {
+			Log.d("maxis", getNodeValue());
+			compdDetail.setNearoutlets(nearOutLets);
+		} else if (localName.equalsIgnoreCase(TAG_DEAL_ICON_URL)) {
+			Log.d("maxis", getNodeValue());
+			iconUrl.setDealIconUrl(getNodeValue());
+			urls.add(iconUrl);
+			compdDetail.setNearoutlets(nearOutLets);
+		} else if (localName.equalsIgnoreCase(TAG_ICON_URL)) {
+			Log.d("maxis", getNodeValue());
+			compdDetail.setIconUrl(urls);
+		} else if (localName.equalsIgnoreCase(TAG_COMP_ID)) {
+			Log.d("maxis", getNodeValue());
+			compdDetail.setCid(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_TERMS_ND_CON)) {
+			Log.d("maxis", getNodeValue());
+			compdDetail.setTermsNdCondition(getNodeValue());
 		}
-		
+
 	}
 
 }

@@ -16,7 +16,9 @@ public class CombinedListRequest implements Parcelable {
 	private static final String METHOD_COMPANY_LIST_BY_SEARCH = "search.xml";
 	private static final String METHOD_DEAL_LIST_BY_SEARCH = "getGroupCategoryData.xml";//"getDeal.xml";//"search.xml";
 	private static final String METHOD_COMPANY_LIST_BY_CATEGORY = "getGroupCategoryData.xml";//"getCompany.xml";
-	private static final String METHOD_DEAL_LIST_BY_CATEGORY = "getGroupCategoryData.xml";//"getDeal.xml";
+//	private static final String METHOD_DEAL_LIST_BY_CATEGORY = "getGroupCategoryData.xml";//"getDeal.xml-- previous one";
+	
+	private static final String METHOD_DEAL_LIST_BY_CATEGORY = "getHotDeals.xml";//"getDeal.xml";
 	private static final String RESULT_DEAL = "DEAL";
 	private static final String RESULT_COMP = "COMPANY";
 	private static final String KEY_RESULT_TYPE = "type";
@@ -124,7 +126,7 @@ public class CombinedListRequest implements Parcelable {
 			if (isCompanyListing)
 				return METHOD_COMPANY_LIST_BY_SEARCH;
 			else
-				return METHOD_DEAL_LIST_BY_SEARCH;
+				return METHOD_DEAL_LIST_BY_CATEGORY;
 		} else {
 			if (isCompanyListing)
 				return METHOD_COMPANY_LIST_BY_CATEGORY;

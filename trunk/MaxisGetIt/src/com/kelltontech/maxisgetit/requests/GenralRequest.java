@@ -49,6 +49,9 @@ public class GenralRequest extends MaxisBaseRequest {
 	public static final String	POST_DEAL_LOCALITY_LIST_METHOD		= "getLiocalityNameByCityName.xml";
 	public static final String	REMOVE_POST_IMAGE_METHOD			= "deleteDealImage.xml";
 	
+	public static final String OUTLET_DETAIL_METHOD = "getOutletsyByDealandcid.xml";
+	public static final String DEAL_DOWNLOAD_METHOD = "sendSmsbyuidanddealid.xml";
+	
 	
 	private static final String KEY_APP_CODE = "app_code";
 	public GenralRequest(Context context) {
@@ -158,6 +161,14 @@ public class GenralRequest extends MaxisBaseRequest {
 		ht.put(KEY_COMPANY_ID, cId);
 		return ht;
 	}
+	public Hashtable<String, String> getHeadersWithCompanyIDndDealID(String cId,String dealId) {
+		Hashtable<String, String> ht = getDefaultHeaders();
+		ht.put(KEY_COMP_ID, cId);
+		ht.put(KEY_DEAL_ID, dealId);
+		return ht;
+	}
+	
+	
 	public Hashtable<String, String> getUserDetailHeaders(String mobile) {
 		Hashtable<String, String> ht = getDefaultHeaders();
 		ht.put(KEY_MOBILE, mobile);
@@ -183,5 +194,11 @@ public class GenralRequest extends MaxisBaseRequest {
 		ht.put(KEY_CITY_ID, cityId);
 		return ht;		
 	}
-
+	public Hashtable<String, String> getDownloadDealHeaders(String name, String number , String dealId) {
+		Hashtable<String, String> ht = getDefaultHeaders();
+		ht.put(KEY_NAME, name);
+		ht.put(KEY_NUMBER, number);
+		ht.put(KEY_DEAL_ID, dealId);
+		return ht;
+	}
 }

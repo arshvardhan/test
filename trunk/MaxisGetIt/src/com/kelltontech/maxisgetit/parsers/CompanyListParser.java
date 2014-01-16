@@ -43,6 +43,9 @@ public class CompanyListParser extends AbstractSAXParser {
 	private static final String TAG_ATTR_VAL = "Value";
 	
 	private static final String TAG_CATEGORY_ID = "L3Catid";
+	private static final String TAG_END_DATE = "End_Date";
+	private static final String TAG_VALID_IN = "ValidIn";
+	
 	
 	private CompanyListResponse clResponse = new CompanyListResponse();
 	private CategoryRefine category;
@@ -135,6 +138,10 @@ public class CompanyListParser extends AbstractSAXParser {
 			compDesc.addAttrGroups(attrGroup);
 		} else if (localName.equalsIgnoreCase(TAG_CATEGORY_ID)) {
 			compDesc.setCat_id(getNodeValue());
+		}else if (localName.equalsIgnoreCase(TAG_END_DATE)) {
+			compDesc.setEnd_date(getNodeValue());
+		}else if (localName.equalsIgnoreCase(TAG_VALID_IN)) {
+			compDesc.setValid_in(getNodeValue());
 		}
 
 	}

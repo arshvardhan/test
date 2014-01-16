@@ -40,6 +40,7 @@ import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
 import com.kelltontech.maxisgetit.dao.CompanyDesc;
 import com.kelltontech.maxisgetit.dao.CompanyDetail;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
+import com.kelltontech.maxisgetit.requests.CombinedListRequest;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
 public class ViewAllOnMapActivity extends MaxisFragmentBaseActivity implements
@@ -58,6 +59,8 @@ public class ViewAllOnMapActivity extends MaxisFragmentBaseActivity implements
 	private String mCurrentCompId;
 	private ImageView mHomeIconView;
 	private String mSearchKeyword;
+	CompanyDetail compDetailResponse;
+	private CombinedListRequest mClRequest;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +69,12 @@ public class ViewAllOnMapActivity extends MaxisFragmentBaseActivity implements
 		Bundle bundle = getIntent().getExtras();
 		mCompanyDetailList = bundle
 				.getParcelableArrayList(AppConstants.COMP_DETAIL_LIST);
+		mClRequest = bundle.getParcelable(AppConstants.DATA_LIST_REQUEST);
 		String headerTitle = bundle.getString(AppConstants.MAP_ALL_TITLE);
 		boolean isSearchKeyword = bundle
 				.getBoolean(AppConstants.IS_SEARCH_KEYWORD);
+		compDetailResponse = bundle
+				.getParcelable(AppConstants.COMP_DETAIL_DATA);
 		// setUpMapIfNeeded();
 		ImageLoader.initialize(ViewAllOnMapActivity.this);
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
@@ -93,15 +99,12 @@ public class ViewAllOnMapActivity extends MaxisFragmentBaseActivity implements
 
 			mSearchKeyword = bundle
 					.getString(AppConstants.GLOBAL_SEARCH_KEYWORD);
-			
 
 			if (!StringUtil.isNullOrEmpty(mSearchKeyword.trim()))
 
 				mSearchEditText.setText(mSearchKeyword.trim());
-		}
-		else
-		{
-			mSearchKeyword= "";
+		} else {
+			mSearchKeyword = "";
 		}
 
 		findViewById(R.id.fm_switch_view).setVisibility(View.INVISIBLE);
@@ -184,13 +187,24 @@ public class ViewAllOnMapActivity extends MaxisFragmentBaseActivity implements
 				if (!StringUtil.isNullOrEmpty(marker.getSnippet())) {
 					mCurrentCompId = marker.getSnippet().split(
 							AppConstants.SPLIT_STRING)[0];
-					
+
 					mCurrentCompId = marker.getSnippet().split(
 							AppConstants.SPLIT_STRING)[0];
 					CompanyDesc compDesc = mMapInfoWindowAdapter
 							.getValue(mCurrentCompId);
-					Intent intent = new Intent(ViewAllOnMapActivity.this,
-							CompanyDetailActivity.class);
+					Intent intent;
+					if (getIntent().getExtras().getBoolean(
+							AppConstants.IS_DEAL_LIST)) {
+						intent = new Intent(ViewAllOnMapActivity.this,
+								DealDetailActivity.class);
+						intent.putExtra(AppConstants.DATA_LIST_REQUEST,
+								mClRequest);
+						intent.putExtra(AppConstants.COMP_DETAIL_DATA,
+								compDetailResponse);
+					} else {
+						intent = new Intent(ViewAllOnMapActivity.this,
+								CompanyDetailActivity.class);
+					}
 
 					Bundle bundle = new Bundle();
 					bundle.putString(AppConstants.COMP_ID, mCurrentCompId);
@@ -200,6 +214,7 @@ public class ViewAllOnMapActivity extends MaxisFragmentBaseActivity implements
 							.getExtras().getBoolean(AppConstants.IS_DEAL_LIST));
 					intent.putExtra(AppConstants.CATEGORY_ID_KEY,
 							compDesc.getCat_id());
+
 					intent.putExtras(bundle);
 					startActivity(intent);
 

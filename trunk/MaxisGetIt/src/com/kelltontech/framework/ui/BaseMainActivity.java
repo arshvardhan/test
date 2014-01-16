@@ -11,6 +11,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -25,7 +26,7 @@ import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
-public abstract class BaseMainActivity extends Activity implements IScreen, OnClickListener, IActionController, OnKeyListener {
+public abstract class BaseMainActivity extends FragmentActivity implements IScreen, OnClickListener, IActionController, OnKeyListener {
 	protected ProgressDialog mProgressDialog;
 	protected String mProgressDialogBodyText = "Loading...";
 	protected Dialog mDialog;
