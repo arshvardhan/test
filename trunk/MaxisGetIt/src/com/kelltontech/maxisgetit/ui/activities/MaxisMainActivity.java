@@ -14,10 +14,7 @@ import android.text.Spanned;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.ui.BaseMainActivity;
@@ -98,6 +95,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 //	protected void onStart() {
 //		super.onStart();
 //		AnalyticsHelper.onActivityStart(this);
+//		AnalyticsHelper.setLogEnabled(false);
 //		AnalyticsHelper.getReleaseVersion();
 //		if(!StringUtil.isNullOrEmpty(mStore.getUserMobileNumber())){
 //		AnalyticsHelper.setUserID(mStore.getUserMobileNumber());

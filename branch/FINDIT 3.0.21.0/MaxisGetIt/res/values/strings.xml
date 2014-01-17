@@ -247,7 +247,7 @@
     <string name="are_choose_reason">Choose a reason</string>
     <string name="are_provide_description">Error description</string>
     <string name="are_feel">Report about</string>
-    <string name="are_select_reason">Please select a reason for reporting the error</string>
+    <string name="are_select_reason">Please select a reason for reporting the error.</string>
     <string name="are_error_reported">Your Error has been reported successfully.</string>
     <string name="are_error_occured">Some error occurred. Please try again later.</string>
     <string name="are_char_count">( 250 characters )</string>

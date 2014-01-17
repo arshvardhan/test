@@ -38,10 +38,25 @@ public class ResponseList extends MaxisResponse implements Parcelable{
 		try {
 			System.out.println("** ResponseList "+jsonString);
 			this.eventType=eventType;
-			if(eventType==Events.CATEGORY_LIST_EVENT)
+			/*if(eventType==Events.CATEGORY_LIST_EVENT)
 			{
 				JSONArray jsonArray=new JSONArray(jsonString);
 				if(jsonArray.length()>0)
+				{
+					list=new ArrayList<IModel>();
+					for(int index=0;index<jsonArray.length();index++)
+					{
+						list.add(new Category().fromJson(jsonArray.getString(index)));
+					}
+				}
+
+			}*/
+			if(eventType==Events.CATEGORY_LIST_EVENT)
+			{
+				JSONObject jsonObject=new JSONObject(jsonString);
+				totalRecord=jsonObject.optInt("total_record");
+				JSONArray jsonArray=jsonObject.optJSONArray("categories");
+				if(jsonArray!=null&&jsonArray.length()>0)
 				{
 					list=new ArrayList<IModel>();
 					for(int index=0;index<jsonArray.length();index++)
