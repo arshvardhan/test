@@ -69,9 +69,9 @@ public class OutLetDetailParser extends AbstractSAXParser {
 		} else if (localName.equalsIgnoreCase(OUTLET_ICON_URL)) {
 			outLet.setIcon_url(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_LATITUDE)) {
-			outLet.setLat(Double.parseDouble(getNodeValue()));
+			outLet.setLat(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_LONGITUDE)) {
-			outLet.setLongt(Double.parseDouble(getNodeValue()));
+			outLet.setLongt(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_OUTLET_CAT_ID)) {
 			outLet.setCatid(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_OUTLET)) {

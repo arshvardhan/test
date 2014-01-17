@@ -23,7 +23,7 @@
     <string name="modify_to_filter">Modify the search to get filtered list</string>
     <string name="category_list_not_found">Insufficient information to process your request</string>
     <string name="record_found"><u>Records Found Near You</u></string>
-     <string name="deal_found"><u>Deal(s) Found Near You</u></string>
+     <string name="deal_found">Deal(s) Found Near You</string>
     <string name="category_deals">Featured Deals Category</string>
     <string name="cl_hot_deals">Hot Deals</string>
     <string name="cl_view_on_map">View on Map</string>
@@ -77,7 +77,7 @@
     <string name="entire_malaysia">Entire Malaysia</string>
     <string name="selective_cities">Selective Cities</string>
     <string name="city">City</string>
-	<string name="locality">Locality</string>
+	<string name="locality">Outlet(s)</string>
     <string name="type_of_deal">Type Of Deal</string>
     <string name="informative">Informative</string>
     <string name="voucher">Voucher</string>
@@ -207,7 +207,7 @@
     <string name="terms_checkbox_text">I have read and agree to the terms &amp; conditions</string>
     <string name="upgrade_to_prem">Upgrade to premium</string>
     <string name="under_implement">Under Implementation</string>
-    <string name="valid_till">Valid till :</string>
+    <string name="valid_till">Valid Till :</string>
     <string name="verified"><u>Verified</u></string>
     <string name="view_lead_underline"><u>View Leads</u></string>
     <string name="voucher_redeem_date">Voucher Redemption Date</string>

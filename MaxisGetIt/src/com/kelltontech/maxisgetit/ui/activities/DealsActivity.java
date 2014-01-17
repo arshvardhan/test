@@ -278,19 +278,26 @@ public class DealsActivity extends MaxisMainActivity {
 		});
 		mCompanyList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 					long arg3) {
 				Log.e("manish", "inside onclick");
+				
+				if(position==(mCompListDealAdapter.getCount()-1))
+				{
+					//do nothing
+				}
+				else{
 				CompanyDetailController controller = new CompanyDetailController(
 						DealsActivity.this, Events.DEAL_DETAIL);
-				String id = ((CompanyDesc) mCompListDealAdapter.getItem(arg2))
+				String id = ((CompanyDesc) mCompListDealAdapter.getItem(position))
 						.getCompId();
 				DetailRequest detailRequest = new DetailRequest(
 						DealsActivity.this, id, true,
-						((CompanyDesc) mCompListDealAdapter.getItem(arg2))
+						((CompanyDesc) mCompListDealAdapter.getItem(position))
 								.getCat_id());
 				startSppiner();
 				controller.requestService(detailRequest);
+			}
 			}
 		});
 
@@ -595,7 +602,8 @@ public class DealsActivity extends MaxisMainActivity {
 			stopSppiner();
 		} else if (msg.arg2 == Events.DEAL_DETAIL) {
 			if (msg.arg1 == 1) {
-				showInfoDialog((String) msg.obj);
+				showInfoDialog(getResources().getString(
+						R.string.network_unavailable));
 			} else {
 				compListResp = (CompanyDetail) msg.obj;
 				if (!StringUtil.isNullOrEmpty(compListResp.getId())) {

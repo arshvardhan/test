@@ -35,6 +35,7 @@
                 android:paddingBottom="9dp"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
+                 android:src="@drawable/detail_cross"
                 android:paddingTop="4dp" />
 
             <LinearLayout
@@ -80,7 +81,7 @@
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:paddingRight="10dp"
-                            android:singleLine="true"
+                            android:singleLine="false"
                             android:textColor="@color/white"
                             android:textSize="@dimen/sp_15"
                             android:textStyle="bold" />
@@ -149,7 +150,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:background="@drawable/left_btn"
+                        android:background="@drawable/left_btnselected"
                         android:clickable="true"
                         android:text=""
                         android:textColor="@color/black" />

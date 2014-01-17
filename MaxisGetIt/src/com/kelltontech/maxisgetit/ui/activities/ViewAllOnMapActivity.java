@@ -197,6 +197,7 @@ public class ViewAllOnMapActivity extends MaxisFragmentBaseActivity implements
 							AppConstants.IS_DEAL_LIST)) {
 						intent = new Intent(ViewAllOnMapActivity.this,
 								DealDetailActivity.class);
+						
 						intent.putExtra(AppConstants.DATA_LIST_REQUEST,
 								mClRequest);
 						intent.putExtra(AppConstants.COMP_DETAIL_DATA,

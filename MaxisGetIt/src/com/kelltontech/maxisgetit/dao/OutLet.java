@@ -9,8 +9,8 @@ public class OutLet {
 	private String address;
 	
 
-	private double lat;
-	private double longt;
+	private String lat;
+	private String longt;
 	private String catid;
 	
 	public String getCatid() {
@@ -61,19 +61,20 @@ public class OutLet {
 		this.icon_url = icon_url;
 	}
 
-	public double getLat() {
+	public String getLat() {
 		return lat;
 	}
 
-	public void setLat(double lat) {
+	public void setLat(String lat) {
 		this.lat = lat;
 	}
 
-	public double getLongt() {
+	public String getLongt() {
 		return longt;
 	}
 
-	public void setLongt(double longt) {
+	public void setLongt(String longt) {
 		this.longt = longt;
 	}
+
 }

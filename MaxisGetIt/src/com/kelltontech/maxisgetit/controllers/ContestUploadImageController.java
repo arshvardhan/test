@@ -62,6 +62,7 @@ public class ContestUploadImageController extends BaseServiceController {
 			
 			RequestUploadPhoto requestUpload = (RequestUploadPhoto) requestData;  
 			String json = requestUpload.toJson();
+			System.out.println(json);
 			serviceRq.setPostData(new ByteArrayEntity(json.toString().getBytes()));
 			
 			serviceRq.setHttpHeaders( API_HEADER_NAMES_ARRAY_2, getApiHeaderValuesArray2());

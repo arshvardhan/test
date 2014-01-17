@@ -189,7 +189,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 
 			if (!StringUtil.isNullOrEmpty(outLetResponse.getOutlet().get(0)
 					.getAddress())) {
-				dealDesc.setText(outLets.get(0).getAddress());
+				dealDesc.setText(outLets.get(0).getTitle()+", "+outLets.get(0).getAddress());
 			} else {
 				dealDesc.setText("Nearest OutLet Address not available .");
 			}
@@ -351,14 +351,21 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		// builder.include(sourceMarker.getPosition());
 		LatLng toPosition = null;
 		for (int i = 0; i < outLets.size(); i++) {
-			toPosition = new LatLng(outLets.get(i).getLat(), outLets.get(i)
-					.getLongt());
-			mMap.addMarker(new MarkerOptions()
-					.icon(BitmapDescriptorFactory
-							.fromResource(R.drawable.map_company_marker))
-					.position(toPosition).title(outLets.get(i).getTitle())
-					.snippet(getSnippet(outLets.get(i))));
-			builder.include(toPosition);
+
+			if (StringUtil.isNullOrEmpty(outLets.get(i).getLat())
+					|| StringUtil.isNullOrEmpty(outLets.get(i).getLat())) {
+
+			} else {
+				toPosition = new LatLng(Double.parseDouble(outLets.get(i)
+						.getLat()), Double.parseDouble(outLets.get(i)
+						.getLongt()));
+				mMap.addMarker(new MarkerOptions()
+						.icon(BitmapDescriptorFactory
+								.fromResource(R.drawable.map_company_marker))
+						.position(toPosition).title(outLets.get(i).getTitle())
+						.snippet(getSnippet(outLets.get(i))));
+				builder.include(toPosition);
+			}
 		}
 		LatLngBounds bounds = builder.build();
 		int padding = 100; // offset from edges of the map in pixels
@@ -372,56 +379,57 @@ public class DealDetailActivity extends MaxisMainActivity implements
 				.tilt(30) // Sets the tilt of the camera to 30 degrees
 				.build();
 		// mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
+		if (outLets != null) {
 		if (isNearestOutlet) {
 			mMapInfoWindowAdapter = new DealMapInfoWindowAdapter(this);
 			ArrayList<OutLet> nearestOutlet = new ArrayList<OutLet>();
-			nearestOutlet.add(outLets.get(0));
-			mMapInfoWindowAdapter.setData(nearestOutlet);
-			mMap.setInfoWindowAdapter(mMapInfoWindowAdapter);
-
+		
+				nearestOutlet.add(outLets.get(0));
+				mMapInfoWindowAdapter.setData(nearestOutlet);
+				mMap.setInfoWindowAdapter(mMapInfoWindowAdapter);
+			
 		} else {
 			mMapInfoWindowAdapter = new DealMapInfoWindowAdapter(this);
 			mMapInfoWindowAdapter.setData(outLets);
 			mMap.setInfoWindowAdapter(mMapInfoWindowAdapter);
 		}
+		}
+		mMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 
-		 mMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
-		
-		 @Override
-		 public void onInfoWindowClick(Marker marker) {
-		 if (!StringUtil.isNullOrEmpty(marker.getSnippet())) {
-			 String mCurrentCompId ;
-		 mCurrentCompId = marker.getSnippet().split(
-		 AppConstants.SPLIT_STRING)[0];
-		
-		 mCurrentCompId = marker.getSnippet().split(
-		 AppConstants.SPLIT_STRING)[0];
-		 OutLet outLet = mMapInfoWindowAdapter
-		 .getValue(mCurrentCompId);
-		 Intent intent = new Intent(DealDetailActivity.this,
-		 CompanyDetailActivity.class);
-		
-		 Bundle bundle = new Bundle();
-		 bundle.putString(AppConstants.COMP_ID, mCurrentCompId);
-		 bundle.putString(AppConstants.GLOBAL_SEARCH_KEYWORD,
-		 mSearchKeyword);
-		 bundle.putBoolean(AppConstants.IS_DEAL_LIST, getIntent()
-		 .getExtras().getBoolean(AppConstants.IS_DEAL_LIST));
-		 intent.putExtra(AppConstants.CATEGORY_ID_KEY,
-				 outLet.getCatid());
-		 intent.putExtras(bundle);
-		 startActivity(intent);
-		
-		 /*
-		 * Dialog dialog =
-		 * CustomDialog.CreateCustomDialog(ViewAllOnMapActivity
-		 * .this, CustomDialog.MAP_DIALOG, marker.getTitle());
-		 * dialog.show();
-		 */
-		 }
-		 }
-		 });
+			@Override
+			public void onInfoWindowClick(Marker marker) {
+				if (!StringUtil.isNullOrEmpty(marker.getSnippet())) {
+					String mCurrentCompId;
+					mCurrentCompId = marker.getSnippet().split(
+							AppConstants.SPLIT_STRING)[0];
+
+					mCurrentCompId = marker.getSnippet().split(
+							AppConstants.SPLIT_STRING)[0];
+					OutLet outLet = mMapInfoWindowAdapter
+							.getValue(mCurrentCompId);
+					Intent intent = new Intent(DealDetailActivity.this,
+							CompanyDetailActivity.class);
+
+					Bundle bundle = new Bundle();
+					bundle.putString(AppConstants.COMP_ID, mCurrentCompId);
+					bundle.putString(AppConstants.GLOBAL_SEARCH_KEYWORD,
+							mSearchKeyword);
+					bundle.putBoolean(AppConstants.IS_DEAL_LIST, getIntent()
+							.getExtras().getBoolean(AppConstants.IS_DEAL_LIST));
+					intent.putExtra(AppConstants.CATEGORY_ID_KEY,
+							outLet.getCatid());
+					intent.putExtras(bundle);
+					startActivity(intent);
+
+					/*
+					 * Dialog dialog =
+					 * CustomDialog.CreateCustomDialog(ViewAllOnMapActivity
+					 * .this, CustomDialog.MAP_DIALOG, marker.getTitle());
+					 * dialog.show();
+					 */
+				}
+			}
+		});
 		mMap.setOnMyLocationChangeListener(new OnMyLocationChangeListener() {
 			@Override
 			public void onMyLocationChange(Location location) {
@@ -470,12 +478,10 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		if (event == Events.DOWNLOAD_DEAL) {
 			Message message = (Message) screenData;
 			handler.sendMessage(message);
-		}
-		else if (event ==   Events.COMBIND_LISTING_NEW_LISTING_PAGE
+		} else if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE
 				|| event == Events.USER_DETAIL) {
 			super.setScreenData(screenData, event, time);
-		}
-		else {
+		} else {
 			System.out.println(screenData);
 			Response response = (Response) screenData;
 			Message message = new Message();
@@ -535,7 +541,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 				outLetResponse = (OutLetDetails) msg.obj;
 				outLets = outLetResponse.getOutlet();
 				setUpMapIfNeeded();
-				
+
 			}
 			stopSppiner();
 		} else if (msg.arg2 == Events.DOWNLOAD_DEAL) {
@@ -567,7 +573,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 				}
 			}
 			stopSppiner();
-		}else if (msg.arg2 ==   Events.COMBIND_LISTING_NEW_LISTING_PAGE
+		} else if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE
 				|| msg.arg2 == Events.USER_DETAIL) {
 			super.updateUI(msg);
 		}
@@ -576,12 +582,12 @@ public class DealDetailActivity extends MaxisMainActivity implements
 	public void getDownloadDetails() {
 
 		if (store.isLoogedInUser()) {
-			 userNo = store.getUserMobileNumberToDispaly();
-			 userName = store.getUserName();
+			userNo = store.getUserMobileNumberToDispaly();
+			userName = store.getUserName();
 			dealDownload();
-			
+
 		} else {
-			Intent intent = new Intent(getApplicationContext(),DealForm.class);
+			Intent intent = new Intent(getApplicationContext(), DealForm.class);
 			startActivityForResult(intent, 2);
 
 		}
@@ -686,46 +692,45 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			// getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			// View view = inflater.inflate(
 			// R.layout.offerlistheader, null, true);
-			if(!viewAdded)
-			{
-			viewAdded = true;
-			for (OutLet title : outLets) {
-				TextView name = new TextView(this);
-				LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) name
-						.getLayoutParams();
+			if (!viewAdded) {
+				viewAdded = true;
+				for (OutLet title : outLets) {
+					TextView name = new TextView(this);
+					LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) name
+							.getLayoutParams();
 
-				name.setPadding(10, 10, 10, 10);
-				// name.setTextSize(, size)
-//				name.setCompoundDrawablesWithIntrinsicBounds(
-//						R.drawable.circle_blue, 0, 0, 0);
-				int count = tagId+1;
-				name.setText(Html.fromHtml("<b><font color='black'>"+count+"</font></b>" +"  " +"<font color='blue'>"+title.getTitle()+"</font>" ));
-				
-				name.setTag(tagId);
-				name.setOnClickListener(this);
-				name.setId(textId);
-				outLetsName.addView(name);
-				tagId++;
-			}
-			}
-			else
-			{
+					name.setPadding(10, 10, 10, 10);
+					// name.setTextSize(, size)
+					// name.setCompoundDrawablesWithIntrinsicBounds(
+					// R.drawable.circle_blue, 0, 0, 0);
+					int count = tagId + 1;
+					name.setText(Html.fromHtml("<b><font color='black'>"
+							+ count + "</font></b>" + "  "
+							+ "<font color='blue'>" + title.getTitle()
+							+ "</font>"));
+
+					name.setTag(tagId);
+					name.setOnClickListener(this);
+					name.setId(textId);
+					outLetsName.addView(name);
+					tagId++;
+				}
+			} else {
 				outLetsName.setVisibility(View.VISIBLE);
 			}
 
 		}
 	}
-	
-	public  void dealDownload()
-	{
+
+	public void dealDownload() {
 		DownloadDealReq dealReq = new DownloadDealReq();
 		dealReq.setName(userName);
-		dealReq.setPhoneNo("60"+userNo);
+		dealReq.setPhoneNo("60" + userNo);
 		dealReq.setDeal_id(deal_id);
 
 		DownloadDealController downloadDealController = new DownloadDealController(
 				DealDetailActivity.this, Events.DOWNLOAD_DEAL);
 		startSppiner();
 		downloadDealController.requestService(dealReq);
-}
+	}
 }

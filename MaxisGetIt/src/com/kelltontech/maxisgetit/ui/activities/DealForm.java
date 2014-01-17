@@ -32,14 +32,15 @@ public class DealForm extends MaxisMainActivity {
 	private ImageView mSearchToggler;
 	private ImageView mHeaderBackButton;
 	private ImageView mHomeIconView;
+	private TextView mHeaderTitle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_deal_form);
-		name = (TextView) findViewById(R.id.name);
-		phoneNo = (TextView) findViewById(R.id.phone_no);
-		submit = (TextView) findViewById(R.id.submit_btn);
+		name = (TextView) findViewById(R.id.reg_name);
+		phoneNo = (TextView) findViewById(R.id.reg_mobile);
+		submit = (TextView) findViewById(R.id.register_button);
 		submit.setOnClickListener(this);
 
 		mProfileIconView = (ImageView) findViewById(R.id.show_profile_icon);
@@ -55,6 +56,8 @@ public class DealForm extends MaxisMainActivity {
 		
 		mHomeIconView = (ImageView) findViewById(R.id.goto_home_icon);
 		mHomeIconView.setOnClickListener(this);
+		mHeaderTitle = (TextView) findViewById(R.id.header_title);
+		mHeaderTitle.setText("Deals");
 		
 		
 	}
@@ -70,7 +73,7 @@ public class DealForm extends MaxisMainActivity {
 		// TODO Auto-generated method stub
 
 		switch (v.getId()) {
-		case R.id.submit_btn:
+		case R.id.register_button:
 			validateData();
 			
 			break;
@@ -113,7 +116,7 @@ public class DealForm extends MaxisMainActivity {
 		if(name.getText().toString().equalsIgnoreCase(""))
 		{
 			Toast.makeText(getApplicationContext(), "Please Enter Name .", Toast.LENGTH_SHORT).show();
-		}else if (phoneNo.getText().toString().equalsIgnoreCase("")) {
+		}else if (phoneNo.getText().toString().equalsIgnoreCase("") || phoneNo.getText().length()>12 || phoneNo.getText().length()<7) {
 			Toast.makeText(getApplicationContext(), "Please Enter Mobile Number correctly.", Toast.LENGTH_SHORT).show();
 		}else{
 			Intent returnIntent = new Intent();

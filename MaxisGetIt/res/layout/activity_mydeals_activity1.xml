@@ -43,8 +43,8 @@
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:divider="@drawable/single_line_seprator"
-            android:paddingLeft="5dp" 
-            android:visibility="gone"/>
+            android:paddingLeft="5dp"
+            android:visibility="gone" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -61,7 +61,7 @@
                 android:layout_centerVertical="true"
                 android:paddingLeft="10dp"
                 android:singleLine="true"
-                android:text="@string/record_found"
+                android:text="@string/deal_found"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_12"
                 android:textStyle="bold" />
@@ -70,12 +70,12 @@
                 android:id="@+id/deal_cat_chooser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/dropdown_box"
-                android:textColor="@color/black"
                 android:layout_alignParentRight="true"
-               android:layout_marginLeft="10dp"
-               
+                android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/col_records_found"
+                android:background="@drawable/dropdown_box"
+                android:paddingRight="25dp"
+                android:textColor="@color/black"
                 android:textSize="@dimen/sp_13" />
         </RelativeLayout>
 
@@ -85,6 +85,7 @@
             android:layout_height="wrap_content"
             android:divider="@drawable/company_list_seprator"
             android:gravity="center_vertical"
+            android:fadingEdge="none"
             android:numColumns="2" >
         </ListView>
 
@@ -151,7 +152,6 @@
             android:textColor="@color/transparent_white"
             android:textSize="@dimen/sp_14"
             android:textStyle="bold" />
-      
     </LinearLayout>
 
     <LinearLayout
