@@ -1,6 +1,7 @@
 package com.kelltontech.maxisgetit.ui.activities;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,7 +18,9 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
@@ -26,7 +29,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -83,6 +85,7 @@ public class DealPostActivity extends MaxisMainActivity {
 	private LinearLayout mEmailAlertContainer;
 	private ImageView mHomeIconView, mProfileIconView;
 	private ImageView imgView[], removeImgView[];
+	private RadioButton radioBtns[];
 	private RadioGroup mDealApplicableInGroup, mTypeOfDealGroup;
 	private RadioGroup mVoucherGroup, mVoucherTypeGroup;
 	private RadioButton mSingleCodeRadioBtn, mProvidedBySMERadioBtn;
@@ -92,16 +95,19 @@ public class DealPostActivity extends MaxisMainActivity {
 	private DealsListResponse mMyDealResp;
 	private MaxisStore mStore;
 	private Bitmap mBitmap;
+	private RadioButton mEntireMalaysiaRadioBtn;
 	// String imageNameForRemoval;
 	// private int imageToRemove;
 	private int removeImageIndex;
 	private int mStartYear, mStartMonth, mStartDay, mEndYear, mEndMonth,
 			mEndDay;
 	private boolean mIsSingleCompany;
-	private ArrayList<String> imageNames = new ArrayList<String>();
+	private ArrayList<String> imageId = new ArrayList<String>();
 	private List<String> selectedCities = new ArrayList<String>();
 	private List<String> selectedLocalities = new ArrayList<String>();
 	private boolean booleanFirstTime = false;
+
+	private int checkedIndex = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +134,7 @@ public class DealPostActivity extends MaxisMainActivity {
 		mSingleCodeContainer = (LinearLayout) findViewById(R.id.adp_single_code_container);
 		mEmailAlertContainer = (LinearLayout) findViewById(R.id.adp_provided_by_sme_email_alert_container);
 		mDealApplicableInGroup = (RadioGroup) findViewById(R.id.adp_deal_applicable_in_RG);
+		mEntireMalaysiaRadioBtn = (RadioButton) findViewById(R.id.adp_entire_malaysia);
 		mDealApplicableInGroup
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					@Override
@@ -137,9 +144,17 @@ public class DealPostActivity extends MaxisMainActivity {
 									.setVisibility(View.GONE);
 						} else if (checkedId == R.id.adp_in_selective_cities) {
 							PostDealCityLocalityRequest request = new PostDealCityLocalityRequest();
-							if (mCompanyChooser.getSelectedItemPosition() != 0
-							         && !mCompanyChooser.getSelectedItem().equals("Select") && mCategorySpinnerContainer.getVisibility() == 0 && mCatChooser.getSelectedItemPosition() != 0
-							           && !mCatChooser.getSelectedItem().equals("Select")) {
+							if (mCompanyChooser.getSelectedItemPosition() < 1
+									|| "Select".equals(mCompanyChooser
+											.getSelectedItem())) {
+								showAlertDialog("Please select a company.");
+							} else if (mCompanyChooser
+									.getSelectedItemPosition() > 0
+									&& (mCatChooser.getSelectedItemPosition() < 1 || "Select"
+											.equals(mCatChooser
+													.getSelectedItem()))) {
+								showAlertDialog("Please select a category.");
+							} else {
 								if (mMyDealResp.getCompCategoryList().size() == 2) {
 									request.setCompanyId(mSingalCompCat
 											.getCompanyId());
@@ -153,19 +168,55 @@ public class DealPostActivity extends MaxisMainActivity {
 											.getCategoryList().get(1)
 											.getCategoryId());
 								}
-							}
-							PostDealCityLocalityListController clController = new PostDealCityLocalityListController(
-									DealPostActivity.this,
-									Events.POST_DEAL_CITY_LISTING);
-							startSppiner();
-							request.setUserId(mStore.getUserID());
-							clController.requestService(request);
+								PostDealCityLocalityListController clController = new PostDealCityLocalityListController(
+										DealPostActivity.this,
+										Events.POST_DEAL_CITY_LISTING);
+								startSppiner();
+								request.setUserId(mStore.getUserID());
+								clController.requestService(request);
 
-							mCityLocalityChooserSpinnerContainer
-									.setVisibility(View.VISIBLE);
+								mCityLocalityChooserSpinnerContainer
+										.setVisibility(View.VISIBLE);
+							}
+
 						}
 					}
 				});
+		mTypeOfDealGroup = (RadioGroup) findViewById(R.id.adp_type_of_deal_RG);
+		mTypeOfDealGroup
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(RadioGroup group, int checkedId) {
+						if (checkedId == R.id.adp_informative) {
+							mVoucherDetailContainer.setVisibility(View.GONE);
+						} else if (checkedId == R.id.adp_voucher) {
+							mVoucherDetailContainer.setVisibility(View.VISIBLE);
+						}
+					}
+				});
+		mVoucherGroup = (RadioGroup) findViewById(R.id.adp_voucher_RG);
+		mSingleCodeRadioBtn = (RadioButton) findViewById(R.id.adp_single_code);
+		mProvidedBySMERadioBtn = (RadioButton) findViewById(R.id.adp_provided_by_sme);
+		mEntireMalaysiaRadioBtn = (RadioButton) findViewById(R.id.adp_entire_malaysia);
+		/*
+		 * mSelectiveCitiesRadioBtn = (RadioButton)
+		 * findViewById(R.id.adp_in_selective_cities);
+		 */
+		mVoucherGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				if (checkedId == R.id.adp_specific_count) {
+					mVoucherCountContainer.setVisibility(View.VISIBLE);
+					mProvidedBySMERadioBtn.setVisibility(View.VISIBLE);
+					mSingleCodeRadioBtn.setChecked(true);
+
+				} else if (checkedId == R.id.adp_unlimited_codes) {
+					mVoucherCountContainer.setVisibility(View.GONE);
+					mProvidedBySMERadioBtn.setVisibility(View.GONE);
+					mSingleCodeRadioBtn.setChecked(true);
+				}
+			}
+		});
 		mTypeOfDealGroup = (RadioGroup) findViewById(R.id.adp_type_of_deal_RG);
 		mTypeOfDealGroup
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -225,6 +276,17 @@ public class DealPostActivity extends MaxisMainActivity {
 		imgView[3] = (ImageView) findViewById(R.id.adp_deal_image4);
 		imgView[3].setOnClickListener(this);
 
+		radioBtns = new RadioButton[4];
+		radioBtns[0] = (RadioButton) findViewById(R.id.adp_cover_photo);
+		radioBtns[0].setOnClickListener(this);
+		radioBtns[0].setChecked(true);
+		radioBtns[1] = (RadioButton) findViewById(R.id.adp_cover_photo2);
+		radioBtns[1].setOnClickListener(this);
+		radioBtns[2] = (RadioButton) findViewById(R.id.adp_cover_photo3);
+		radioBtns[2].setOnClickListener(this);
+		radioBtns[3] = (RadioButton) findViewById(R.id.adp_cover_photo4);
+		radioBtns[3].setOnClickListener(this);
+
 		FrameLayout.LayoutParams vp = new FrameLayout.LayoutParams(getSize(),
 				getSize());
 		imgView[0].setLayoutParams(vp);
@@ -246,6 +308,13 @@ public class DealPostActivity extends MaxisMainActivity {
 		mCatChooser = (Spinner) findViewById(R.id.adp_category_chooser);
 		mCityDropDown = (MultiSelectSpinner) findViewById(R.id.adp_city_chooser);
 		mLocalityDropDown = (MultiSelectSpinner) findViewById(R.id.adp_locality_chooser);
+
+		// tododoodododod
+		/*
+		 * mCityDropDown.setFocusable(true);
+		 * mCityDropDown.setFocusableInTouchMode(true);
+		 * mCityDropDown.requestFocus();
+		 */
 
 		if (mMyDealResp.getCompCategoryList().size() == 2) {
 			mIsSingleCompany = true;
@@ -274,6 +343,7 @@ public class DealPostActivity extends MaxisMainActivity {
 						@Override
 						public void onItemSelected(AdapterView<?> parent,
 								View view, int position, long id) {
+							mEntireMalaysiaRadioBtn.setChecked(true);
 							if (position == 0) {
 								mCategorySpinnerContainer
 										.setVisibility(View.GONE);
@@ -296,6 +366,19 @@ public class DealPostActivity extends MaxisMainActivity {
 
 						}
 					});
+
+			mCatChooser.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+				@Override
+				public void onItemSelected(AdapterView<?> parent, View view,
+						int position, long id) {
+					mEntireMalaysiaRadioBtn.setChecked(true);
+				}
+
+				@Override
+				public void onNothingSelected(AdapterView<?> arg0) {
+				}
+			});
 		}
 		mDealTitle = (EditText) findViewById(R.id.adp_title_text);
 		mDealDesc = (EditText) findViewById(R.id.adp_desc_txt);
@@ -384,83 +467,83 @@ public class DealPostActivity extends MaxisMainActivity {
 		// }
 		// });
 
-//		mLocalityChooserSpinnerContainer
-//				.setOnClickListener(new OnClickListener() {
-//
-//					@Override
-//					public void onClick(View v) {
-//						// TODO Auto-generated method stub
-//						if (mCityDropDown.getSelectedStrings().size() > 0) {
-//							selectedCities = mCityDropDown.getSelectedStrings();
-//							PostDealCityLocalityListController clController = new PostDealCityLocalityListController(
-//									DealPostActivity.this,
-//									Events.POST_DEAL_LOCALITY_LISTING);
-//							startSppiner();
-//
-//							JSONObject postJsaon = new JSONObject();
-//							JSONArray jArray = new JSONArray();
-//							try {
-//								for (String string : selectedCities) {
-//									jArray.put(string);
-//								}
-//								postJsaon.put("cities", jArray);
-//							} catch (JSONException e) {
-//								showAlertDialog(getResources().getString(
-//										R.string.internal_error));
-//								AnalyticsHelper
-//										.onError(
-//												FlurryEventsConstants.DATA_VALIDATION_ERR,
-//												"DealPostActivity : "
-//														+ AppConstants.DATA_VALIDATION_ERROR_MSG,
-//												e);
-//							}
-//							clController.requestService(postJsaon);
-//						}
-//					}
-//				});
+		// mLocalityChooserSpinnerContainer
+		// .setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// // TODO Auto-generated method stub
+		// if (mCityDropDown.getSelectedStrings().size() > 0) {
+		// selectedCities = mCityDropDown.getSelectedStrings();
+		// PostDealCityLocalityListController clController = new
+		// PostDealCityLocalityListController(
+		// DealPostActivity.this,
+		// Events.POST_DEAL_LOCALITY_LISTING);
+		// startSppiner();
+		//
+		// JSONObject postJsaon = new JSONObject();
+		// JSONArray jArray = new JSONArray();
+		// try {
+		// for (String string : selectedCities) {
+		// jArray.put(string);
+		// }
+		// postJsaon.put("cities", jArray);
+		// } catch (JSONException e) {
+		// showAlertDialog(getResources().getString(
+		// R.string.internal_error));
+		// AnalyticsHelper
+		// .onError(
+		// FlurryEventsConstants.DATA_VALIDATION_ERR,
+		// "DealPostActivity : "
+		// + AppConstants.DATA_VALIDATION_ERROR_MSG,
+		// e);
+		// }
+		// clController.requestService(postJsaon);
+		// }
+		// }
+		// });
 
-mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
-	
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-		// TODO Auto-generated method stub
-		if(!booleanFirstTime)
-		{
-			booleanFirstTime =  true;
+		mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
 
-			// TODO Auto-generated method stub
-			if (mCityDropDown.getSelectedStrings().size() > 0) {
-				selectedCities = mCityDropDown.getSelectedStrings();
-				PostDealCityLocalityListController clController = new PostDealCityLocalityListController(
-						DealPostActivity.this,
-						Events.POST_DEAL_LOCALITY_LISTING);
-				startSppiner();
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				if (!booleanFirstTime) {
+					booleanFirstTime = true;
 
-				JSONObject postJsaon = new JSONObject();
-				JSONArray jArray = new JSONArray();
-				try {
-					for (String string : selectedCities) {
-						jArray.put(string);
+					// TODO Auto-generated method stub
+					if (mCityDropDown.getSelectedStrings().size() > 0) {
+						selectedCities = mCityDropDown.getSelectedStrings();
+						PostDealCityLocalityListController clController = new PostDealCityLocalityListController(
+								DealPostActivity.this,
+								Events.POST_DEAL_LOCALITY_LISTING);
+						startSppiner();
+
+						JSONObject postJsaon = new JSONObject();
+						JSONArray jArray = new JSONArray();
+						try {
+							for (String string : selectedCities) {
+								jArray.put(string);
+							}
+							postJsaon.put("cities", jArray);
+						} catch (JSONException e) {
+							showAlertDialog(getResources().getString(
+									R.string.internal_error));
+							AnalyticsHelper
+									.onError(
+											FlurryEventsConstants.DATA_VALIDATION_ERR,
+											"DealPostActivity : "
+													+ AppConstants.DATA_VALIDATION_ERROR_MSG,
+											e);
+						}
+						clController.requestService(postJsaon);
 					}
-					postJsaon.put("cities", jArray);
-				} catch (JSONException e) {
-					showAlertDialog(getResources().getString(
-							R.string.internal_error));
-					AnalyticsHelper
-							.onError(
-									FlurryEventsConstants.DATA_VALIDATION_ERR,
-									"DealPostActivity : "
-											+ AppConstants.DATA_VALIDATION_ERROR_MSG,
-									e);
+
 				}
-				clController.requestService(postJsaon);
+
+				return false;
 			}
-			
-		}
-		
-		return false;
-	}
-});
+		});
 	}
 
 	@Override
@@ -503,10 +586,10 @@ mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
 			if (postJson == null) {
 				return;
 			}
-			if (imageNames != null) {
+			if (imageId != null) {
 				try {
 					JSONArray array = new JSONArray();
-					for (String img : imageNames) {
+					for (String img : imageId) {
 						array.put(img);
 					}
 					postJson.put("image", array);
@@ -520,6 +603,7 @@ mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
 					return;
 				}
 			}
+
 			startSppiner();
 			PostDealController dealController = new PostDealController(
 					DealPostActivity.this, Events.POST_DEAL_EVENT);
@@ -542,6 +626,18 @@ mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
 			break;
 		case R.id.adp_deal_image4:
 			uploadImage();
+			break;
+		case R.id.adp_cover_photo:
+			setCoverImage(0);
+			break;
+		case R.id.adp_cover_photo2:
+			setCoverImage(1);
+			break;
+		case R.id.adp_cover_photo3:
+			setCoverImage(2);
+			break;
+		case R.id.adp_cover_photo4:
+			setCoverImage(3);
 			break;
 		case R.id.adp_deal_image_cross:
 			removeImageIndex = 0;
@@ -662,7 +758,7 @@ mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
 					cityArray.put(string);
 				}
 
-				jArray.put("city_name", cityArray);
+				jArray.put("city_id", cityArray);
 				selectedLocalities = mLocalityDropDown.getSelectedStrings();
 				/* if (mLocalityDropDown.getSelectedItemPosition() == 0) { */
 				if (mLocalityDropDown.getSelectedIndicies().size() == 0) {
@@ -684,7 +780,16 @@ mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
 						localityArray.put(string);
 					}
 
-					jArray.put("locality_name", localityArray);
+					jArray.put("locality_id", localityArray);
+				}
+				if (imageId.size() > 0) {
+					if (checkedIndex >= 0) {
+						String coverImage = imageId.get(checkedIndex);
+						jArray.put("cover_id", coverImage);
+					} else {
+						showAlertDialog("Please select a Cover Image");
+						return null;
+					}
 				}
 			}
 		}
@@ -834,7 +939,7 @@ mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
 				showInfoDialog((String) msg.obj);
 			} else {
 				ImageDataResponse response = (ImageDataResponse) msg.obj;
-				imageNames.add(response.getImagename());
+				imageId.add(response.getImageId());
 				setImageView(mBitmap);
 				showInfoDialog("Image has been successfully saved.");
 				// Toast.makeText(getApplicationContext(),
@@ -851,9 +956,9 @@ mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
 				 * removeImage(removeImageIndex);
 				 */// resetImageView(mBitmap);
 				replaceImageView(removeImageIndex);
-				removeImgView[removeImageIndex].setVisibility(View.GONE);
+				// removeImgView[removeImageIndex].setVisibility(View.GONE);
 				// imgView[removeImageIndex].setPadding(10, 10, 10, 10);
-				imageNames.remove(removeImageIndex);
+				imageId.remove(removeImageIndex);
 				showInfoDialog("Image has been successfully removed.");
 				// Toast.makeText(getApplicationContext(),
 				// "Image has been successfully removed.",
@@ -960,6 +1065,10 @@ mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
 			}
 			mBitmap = BitmapCalculation.decodeSampledBitmapFromPath(imagePath,
 					getSize(), (int) (getSize() * (1.3)));
+
+			// TODO:: SET ORIENTATION
+			// mBitmap = setOrientation(mBitmap,imagePath);
+
 			// BitmapFactory.Options options = new BitmapFactory.Options() ;
 			// options.inPurgeable = true;
 			// mBitmap = BitmapFactory.decodeStream(imageStream);
@@ -1030,8 +1139,11 @@ mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
 	 * return new BitmapDrawable(getResources(), myBitmap); } return null; }
 	 */
 	public void uploadImage() {
-		if (imageNames.size() < 4) {
-			Intent imagePicker = new Intent(Intent.ACTION_GET_CONTENT);
+		if (imageId.size() < 4) {
+
+			Intent imagePicker = new Intent(
+					Intent.ACTION_PICK,
+					android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 			imagePicker.setType("image/*");
 			startActivityForResult(imagePicker, IMAGE_PICK);
 		} else {
@@ -1051,29 +1163,30 @@ mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
 
 	public void setImageView(Bitmap bitmap) {
 		BitmapDrawable drawable = new BitmapDrawable(
-				imgView[imageNames.size() - 1].getResources(), bitmap);
-		imgView[imageNames.size() - 1].setImageDrawable(drawable);
+				imgView[imageId.size() - 1].getResources(), bitmap);
+		imgView[imageId.size() - 1].setImageDrawable(drawable);
 		FrameLayout.LayoutParams vp = new FrameLayout.LayoutParams(getSize(),
 				getSize());
-		imgView[imageNames.size() - 1].setLayoutParams(vp);
-		imgView[imageNames.size() - 1].setPadding(10, 10, 10, 10);
-		removeImgView[imageNames.size() - 1].setVisibility(View.VISIBLE);
+		imgView[imageId.size() - 1].setLayoutParams(vp);
+		imgView[imageId.size() - 1].setPadding(10, 10, 10, 10);
+		removeImgView[imageId.size() - 1].setVisibility(View.VISIBLE);
+		radioBtns[imageId.size() - 1].setVisibility(View.VISIBLE);
 	}
 
 	public void removeImage(int imageIndex) {
 		String imageNameForRemoval = null;
 		switch (imageIndex) {
 		case 0:
-			imageNameForRemoval = imageNames.get(0);
+			imageNameForRemoval = imageId.get(0);
 			break;
 		case 1:
-			imageNameForRemoval = imageNames.get(1);
+			imageNameForRemoval = imageId.get(1);
 			break;
 		case 2:
-			imageNameForRemoval = imageNames.get(2);
+			imageNameForRemoval = imageId.get(2);
 			break;
 		case 3:
-			imageNameForRemoval = imageNames.get(3);
+			imageNameForRemoval = imageId.get(3);
 			break;
 		default:
 			break;
@@ -1088,6 +1201,8 @@ mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
 	}
 
 	public void replaceImageView(int index) {
+		setCoverImageCheck(index);
+
 		if (index != 3) {
 			for (int i = index; i < 3; i++) {
 				imgView[i].setImageDrawable(imgView[i + 1].getDrawable());
@@ -1095,13 +1210,21 @@ mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
 				// 1].getDrawable());
 				removeImgView[i].setVisibility(removeImgView[i + 1]
 						.getVisibility());
+
+				radioBtns[i].setVisibility(radioBtns[i + 1].getVisibility());
 				// imgView[i].setPadding(0, 0, 0, 0);
 				/* removeImgView[i].setVisibility(View.GONE); */
 			}
 			// imgView[3].setBackgroundResource(R.drawable.upload_photo_icon);
 			imgView[3].setImageResource(R.drawable.upload_photo_icon);
+
 			imgView[3].setPadding(0, 0, 0, 0);
 			removeImgView[3].setVisibility(View.GONE);
+		} else {
+			imgView[3].setImageResource(R.drawable.upload_photo_icon);
+			imgView[3].setPadding(0, 0, 0, 0);
+			removeImgView[3].setVisibility(View.GONE);
+			radioBtns[3].setVisibility(View.INVISIBLE);
 		}
 	}
 
@@ -1128,6 +1251,68 @@ mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
 		imageController.requestService(jArray);
 		startSppiner();
 
+	}
+
+	public Bitmap setOrientation(Bitmap sourceBitmap, String photo) {
+		ExifInterface exif = null;
+		try {
+			exif = new ExifInterface(photo);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+				ExifInterface.ORIENTATION_NORMAL);
+		Log.e("Exif Orientation", "oreination" + orientation);
+		Matrix matrix = new Matrix();
+		switch (orientation) {
+		case ExifInterface.ORIENTATION_ROTATE_90:
+			matrix.postRotate(90);
+			break;
+		case ExifInterface.ORIENTATION_ROTATE_180:
+			matrix.postRotate(180);
+			break;
+		case ExifInterface.ORIENTATION_ROTATE_270:
+			matrix.postRotate(270);
+			break;
+		}
+
+		Bitmap originalImage = Bitmap
+				.createBitmap(sourceBitmap, 0, 0, sourceBitmap.getWidth(),
+						sourceBitmap.getHeight(), matrix, true);
+
+		return originalImage;
+	}
+
+	public void setCoverImageCheck(int index) {
+		if (index != 0) {
+			if (index == checkedIndex) {
+				radioBtns[0].setChecked(true);
+				checkedIndex = 0;
+			} else if (index < checkedIndex) {
+				radioBtns[checkedIndex - 1].setChecked(true);
+				checkedIndex = checkedIndex - 1;
+			}
+		} else {
+			if (imageId.size() > 0) {
+				radioBtns[0].setChecked(true);
+				checkedIndex = 0;
+			} else {
+				setCoverImage(-1);
+			}
+		}
+	}
+
+	public void setCoverImage(int index) {
+		for (int i = 0; i < 4; i++) {
+			if (i == index) {
+				radioBtns[i].setChecked(true);
+				checkedIndex = i;
+			} else {
+				radioBtns[i].setChecked(false);
+				checkedIndex = index;
+			}
+		}
 	}
 
 }

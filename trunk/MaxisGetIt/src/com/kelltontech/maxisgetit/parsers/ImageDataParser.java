@@ -13,6 +13,7 @@ import com.kelltontech.maxisgetit.response.ImageDataResponse;
 
 public class ImageDataParser extends AbstractSAXParser {
 	public static final String TAG_IMAGENAME = "Image_name";
+	public static final String TAG_IMAGEID= "Image_Id";
 	
 	private ImageDataResponse imResponse;
 
@@ -34,7 +35,11 @@ public class ImageDataParser extends AbstractSAXParser {
 		if (localName.equalsIgnoreCase(TAG_IMAGENAME)) {
 			Log.d("maxis", getNodeValue());
 			imResponse.setImagename(getNodeValue());
-		} 
+		}else if(localName.equalsIgnoreCase(TAG_IMAGEID))
+		{
+			Log.d("maxis", getNodeValue());
+			imResponse.setImageId(getNodeValue());
+		}
 	}
 
 }
