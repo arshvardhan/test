@@ -87,6 +87,11 @@ public class MultiSelectSpinner extends Spinner implements
 		}
 	}
 
+	public void onFocusChange(View v, boolean hasFocus) {
+		//super.onFocusChanged(hasFocus, FOCUS_DOWN, null);
+		super.onFocusChanged(hasFocus, getDescendantFocusability(), null);
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */

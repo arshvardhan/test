@@ -43,6 +43,10 @@ public class AnalyticsHelper {
 		FlurryAgent.setContinueSessionMillis(seconds * 1000);
 	}
 	
+	public static void setLogEnabled(boolean state) {
+		FlurryAgent.setLogEnabled(state);
+	}
+	
 	public static void logEvent(String event) {
 		FlurryAgent.logEvent(event);
 	}

@@ -131,9 +131,9 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 
 			@Override
 			public void onScroll(AbsListView listView, int firstVisibleItem,int visibleItemCount, int totalItemCount) {
-				if( mInitialEventType == Events.CATEGORY_LIST_EVENT ) {
+				/*	if( mInitialEventType == Events.CATEGORY_LIST_EVENT ) {
 					return;
-				}
+				}*/
 				if( mResponseListPoiByCatOrDist == null || totalItemCount == (mResponseListPoiByCatOrDist).getTotalRecord() ) {
 					return;
 				}
@@ -357,7 +357,7 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 					break;
 				}
 			}
-			else if(msg.obj instanceof ResponseList && mRequestedEventType == Events.DISTANCE_LIST_EVENT )
+			else if(msg.obj instanceof ResponseList && (mRequestedEventType == Events.DISTANCE_LIST_EVENT || mRequestedEventType == Events.CATEGORY_LIST_EVENT))
 			{
 				ResponseList responselist=(ResponseList) msg.obj;
 				if(responselist.getList()!=null&&responselist.getList().size()>0)

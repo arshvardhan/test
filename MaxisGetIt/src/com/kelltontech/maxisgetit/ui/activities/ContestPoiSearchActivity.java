@@ -183,6 +183,8 @@ public class ContestPoiSearchActivity extends ContestBaseActivity {
 			getLocation();
 			distance1.setLatitude(mLattitude);
 			distance1.setLongitude(mLongitude);
+			distance1.setPageNumber(1);
+			distance1.setRecordsPerPage(AppConstants.PAGE_SIZE_POI_LIST_BY_DISTANCE);
 			contestListController.requestService(distance1);
 			break;
 		}
@@ -262,7 +264,7 @@ public class ContestPoiSearchActivity extends ContestBaseActivity {
 				{
 					Intent poiListIntent = new Intent(ContestPoiSearchActivity.this,ContestPoiListActivity.class);
 					poiListIntent.putExtra(AppConstants.LIST_RESPONSE_PARCEL, responselist);
-					poiListIntent.putExtra(AppConstants.LIST_RESPONSE_TYPE, mCurrentEventType); 
+					poiListIntent.putExtra(AppConstants.LIST_RESPONSE_TYPE, mCurrentEventType);
 					poiListIntent.putExtra(AppConstants.EXTRA_SEARCH_KEYWORD, mSearchKeyEdtTxt.getText().toString());
 					startActivity(poiListIntent);
 					//removeDialog(CustomDialog.PROGRESS_DIALOG);
