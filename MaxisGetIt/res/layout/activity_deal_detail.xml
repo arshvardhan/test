@@ -68,8 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginRight="7dp"
-                    android:weightSum="1" >
+                    android:layout_marginRight="7dp" >
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -80,6 +79,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
+                            android:maxLines="2"
                             android:paddingRight="10dp"
                             android:singleLine="false"
                             android:textColor="@color/white"
@@ -94,13 +94,16 @@
                             <LinearLayout
                                 android:id="@+id/cd_layout_rate_us"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent" >
+                                android:layout_height="wrap_content"
+                                android:weightSum="1" >
 
                                 <TextView
                                     android:id="@+id/validin"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
+                                    android:layout_weight=".64"
+                                    android:singleLine="true"
                                     android:text="valid in entire malasia"
                                     android:textColor="@color/white" />
 
@@ -109,18 +112,19 @@
                                     android:layout_width="1dp"
                                     android:layout_height="match_parent"
                                     android:layout_gravity="center_vertical"
-                                    android:layout_marginLeft="7dp"
-                                    android:layout_marginRight="7dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginRight="5dp"
                                     android:background="@color/bar_light_grey"
                                     android:visibility="visible" />
 
                                 <TextView
                                     android:id="@+id/validdate"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
-                                    android:layout_marginLeft="3dp"
                                     android:layout_marginRight="3dp"
+                                    android:layout_weight=".36"
+                                    android:singleLine="true"
                                     android:text="@string/txt_rate_me"
                                     android:textColor="@color/white"
                                     android:visibility="visible" />
