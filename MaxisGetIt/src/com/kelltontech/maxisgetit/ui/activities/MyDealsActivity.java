@@ -214,7 +214,7 @@ public class MyDealsActivity extends MaxisMainActivity {
 			if (adStatus.equalsIgnoreCase("Active") || adStatus.equalsIgnoreCase("Incomplete") || adStatus.equalsIgnoreCase("Reject")) {
 				// edit
 				ImageView editLink = (ImageView) compContainer.findViewById(R.id.mydeal_edit_link);
-				editLink.setVisibility(View.VISIBLE);
+				editLink.setVisibility(View.GONE);
 				editLink.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -224,7 +224,7 @@ public class MyDealsActivity extends MaxisMainActivity {
 				if (adStatus.equalsIgnoreCase("Active")) {
 					// stop
 					ImageView stop = (ImageView) compContainer.findViewById(R.id.mydeal_stop);
-					stop.setVisibility(View.VISIBLE);
+					stop.setVisibility(View.GONE);
 					stop.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
@@ -235,7 +235,7 @@ public class MyDealsActivity extends MaxisMainActivity {
 			} else if (adStatus.equalsIgnoreCase("Stop") || adStatus.equalsIgnoreCase("Expire")) {
 				// repost
 				ImageView repost = (ImageView) compContainer.findViewById(R.id.mydeal_repost);
-				repost.setVisibility(View.VISIBLE);
+				repost.setVisibility(View.GONE);
 				repost.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {

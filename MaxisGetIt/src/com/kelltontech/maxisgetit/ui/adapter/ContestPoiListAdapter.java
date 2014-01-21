@@ -77,8 +77,9 @@ public class ContestPoiListAdapter extends BaseAdapter {
 			} else {
 				holder.txtBottom.setText(distance.getCount() + " images already submitted");
 			}
-			DecimalFormat df = new DecimalFormat("####0.00");
-			holder.txtRight.setText(df.format(distance.getDistance()) + " Km");
+//			DecimalFormat df = new DecimalFormat("####0.00");
+//			holder.txtRight.setText(df.format(distance.getDistance()) + " Km");
+			holder.txtRight.setText(distance.getDistance());
 		} else {
 			Category category = (Category) mlist.get(position);
 			if (category.getPoiCount() != 0) {

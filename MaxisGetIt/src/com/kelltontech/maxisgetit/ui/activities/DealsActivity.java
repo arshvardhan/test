@@ -79,6 +79,7 @@ public class DealsActivity extends MaxisMainActivity {
 
 	private TextView mViewAllOnMap;
 	private TextView mRefineSearchView;
+	private TextView mRefineSearchView1;
 
 	private ListView mCompanyList;
 	private CompanyListDealAdapter mCompListDealAdapter;
@@ -107,8 +108,8 @@ public class DealsActivity extends MaxisMainActivity {
 			if (resultCode == RESULT_OK) {
 				mIsFreshSearch = false;
 				// mRefineSearchView.setImageDrawable(getResources().getDrawable(R.drawable.modify_search));
-				mRefineSearchView.setText(getResources().getString(
-						R.string.cl_modify_search));
+				// mRefineSearchView.setText(getResources().getString(
+				// R.string.cl_modify_search));
 				Bundle bundle = data.getExtras();
 				mClResponse = bundle.getParcelable(AppConstants.COMP_LIST_DATA);
 				mLocalitySelectorDao = bundle
@@ -184,7 +185,8 @@ public class DealsActivity extends MaxisMainActivity {
 		mRefineSearchView = (TextView) findViewById(R.id.col_refine_search);
 		mRefineSearchView.setOnClickListener(this);
 
-		findViewById(R.id.col_refine_search1).setOnClickListener(this);
+		mRefineSearchView1 = (TextView) findViewById(R.id.col_refine_search1);
+		mRefineSearchView1.setOnClickListener(this);
 
 		// mHeaderTitle.setText(parCategory.getCategoryTitle()); TODO
 		mCatchooser = (Spinner) findViewById(R.id.deal_cat_chooser);
@@ -239,6 +241,7 @@ public class DealsActivity extends MaxisMainActivity {
 			public void onItemSelected(AdapterView<?> adapter, View arg1,
 					int position, long arg3) {
 				if (position > 0) {
+					mRefineSearchView1.setText("Modify Result(s)");
 					// mSelectdCategory = (SubCategory) adapter
 					// .getItemAtPosition(position);
 					// if (!StringUtil.isNullOrEmpty(mSelectdCategory
@@ -265,6 +268,7 @@ public class DealsActivity extends MaxisMainActivity {
 					mSelctorResp = null;
 					// }
 				} else {
+					mRefineSearchView1.setText("Filter Deals");
 					showDealListing();
 					mSelctorResp = null;
 				}
@@ -278,26 +282,25 @@ public class DealsActivity extends MaxisMainActivity {
 		});
 		mCompanyList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-					long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
 				Log.e("manish", "inside onclick");
-				
-				if(position==(mCompListDealAdapter.getCount()-1))
-				{
-					//do nothing
+
+				if (position == (mCompListDealAdapter.getCount() - 1)
+						&& position != 0) {
+					// do nothing
+				} else {
+					CompanyDetailController controller = new CompanyDetailController(
+							DealsActivity.this, Events.DEAL_DETAIL);
+					String id = ((CompanyDesc) mCompListDealAdapter
+							.getItem(position)).getCompId();
+					DetailRequest detailRequest = new DetailRequest(
+							DealsActivity.this, id, true,
+							((CompanyDesc) mCompListDealAdapter
+									.getItem(position)).getCat_id());
+					startSppiner();
+					controller.requestService(detailRequest);
 				}
-				else{
-				CompanyDetailController controller = new CompanyDetailController(
-						DealsActivity.this, Events.DEAL_DETAIL);
-				String id = ((CompanyDesc) mCompListDealAdapter.getItem(position))
-						.getCompId();
-				DetailRequest detailRequest = new DetailRequest(
-						DealsActivity.this, id, true,
-						((CompanyDesc) mCompListDealAdapter.getItem(position))
-								.getCat_id());
-				startSppiner();
-				controller.requestService(detailRequest);
-			}
 			}
 		});
 
@@ -460,6 +463,12 @@ public class DealsActivity extends MaxisMainActivity {
 					Toast.makeText(getApplicationContext(),
 							"Please select a category first.",
 							Toast.LENGTH_SHORT).show();
+
+//					mCatchooser.getOnItemSelectedListener().onItemSelected(
+//							mCatchooser, mCatchooser.getSelectedView(),
+//							mCatchooser.getSelectedItemPosition(),
+//							mCatchooser.getSelectedItemId());
+					mCatchooser.performClick();
 				} else {
 					refineSearch();
 				}
@@ -710,7 +719,15 @@ public class DealsActivity extends MaxisMainActivity {
 	@Override
 	public void onPositiveDialogButton(int id) {
 		if (id == CustomDialog.CONFIRMATION_DIALOG) {
-			// refineSearch();
+			if (mCatchooser.getSelectedItem().toString()
+					.equalsIgnoreCase("All Categories")) {
+				Log.e("manish", "inside onclick");
+				Toast.makeText(getApplicationContext(),
+						"Please select a category first.", Toast.LENGTH_SHORT)
+						.show();
+			} else {
+				refineSearch();
+			}
 			isModifySearchDialogOpen = false;
 		} else if (id == CustomDialog.DATA_USAGE_DIALOG) {
 			showMap();
@@ -751,26 +768,29 @@ public class DealsActivity extends MaxisMainActivity {
 			if (mIsFreshSearch) {
 				mCatResponse = new RefineCategoryResponse();
 				if (mClResponse.getCategoryList() == null
-						|| mClResponse.getCategoryList().size() < 1 || mClRequest.getKeywordOrCategoryId()!=null || mClRequest.getKeywordOrCategoryId().equalsIgnoreCase("")) {
+						|| mClResponse.getCategoryList().size() < 1
+						|| mClRequest.getKeywordOrCategoryId() != null
+						|| mClRequest.getKeywordOrCategoryId()
+								.equalsIgnoreCase("")) {
 					showAlertDialog(getResources().getString(
 							R.string.category_list_not_found));
 					return;
-				}
-				else
-				{
-					if(mClRequest.isBySearch())
+				} else {
+					if (mClRequest.isBySearch()) {
+						ArrayList<CategoryRefine> catList = new ArrayList<CategoryRefine>();
+						CategoryRefine categoryRefine = new CategoryRefine();
+						categoryRefine.setCategoryId(mClRequest
+								.getKeywordOrCategoryId());
+						categoryRefine.setCategoryTitle(mClRequest
+								.getCategoryTitle());
+						catList.add(categoryRefine);
+						mCatResponse.setCategories(catList);
+					} else
+						mCatResponse.setCategories(mClResponse
+								.getCategoryList());
 					{
-						 ArrayList<CategoryRefine> catList = new ArrayList<CategoryRefine>();
-						 CategoryRefine categoryRefine = new CategoryRefine();
-						 categoryRefine.setCategoryId(mClRequest.getKeywordOrCategoryId());
-						 categoryRefine.setCategoryTitle(mClRequest.getCategoryTitle());
-						 catList.add(categoryRefine);
-						 mCatResponse.setCategories(catList);
-					}else
-						mCatResponse.setCategories(mClResponse.getCategoryList());
-					{
-			
-				}
+
+					}
 				}
 				Intent intent = new Intent(DealsActivity.this,
 						RefineSearchCategoryActivity.class);
