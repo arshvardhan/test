@@ -28,7 +28,8 @@
             android:text="@string/category_deals"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_12"
-            android:textStyle="bold" />
+            android:textStyle="bold" 
+            android:visibility="gone"/>
     </LinearLayout>
 
     <LinearLayout
@@ -130,7 +131,7 @@
             android:background="@color/transparent_footer_blue"
             android:clickable="true"
             android:gravity="center"
-            android:text="@string/cl_modify_search"
+            android:text="Filter Deals"
             android:textColor="@color/transparent_white"
             android:textSize="@dimen/sp_14"
             android:textStyle="bold" />
@@ -171,7 +172,7 @@
             android:background="@color/transparent_footer_blue"
             android:clickable="true"
             android:gravity="center"
-            android:text="Modify Search"
+            android:text="Filter Deals"
             android:textColor="@color/transparent_white"
             android:textSize="@dimen/sp_14"
             android:textStyle="bold" />

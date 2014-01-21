@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/header_base_activity"
-        layout="@layout/header_without_search" />
+        layout="@layout/header_with_popdown_search" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,16 +25,19 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/home_list_bar" >
+                android:background="@drawable/shape_bg_green_grey_stroke" >
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
+                    android:background="@drawable/shape_bg_green_grey_stroke"
+                    android:gravity="left"
                     android:paddingLeft="10dp"
+                    android:padding="5dp"
                     android:text="@string/post_deal"
-                    android:textColor="@color/maxis_green"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/sp_17"
                     android:textStyle="bold" />
             </RelativeLayout>
@@ -248,7 +251,7 @@
                             android:textColor="@color/black"
                             android:textSize="@dimen/sp_13" />
 
-                        <com.kelltontech.maxisgetit.ui.widgets.MultiSelectSpinner
+                        <TextView
                             android:id="@+id/adp_city_chooser"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -256,8 +259,10 @@
                             android:background="@drawable/dropdown_box"
                             android:paddingBottom="5dp"
                             android:paddingLeft="5dp"
-                            android:paddingRight="13dp"
+                            android:paddingRight="25dp"
                             android:paddingTop="5dp"
+                            android:scrollHorizontally="true"
+                            android:singleLine="true"
                             android:textColor="@color/black"
                             android:textSize="@dimen/sp_13" />
                     </LinearLayout>
@@ -273,13 +278,12 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".42"
-                            android:drawableRight="@drawable/required_icon"
                             android:padding="5dp"
                             android:text="@string/locality"
                             android:textColor="@color/black"
                             android:textSize="@dimen/sp_13" />
 
-                        <com.kelltontech.maxisgetit.ui.widgets.MultiSelectSpinner
+                        <TextView
                             android:id="@+id/adp_locality_chooser"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -287,8 +291,10 @@
                             android:background="@drawable/dropdown_box"
                             android:paddingBottom="5dp"
                             android:paddingLeft="5dp"
-                            android:paddingRight="13dp"
+                            android:paddingRight="25dp"
                             android:paddingTop="5dp"
+                            android:scrollHorizontally="true"
+                            android:singleLine="true"
                             android:textColor="@color/black"
                             android:textSize="@dimen/sp_13" />
                     </LinearLayout>
@@ -507,7 +513,7 @@
                             android:id="@+id/adp_voucher_type_RG"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".55"
+                            android:layout_weight=".65"
                             android:orientation="vertical" >
 
                             <RadioButton
