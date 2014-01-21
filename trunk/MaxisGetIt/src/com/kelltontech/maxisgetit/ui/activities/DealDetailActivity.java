@@ -279,14 +279,12 @@ public class DealDetailActivity extends MaxisMainActivity implements
 	}
 
 	private void indicatorchange(int pos) {
-
 		for (int i = 0; i < imgPathList.size(); i++) {
 			circleIndicator.getChildAt(i).setBackgroundResource(
 					R.drawable.circle_white);
 		}
 		circleIndicator.getChildAt(pos).setBackgroundResource(
 				R.drawable.circle_blue);
-
 	}
 
 	private void addImage() {
