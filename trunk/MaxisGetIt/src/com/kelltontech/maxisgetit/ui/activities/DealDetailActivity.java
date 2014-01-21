@@ -350,6 +350,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 						.fromResource(R.drawable.map_user_marker)));
 		// builder.include(sourceMarker.getPosition());
 		LatLng toPosition = null;
+		if(outLets!=null){
 		for (int i = 0; i < outLets.size(); i++) {
 
 			if (StringUtil.isNullOrEmpty(outLets.get(i).getLat())
@@ -366,6 +367,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 						.snippet(getSnippet(outLets.get(i))));
 				builder.include(toPosition);
 			}
+		}
 		}
 		LatLngBounds bounds = builder.build();
 		int padding = 100; // offset from edges of the map in pixels
@@ -623,10 +625,10 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			mDealTitle.setText(compDetailResponse.getTitle());
 
 		if (!StringUtil.isNullOrEmpty(compDetailResponse.getValidIn()))
-			validIn.setText("Valid in " + compDetailResponse.getValidIn());
+			validIn.setText(compDetailResponse.getValidIn());
 
 		if (!StringUtil.isNullOrEmpty(compDetailResponse.getValidDate()))
-			validDate.setText("Till " + compDetailResponse.getValidDate());
+			validDate.setText(compDetailResponse.getValidDate());
 
 		if (!StringUtil.isNullOrEmpty(compDetailResponse.getDescription()))
 			dealDesc.setText(compDetailResponse.getDescription());
@@ -652,14 +654,22 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		imgPathList = compDetailResponse.getIconUrl();
 
 		dealGallery = (ViewPager) findViewById(R.id.dealtopbanner);
-		if (imgPathList != null) {
+		if (imgPathList != null && imgPathList.size()>0) {
 			dealGallery.setVisibility(View.VISIBLE);
 			ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(
 					getSupportFragmentManager(), imgPathList, this);
+			if(imgPathList.size()>1)
+			{
 			addImage();
+			circleIndicator.setVisibility(View.VISIBLE);
+			}
+			else{
+				circleIndicator.setVisibility(View.GONE);
+			}
 			dealGallery.setAdapter(pagerAdapter);
 		} else {
 			dealGallery.setVisibility(View.GONE);
+			circleIndicator.setVisibility(View.GONE);
 		}
 
 		dealGallery.setOnPageChangeListener(new OnPageChangeListener() {

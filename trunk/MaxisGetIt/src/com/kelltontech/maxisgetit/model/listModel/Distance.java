@@ -12,7 +12,7 @@ public class Distance  implements Parcelable,IModel{
 	private int cId;
 	private int categoryId;
 	private String companyName;
-	private double distance;
+	private String distance;
 	private int count;
 	
 	private Address address;
@@ -62,14 +62,14 @@ public class Distance  implements Parcelable,IModel{
 	/**
 	 * @return the distance
 	 */
-	public double getDistance() {
+	public String getDistance() {
 		return distance;
 	}
 
 	/**
 	 * @param distance the distance to set
 	 */
-	public void setDistance(double distance) {
+	public void setDistance(String distance) {
 		this.distance = distance;
 	}
 
@@ -108,7 +108,7 @@ public class Distance  implements Parcelable,IModel{
 		count=parcel.readInt();
 		cId=parcel.readInt();
 		categoryId=parcel.readInt();
-		distance=parcel.readDouble();
+		distance=parcel.readString();
 		companyName=parcel.readString();
 		
 		byte addressFlag = parcel.readByte();
@@ -121,7 +121,7 @@ public class Distance  implements Parcelable,IModel{
 		parcel.writeInt(count);
 		parcel.writeInt(cId);
 		parcel.writeInt(categoryId);
-		parcel.writeDouble(distance);
+		parcel.writeString(distance);
 		parcel.writeString(companyName);
 		
 		// address with flag for null 
@@ -142,7 +142,7 @@ public class Distance  implements Parcelable,IModel{
 			cId=jsonObject.optInt("cid");
 			categoryId=jsonObject.optInt("cat_id");
 			companyName=jsonObject.optString("company_name");
-			distance=jsonObject.optDouble("distance");
+			distance=jsonObject.optString("distance");
 			address = new Address().fromJson(jsonObject.optString("address"));
 		} catch (JSONException e) {
 			e.printStackTrace();

@@ -39,8 +39,8 @@ public class CompanyListDealAdapter extends BaseAdapter {
 			dummyDrawable=mContext.getResources().getDrawable(R.drawable.comp_list_loading);
 			errorDrawable=mContext.getResources().getDrawable(R.drawable.comp_list_cross);
 		}else{
-			dummyDrawable=mContext.getResources().getDrawable(R.drawable.deal_list_loading);
-			errorDrawable=mContext.getResources().getDrawable(R.drawable.deal_list_noimage);
+			dummyDrawable=mContext.getResources().getDrawable(R.drawable.loading_deal);
+			errorDrawable=mContext.getResources().getDrawable(R.drawable.no_image_deal);
 		}
 	}
 	public void setData(ArrayList<CompanyDesc> compDescList) {
@@ -108,7 +108,7 @@ public class CompanyListDealAdapter extends BaseAdapter {
 			
 			
 			if(!StringUtil.isNullOrEmpty(compDesc.getEnd_date()))
-				model.dealValidDate.setText(Html.fromHtml("till "+compDesc.getEnd_date()));
+				model.dealValidDate.setText(Html.fromHtml(compDesc.getEnd_date()));
 			else
 				model.dealValidDate.setText(Html.fromHtml(""));
 			
@@ -123,7 +123,7 @@ public class CompanyListDealAdapter extends BaseAdapter {
 				city_state=compDesc.getState();
 			
 			if(!StringUtil.isNullOrEmpty(compDesc.getValid_in()))
-				model.dealValidArea.setText("Valid in "+compDesc.getValid_in());
+				model.dealValidArea.setText(compDesc.getValid_in());
 			else
 				model.dealValidArea.setText(Html.fromHtml(""));
 			

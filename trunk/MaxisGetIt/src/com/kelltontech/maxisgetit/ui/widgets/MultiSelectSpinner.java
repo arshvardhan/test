@@ -88,10 +88,10 @@ public class MultiSelectSpinner extends Spinner implements
 	}
 
 	public void onFocusChange(View v, boolean hasFocus) {
-		//super.onFocusChanged(hasFocus, FOCUS_DOWN, null);
+		// super.onFocusChanged(hasFocus, FOCUS_DOWN, null);
 		super.onFocusChanged(hasFocus, getDescendantFocusability(), null);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -192,12 +192,16 @@ public class MultiSelectSpinner extends Spinner implements
 	 */
 	public List<String> getSelectedStrings() {
 		List<String> selection = new LinkedList<String>();
-		for (int i = 0; i < _items.length; ++i) {
-			if (_selection[i]) {
-				selection.add(_items[i]);
+		if (_items != null) {
+			for (int i = 0; i < _items.length; ++i) {
+				if (_selection[i]) {
+					selection.add(_items[i]);
+				}
 			}
+			return selection;
+		} else {
+			return selection;
 		}
-		return selection;
 	}
 
 	/**
@@ -207,9 +211,11 @@ public class MultiSelectSpinner extends Spinner implements
 	 */
 	public List<Integer> getSelectedIndicies() {
 		List<Integer> selection = new LinkedList<Integer>();
-		for (int i = 0; i < _items.length; ++i) {
-			if (_selection[i]) {
-				selection.add(i);
+		if (_items != null) {
+			for (int i = 0; i < _items.length; ++i) {
+				if (_selection[i]) {
+					selection.add(i);
+				}
 			}
 		}
 		return selection;
@@ -238,5 +244,4 @@ public class MultiSelectSpinner extends Spinner implements
 		return sb.toString();
 	}
 
-	
 }
