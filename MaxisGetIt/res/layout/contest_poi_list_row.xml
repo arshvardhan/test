@@ -57,7 +57,7 @@
             android:id="@+id/txt3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight=".27"
+            android:layout_weight=".20"
             android:gravity="center"
             android:textColor="@color/app_green_light_color" />
     </LinearLayout>

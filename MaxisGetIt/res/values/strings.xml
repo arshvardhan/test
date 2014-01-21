@@ -76,7 +76,7 @@
     <string name="deal_applicable_in">Applicable In</string>
     <string name="entire_malaysia">Entire Malaysia</string>
     <string name="selective_cities">Selective Cities</string>
-    <string name="city">City</string>
+    <string name="city">City(s)</string>
 	<string name="locality">Outlet(s)</string>
     <string name="type_of_deal">Type Of Deal</string>
     <string name="informative">Informative</string>
@@ -130,7 +130,7 @@
     <string name="company_details">Company Details -</string>
     
     <string name="current_list_type">Current Listing Type -</string>
-    <string name="date_format">"MM-DD-YYYY"</string>
+    <string name="date_format">"YYYY-MM-DD"</string>
     <string name="dear_guest">Dear Guest</string>
     <string name="dear">Dear</string>
     <string name="deals">Deals</string>
