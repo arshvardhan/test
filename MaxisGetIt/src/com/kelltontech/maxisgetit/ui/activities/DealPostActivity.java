@@ -811,7 +811,7 @@ public class DealPostActivity extends MaxisMainActivity {
 			userId = mStore.getUserID();
 		}
 		if (StringUtil.isNullOrEmpty(userId)) {
-			showAlertDialog("Please Login again to post a deal.");
+			showAlertDialog("Please login again to post a Deal.");
 			return null;
 		} else {
 			jArray.put("uid", userId);
@@ -855,7 +855,7 @@ public class DealPostActivity extends MaxisMainActivity {
 				compId = compCatTemp.getCompanyId();
 				jArray.put("cid", compId);
 				if (mCatChooser.getSelectedItemPosition() == 0) {
-					showAlertDialog("Please choose category.");
+					showAlertDialog("Please choose Category.");
 					return null;
 				} else {
 					CategoryWithCharge catChTemp = (CategoryWithCharge) mCatChooser
@@ -944,7 +944,7 @@ public class DealPostActivity extends MaxisMainActivity {
 
 		String endDateStr = mEndDateBtn.getText().toString();
 		if (endDateStr.equals(getResources().getString(R.string.date_format))) {
-			showAlertDialog("Please Select End Date.");
+			showAlertDialog("Please select End Date.");
 			return null;
 		}
 		Calendar calEndDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
