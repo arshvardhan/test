@@ -750,7 +750,7 @@ public class DealsActivity extends MaxisMainActivity {
 					mClRequest.isBySearch());
 			intent.putExtra(AppConstants.IS_DEAL_LIST,
 					!mClRequest.isCompanyListing());
-			intent.putExtra(AppConstants.COMP_DETAIL_DATA, compListResp);
+			intent.putExtra(AppConstants.COMP_DETAIL_DATA, mClResponse);
 			intent.putExtra(AppConstants.DATA_LIST_REQUEST, mClRequest);
 			intent.putParcelableArrayListExtra(AppConstants.COMP_DETAIL_LIST,
 					mClResponse.getCompanyArrayList());
