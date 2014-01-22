@@ -88,7 +88,6 @@ public class CombindListActivity extends MaxisMainActivity {
 	private LinearLayout mDealsFooter;
 	private LinearLayout mListFooter;
 	private boolean mScrollUp;
-	private int count;
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -520,8 +519,8 @@ public class CombindListActivity extends MaxisMainActivity {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				mRecordsFoundView.setText(mClResponse.getTotalrecordFound()
-						+ " " + getResources().getString(R.string.record_found));
+//				mRecordsFoundView.setText(mClResponse.getTotalrecordFound()
+//						+ " " + getResources().getString(R.string.record_found));
 				// initNavigationButton(mClResponse.getPagesCount());
 				ArrayList<CompanyDesc> compListData = mClResponse
 						.getCompanyArrayList();
@@ -586,7 +585,6 @@ public class CombindListActivity extends MaxisMainActivity {
 		// getResources().getString(R.string.modify_to_filter));
 		// break;
 		case R.id.col_deal_btn:
-			 count =  mClResponse.getTotalrecordFound();
 			showDealListing(mClRequest.getKeywordOrCategoryId());
 			// CombindListingController listingController = new
 			// CombindListingController(CombindListActivity.this,
@@ -761,14 +759,4 @@ public class CombindListActivity extends MaxisMainActivity {
 
 	}
 	
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		mRecordsFoundView
-		.setText(count
-				+ " "
-				+ getResources().getString(
-						R.string.record_found));
-		super.onResume();
-	}
 }

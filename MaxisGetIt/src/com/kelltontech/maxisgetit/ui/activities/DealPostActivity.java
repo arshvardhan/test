@@ -99,6 +99,7 @@ public class DealPostActivity extends MaxisMainActivity {
 	private DealsListResponse mMyDealResp;
 	private MaxisStore mStore;
 	private Bitmap mBitmap;
+	Bitmap newBitmap;
 	private RadioButton mEntireMalaysiaRadioBtn, mSelectiveCities;
 	// String imageNameForRemoval;
 	// private int imageToRemove;
@@ -115,7 +116,7 @@ public class DealPostActivity extends MaxisMainActivity {
 	ArrayList<String> selectedStrings;
 	ArrayList<String> items;
 	ArrayList<String> localityItems;
-	
+
 	private ImageView mProfileIconView;
 	private ImageView mHeaderBackButton;
 	private ImageView mHomeIconView;
@@ -133,8 +134,8 @@ public class DealPostActivity extends MaxisMainActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_deal_post);
-//		UiUtils.hideKeyboardOnTappingOutside(
-//				findViewById(R.id.adp_root_layout), this);
+		// UiUtils.hideKeyboardOnTappingOutside(
+		// findViewById(R.id.adp_root_layout), this);
 		
 		mSelectedCityPositionList = new ArrayList<Integer>();
 		mSelectedOutletPositionList = new ArrayList<Integer>();
@@ -143,25 +144,25 @@ public class DealPostActivity extends MaxisMainActivity {
 		mStore = MaxisStore.getStore(DealPostActivity.this);
 
 		mHeaderTitle = (TextView) findViewById(R.id.header_title);
-		mHeaderTitle.setText("Post a Deal");
-		
+		mHeaderTitle.setText("My Deals");
+
 		mHomeIconView = (ImageView) findViewById(R.id.goto_home_icon);
 		mHomeIconView.setOnClickListener(this);
-		
+
 		mHeaderBackButton = (ImageView) findViewById(R.id.header_btn_back);
 		mHeaderBackButton.setOnClickListener(this);
-		
+
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
 		mSearchBtn.setOnClickListener(DealPostActivity.this);
-		
+
 		mProfileIconView = (ImageView) findViewById(R.id.show_profile_icon);
 		mProfileIconView.setOnClickListener(this);
-		
+
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
 		mSearchContainer = (LinearLayout) findViewById(R.id.search_box_container);
 		mSearchToggler = (ImageView) findViewById(R.id.search_toggler);
 		mSearchToggler.setOnClickListener(this);
-		
+
 		final Calendar c = Calendar.getInstance();
 		mStartYear = mEndYear = c.get(Calendar.YEAR);
 		mStartMonth = mEndMonth = c.get(Calendar.MONTH);
@@ -202,13 +203,13 @@ public class DealPostActivity extends MaxisMainActivity {
 								mEntireMalaysiaRadioBtn.setChecked(true);
 								mSelectiveCities.setChecked(false);
 							} else {
-								
+
 								clearCityLocalityLists(localityItems, mSelectedOutletPositionList);
 								clearCityLocalityLists(items, mSelectedCityPositionList);
 								
 								mCityDropDown.setText("Select");
 								mLocalityDropDown.setText("Select");
-								
+
 								if (mMyDealResp.getCompCategoryList().size() == 2) {
 									request.setCompanyId(mSingalCompCat
 											.getCompanyId());
@@ -388,7 +389,7 @@ public class DealPostActivity extends MaxisMainActivity {
 				{
 					showAlertDialog("Please choose city.");
 				}
-				
+
 			}
 		});
 
@@ -586,50 +587,51 @@ public class DealPostActivity extends MaxisMainActivity {
 		// }
 		// });
 
-//		mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
-//
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				// TODO Auto-generated method stub
-//				if (!booleanFirstTime) {
-//					booleanFirstTime = true;
-//
-//					// TODO Auto-generated method stub
-//					if (mSelectedItems.size() > 0) {
-//						selectedCities = selectedStrings;
-//						PostDealCityLocalityListController clController = new PostDealCityLocalityListController(
-//								DealPostActivity.this,
-//								Events.POST_DEAL_LOCALITY_LISTING);
-//						startSppiner();
-//
-//						JSONObject postJsaon = new JSONObject();
-//						JSONArray jArray = new JSONArray();
-//						try {
-//							for (String string : selectedCities) {
-//								jArray.put(string);
-//							}
-//							postJsaon.put("cities", jArray);
-//						} catch (JSONException e) {
-//							showAlertDialog(getResources().getString(
-//									R.string.internal_error));
-//							AnalyticsHelper
-//									.onError(
-//											FlurryEventsConstants.DATA_VALIDATION_ERR,
-//											"DealPostActivity : "
-//													+ AppConstants.DATA_VALIDATION_ERROR_MSG,
-//											e);
-//						}
-//						clController.requestService(postJsaon);
-//					} else {
-//						showAlertDialog("Please select a city.");
-//						booleanFirstTime = false;
-//					}
-//
-//				}
-//
-//				return false;
-//			}
-//		});
+		// mLocalityDropDown.setOnTouchListener(new OnTouchListener() {
+		//
+		// @Override
+		// public boolean onTouch(View v, MotionEvent event) {
+		// // TODO Auto-generated method stub
+		// if (!booleanFirstTime) {
+		// booleanFirstTime = true;
+		//
+		// // TODO Auto-generated method stub
+		// if (mSelectedItems.size() > 0) {
+		// selectedCities = selectedStrings;
+		// PostDealCityLocalityListController clController = new
+		// PostDealCityLocalityListController(
+		// DealPostActivity.this,
+		// Events.POST_DEAL_LOCALITY_LISTING);
+		// startSppiner();
+		//
+		// JSONObject postJsaon = new JSONObject();
+		// JSONArray jArray = new JSONArray();
+		// try {
+		// for (String string : selectedCities) {
+		// jArray.put(string);
+		// }
+		// postJsaon.put("cities", jArray);
+		// } catch (JSONException e) {
+		// showAlertDialog(getResources().getString(
+		// R.string.internal_error));
+		// AnalyticsHelper
+		// .onError(
+		// FlurryEventsConstants.DATA_VALIDATION_ERR,
+		// "DealPostActivity : "
+		// + AppConstants.DATA_VALIDATION_ERROR_MSG,
+		// e);
+		// }
+		// clController.requestService(postJsaon);
+		// } else {
+		// showAlertDialog("Please select a city.");
+		// booleanFirstTime = false;
+		// }
+		//
+		// }
+		//
+		// return false;
+		// }
+		// });
 	}
 
 
@@ -677,14 +679,14 @@ public class DealPostActivity extends MaxisMainActivity {
 			break;
 		case R.id.show_profile_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.SHOW_PROFILE_CLICK);
-//			Intent myAccountIntent = new Intent(DealPostActivity.this,
-//					MyAccountActivity.class);
-//			myAccountIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-//					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//			startActivity(myAccountIntent);
-			 onProfileClick();
+			// Intent myAccountIntent = new Intent(DealPostActivity.this,
+			// MyAccountActivity.class);
+			// myAccountIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+			// | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			// startActivity(myAccountIntent);
+			onProfileClick();
 			break;
-			
+
 		case R.id.search_toggler:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SEARCH_CLICK);
 			if (mSearchContainer.getVisibility() == View.VISIBLE) {
@@ -693,7 +695,7 @@ public class DealPostActivity extends MaxisMainActivity {
 				mSearchContainer.setVisibility(View.VISIBLE);
 			}
 			break;
-			
+
 		case R.id.search_icon_button:
 			mSearchEditText
 					.setText(mSearchEditText.getText().toString().trim());
@@ -951,12 +953,12 @@ public class DealPostActivity extends MaxisMainActivity {
 			showAlertDialog("Please Select a future End Date.");
 			return null;
 		}
-		// if (!startDateStr
-		// .equals(getResources().getString(R.string.date_format))
-		// && calStartDate.after(calEndDate)) {
-		// showAlertDialog("End Date should not be less than Start Date.");
-		// return null;
-		// }
+		 if (!startDateStr
+		 .equals(getResources().getString(R.string.date_format))
+		 && calStartDate.after(calEndDate)) {
+		 showAlertDialog("End Date should not be less than Start Date.");
+		 return null;
+		 }
 		else {
 			jArray.put("end_date", (calEndDate.getTime().getTime() / 1000));
 		}
@@ -995,10 +997,12 @@ public class DealPostActivity extends MaxisMainActivity {
 			if (mVoucherTypeGroup.getCheckedRadioButtonId() == R.id.adp_single_code) {
 				jArray.put("voucher_type", "0");
 				String voucherCode = mVoucherCode.getText().toString();
-				if (!StringUtil.isNullOrEmpty(voucherCode) && voucherCode.length() >= 7 && voucherCode.length() <=10 ) {
+				if (!StringUtil.isNullOrEmpty(voucherCode)
+						&& voucherCode.length() >= 7
+						&& voucherCode.length() <= 10) {
 					jArray.put("voucher_code", voucherCode);
 				} else {
-					showAlertDialog("Please enter a valid Voucher Code.");
+					showAlertDialog("Voucher Code should not be less than 7 characters.");
 					return null;
 				}
 			} else if (mVoucherTypeGroup.getCheckedRadioButtonId() == R.id.adp_system_generated) {
@@ -1052,7 +1056,7 @@ public class DealPostActivity extends MaxisMainActivity {
 		} else if (msg.arg2 == Events.POST_DEAL_LOCALITY_LISTING) {
 			stopSppiner();
 			if (msg.arg1 == 1) {
-//				showInfoDialog((String) msg.obj);
+				// showInfoDialog((String) msg.obj);
 				// mLocalityDropDown.setSelection(0);
 				mLocalityChooserSpinnerContainer.setVisibility(View.GONE);
 
@@ -1081,7 +1085,7 @@ public class DealPostActivity extends MaxisMainActivity {
 			} else {
 				ImageDataResponse response = (ImageDataResponse) msg.obj;
 				imageId.add(response.getImageId());
-				setImageView(mBitmap);
+				setImageView(newBitmap);
 				showInfoDialog("Image has been successfully saved.");
 				// Toast.makeText(getApplicationContext(),
 				// "Image has been successfully saved.",
@@ -1208,10 +1212,9 @@ public class DealPostActivity extends MaxisMainActivity {
 					getSize(), (int) (getSize() * (1.3)));
 
 			// TODO:: SET ORIENTATION
-			Bitmap newBitmap = null;
-			if(mBitmap!=null)
-			{
-			 newBitmap = setOrientation(mBitmap,imagePath);
+			newBitmap = null;
+			if (mBitmap != null) {
+				newBitmap = setOrientation(mBitmap, imagePath);
 			}
 			// BitmapFactory.Options options = new BitmapFactory.Options() ;
 			// options.inPurgeable = true;
@@ -1221,6 +1224,10 @@ public class DealPostActivity extends MaxisMainActivity {
 
 				uploadImagetoServer(newBitmap);
 
+			}
+			else
+			{
+				Toast.makeText(this, "Please select another image different from device's default.", Toast.LENGTH_SHORT).show();
 			}
 			// System.out.println(getBase64Image());
 			// mImagePath = getFileNameByUri(selectedImage);
@@ -1312,7 +1319,7 @@ public class DealPostActivity extends MaxisMainActivity {
 		FrameLayout.LayoutParams vp = new FrameLayout.LayoutParams(getSize(),
 				getSize());
 		imgView[imageId.size() - 1].setLayoutParams(vp);
-		imgView[imageId.size() - 1].setPadding(10, 10, 10, 10);
+//		imgView[imageId.size() - 1].setPadding(10, 10, 10, 10);
 		removeImgView[imageId.size() - 1].setVisibility(View.VISIBLE);
 		radioBtns[imageId.size() - 1].setVisibility(View.VISIBLE);
 	}
@@ -1512,7 +1519,7 @@ public class DealPostActivity extends MaxisMainActivity {
 								for (int i = 0; i < mSelectedItems.size(); i++) {
 									selectedStrings.add(totalItems.get(i));
 									selectedData.append(totalItems.get(i));
-									if (i < mSelectedItems.size()-1) {
+									if (i < mSelectedItems.size() - 1) {
 										selectedData.append(", ");
 									}
 								}
@@ -1523,7 +1530,8 @@ public class DealPostActivity extends MaxisMainActivity {
 									mLocalityDropDown.setText("Select");
 									getLocality();
 								} else {
-									mLocalityDropDown.setText(selectedData.toString());
+									mLocalityDropDown.setText(selectedData
+											.toString());
 									selectedLocalities.addAll(selectedStrings);
 								}
 							} else {
@@ -1548,14 +1556,12 @@ public class DealPostActivity extends MaxisMainActivity {
 		builder.create();
 		builder.show();
 	}
-	
-	public void getLocality()
-	{
+
+	public void getLocality() {
 		if (mSelectedItems.size() > 0) {
 			selectedCities = selectedStrings;
 			PostDealCityLocalityListController clController = new PostDealCityLocalityListController(
-					DealPostActivity.this,
-					Events.POST_DEAL_LOCALITY_LISTING);
+					DealPostActivity.this, Events.POST_DEAL_LOCALITY_LISTING);
 			startSppiner();
 
 			JSONObject postJsaon = new JSONObject();
@@ -1566,15 +1572,12 @@ public class DealPostActivity extends MaxisMainActivity {
 				}
 				postJsaon.put("cities", jArray);
 			} catch (JSONException e) {
-				showAlertDialog(getResources()
-						.getString(
-								R.string.internal_error));
-				AnalyticsHelper
-						.onError(
-								FlurryEventsConstants.DATA_VALIDATION_ERR,
-								"DealPostActivity : "
-										+ AppConstants.DATA_VALIDATION_ERROR_MSG,
-								e);
+				showAlertDialog(getResources().getString(
+						R.string.internal_error));
+				AnalyticsHelper.onError(
+						FlurryEventsConstants.DATA_VALIDATION_ERR,
+						"DealPostActivity : "
+								+ AppConstants.DATA_VALIDATION_ERROR_MSG, e);
 			}
 			clController.requestService(postJsaon);
 		} else {

@@ -186,11 +186,13 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			tNc.setBackgroundResource(R.drawable.right_btn);
 
 			setUpMapIfNeeded();
-
+			if(outLets!=null && outLets.size()>0 )
+			{
 			if (!StringUtil.isNullOrEmpty(outLetResponse.getOutlet().get(0)
 					.getAddress())) {
 				dealDesc.setText(outLets.get(0).getTitle()+", "+outLets.get(0).getAddress());
-			} else {
+			}
+			}else {
 				dealDesc.setText("Nearest OutLet Address not available .");
 			}
 			break;
@@ -379,7 +381,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 				.tilt(30) // Sets the tilt of the camera to 30 degrees
 				.build();
 		// mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-		if (outLets != null) {
+		if (outLets != null && outLets.size()>0) {
 		if (isNearestOutlet) {
 			mMapInfoWindowAdapter = new DealMapInfoWindowAdapter(this);
 			ArrayList<OutLet> nearestOutlet = new ArrayList<OutLet>();
@@ -488,8 +490,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			message.arg2 = event;
 			message.arg1 = 1;
 			if (response.isError()) {
-				message.obj = response.getErrorText() + " "
-						+ response.getErrorCode();
+				message.obj = response.getErrorText();
 			}
 
 			else if (event == Events.OUTLET_DETAIL) {
@@ -546,7 +547,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			stopSppiner();
 		} else if (msg.arg2 == Events.DOWNLOAD_DEAL) {
 			if (msg.arg1 == 1) {
-				showInfoDialog("There is some problem in Downloding deal. Please Try again.");
+				showInfoDialog((String) msg.obj);
 			} else if (msg.arg1 == 0) {
 				MaxisResponse genResp = (MaxisResponse) msg.obj;
 				showInfoDialog("Thank you for Download Deal. The message has been sent to your Phone Number.");
