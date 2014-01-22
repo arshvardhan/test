@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.kelltontech.framework.model.IModel;
 import com.kelltontech.framework.parser.AbstractSAXParser;
+import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.dao.SelectorDAO;
 import com.kelltontech.maxisgetit.response.RefineSelectorResponse;
 
@@ -50,6 +51,7 @@ public class RefineAttributeParser extends AbstractSAXParser {
 			Log.d("maxis", getNodeValue());
 			selector.setDisplayName(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_VLAUE)) {
+			if(!StringUtil.isNullOrEmpty(getNodeValue()))
 			selector.addSelectorValues(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_SELCTOR_ROOT)) {
 			response.addSelector(selector);

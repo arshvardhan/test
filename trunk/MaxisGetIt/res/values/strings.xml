@@ -72,7 +72,7 @@
 
     <!-- Deal Post activity -->
 
-    <string name="post_deal">Post Deal</string>
+    <string name="post_deal">Post a Deal</string>
     <string name="deal_applicable_in">Applicable In</string>
     <string name="entire_malaysia">Entire Malaysia</string>
     <string name="selective_cities">Selective Cities</string>

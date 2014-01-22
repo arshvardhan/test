@@ -272,6 +272,7 @@ public class DealsActivity extends MaxisMainActivity {
 					showDealListing();
 					mSelctorResp = null;
 				}
+				isModifySearchDialogOpen = false;
 			}
 
 			@Override
@@ -500,8 +501,7 @@ public class DealsActivity extends MaxisMainActivity {
 			message.arg2 = event;
 			message.arg1 = 1;
 			if (response.isError()) {
-				message.obj = response.getErrorText() + " "
-						+ response.getErrorCode();
+				message.obj = response.getErrorText();
 			} else if (event == Events.COMBIND_LISTING_PAGINATION) {
 				if (response.getPayload() instanceof CompanyListResponse) {
 					CompanyListResponse compListResponse = (CompanyListResponse) response
@@ -650,7 +650,7 @@ public class DealsActivity extends MaxisMainActivity {
 			stopSppiner();
 		} else if (msg.arg2 == Events.DOWNLOAD_DEAL) {
 			if (msg.arg1 == 1) {
-				showInfoDialog("There is some problem in Downloding deal. Please Try again.");
+				showInfoDialog((String) msg.obj);
 			} else if (msg.arg1 == 0) {
 				MaxisResponse genResp = (MaxisResponse) msg.obj;
 				showInfoDialog("Thank you for Download Deal. The message has been sent to your Phone Number.");
@@ -725,10 +725,12 @@ public class DealsActivity extends MaxisMainActivity {
 				Toast.makeText(getApplicationContext(),
 						"Please select a category first.", Toast.LENGTH_SHORT)
 						.show();
+				mCatchooser.performClick();
 			} else {
 				refineSearch();
+				isModifySearchDialogOpen = false;
 			}
-			isModifySearchDialogOpen = false;
+			
 		} else if (id == CustomDialog.DATA_USAGE_DIALOG) {
 			showMap();
 		} else {
@@ -797,6 +799,7 @@ public class DealsActivity extends MaxisMainActivity {
 				intent.putExtra(AppConstants.REFINE_CAT_RESPONSE, mCatResponse);
 				intent.putExtra(AppConstants.DATA_LIST_REQUEST, mClRequest);
 				startActivityForResult(intent, 1);
+				
 			} else {
 				if (mSelctorResp != null) {
 					displayRefineWithAttributeSpinnersPreloaded(mSelctorResp,
