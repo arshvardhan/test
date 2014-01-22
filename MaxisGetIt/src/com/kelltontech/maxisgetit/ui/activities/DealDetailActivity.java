@@ -143,7 +143,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 				DetailRequest detailRequest = new DetailRequest(
 						DealDetailActivity.this, comp_id, getIntent()
 								.getExtras().getBoolean(
-										AppConstants.IS_DEAL_LIST), mCategoryid);
+										AppConstants.IS_DEAL_LIST), "");
 
 				startSppiner();
 				controller.requestService(detailRequest);
@@ -154,6 +154,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			comp_id = compDetailResponse.getCid();
 			deal_id = compDetailResponse.getId();
 			setdata();
+			getOutLets();
 		}
 
 	}
@@ -186,13 +187,13 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			tNc.setBackgroundResource(R.drawable.right_btn);
 
 			setUpMapIfNeeded();
-			if(outLets!=null && outLets.size()>0 )
-			{
-			if (!StringUtil.isNullOrEmpty(outLetResponse.getOutlet().get(0)
-					.getAddress())) {
-				dealDesc.setText(outLets.get(0).getTitle()+", "+outLets.get(0).getAddress());
-			}
-			}else {
+			if (outLets != null && outLets.size() > 0) {
+				if (!StringUtil.isNullOrEmpty(outLetResponse.getOutlet().get(0)
+						.getAddress())) {
+					dealDesc.setText(outLets.get(0).getTitle() + ", "
+							+ outLets.get(0).getAddress());
+				}
+			} else {
 				dealDesc.setText("Nearest OutLet Address not available .");
 			}
 			break;
@@ -350,24 +351,25 @@ public class DealDetailActivity extends MaxisMainActivity implements
 						.fromResource(R.drawable.map_user_marker)));
 		// builder.include(sourceMarker.getPosition());
 		LatLng toPosition = null;
-		if(outLets!=null){
-		for (int i = 0; i < outLets.size(); i++) {
+		if (outLets != null) {
+			for (int i = 0; i < outLets.size(); i++) {
 
-			if (StringUtil.isNullOrEmpty(outLets.get(i).getLat())
-					|| StringUtil.isNullOrEmpty(outLets.get(i).getLat())) {
+				if (StringUtil.isNullOrEmpty(outLets.get(i).getLat())
+						|| StringUtil.isNullOrEmpty(outLets.get(i).getLat())) {
 
-			} else {
-				toPosition = new LatLng(Double.parseDouble(outLets.get(i)
-						.getLat()), Double.parseDouble(outLets.get(i)
-						.getLongt()));
-				mMap.addMarker(new MarkerOptions()
-						.icon(BitmapDescriptorFactory
-								.fromResource(R.drawable.map_company_marker))
-						.position(toPosition).title(outLets.get(i).getTitle())
-						.snippet(getSnippet(outLets.get(i))));
-				builder.include(toPosition);
+				} else {
+					toPosition = new LatLng(Double.parseDouble(outLets.get(i)
+							.getLat()), Double.parseDouble(outLets.get(i)
+							.getLongt()));
+					mMap.addMarker(new MarkerOptions()
+							.icon(BitmapDescriptorFactory
+									.fromResource(R.drawable.map_company_marker))
+							.position(toPosition)
+							.title(outLets.get(i).getTitle())
+							.snippet(getSnippet(outLets.get(i))));
+					builder.include(toPosition);
+				}
 			}
-		}
 		}
 		LatLngBounds bounds = builder.build();
 		int padding = 100; // offset from edges of the map in pixels
@@ -381,20 +383,20 @@ public class DealDetailActivity extends MaxisMainActivity implements
 				.tilt(30) // Sets the tilt of the camera to 30 degrees
 				.build();
 		// mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-		if (outLets != null && outLets.size()>0) {
-		if (isNearestOutlet) {
-			mMapInfoWindowAdapter = new DealMapInfoWindowAdapter(this);
-			ArrayList<OutLet> nearestOutlet = new ArrayList<OutLet>();
-		
+		if (outLets != null && outLets.size() > 0) {
+			if (isNearestOutlet) {
+				mMapInfoWindowAdapter = new DealMapInfoWindowAdapter(this);
+				ArrayList<OutLet> nearestOutlet = new ArrayList<OutLet>();
+
 				nearestOutlet.add(outLets.get(0));
 				mMapInfoWindowAdapter.setData(nearestOutlet);
 				mMap.setInfoWindowAdapter(mMapInfoWindowAdapter);
-			
-		} else {
-			mMapInfoWindowAdapter = new DealMapInfoWindowAdapter(this);
-			mMapInfoWindowAdapter.setData(outLets);
-			mMap.setInfoWindowAdapter(mMapInfoWindowAdapter);
-		}
+
+			} else {
+				mMapInfoWindowAdapter = new DealMapInfoWindowAdapter(this);
+				mMapInfoWindowAdapter.setData(outLets);
+				mMap.setInfoWindowAdapter(mMapInfoWindowAdapter);
+			}
 		}
 		mMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 
@@ -559,11 +561,10 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			} else {
 				compDetailResponse = (CompanyDetail) msg.obj;
 				if (!StringUtil.isNullOrEmpty(compDetailResponse.getId())) {
-					if (mClRequest.isBySearch())
-
-						deal_id = compDetailResponse.getId();
+					deal_id = compDetailResponse.getId();
 					comp_id = compDetailResponse.getCid();
 					setdata();
+					getOutLets();
 					// intent.putExtra(AppConstants.THUMB_URL,
 					// mCategoryThumbUrl);
 					// intent.putExtra(AppConstants.IS_DEAL_LIST,
@@ -653,16 +654,14 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		imgPathList = compDetailResponse.getIconUrl();
 
 		dealGallery = (ViewPager) findViewById(R.id.dealtopbanner);
-		if (imgPathList != null && imgPathList.size()>0) {
+		if (imgPathList != null && imgPathList.size() > 0) {
 			dealGallery.setVisibility(View.VISIBLE);
 			ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(
 					getSupportFragmentManager(), imgPathList, this);
-			if(imgPathList.size()>1)
-			{
-			addImage();
-			circleIndicator.setVisibility(View.VISIBLE);
-			}
-			else{
+			if (imgPathList.size() > 1) {
+				addImage();
+				circleIndicator.setVisibility(View.VISIBLE);
+			} else {
 				circleIndicator.setVisibility(View.GONE);
 			}
 			dealGallery.setAdapter(pagerAdapter);
@@ -690,7 +689,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			}
 		});
 
-		getOutLets();
+		// getOutLets();
 	}
 
 	public void addOutLets() {
