@@ -20,8 +20,9 @@ public class PostDealCityLocalityListParser extends AbstractSAXParser {
 	public static final String TAG_LOCALITY_ROOT = "Localities";
 	public static final String TAG_CITY_NAME = "CityName";
 	public static final String TAG_LOCALITY_NAME = "Locality";
-	private ArrayList<PostDealCityOrLoc> cityLocalityList = new ArrayList<PostDealCityOrLoc>();
-	private PostDealCityOrLoc cityLocality;
+	private ArrayList<PostDealCityOrLoc> cityLocalityList;
+	private PostDealCityOrLoc city;
+	private PostDealCityOrLoc locality;
 	private PostDealCityLocListResponse listResponse = new PostDealCityLocListResponse();
 
 	@Override
@@ -38,7 +39,7 @@ public class PostDealCityLocalityListParser extends AbstractSAXParser {
 			IllegalArgumentException {
 		if (localName.equalsIgnoreCase(TAG_CITY_ROOT)
 				|| localName.equalsIgnoreCase(TAG_LOCALITY_ROOT)) {
-			cityLocality = new PostDealCityOrLoc();
+			cityLocalityList = new ArrayList<PostDealCityOrLoc>();
 		}
 	}
 
@@ -53,12 +54,14 @@ public class PostDealCityLocalityListParser extends AbstractSAXParser {
 			listResponse.setServerMessage(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_CITY_NAME)) {
 			Log.d("maxis", getNodeValue());
-			cityLocality.setName(getNodeValue());
-			cityLocalityList.add(cityLocality);
+			city = new PostDealCityOrLoc();
+			city.setName(getNodeValue());
+			cityLocalityList.add(city);
 		} else if (localName.equalsIgnoreCase(TAG_LOCALITY_NAME)) {
 			Log.d("maxis", getNodeValue());
-			cityLocality.setName(getNodeValue());
-			cityLocalityList.add(cityLocality);
+			locality = new PostDealCityOrLoc();
+			locality.setName(getNodeValue());
+			cityLocalityList.add(locality);
 		} else if (localName.equalsIgnoreCase(TAG_CITY_ROOT)
 				|| localName.equalsIgnoreCase(TAG_LOCALITY_ROOT)) {
 			listResponse.setCityOrLocalityList(cityLocalityList);

@@ -636,6 +636,7 @@ public class DealPostActivity extends MaxisMainActivity {
 
 
 	protected boolean[] getSelectedCityOutletBooleanArray(ArrayList<String> items, ArrayList<Integer> selectedPoition) {
+		if(items != null) {
 		boolean[] selectedArray = new boolean[items.size()];
 		for (int i = 0; i < items.size(); i++) {
 			if (selectedPoition.contains(i)) {
@@ -645,7 +646,9 @@ public class DealPostActivity extends MaxisMainActivity {
 			}
 		}
 		return selectedArray;
-		
+		} else {
+			return null;
+		}
 	}
 
 	protected void clearCityLocalityLists(ArrayList<String> arraylist, ArrayList<Integer> integerList) {
@@ -1034,6 +1037,7 @@ public class DealPostActivity extends MaxisMainActivity {
 			stopSppiner();
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
+				mEntireMalaysiaRadioBtn.setChecked(true);
 				// mLocalityDropDown.setSelection(0);
 			} else {
 				booleanFirstTime = false;
