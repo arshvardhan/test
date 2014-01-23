@@ -86,7 +86,6 @@
                         android:layout_weight=".65"
                         android:background="@drawable/text_field"
                         android:inputType="textPersonName"
-                        android:maxLength="30"
                         android:padding="5dp"
                         android:singleLine="true"
                         android:textColor="@color/black"
