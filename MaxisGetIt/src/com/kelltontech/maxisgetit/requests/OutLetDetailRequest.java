@@ -4,6 +4,15 @@ public class OutLetDetailRequest {
 
 	private String deal_id;
 	private String comp_id;
+	private String l3cat_id;
+
+	public String getL3cat_id() {
+		return l3cat_id;
+	}
+
+	public void setL3cat_id(String l3cat_id) {
+		this.l3cat_id = l3cat_id;
+	}
 
 	public String getDeal_id() {
 		return deal_id;

@@ -168,7 +168,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 
 		boolean isDeal = getIntent().getExtras().getBoolean(
 				AppConstants.IS_DEAL_LIST);
-		if (isDeal) {
+		if (false) {
 			mFavBtnView.setVisibility(View.GONE);
 		} else {
 			mFavBtnView.setVisibility(View.VISIBLE);
@@ -185,8 +185,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 				CompanyDetailController controller = new CompanyDetailController(
 						CompanyDetailActivity.this, Events.COMPANY_DETAIL);
 				DetailRequest detailRequest = new DetailRequest(
-						CompanyDetailActivity.this, id, getIntent().getExtras()
-								.getBoolean(AppConstants.IS_DEAL_LIST),
+						CompanyDetailActivity.this, id, false,
 						mCategoryid);
 
 				startSppiner();
@@ -354,6 +353,8 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			mTxtDistanceTitle.setText(mCompanyDetail.getDistance());
 		}
 
+//		if(!StringUtil.isNullOrEmpty(mCompanyDetail.getRecordType()))
+//		{
 		if (mCompanyDetail.getRecordType().equalsIgnoreCase(
 				AppConstants.COMP_TYPE_DEAL)) {
 			mReviewList.setVisibility(View.GONE);
@@ -364,7 +365,8 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			findViewById(R.id.cd_layout_report_an_error).setVisibility(
 					View.GONE);
 			mViewMoreReviews.setVisibility(View.GONE);
-		} else {
+//		}
+		}else {
 			inflateReviewsList(mCompanyDetail.getCompanyReviewList());
 			mUserRating.setRating(mCompanyDetail.getRating());
 		}

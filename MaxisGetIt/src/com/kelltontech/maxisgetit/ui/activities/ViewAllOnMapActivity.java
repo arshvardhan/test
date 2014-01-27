@@ -73,8 +73,7 @@ public class ViewAllOnMapActivity extends MaxisFragmentBaseActivity implements
 		String headerTitle = bundle.getString(AppConstants.MAP_ALL_TITLE);
 		boolean isSearchKeyword = bundle
 				.getBoolean(AppConstants.IS_SEARCH_KEYWORD);
-		compDetailResponse = bundle
-				.getParcelable(AppConstants.COMP_DETAIL_DATA);
+		compDetailResponse = null;
 		// setUpMapIfNeeded();
 		ImageLoader.initialize(ViewAllOnMapActivity.this);
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
@@ -216,6 +215,8 @@ public class ViewAllOnMapActivity extends MaxisFragmentBaseActivity implements
 					intent.putExtra(AppConstants.CATEGORY_ID_KEY,
 							compDesc.getCat_id());
 
+					
+					
 					intent.putExtras(bundle);
 					startActivity(intent);
 

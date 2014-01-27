@@ -272,7 +272,7 @@ public class DealsActivity extends MaxisMainActivity {
 					showDealListing();
 					mSelctorResp = null;
 				}
-				isModifySearchDialogOpen = false;
+				
 			}
 
 			@Override
@@ -288,8 +288,9 @@ public class DealsActivity extends MaxisMainActivity {
 				Log.e("manish", "inside onclick");
 
 				if (position == (mCompListDealAdapter.getCount() - 1)
-						&& position != 0) {
+						&& position != 0 && mClResponse.getTotalrecordFound()>10) {
 					// do nothing
+					
 				} else {
 					CompanyDetailController controller = new CompanyDetailController(
 							DealsActivity.this, Events.DEAL_DETAIL);
@@ -581,6 +582,7 @@ public class DealsActivity extends MaxisMainActivity {
 						DealsActivity.this, false);
 				mCompListDealAdapter.setData(compListData);
 				mCompanyList.setAdapter(mCompListDealAdapter);
+				isModifySearchDialogOpen = false;
 			}
 			stopSppiner();
 
@@ -623,6 +625,7 @@ public class DealsActivity extends MaxisMainActivity {
 								mClRequest.getKeywordOrCategoryId());
 					intent.putExtra(AppConstants.COMP_DETAIL_DATA, compListResp);
 					intent.putExtra(AppConstants.DATA_LIST_REQUEST, mClRequest);
+					
 					// intent.putExtra(AppConstants.THUMB_URL,
 					// mCategoryThumbUrl);
 					// intent.putExtra(AppConstants.IS_DEAL_LIST,
@@ -729,8 +732,9 @@ public class DealsActivity extends MaxisMainActivity {
 			} else {
 				refineSearch();
 				isModifySearchDialogOpen = false;
+
 			}
-			
+//			
 		} else if (id == CustomDialog.DATA_USAGE_DIALOG) {
 			showMap();
 		} else {
@@ -799,7 +803,6 @@ public class DealsActivity extends MaxisMainActivity {
 				intent.putExtra(AppConstants.REFINE_CAT_RESPONSE, mCatResponse);
 				intent.putExtra(AppConstants.DATA_LIST_REQUEST, mClRequest);
 				startActivityForResult(intent, 1);
-				
 			} else {
 				if (mSelctorResp != null) {
 					displayRefineWithAttributeSpinnersPreloaded(mSelctorResp,

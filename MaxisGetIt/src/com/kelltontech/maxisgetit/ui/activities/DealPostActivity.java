@@ -726,6 +726,15 @@ public class DealPostActivity extends MaxisMainActivity {
 						array.put(img);
 					}
 					postJson.put("image", array);
+					
+					if (imageId.size() > 0) {
+						if (checkedIndex >= 0) {
+							String coverImage = imageId.get(checkedIndex);
+							postJson.put("cover_id", coverImage);
+						} else {
+							showAlertDialog("Please choose Cover Image");
+						}
+					}
 				} catch (Throwable e) {
 					AnalyticsHelper
 							.onError(
@@ -915,15 +924,7 @@ public class DealPostActivity extends MaxisMainActivity {
 
 						jArray.put("locality_id", localityArray);
 					}
-					if (imageId.size() > 0) {
-						if (checkedIndex >= 0) {
-							String coverImage = imageId.get(checkedIndex);
-							jArray.put("cover_id", coverImage);
-						} else {
-							showAlertDialog("Please choose Cover Image");
-							return null;
-						}
-					}
+					
 				}
 			} else {
 				showAlertDialog("Please choose City.");
@@ -953,7 +954,7 @@ public class DealPostActivity extends MaxisMainActivity {
 		Calendar calEndDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		calEndDate.set(mEndYear, mEndMonth, mEndDay);
 		if (calEndDate.getTime().getTime() <= System.currentTimeMillis()) {
-			showAlertDialog("Please Select a future End Date.");
+			showAlertDialog("Please select a future End Date.");
 			return null;
 		}
 		 if (!startDateStr
@@ -1004,8 +1005,12 @@ public class DealPostActivity extends MaxisMainActivity {
 						&& voucherCode.length() >= 7
 						&& voucherCode.length() <= 10) {
 					jArray.put("voucher_code", voucherCode);
-				} else {
+				} else if(voucherCode.length() < 7 && voucherCode.length() > 0){
 					showAlertDialog("Voucher Code should not be less than 7 characters.");
+					return null;
+				}
+				else{
+					showAlertDialog("Please enter Voucher Code.");
 					return null;
 				}
 			} else if (mVoucherTypeGroup.getCheckedRadioButtonId() == R.id.adp_system_generated) {
@@ -1106,7 +1111,7 @@ public class DealPostActivity extends MaxisMainActivity {
 				 */// resetImageView(mBitmap);
 				replaceImageView(removeImageIndex);
 				// removeImgView[removeImageIndex].setVisibility(View.GONE);
-				// imgView[removeImageIndex].setPadding(10, 10, 10, 10);
+//				 imgView[removeImageIndex].setPadding(10, 10, 10, 10);
 				imageId.remove(removeImageIndex);
 				showInfoDialog("Image has been successfully removed.");
 				// Toast.makeText(getApplicationContext(),
@@ -1323,7 +1328,7 @@ public class DealPostActivity extends MaxisMainActivity {
 		FrameLayout.LayoutParams vp = new FrameLayout.LayoutParams(getSize(),
 				getSize());
 		imgView[imageId.size() - 1].setLayoutParams(vp);
-//		imgView[imageId.size() - 1].setPadding(10, 10, 10, 10);
+		imgView[imageId.size() - 1].setPadding(10, 10, 10, 10);
 		removeImgView[imageId.size() - 1].setVisibility(View.VISIBLE);
 		radioBtns[imageId.size() - 1].setVisibility(View.VISIBLE);
 	}
@@ -1367,7 +1372,7 @@ public class DealPostActivity extends MaxisMainActivity {
 				// radioBtns[i].setChecked(false);
 				radioBtns[i].setVisibility(radioBtns[i + 1].getVisibility());
 
-				// imgView[i].setPadding(0, 0, 0, 0);
+				 imgView[i].setPadding(0, 0, 0, 0);
 				/* removeImgView[i].setVisibility(View.GONE); */
 			}
 			// imgView[3].setBackgroundResource(R.drawable.upload_photo_icon);
@@ -1375,6 +1380,8 @@ public class DealPostActivity extends MaxisMainActivity {
 
 			imgView[3].setPadding(0, 0, 0, 0);
 			removeImgView[3].setVisibility(View.GONE);
+			radioBtns[3].setChecked(false);
+			radioBtns[3].setVisibility(View.INVISIBLE);
 		} else {
 			imgView[3].setImageResource(R.drawable.upload_photo_icon);
 			imgView[3].setPadding(0, 0, 0, 0);

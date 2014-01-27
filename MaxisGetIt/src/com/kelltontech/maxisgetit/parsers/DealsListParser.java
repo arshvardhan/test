@@ -1,6 +1,7 @@
 package com.kelltontech.maxisgetit.parsers;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -20,6 +21,7 @@ public class DealsListParser extends AbstractSAXParser {
 	private MyDeal latestDeal;
 	private MyDeal myDeal;
 	private MyDealsList dealGroup;
+	private ArrayList<MyDeal> dealArray;
 	private CompanyCategory companyCategory;
 	private CategoryWithCharge catCharge;
 	public static final String TAG_ERROR_CODE = "Error_Code";
@@ -51,6 +53,7 @@ public class DealsListParser extends AbstractSAXParser {
 		if (localName.equalsIgnoreCase(TAG_DEAL)) {
 			myDeal = new MyDeal();
 		} else if (localName.equalsIgnoreCase(TAG_GROUP)) {
+			dealArray = new ArrayList<MyDeal>();
 			dealGroup = new MyDealsList();
 		}else if (localName.equalsIgnoreCase(TAG_COMPANY)) {
 			companyCategory = new CompanyCategory();
@@ -80,15 +83,17 @@ public class DealsListParser extends AbstractSAXParser {
 		} else if (localName.equalsIgnoreCase(TAG_VALIDITY) && parent.endsWith(TAG_DEAL)) {
 			myDeal.setValidity(getLong(getNodeValue(),0)+"");
 		} else if (localName.equalsIgnoreCase(TAG_DEAL)) {
-			dealGroup.addDeal(myDeal);
+//			dealGroup.addDeal(myDeal);
+			dealArray.add(myDeal);
 			if(latestDeal==null){
 				latestDeal=myDeal;
 			}else{
-				if(getLong(latestDeal.getValidity(),0)<getLong(myDeal.getValidity(),0)){
-					latestDeal=myDeal;
-				}
+//				if(getLong(latestDeal.getValidity(),0)<getLong(myDeal.getValidity(),0)){
+//					latestDeal=myDeal;
+//				}
 			}
 		} else if (localName.equalsIgnoreCase(TAG_GROUP)) {
+			dealGroup.addDealList(dealArray);
 			myDealsResponse.addDealGroupList(dealGroup);
 		}else if (localName.equalsIgnoreCase(TAG_ID) && parent.endsWith(TAG_COMPANY)) {
 			companyCategory.setCompanyId(getNodeValue());
