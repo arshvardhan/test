@@ -73,6 +73,7 @@ public class CombindListActivity extends MaxisMainActivity {
 	private ImageView mSearchBtn;
 	private EditText mSearchEditText;
 	private CompanyListResponse mClResponse;
+	private CompanyListResponse mDealResponse;
 	private CombinedListRequest mClRequest;
 	private ImageView mProfileIconView;
 	private ImageView mHeaderBackButton;
@@ -240,6 +241,11 @@ public class CombindListActivity extends MaxisMainActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
+				
+				if (arg2 == (mCompListAdapter.getCount() - 1)
+						&& arg2 != 0) {
+					// do nothing
+				} else {
 				CompanyDetailController controller = new CompanyDetailController(
 						CombindListActivity.this, Events.COMPANY_DETAIL);
 				String id = ((CompanyDesc) mCompListAdapter.getItem(arg2))
@@ -252,6 +258,7 @@ public class CombindListActivity extends MaxisMainActivity {
 
 				startSppiner();
 				controller.requestService(detailRequest);
+			}
 			}
 		});
 		mCompanyList.setOnScrollListener(new OnScrollListener() {
@@ -410,18 +417,18 @@ public class CombindListActivity extends MaxisMainActivity {
 				}
 			} else if (event == Events.COMBIND_DEAL_LISTING_NEW_LISTING_PAGE) {
 				if (response.getPayload() instanceof CompanyListResponse) {
-					mClResponse = (CompanyListResponse) response.getPayload();
-					if (mClResponse.getErrorCode() != 0) {
+					mDealResponse = (CompanyListResponse) response.getPayload();
+					if (mDealResponse.getErrorCode() != 0) {
 						message.obj = getResources().getString(
 								R.string.communication_failure);
 						// clResponse.getServerMessage() + " " +
 						// clResponse.getErrorCode();
 					} else {
-						if (mClResponse.getCompanyArrayList().size() < 1) {
+						if (mDealResponse.getCompanyArrayList().size() < 1) {
 							message.obj = new String("No Result Found");
 						} else {
 							message.arg1 = 0;
-							message.obj = mClResponse;
+							message.obj = mDealResponse;
 						}
 					}
 				} else {
@@ -522,14 +529,14 @@ public class CombindListActivity extends MaxisMainActivity {
 //				mRecordsFoundView.setText(mClResponse.getTotalrecordFound()
 //						+ " " + getResources().getString(R.string.record_found));
 				// initNavigationButton(mClResponse.getPagesCount());
-				ArrayList<CompanyDesc> compListData = mClResponse
+				ArrayList<CompanyDesc> compListData = mDealResponse
 						.getCompanyArrayList();
 
 				Intent intent = new Intent(CombindListActivity.this,
 						DealsActivity.class);
 
 				intent.putExtra(AppConstants.DATA_LIST_REQUEST, mClRequest);
-				intent.putExtra(AppConstants.COMP_LIST_DATA, mClResponse);
+				intent.putExtra(AppConstants.COMP_LIST_DATA, mDealResponse);
 
 				startActivity(intent);
 
@@ -737,25 +744,25 @@ public class CombindListActivity extends MaxisMainActivity {
 				CombindListActivity.this,
 				Events.COMBIND_DEAL_LISTING_NEW_LISTING_PAGE);
 		// mClRequest = new CombinedListRequest(CombindListActivity.this);
-
-		mClRequest.setCompanyListing(false);
+		 CombinedListRequest mdealRequest = new CombinedListRequest(CombindListActivity.this);
+		 mdealRequest.setCompanyListing(false);
 		// mClRequest.setKeywordOrCategoryId("-1");
-		mClRequest.setKeywordOrCategoryId(cat);
-		mClRequest.setLatitude(GPS_Data.getLatitude());
-		mClRequest.setLongitude(GPS_Data.getLongitude());
+		 mdealRequest.setKeywordOrCategoryId(cat);
+		 mdealRequest.setLatitude(GPS_Data.getLatitude());
+		 mdealRequest.setLongitude(GPS_Data.getLongitude());
 		// mClRequest.setCategoryTitle(cat.getCategoryTitle());
 		// mClRequest.setParentThumbUrl(cat.getThumbUrl());
 		
-		 mClRequest.setGroupActionType(AppConstants.GROUP_ACTION_TYPE_DEAL);
-		 mClRequest.setGroupType(AppConstants.GROUP_TYPE_SUB_CATEGORY);
+		 mdealRequest.setGroupActionType(AppConstants.GROUP_ACTION_TYPE_DEAL);
+		 mdealRequest.setGroupType(AppConstants.GROUP_TYPE_SUB_CATEGORY);
 		if (mClRequest.isBySearch()) {
-			mClRequest.setBySearch(true);
+			mdealRequest.setBySearch(true);
 		} else {
-			mClRequest.setBySearch(false);
+			mdealRequest.setBySearch(false);
 		}
-		setRequest(mClRequest);
+		setRequest(mdealRequest);
 		startSppiner();
-		listingController.requestService(mClRequest);
+		listingController.requestService(mdealRequest);
 
 	}
 	

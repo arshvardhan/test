@@ -161,10 +161,11 @@ public class GenralRequest extends MaxisBaseRequest {
 		ht.put(KEY_COMPANY_ID, cId);
 		return ht;
 	}
-	public Hashtable<String, String> getHeadersWithCompanyIDndDealID(String cId,String dealId) {
+	public Hashtable<String, String> getHeadersWithCompanyIDndDealID(String cId,String dealId,String l3catId) {
 		Hashtable<String, String> ht = getDefaultHeaders();
 		ht.put(KEY_COMP_ID, cId);
 		ht.put(KEY_DEAL_ID, dealId);
+		ht.put(KEY_L3CAT_ID,l3catId);
 		return ht;
 	}
 	

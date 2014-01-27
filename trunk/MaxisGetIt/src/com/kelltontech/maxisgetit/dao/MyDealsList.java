@@ -18,7 +18,10 @@ public class MyDealsList implements Parcelable {
 	public void addDeal(MyDeal deal) {
 		this.dealList.add(deal);
 	}
-
+	public void addDealList(ArrayList<MyDeal> mdealArrayList ) {
+		this.dealList = mdealArrayList ;
+	}
+	
 	public MyDealsList(Parcel in) {
 		in.readTypedList(dealList, MyDeal.CREATOR);
 	}

@@ -41,6 +41,7 @@ public class OutLetDetailtController extends BaseServiceController {
 
 		String cid = detailRequest.getComp_id();
 		String deal_id = detailRequest.getDeal_id();
+		String l3cat_id = detailRequest.getL3cat_id();
 		try {
 			if (!NativeHelper.isDataConnectionAvailable(mActivity)) {
 				Response res = new Response();
@@ -68,7 +69,7 @@ public class OutLetDetailtController extends BaseServiceController {
 
 			GenralRequest genralRequest = new GenralRequest(mActivity);
 			Hashtable<String, String> urlParams = genralRequest
-					.getHeadersWithCompanyIDndDealID(cid, deal_id);
+					.getHeadersWithCompanyIDndDealID(cid, deal_id ,l3cat_id);
 			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, urlParams));
 
 			HttpClientConnection.getInstance().addRequest(serviceRq);

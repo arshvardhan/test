@@ -91,6 +91,8 @@ public interface AppConstants {
 	
 	String GLOBAL_SEARCH_KEYWORD = "GLOBAL_SEARCH_KEYWORD";
 	
+	String CATEGORY_ID = "CATEGORY_ID";
+	
 	//TnC Extra
 	String TNC_FROM = "TNC_FROM";
 	

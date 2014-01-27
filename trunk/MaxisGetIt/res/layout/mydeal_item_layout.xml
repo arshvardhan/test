@@ -40,7 +40,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="65"
                     android:text="AD01"
-                    android:textColor="@color/blue"
+                    android:textColor="#4db848"
                     android:textSize="@dimen/sp_13"
                     android:textStyle="bold" />
 

@@ -95,6 +95,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 	private Marker sourceMarker;
 	private String comp_id;
 	private String deal_id;
+	private String l3cat_id;
 	private OutLetDetails outLetResponse;
 	ArrayList<OutLet> outLets = new ArrayList<OutLet>();
 	private String termsNdcond;
@@ -153,6 +154,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		} else {
 			comp_id = compDetailResponse.getCid();
 			deal_id = compDetailResponse.getId();
+			l3cat_id = compDetailResponse.getCatId();
 			setdata();
 			getOutLets();
 		}
@@ -267,8 +269,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			Bundle bundle = new Bundle();
 			bundle.putString(AppConstants.COMP_ID, comp_id);
 			bundle.putString(AppConstants.GLOBAL_SEARCH_KEYWORD, mSearchKeyword);
-			bundle.putBoolean(AppConstants.IS_DEAL_LIST, getIntent()
-					.getExtras().getBoolean(AppConstants.IS_DEAL_LIST));
+			bundle.putBoolean(AppConstants.IS_DEAL_LIST, true);
 			intent.putExtra(AppConstants.CATEGORY_ID_KEY, catId);
 			intent.putExtras(bundle);
 			startActivity(intent);
@@ -418,8 +419,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 					bundle.putString(AppConstants.COMP_ID, mCurrentCompId);
 					bundle.putString(AppConstants.GLOBAL_SEARCH_KEYWORD,
 							mSearchKeyword);
-					bundle.putBoolean(AppConstants.IS_DEAL_LIST, getIntent()
-							.getExtras().getBoolean(AppConstants.IS_DEAL_LIST));
+					bundle.putBoolean(AppConstants.IS_DEAL_LIST, true);
 					intent.putExtra(AppConstants.CATEGORY_ID_KEY,
 							outLet.getCatid());
 					intent.putExtras(bundle);
@@ -473,6 +473,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 
 		detailRequest.setComp_id(comp_id);
 		detailRequest.setDeal_id(deal_id);
+		detailRequest.setL3cat_id(l3cat_id);
 		startSppiner();
 		detailtController.requestService(detailRequest);
 	}
@@ -563,6 +564,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 				if (!StringUtil.isNullOrEmpty(compDetailResponse.getId())) {
 					deal_id = compDetailResponse.getId();
 					comp_id = compDetailResponse.getCid();
+					l3cat_id = compDetailResponse.getCatId();
 					setdata();
 					getOutLets();
 					// intent.putExtra(AppConstants.THUMB_URL,

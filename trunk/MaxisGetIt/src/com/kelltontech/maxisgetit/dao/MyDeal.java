@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class MyDeal implements Parcelable {
 	public static final String DEAL_TYPE_VOUCHERED="Voucher";
-	public static final String DEAL_TYPE_NON_VOUCHERED="Non Voucher";
+	public static final String DEAL_TYPE_NON_VOUCHERED="Informative";
 	private String id;
 	private String title;
 	private String desc;

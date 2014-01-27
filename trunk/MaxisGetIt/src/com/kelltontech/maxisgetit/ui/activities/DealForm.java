@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.R.id;
 import com.kelltontech.maxisgetit.R.layout;
@@ -113,11 +114,11 @@ public class DealForm extends MaxisMainActivity {
 	
 	public void validateData()
 	{
-		if(name.getText().toString().equalsIgnoreCase(""))
+		if(StringUtil.isNullOrEmpty(name.getText().toString()))
 		{
-			Toast.makeText(getApplicationContext(), "Please Enter Name .", Toast.LENGTH_SHORT).show();
-		}else if (phoneNo.getText().toString().equalsIgnoreCase("") || phoneNo.getText().length()>12 || phoneNo.getText().length()<7) {
-			Toast.makeText(getApplicationContext(), "Please Enter Mobile Number correctly.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Please enter Name.", Toast.LENGTH_SHORT).show();
+		}else if (StringUtil.isNullOrEmpty((phoneNo.getText().toString()))|| phoneNo.getText().length()>12 || phoneNo.getText().length()<7) {
+			Toast.makeText(getApplicationContext(), "Please enter Mobile Number correctly.", Toast.LENGTH_SHORT).show();
 		}else{
 			Intent returnIntent = new Intent();
 			returnIntent.putExtra("name", name.getText().toString());

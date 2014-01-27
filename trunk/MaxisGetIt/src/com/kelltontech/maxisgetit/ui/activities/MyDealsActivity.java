@@ -82,7 +82,7 @@ public class MyDealsActivity extends MaxisMainActivity {
 		mLatestDealContainer = (LinearLayout) findViewById(R.id.amd_latest_deal_container);
 		if (mMyDealsResponse != null) {
 			if (mMyDealsResponse.getLatestDeal() != null) {
-				inflateCompanyDetail(mMyDealsResponse.getLatestDeal(), 1, mLatestDealContainer);
+				inflateCompanyDetail(mMyDealsResponse.getLatestDeal(), 1, mLatestDealContainer , true );
 				findViewById(R.id.amd_deal_unavailable).setVisibility(View.GONE);
 			}
 			displayDealListing();
@@ -171,7 +171,7 @@ public class MyDealsActivity extends MaxisMainActivity {
 						((TextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.up_arrow), null);
 						if (catList != null && innerlayout.getChildCount() == 0) {
 							for (int j = 0; j < catList.size(); j++) {
-								inflateCompanyDetail(catList.get(j), j + 1, innerlayout);
+								inflateCompanyDetail(catList.get(j), j + 1, innerlayout , false );
 							}
 						}
 						View firstVu = innerlayout.getChildCount() > 0 ? innerlayout.getChildAt(0) : null;
@@ -189,7 +189,9 @@ public class MyDealsActivity extends MaxisMainActivity {
 	}
 
 
-	private void inflateCompanyDetail(MyDeal deal, int countIndex, LinearLayout container) {
+	private void inflateCompanyDetail(MyDeal deal, int countIndex, LinearLayout container , boolean isLatest) {
+		if(isLatest)
+			container.removeAllViews();
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		LinearLayout compContainer = (LinearLayout) inflater.inflate(R.layout.mydeal_item_layout, null);
 		TextView counterTxt = (TextView) compContainer.findViewById(R.id.mydeal_id);
@@ -335,6 +337,7 @@ public class MyDealsActivity extends MaxisMainActivity {
 				showInfoDialog((String) msg.obj);
 			} else {
 				mMyDealsResponse = (DealsListResponse) msg.obj;
+				inflateCompanyDetail(mMyDealsResponse.getLatestDeal(), 1, mLatestDealContainer , true );
 				displayDealListing();
 			}
 			stopSppiner();
