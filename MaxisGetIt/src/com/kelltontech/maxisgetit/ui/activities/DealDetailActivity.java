@@ -188,15 +188,18 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			nearOutLets.setBackgroundResource(R.drawable.center_btnselected);
 			tNc.setBackgroundResource(R.drawable.right_btn);
 
-			setUpMapIfNeeded();
 			if (outLets != null && outLets.size() > 0) {
 				if (!StringUtil.isNullOrEmpty(outLetResponse.getOutlet().get(0)
 						.getAddress())) {
 					dealDesc.setText(outLets.get(0).getTitle() + ", "
 							+ outLets.get(0).getAddress());
 				}
+				setUpMapIfNeeded();
+
 			} else {
-				dealDesc.setText("Nearest OutLet Address not available .");
+				showInfoDialog(getResources().getString(
+						R.string.no_result_found));
+				dealDesc.setText("Nearest Outlet Address not available .");
 			}
 			break;
 
@@ -252,8 +255,13 @@ public class DealDetailActivity extends MaxisMainActivity implements
 
 		case R.id.deal_all_outlet:
 			isNearestOutlet = false;
-			setUpMapIfNeeded();
-			addOutLets();
+			if (outLets != null && outLets.size() > 0) {
+				setUpMapIfNeeded();
+				addOutLets();
+			} else {
+				showInfoDialog(getResources().getString(
+						R.string.no_result_found));
+			}
 			break;
 		case textId:
 			int index = Integer.parseInt(v.getTag().toString());

@@ -16,15 +16,21 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.framework.utils.UiUtils;
 import com.kelltontech.maxisgetit.R;
@@ -32,12 +38,16 @@ import com.kelltontech.maxisgetit.adapters.RootCategoryAdapter;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
+import com.kelltontech.maxisgetit.controllers.CityAreaListController;
 import com.kelltontech.maxisgetit.controllers.CombindListingController;
 import com.kelltontech.maxisgetit.controllers.SubCategoryController;
 import com.kelltontech.maxisgetit.controllers.TypeByCategoryController;
 import com.kelltontech.maxisgetit.dao.CategoryGroup;
+import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
+import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.requests.CombinedListRequest;
+import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.response.SubCategoryResponse;
 import com.kelltontech.maxisgetit.service.AppSharedPreference;
 import com.kelltontech.maxisgetit.service.LocationFinderService;
@@ -55,6 +65,13 @@ public class HomeActivity extends MaxisMainActivity {
 	private Timer mGalleryFlipperTimer;
 	private Intent mLocationServiceIntent;
 	private static final String GROUP_TYPE_DEAL = "Deal";
+	private boolean isAdvanceSearchLayoutOpen = false;
+
+	private LinearLayout advanceSearchLayout;
+	private TextView currentCity, currentLocality;
+	private ImageView upArrow;
+	private ArrayList<String> cityListString = new ArrayList<String>();
+	private String selectedCity = "Entire Malasyia";
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -125,6 +142,20 @@ public class HomeActivity extends MaxisMainActivity {
 		mLogo.setOnClickListener(HomeActivity.this);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
 		mListView = (ListView) findViewById(R.id.home_category_list);
+		advanceSearchLayout = (LinearLayout) findViewById(R.id.advanceSearch);
+		advanceSearchLayout.setVisibility(View.GONE);
+
+		upArrow = (ImageView) findViewById(R.id.upArrow);
+		upArrow.setOnClickListener(this);
+
+		currentCity = (TextView) findViewById(R.id.currentCity);
+		currentLocality = (TextView) findViewById(R.id.currentLocality);
+		currentCity.setText(Html.fromHtml("In "+"<b>"+selectedCity+"</b>"));
+		
+
+		currentCity.setOnClickListener(this);
+		currentLocality.setOnClickListener(this);
+
 		// uncomment for displaying banner also uncomment start flipping in
 		// onResume as well set visibility on in layout
 		// imgGallery = (CustomGallery) findViewById(R.id.home_gallery);
@@ -165,6 +196,23 @@ public class HomeActivity extends MaxisMainActivity {
 		} else {
 			GPS_Data.resetCordinates();
 		}
+
+		// TODO:: for Advance search visibility.
+
+		mSearchEditText.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+
+				if (!isAdvanceSearchLayoutOpen) {
+					isAdvanceSearchLayoutOpen = true;
+					advanceSearchLayout.setVisibility(View.GONE);
+				}
+				return false;
+			}
+		});
+
 	}
 
 	protected void gotoScreen(int position) {
@@ -195,7 +243,7 @@ public class HomeActivity extends MaxisMainActivity {
 				showSubcategories(cat);
 			} else if (cat.getmGroupActionType().trim()
 					.equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_DEAL)) {
-				//TODO : for Hot Deals.
+				// TODO : for Hot Deals.
 				showDealcategories(cat);
 			} else if (cat
 					.getmGroupActionType()
@@ -425,6 +473,27 @@ public class HomeActivity extends MaxisMainActivity {
 				mImgGallery.setSelection(index, true);
 			else
 				mImgGallery.onKeyDown(KeyEvent.KEYCODE_DPAD_RIGHT, null);
+		} else if (msg.arg2 == Events.CITY_LISTING) {
+			stopSppiner();
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+			} else {
+				CityTable cityTable = new CityTable(
+						(MyApplication) getApplication());
+				GenralListResponse glistRes = (GenralListResponse) msg.obj;
+//				cityTable.addCityList(glistRes.getCityOrLocalityList());
+				ArrayList<CityOrLocality> cityList = glistRes.getCityOrLocalityList();
+				// inflateCityList(cityList);
+				Intent intent = new Intent(HomeActivity.this,
+						AdvanceSelectCity.class);
+				for (CityOrLocality cityOrLocality : cityList) {
+
+					cityListString.add(cityOrLocality.getName());
+				}
+				intent.putExtra("CITY_LIST", cityListString);
+				startActivityForResult(intent, 1);
+			}
+			stopSppiner();
 		}
 	}
 
@@ -488,6 +557,27 @@ public class HomeActivity extends MaxisMainActivity {
 		case R.id.logo:
 			startActivity(new Intent(HomeActivity.this, GetItInfoActivity.class));
 			break;
+
+		/*case R.id.upArrow:
+			if (isAdvanceSearchLayoutOpen) {
+				isAdvanceSearchLayoutOpen = false;
+				advanceSearchLayout.setVisibility(View.GONE);
+			}
+			break;
+		case R.id.currentCity:
+			if(cityListString!=null && cityListString.size()>0)
+			{
+				Intent cityIntent = new Intent(HomeActivity.this,
+						AdvanceSelectCity.class);	
+				cityIntent.putExtra("CITY_LIST", cityListString);
+				startActivity(cityIntent);
+			}else{
+				setSearchCity();
+			}
+			break;
+
+		case R.id.currentLocality:
+			setSearchLocality();*/
 		default:
 			break;
 		}
@@ -512,6 +602,32 @@ public class HomeActivity extends MaxisMainActivity {
 				HomeActivity.this, Events.DEALCATEGORY_EVENT);
 		controller.requestService(cat);
 		startSppiner();
+	}
+
+	public void setSearchCity() {
+		// TODO
+		CityAreaListController clController = new CityAreaListController(
+				HomeActivity.this, Events.CITY_LISTING);
+		startSppiner();
+		clController.requestService(null);
+
+	}
+
+	public void setSearchLocality() {
+		// TODO
+	}
+	
+	@Override
+	protected void onActivityResult(int reqCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		if(resultCode==RESULT_OK)
+		{
+			selectedCity = data.getStringExtra("CITY_NAME");
+			currentCity.setText(Html.fromHtml("In "+"<b>"+selectedCity+"</b>"));
+		}
+		
+		
+		super.onActivityResult(reqCode, resultCode, data);
 	}
 
 }

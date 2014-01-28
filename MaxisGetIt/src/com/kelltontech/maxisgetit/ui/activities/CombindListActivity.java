@@ -75,6 +75,9 @@ public class CombindListActivity extends MaxisMainActivity {
 	private CompanyListResponse mClResponse;
 	private CompanyListResponse mDealResponse;
 	private CombinedListRequest mClRequest;
+	
+	private CombinedListRequest mdealRequest;
+	
 	private ImageView mProfileIconView;
 	private ImageView mHeaderBackButton;
 	// private TextView mCategoryTitle;
@@ -243,7 +246,7 @@ public class CombindListActivity extends MaxisMainActivity {
 					long arg3) {
 				
 				if (arg2 == (mCompListAdapter.getCount() - 1)
-						&& arg2 != 0) {
+						&& arg2 != 0 && mClResponse.getTotalrecordFound()>10) {
 					// do nothing
 				} else {
 				CompanyDetailController controller = new CompanyDetailController(
@@ -535,7 +538,7 @@ public class CombindListActivity extends MaxisMainActivity {
 				Intent intent = new Intent(CombindListActivity.this,
 						DealsActivity.class);
 
-				intent.putExtra(AppConstants.DATA_LIST_REQUEST, mClRequest);
+				intent.putExtra(AppConstants.DATA_LIST_REQUEST, mdealRequest);
 				intent.putExtra(AppConstants.COMP_LIST_DATA, mDealResponse);
 
 				startActivity(intent);
@@ -744,7 +747,7 @@ public class CombindListActivity extends MaxisMainActivity {
 				CombindListActivity.this,
 				Events.COMBIND_DEAL_LISTING_NEW_LISTING_PAGE);
 		// mClRequest = new CombinedListRequest(CombindListActivity.this);
-		 CombinedListRequest mdealRequest = new CombinedListRequest(CombindListActivity.this);
+		  mdealRequest = new CombinedListRequest(CombindListActivity.this);
 		 mdealRequest.setCompanyListing(false);
 		// mClRequest.setKeywordOrCategoryId("-1");
 		 mdealRequest.setKeywordOrCategoryId(cat);
