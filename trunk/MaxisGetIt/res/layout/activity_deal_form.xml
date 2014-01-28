@@ -65,7 +65,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".65"
                     android:background="@drawable/text_field"
-                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                     android:maxLength="30"
                     android:padding="5dp"
                     android:singleLine="true"
