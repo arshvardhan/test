@@ -371,14 +371,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
-        <activity
-            android:name="com.kelltontech.maxisgetit.ui.activities.AdvanceSelectCity"
-            android:label="@string/title_activity_advance_select_city" >
-        </activity>
-        <activity
-            android:name="com.kelltontech.maxisgetit.CitySelectorActivity"
-            android:label="@string/title_activity_city_selector" >
-        </activity>
     </application>
 
 </manifest>
