@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bg_base_col"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/header_base_activity"
+        layout="@layout/header_with_popdown_search" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_base_activity" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="1" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                 android:background="@drawable/shape_bg_green_grey_stroke"
+                android:gravity="left"
+                android:textColor="@color/white"
+                  android:padding="5dp"
+                android:text="@string/my_deals"
+                android:textSize="@dimen/sp_17"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/home_list_bar"
+                android:paddingRight="10dp" >
+
+                <TextView
+                    android:id="@+id/amd_latest_deal_lbl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="10dp"
+                    android:text="@string/your_latest_deal"
+                    android:textColor="@color/maxis_green"
+                    android:textSize="@dimen/sp_17"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/amd_post_deal_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignRight="@id/amd_latest_deal_lbl"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/deal_post" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/amd_latest_deal_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/amd_deals_group_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+                <TextView
+                        android:id="@+id/amd_deal_unavailable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="5dp"
+                        android:text="@string/deal_unavailable"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp_17"
+                        android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/amd_leads_outer_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                   android:background="@drawable/shape_bg_green_grey_stroke"
+                android:gravity="left"
+                    android:padding="5dp"
+                    android:text="@string/my_leads"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_17"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/amd_leads_group_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/amd_leads_unavailable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="5dp"
+                        android:text="@string/leads_unavailable"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp_17"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

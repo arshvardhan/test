@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/home_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/header_base_activity"
+        layout="@layout/header_base_screen" />
+
+    <include
+        android:id="@+id/footer_base_screen"
+        layout="@layout/footer_home_screen" />
+
+    <com.kelltontech.maxisgetit.ui.widgets.CustomGallery
+        android:id="@+id/home_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_base_activity"
+        android:animationDuration="1000"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/home_vertical_seprator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/home_gallery"
+        android:background="@color/vertical_line_seprator" />
+
+    <ListView
+        android:id="@+id/home_category_list"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btn_photo_contest"
+        android:layout_below="@id/home_vertical_seprator"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@drawable/single_line_seprator"
+        android:footerDividersEnabled="false"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/btn_photo_contest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/footer_base_screen"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="20dp"
+        android:background="@drawable/btn_selector"
+        android:paddingBottom="20dp"
+        android:paddingLeft="28dp"
+        android:paddingRight="28dp"
+        android:paddingTop="20dp"
+        android:text="@string/header_photo_contest"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="normal"
+        android:visibility="gone" >
+    </Button>
+
+</RelativeLayout>

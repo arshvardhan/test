@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tl_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bg_base_col"
+    android:orientation="vertical" >
+    <include
+        android:id="@+id/header_base_activity"
+        layout="@layout/header_with_popdown_search" />
+    <com.kelltontech.maxisgetit.ui.widgets.VerticalScrollview
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_base_activity" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:weightSum="1" >
+            <TextView
+                android:id="@+id/atl_guest_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/dear_guest"
+                android:textColor="@color/rainbow_green"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/atl_desc_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="@string/fill_detail_selling1"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_13" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:weightSum="1" >
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".32"
+                    android:drawableRight="@drawable/required_icon"
+                    android:padding="5dp"
+                    android:text="City"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_13"
+                    android:textStyle="bold" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight=".03" />
+                <Spinner
+                    android:id="@+id/atl_city_chooser"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".65"
+                    android:background="@drawable/dropdown_box"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="12dp"
+                    android:paddingTop="5dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_13" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/atl_locality_chooser_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone"
+                android:weightSum="1" >
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".32"
+                    android:drawableRight="@drawable/required_icon"
+                    android:padding="5dp"
+                    android:text="Locality"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_13"
+                    android:textStyle="bold" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight=".03" />
+                <Spinner
+                    android:id="@+id/atl_locality_chooser"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".65"
+                    android:background="@drawable/dropdown_box"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="12dp"
+                    android:paddingTop="5dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_13" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/tl_control_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:weightSum="1" >
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:weightSum="1" >
+                <TextView
+                    android:id="@+id/atl_lbl_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".32"
+                    android:padding="5dp"
+                    android:text="Title"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_13"
+                    android:textStyle="bold" />
+                 <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight=".03" />
+                <EditText
+                    android:id="@+id/atl_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".65"
+                    android:background="@drawable/text_field"
+                    android:inputType="textPersonName"
+                    android:maxLength="30"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_13" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:weightSum="1" >
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".35"
+                    android:padding="5dp"
+                    android:text="Description"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_13"
+                    android:textStyle="bold" />
+                <EditText
+                    android:id="@+id/atl_desc"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".65"
+                    android:background="@drawable/text_field"
+                    android:inputType="textPersonName"
+                    android:maxLength="150"
+                    android:padding="5dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_13" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/atl_guest_detail_controller"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:singleLine="true"
+                    android:text="@string/contact_detail"
+                    android:textColor="@color/maxis_green"
+                    android:textSize="@dimen/sp_15"
+                    android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:weightSum="1" >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".35"
+                        android:drawableRight="@drawable/required_icon"
+                        android:padding="5dp"
+                        android:text="@string/name"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp_13" />
+                    <EditText
+                        android:id="@+id/atl_user_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".65"
+                        android:background="@drawable/text_field"
+                        android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                        android:inputType="textPersonName"
+                        android:maxLength="30"
+                        android:padding="5dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp_13" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:weightSum="1" >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".35"
+                        android:drawableRight="@drawable/required_icon"
+                        android:padding="5dp"
+                        android:text="@string/mobile_no"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp_13" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.65" >
+                        <!--
+                             <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="5dp"
+                            android:text="@string/country_code"
+                            android:textColor="@color/grey_country_code" />      -->
+                        <EditText
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="0.2"
+                            android:background="@drawable/text_field"
+                            android:editable="false"
+                            android:gravity="center"
+                            android:padding="5dp"
+                            android:text="@string/country_code"
+                            android:textColor="@color/grey_country_code"
+                            android:textSize="@dimen/sp_13" />
+                        <EditText
+                            android:id="@+id/atl_user_mobile"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.8"
+                            android:background="@drawable/text_field"
+                            android:digits="0123456789+"
+                            android:inputType="phone"
+                            android:maxLength="14"
+                            android:padding="5dp"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_13" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/atl_terms_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:clickable="true"
+                android:text="@string/read_term_hyperlink"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/sp_13" />
+            <CheckBox
+                android:id="@+id/atl_terms_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_checkbox_text" />
+            <TextView
+                android:id="@+id/atl_submit_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@drawable/shape_green_curved_box"
+                android:clickable="true"
+                android:text="@string/submit"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </com.kelltontech.maxisgetit.ui.widgets.VerticalScrollview>
+</RelativeLayout>
