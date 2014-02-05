@@ -53,6 +53,7 @@ public class CustomDialog implements OnKeyListener {
 	public static final int		PLAY_STORE_DIALOG					= 18;
 	public static final int		LOGIN_CONFIRMATION_DIALOG			= 19;
 	public static final int		DELETE_CONFIRMATION_DIALOG			= 20;
+	public static final int		ADD_NEW_POI_CONFIRMATION_DIALOG		= 21;
 	
 	
 	private BaseMainActivity mActivity;
@@ -213,6 +214,36 @@ public class CustomDialog implements OnKeyListener {
 
 			break;
 			
+		case ADD_NEW_POI_CONFIRMATION_DIALOG:
+			dialog = new Dialog(mActivity, R.style.Theme_Almost_full_transparent);
+			dialog.setContentView(R.layout.dialog_confirmation);
+			TextView poiView = (TextView) dialog.findViewById(R.id.dialog_content);
+			poiView.setText(info);
+			TextView addNewPOIBtn = (TextView) dialog.findViewById(R.id.dialog_ok);
+			addNewPOIBtn.setBackgroundResource(R.drawable.selector_blue_dialog_positive);
+			addNewPOIBtn.setText(R.string.anp_header);
+			addNewPOIBtn.setPadding(10, 0, 10, 0);
+			addNewPOIBtn.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mActivity.onPositiveDialogButton(mId);
+					dialog.dismiss();
+				}
+			});
+			TextView cancelPOIBtn = (TextView) dialog.findViewById(R.id.dialog_cancel);
+			cancelPOIBtn.setText(R.string.cancel_btn);
+			cancelPOIBtn.setPadding(10, 0, 10, 0);
+			cancelPOIBtn.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+					mActivity.onNegativeDialogbutton(mId);
+				}
+			});
+			dialog.show();
+			dialog.setCancelable(true);
+
+			break;
 			
 		case CHANGE_PASSWORD_DIALOG:
 			dialog = new Dialog(mActivity, R.style.Theme_Almost_full_transparent);

@@ -17,7 +17,7 @@ import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
  * This screen is shown after successful image upload.
  */
 public class ContestUploadMoreActivity extends MaxisMainActivity {
-	ImageView mLogo;
+/*	ImageView mLogo;*/
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +31,12 @@ public class ContestUploadMoreActivity extends MaxisMainActivity {
 		findViewById(R.id.search_toggler).setVisibility(View.INVISIBLE);
 		findViewById(R.id.show_profile_icon).setOnClickListener(this);
 		
-		findViewById(R.id.footer_facebook_icon).setOnClickListener(this);
-		findViewById(R.id.footer_twitterIcon).setOnClickListener(this);
+	/*	findViewById(R.id.footer_facebook_icon).setOnClickListener(this);
+		findViewById(R.id.footer_twitterIcon).setOnClickListener(this);*/
 		
 		findViewById(R.id.upload_btn).setOnClickListener(this);
-		mLogo = (ImageView) findViewById(R.id.logo);
-		mLogo.setOnClickListener(ContestUploadMoreActivity.this);
+		/*mLogo = (ImageView) findViewById(R.id.logo);
+		mLogo.setOnClickListener(ContestUploadMoreActivity.this);*/
 		
 	}
 	
@@ -85,7 +85,7 @@ public class ContestUploadMoreActivity extends MaxisMainActivity {
 			startActivity(intent);
 			break;
 		}
-		case R.id.footer_facebook_icon: {
+		/*case R.id.footer_facebook_icon: {
 			AnalyticsHelper.logEvent(FlurryEventsConstants.FACEBOOK_CLICK);
 			checkPreferenceAndOpenBrowser(AppConstants.FB_PAGE_URL);
 			break;
@@ -97,7 +97,7 @@ public class ContestUploadMoreActivity extends MaxisMainActivity {
 		}
 		case R.id.logo:
 			startActivity(new Intent(ContestUploadMoreActivity.this, GetItInfoActivity.class));
-			break;
+			break;*/
 		}
 	}
 

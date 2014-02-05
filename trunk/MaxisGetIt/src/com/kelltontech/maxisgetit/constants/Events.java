@@ -53,9 +53,10 @@ public class Events {
 	public static final int COMBIND_DEAL_LISTING_NEW_LISTING_PAGE = 46;
 	public static final int DEAL_DETAIL                         = 47;
 	
-	public static final int OUTLET_DETAIL                         = 48;
-	public static final int DOWNLOAD_DEAL                          =49;
+	public static final int OUTLET_DETAIL                       = 48;
+	public static final int DOWNLOAD_DEAL                       =49;
 	
+	public final static int	ADD_NEW_POI_EVENT					= 50;
 	
 	public static final int	POST_DEAL_CITY_LISTING				= 51;
 	public static final int	POST_DEAL_LOCALITY_LISTING			= 52;

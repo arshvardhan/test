@@ -24,6 +24,7 @@ public class FlurryEventsConstants {
 	// Footer
 	public static final String FACEBOOK_CLICK = "Facebook icon is clicked";
 	public static final String TWITTER_CLICK = "Twitter icon is clicked";
+	public static final String ADD_NEW_POI = "AddNewPOI icon is clicked";
 
 	// Home Screen, Category, and Sub-Category Events
 	public static final String APPLICATION_HOME = "Application Home Screen";
@@ -81,6 +82,8 @@ public class FlurryEventsConstants {
 
 	public static final String UPLOAD_IMAGE = "UploadYourImage button is clicked";
 	public static final String CAPTURE_ANOTHER_IMAGE = "CaptureAnotherImage button is clicked";
+	
+	public static final String SUBMIT_ADD_NEW_POI = "SubmitAddNewPOI button is clicked";
 
 	// Category Screen Events
 	public static final String APPLICATION_CATEGORY = "Category Screen";
