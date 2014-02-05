@@ -18,8 +18,6 @@ import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
 import com.kelltontech.maxisgetit.requests.CombinedListRequest;
 import com.kelltontech.maxisgetit.response.CompanyListResponse;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
-import com.kelltontech.maxisgetit.utils.UiUtils;
-import com.kelltontech.maxisgetit.utils.Utility;
 
 public class DealForm extends MaxisMainActivity {
 
@@ -41,8 +39,6 @@ public class DealForm extends MaxisMainActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_deal_form);
-		UiUtils.hideKeyboardOnTappingOutside(
-				findViewById(R.id.reg_root_layout), this);
 		name = (TextView) findViewById(R.id.reg_name);
 		phoneNo = (TextView) findViewById(R.id.reg_mobile);
 		submit = (TextView) findViewById(R.id.register_button);
@@ -53,17 +49,18 @@ public class DealForm extends MaxisMainActivity {
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
 		mSearchBtn.setOnClickListener(DealForm.this);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
-		mSearchContainer = (LinearLayout) findViewById(R.id.search_box_container);
-		mSearchToggler = (ImageView) findViewById(R.id.search_toggler);
+		mSearchContainer=(LinearLayout) findViewById(R.id.search_box_container);
+		mSearchToggler=(ImageView) findViewById(R.id.search_toggler);
 		mSearchToggler.setOnClickListener(this);
 		mHeaderBackButton = (ImageView) findViewById(R.id.header_btn_back);
 		mHeaderBackButton.setOnClickListener(this);
-
+		
 		mHomeIconView = (ImageView) findViewById(R.id.goto_home_icon);
 		mHomeIconView.setOnClickListener(this);
 		mHeaderTitle = (TextView) findViewById(R.id.header_title);
 		mHeaderTitle.setText("Deals");
-
+		
+		
 	}
 
 	@Override
@@ -79,7 +76,7 @@ public class DealForm extends MaxisMainActivity {
 		switch (v.getId()) {
 		case R.id.register_button:
 			validateData();
-
+			
 			break;
 		case R.id.search_toggler:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SEARCH_CLICK);
@@ -103,7 +100,8 @@ public class DealForm extends MaxisMainActivity {
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(DealForm.this, HomeActivity.class);
+			Intent intentHome = new Intent(DealForm.this,
+					HomeActivity.class);
 			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			startActivity(intentHome);
@@ -113,18 +111,15 @@ public class DealForm extends MaxisMainActivity {
 		}
 
 	}
-
-	public void validateData() {
-		if (StringUtil.isNullOrEmpty(name.getText().toString())) {
-			Toast.makeText(getApplicationContext(), "Please enter Name.",
-					Toast.LENGTH_SHORT).show();
-		} else if (StringUtil.isNullOrEmpty((phoneNo.getText().toString()))
-				|| phoneNo.getText().length() > 12
-				|| phoneNo.getText().length() < 7) {
-			Toast.makeText(getApplicationContext(),
-					"Please enter Mobile Number correctly.", Toast.LENGTH_SHORT)
-					.show();
-		} else {
+	
+	public void validateData()
+	{
+		if(StringUtil.isNullOrEmpty(name.getText().toString()))
+		{
+			Toast.makeText(getApplicationContext(), "Please enter Name.", Toast.LENGTH_SHORT).show();
+		}else if (StringUtil.isNullOrEmpty((phoneNo.getText().toString()))|| phoneNo.getText().length()>12 || phoneNo.getText().length()<7) {
+			Toast.makeText(getApplicationContext(), "Please enter Mobile Number correctly.", Toast.LENGTH_SHORT).show();
+		}else{
 			Intent returnIntent = new Intent();
 			returnIntent.putExtra("name", name.getText().toString());
 			returnIntent.putExtra("phoneNo", phoneNo.getText().toString());

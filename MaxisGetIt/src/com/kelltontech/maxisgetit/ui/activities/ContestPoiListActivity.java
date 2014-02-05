@@ -38,6 +38,7 @@ import com.kelltontech.maxisgetit.model.listModel.RequestDistance;
 import com.kelltontech.maxisgetit.model.listModel.ResponseList;
 import com.kelltontech.maxisgetit.model.poiModel.RequestPoiSearch;
 import com.kelltontech.maxisgetit.ui.adapter.ContestPoiListAdapter;
+import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
 import com.kelltontech.maxisgetit.ui.widgets.ThresholdEditTextView;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 import com.kelltontech.maxisgetit.utils.UiUtils;
@@ -79,8 +80,8 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 	private int						mRequestedEventType;
 	private int						mLastSuccededEventType;
 	
-	ImageView mLogo;
-
+	/*ImageView mLogo;*/
+	private TextView mAddNewPoi;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,9 +94,12 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 		findViewById(R.id.goto_home_icon).setOnClickListener(this);
 		findViewById(R.id.search_toggler).setVisibility(View.INVISIBLE);
 		findViewById(R.id.show_profile_icon).setOnClickListener(this);
+		findViewById(R.id.add_new_poi_curve).setOnClickListener(this);
+		mAddNewPoi = (TextView) findViewById(R.id.add_new_poi);
+		mAddNewPoi.setOnClickListener(this);
 		
-		findViewById(R.id.footer_facebook_icon).setOnClickListener(this);
-		findViewById(R.id.footer_twitterIcon).setOnClickListener(this);
+/*		findViewById(R.id.footer_facebook_icon).setOnClickListener(this);
+		findViewById(R.id.footer_twitterIcon).setOnClickListener(this);*/
 		
 		/********** called to hide keyboard  ************/
 		UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.rootLayout), this);
@@ -103,8 +107,8 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 		
 		mLinearRootPoiByCatOrDist = findViewById(R.id.linear_root_poi_by_category_or_distance);
 		
-		mLogo = (ImageView) findViewById(R.id.logo);
-		mLogo.setOnClickListener(ContestPoiListActivity.this);
+		/*mLogo = (ImageView) findViewById(R.id.logo);
+		mLogo.setOnClickListener(ContestPoiListActivity.this);*/
 		mListViewPoiByCatOrDist = (ListView) findViewById(R.id.listView);
 		mListViewPoiByCatOrDist.setCacheColorHint(Color.TRANSPARENT);
 		mListViewPoiByCatOrDist.requestFocus(0);
@@ -238,7 +242,7 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 		poiListIntent.putExtra(AppConstants.COMPANY_NAME_KEY, distance.getCompanyName());
 		startActivity(poiListIntent);
 	}
-
+	
 	/**
 	 * 
 	 * @param eventType
@@ -311,7 +315,20 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 			onProfileClick();
 			break;
 		}
-		case R.id.footer_facebook_icon: {
+		/*case R.id.add_new_poi: {
+			AnalyticsHelper.logEvent(FlurryEventsConstants.ADD_NEW_POI);
+			addNewPOIClick();
+			break;
+		}*/
+		case R.id.add_new_poi:
+		case R.id.add_new_poi_curve: {
+			AnalyticsHelper.logEvent(FlurryEventsConstants.ADD_NEW_POI);
+			mAddNewPoi.setPressed(true);
+			addNewPOIClick();
+			break;
+		}
+		
+/*		case R.id.footer_facebook_icon: {
 			AnalyticsHelper.logEvent(FlurryEventsConstants.FACEBOOK_CLICK);
 			checkPreferenceAndOpenBrowser(AppConstants.FB_PAGE_URL);
 			break;
@@ -321,12 +338,20 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 			checkPreferenceAndOpenBrowser(AppConstants.TWITTER_PAGE_URL);
 			break;
 		}
-		case R.id.logo:
+		case R.id.logo: {
 			startActivity(new Intent(ContestPoiListActivity.this, GetItInfoActivity.class));
 			break;
+		}*/
 		}
 	}
 
+	private void addNewPOIClick() {
+		mRequestedEventType = Events.ADD_NEW_POI_EVENT;
+		Intent addNewPOIIntent = new Intent(ContestPoiListActivity.this,ContestAddNewPoiActivity.class);
+		addNewPOIIntent.putExtra(AppConstants.ADD_NEW_POI_KEY, mRequestedEventType);
+		startActivity(addNewPOIIntent);
+	}
+	
 	@Override
 	public void setScreenData(Object screenData, int event, long hitTime) {
 		if (event == Events.USER_DETAIL) {
@@ -404,7 +429,8 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 					if( mIsNextPageRequest ) {
 						Toast.makeText(ContestPoiListActivity.this, getString(R.string.toast_some_error_try_again), Toast.LENGTH_LONG).show();
 					} else {
-						Toast.makeText(ContestPoiListActivity.this, getString(R.string.no_result_found), Toast.LENGTH_LONG).show();
+						showConfirmationDialog(CustomDialog.ADD_NEW_POI_CONFIRMATION_DIALOG, getString(R.string.dialog_anp_confirmation));
+						/*Toast.makeText(ContestPoiListActivity.this, getString(R.string.no_result_found), Toast.LENGTH_LONG).show();*/
 //						mResponseListPoiSearch = responselist;
 //						mListAdapterPoiSearch.clearData();
 //						mListAdapterPoiSearch.notifyDataSetChanged();
@@ -422,6 +448,15 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 		return this;
 	}
 
+	@Override
+	public void onPositiveDialogButton(int id) {
+		if (id == CustomDialog.ADD_NEW_POI_CONFIRMATION_DIALOG) {
+			addNewPOIClick();
+		} else {
+			super.onPositiveDialogButton(id);
+		}
+	}
+	
 	@Override
 	public void onBackPressed() {
 		if( mLastSuccededEventType != mInitialEventType ) {

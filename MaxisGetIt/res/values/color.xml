@@ -15,8 +15,10 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="blue">#0000FF</color>
+    <color name="dark_blue">#164A65</color>
     <color name="red">#ff0000</color>
     <color name="yellow">#ffda4d</color>
+    <color name="fast_yellow">#E5FF8E</color>
     <color name="grey">#d8cad4</color>
     <color name="pink">#fba497</color>
     <color name="fully_transparent">#00000000</color>
@@ -36,9 +38,12 @@
     <color name="text_light_grey">#676767</color>
     <color name="bar_light_grey">#c6c6c6</color>
     <color name="cd_name_header">#32598a</color>
-    
     <color name="green">#7bc978</color>
 
+    <!-- Contest App AddNewPOI -->
+    <color name="edit_txt_border_grey">#999999</color>
+    <color name="button_dark_bule">#145D86</color>
+    
     <!-- Country Code TextView color -->
     <color name="grey_country_code">#494949</color>
     
@@ -46,7 +51,6 @@
     <color name="login_shape_light_grey">#ededed</color>
     <color name="transparent_footer_blue">#c8004282</color>
     <color name="transparent_white">#c8FFFFFF</color>
-    
     <color name="transparent_blue_map_route">#c80081c2</color>
     
     <!-- Copied from Photo COntest App -->

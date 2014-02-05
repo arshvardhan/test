@@ -23,7 +23,7 @@
     <string name="modify_to_filter">Modify the search to get filtered list</string>
     <string name="category_list_not_found">Insufficient information to process your request</string>
     <string name="record_found"><u>Records Found Near You</u></string>
-    <string name="deal_found">Deal(s) Found Near You</string>
+     <string name="deal_found">Deal(s) Found Near You</string>
     <string name="category_deals">Featured Deals Category</string>
     <string name="cl_hot_deals">Hot Deals</string>
     <string name="cl_view_on_map">View on Map</string>
@@ -77,31 +77,31 @@
     <string name="entire_malaysia">Entire Malaysia</string>
     <string name="selective_cities">Selective Cities</string>
     <string name="city">City(s)</string>
-    <string name="locality">Outlet(s)</string>
+	<string name="locality">Outlet(s)</string>
     <string name="type_of_deal">Type Of Deal</string>
     <string name="informative">Informative</string>
     <string name="voucher">Voucher</string>
-    <string name="start_date">Start Date</string>
+	<string name="start_date">Start Date</string>
     <string name="end_date">End Date</string>
     <string name="specific_count">Specific Count</string>
     <string name="unlimited_codes">Unlimited Codes</string>
     <string name="count">Count</string>
     <string name="voucher_type">Voucher Type</string>
-    <string name="single_code">Single Code</string>
-    <string name="system_generated">System Generated</string>
-    <string name="provided_by_sme">Provided By SME</string>
-    <string name="voucher_code">Voucher Code</string>
-    <string name="provided_by_sme_email_alert">An email containing the voucher code file uploading details will be sent to you.</string>
-    <string name="cover_image">Cover Image</string>
-    <string name="close_cover_image">Close Cover Image</string>
-    <string name="first_image">First Image</string>
-    <string name="close_first_image">Close First Image</string>
+	<string name="single_code">Single Code</string>
+	<string name="system_generated">System Generated</string>
+	<string name="provided_by_sme">Provided By SME</string>    
+	<string name="voucher_code">Voucher Code</string>
+	<string name="provided_by_sme_email_alert">An email containing the voucher code file uploading details will be sent to you.</string>    
+	<string name="cover_image">Cover Image</string>
+	<string name="close_cover_image">Close Cover Image</string>
+	<string name="first_image">First Image</string>
+	<string name="close_first_image">Close First Image</string>
     <string name="second_image">Second Image</string>
-    <string name="close_second_image">Close Second Image</string>
-    <string name="third_image">Third Image</string>
-    <string name="close_third_image">Close Third Image</string>
-    <string name="remove_image_confirmation">Do you wish to remove this image from your deal?</string>
-
+	<string name="close_second_image">Close Second Image</string>
+	<string name="third_image">Third Image</string>
+	<string name="close_third_image">Close Third Image</string>
+	<string name="remove_image_confirmation">Do you wish to remove this image from your deal?</string>
+    
     <!-- messages -->
     <string name="type_colon">Type :</string>
     <string name="active">Active</string>
@@ -128,6 +128,7 @@
     <string name="contact">TEL</string>
     <string name="contact_channels">Contact Channels</string>
     <string name="company_details">Company Details -</string>
+    
     <string name="current_list_type">Current Listing Type -</string>
     <string name="date_format">"YYYY-MM-DD"</string>
     <string name="dear_guest">Dear Guest</string>
@@ -350,6 +351,22 @@
     <string name="dialog_btn_ok">Allow</string>
     <string name="dialog_btn_no">Deny</string>
 
+    <!-- Contest AddNewPOI activity -->
+    <string name="anp_header">Add New POI</string>
+    <string name="add_new_poi">+ Add New POI</string>
+    <string name="txtv_anp_header">Fill in the following details to add a new POI</string>
+    <string name="dialog_anp_confirmation">No matching records found. Do you wish to add new POI in the list ?</string>
+    <string name="txtv_anp_company_detail">Company Detail</string>
+    <string name="txtv_anp_company_name">Company Name</string>
+    <string name="txtv_anp_company_address">Company Address</string>
+    <string name="txtv_anp_business_type">Business Type</string>
+    <string name="txtv_anp_company_number">Contact Number</string>
+    <string name="txtv_anp_user_detail">Your Detail</string>
+    <string name="txtv_anp_user_name">Name</string>
+    <string name="txtv_anp_user_number">Contact Number</string>
+    <string name="submit_poi_btn_txt">Submit</string>
+    <string name="txtv_anp_hint">Enter here</string>
+    
     <!-- Forget Password Activity -->
     <string name="fp_title">Forgot Password</string>
     <string name="fp_sub_title">Reset Your Password</string>
@@ -367,7 +384,5 @@
     <string name="title_activity_mydeals_activity1">MydealsActivity1</string>
     <string name="title_activity_deal_detail">DealDetailActivity</string>
     <string name="title_activity_deal_form">DealForm</string>
-    <string name="title_activity_advance_select_city">AdvanceSelectCity</string>
-    <string name="title_activity_city_selector">CitySelectorActivity</string>
 
 </resources>

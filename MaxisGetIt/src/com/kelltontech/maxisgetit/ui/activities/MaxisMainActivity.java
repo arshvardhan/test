@@ -91,22 +91,22 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 
 	}
 	
-//	@Override
-//	protected void onStart() {
-//		super.onStart();
-//		AnalyticsHelper.onActivityStart(this);
-//		AnalyticsHelper.setLogEnabled(false);
-//		AnalyticsHelper.getReleaseVersion();
-//		if(!StringUtil.isNullOrEmpty(mStore.getUserMobileNumber())){
-//		AnalyticsHelper.setUserID(mStore.getUserMobileNumber());
-//		}
-//	}
-//	
-//	@Override
-//	protected void onStop() {
-//		super.onStop();
-//		AnalyticsHelper.onActivityStop(this);
-//	}
+	/*@Override
+	protected void onStart() {
+		super.onStart();
+		AnalyticsHelper.onActivityStart(this);
+		AnalyticsHelper.setLogEnabled(true);
+		AnalyticsHelper.getReleaseVersion();
+		if(!StringUtil.isNullOrEmpty(mStore.getUserMobileNumber())){
+		AnalyticsHelper.setUserID(mStore.getUserMobileNumber());
+		}
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		AnalyticsHelper.onActivityStop(this);
+	}*/
 
 	protected void performSearch(String searchText) {
 		if (searchText == null || searchText.trim().equals("")) {

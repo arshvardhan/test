@@ -11,9 +11,18 @@
         android:id="@+id/header_base_activity"
         layout="@layout/header_with_popdown_search" />
 
-    <include
+    <!--
+         <include
         android:id="@+id/footer_base_screen"
         layout="@layout/footer_home_screen" />
+    -->
+
+
+    <!--
+         <include
+        android:id="@+id/footer_add_new_poi"
+        layout="@layout/footer_add_new_poi" />
+    -->
 
     <LinearLayout
         android:id="@+id/searchLayout"
@@ -43,7 +52,7 @@
         android:id="@+id/linear_poi_response_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/footer_base_screen"
+        android:layout_above="@+id/add_new_poi"
         android:layout_below="@+id/searchLayout"
         android:orientation="vertical"
         android:paddingLeft="8dp"
@@ -111,7 +120,7 @@
         android:id="@+id/searchListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/footer_base_screen"
+        android:layout_above="@+id/add_new_poi"
         android:layout_below="@+id/searchLayout"
         android:background="@color/white"
         android:cacheColorHint="@color/transparent"
@@ -122,4 +131,38 @@
         android:visibility="gone" >
     </ListView>
 
+    <TextView
+        android:id="@+id/add_new_poi"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/button_dark_bule"
+        android:clickable="true"
+        android:paddingTop="6dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout="@+id/add_new_poi_curve"
+        android:text="@string/add_new_poi"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_15"
+        android:textStyle="bold" />
+    
+    <TextView
+        android:id="@+id/add_new_poi_curve"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/add_new_poi"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-10dp"
+        android:background="@drawable/bottom_btn"
+        android:clickable="true"
+        android:gravity="center_horizontal" />
+
+   <!--  <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/add_new_poi"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/add_new_poi"
+        android:gravity="center"
+        android:src="@drawable/add_new_poi_btn" /> -->
 </RelativeLayout>
