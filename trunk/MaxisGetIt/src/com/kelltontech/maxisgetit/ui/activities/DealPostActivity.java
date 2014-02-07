@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.text.Html;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -49,6 +50,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.internal.ar;
+import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
@@ -59,11 +61,14 @@ import com.kelltontech.maxisgetit.controllers.PostDealController;
 import com.kelltontech.maxisgetit.controllers.PostImageController;
 import com.kelltontech.maxisgetit.controllers.RemovePostDealImgController;
 import com.kelltontech.maxisgetit.dao.CategoryWithCharge;
+import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.CompanyCategory;
 import com.kelltontech.maxisgetit.dao.MaxisStore;
 import com.kelltontech.maxisgetit.dao.PostDealCityOrLoc;
+import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.requests.PostDealCityLocalityRequest;
 import com.kelltontech.maxisgetit.response.DealsListResponse;
+import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.response.ImageDataResponse;
 import com.kelltontech.maxisgetit.response.PostDealCityLocListResponse;
 import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
@@ -115,7 +120,7 @@ public class DealPostActivity extends MaxisMainActivity {
 	private int checkedIndex = 0;
 	ArrayList<String> selectedStrings;
 	ArrayList<String> items;
-	ArrayList<String> localityItems;
+	ArrayList<String> localityItemlist;
 
 	private ImageView mProfileIconView;
 	private ImageView mHeaderBackButton;
@@ -130,13 +135,30 @@ public class DealPostActivity extends MaxisMainActivity {
 	private ArrayList<Integer> mSelectedItems;
 	private ArrayList<String> mSelectedCitysList;
 
+	private boolean isAdvanceSearchLayoutOpen = false;
+	private LinearLayout advanceSearchLayout;
+	private TextView currentCity, currentLocality;
+	private ImageView upArrow;
+	private ArrayList<String> cityListString = new ArrayList<String>();
+	private ArrayList<String> localityItems;
+	ArrayList<CityOrLocality> cityList;
+	private String selectedCity = "Entire Malasyia";
+	private int city_id = -1;
+
+	private ArrayList<String> selectedLocalityItems;
+	ArrayList<CityOrLocality> localityList;
+	ArrayList<String> ids = new ArrayList<String>();
+	TextView mainSearchButton;
+	ArrayList<String> selectedLocalityindex;
+	LinearLayout wholeSearchBoxContainer;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_deal_post);
 		// UiUtils.hideKeyboardOnTappingOutside(
 		// findViewById(R.id.adp_root_layout), this);
-		
+
 		mSelectedCityPositionList = new ArrayList<Integer>();
 		mSelectedOutletPositionList = new ArrayList<Integer>();
 		mSelectedCitysList = new ArrayList<String>();
@@ -204,9 +226,11 @@ public class DealPostActivity extends MaxisMainActivity {
 								mSelectiveCities.setChecked(false);
 							} else {
 
-								clearCityLocalityLists(localityItems, mSelectedOutletPositionList);
-								clearCityLocalityLists(items, mSelectedCityPositionList);
-								
+								clearCityLocalityLists(localityItemlist,
+										mSelectedOutletPositionList);
+								clearCityLocalityLists(items,
+										mSelectedCityPositionList);
+
 								mCityDropDown.setText("Select");
 								mLocalityDropDown.setText("Select");
 
@@ -370,7 +394,12 @@ public class DealPostActivity extends MaxisMainActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				showmultipleSelect(items, "Select City(s)", false, getSelectedCityOutletBooleanArray(items, mSelectedCityPositionList));
+				showmultipleSelect(
+						items,
+						"Select City(s)",
+						false,
+						getSelectedCityOutletBooleanArray(items,
+								mSelectedCityPositionList));
 			}
 		});
 		// mLocalityDropDown = (MultiSelectSpinner)
@@ -382,11 +411,14 @@ public class DealPostActivity extends MaxisMainActivity {
 
 			@Override
 			public void onClick(View v) {
-				if(localityItems != null && localityItems.size() > 0){
-					showmultipleSelect(localityItems, "Select Outlet(s)", true, getSelectedCityOutletBooleanArray(localityItems, mSelectedOutletPositionList));
-				}
-				else
-				{
+				if (localityItemlist != null && localityItemlist.size() > 0) {
+					showmultipleSelect(
+							localityItemlist,
+							"Select Outlet(s)",
+							true,
+							getSelectedCityOutletBooleanArray(localityItemlist,
+									mSelectedOutletPositionList));
+				} else {
 					showAlertDialog("Please choose city.");
 				}
 
@@ -474,6 +506,38 @@ public class DealPostActivity extends MaxisMainActivity {
 		mEndDateBtn.setOnClickListener(this);
 		mDealPostBtn = (TextView) findViewById(R.id.adp_submit);
 		mDealPostBtn.setOnClickListener(this);
+
+		advanceSearchLayout = (LinearLayout) findViewById(R.id.advanceSearch);
+		advanceSearchLayout.setVisibility(View.GONE);
+
+		upArrow = (ImageView) findViewById(R.id.upArrow);
+		upArrow.setOnClickListener(this);
+
+		currentCity = (TextView) findViewById(R.id.currentCity);
+		currentLocality = (TextView) findViewById(R.id.currentLocality);
+		currentCity.setText(Html
+				.fromHtml("in " + "<b>" + selectedCity + "</b>"));
+
+		currentCity.setOnClickListener(this);
+		currentLocality.setOnClickListener(this);
+
+		mainSearchButton = (TextView) findViewById(R.id.mainSearchButton);
+		mainSearchButton.setOnClickListener(this);
+
+		wholeSearchBoxContainer = (LinearLayout) findViewById(R.id.whole_search_box_container);
+		mSearchEditText.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+
+				if (!isAdvanceSearchLayoutOpen) {
+					isAdvanceSearchLayoutOpen = true;
+					advanceSearchLayout.setVisibility(View.VISIBLE);
+				}
+				return false;
+			}
+		});
 
 		// mCityDropDown.setOnItemSelectedListener(new OnItemSelectedListener()
 		// {
@@ -634,24 +698,25 @@ public class DealPostActivity extends MaxisMainActivity {
 		// });
 	}
 
-
-	protected boolean[] getSelectedCityOutletBooleanArray(ArrayList<String> items, ArrayList<Integer> selectedPoition) {
-		if(items != null) {
-		boolean[] selectedArray = new boolean[items.size()];
-		for (int i = 0; i < items.size(); i++) {
-			if (selectedPoition.contains(i)) {
-				selectedArray[i] = true;
-			} else{
-				selectedArray[i] = false;
+	protected boolean[] getSelectedCityOutletBooleanArray(
+			ArrayList<String> items, ArrayList<Integer> selectedPoition) {
+		if (items != null) {
+			boolean[] selectedArray = new boolean[items.size()];
+			for (int i = 0; i < items.size(); i++) {
+				if (selectedPoition.contains(i)) {
+					selectedArray[i] = true;
+				} else {
+					selectedArray[i] = false;
+				}
 			}
-		}
-		return selectedArray;
+			return selectedArray;
 		} else {
 			return null;
 		}
 	}
 
-	protected void clearCityLocalityLists(ArrayList<String> arraylist, ArrayList<Integer> integerList) {
+	protected void clearCityLocalityLists(ArrayList<String> arraylist,
+			ArrayList<Integer> integerList) {
 		if (arraylist != null) {
 			arraylist.clear();
 		}
@@ -692,6 +757,11 @@ public class DealPostActivity extends MaxisMainActivity {
 
 		case R.id.search_toggler:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SEARCH_CLICK);
+			if (wholeSearchBoxContainer.getVisibility() == View.VISIBLE) {
+				wholeSearchBoxContainer.setVisibility(View.GONE);
+			} else {
+				wholeSearchBoxContainer.setVisibility(View.VISIBLE);
+			}
 			if (mSearchContainer.getVisibility() == View.VISIBLE) {
 				mSearchContainer.setVisibility(View.GONE);
 			} else {
@@ -699,10 +769,12 @@ public class DealPostActivity extends MaxisMainActivity {
 			}
 			break;
 
-		case R.id.search_icon_button:
+		case R.id.mainSearchButton:
 			mSearchEditText
 					.setText(mSearchEditText.getText().toString().trim());
-			performSearch(mSearchEditText.getText().toString());
+
+			String JSON_EXTRA = jsonForSearch();
+			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
 			break;
 		case R.id.adp_submit:
 			JSONObject postJson = null;
@@ -726,7 +798,7 @@ public class DealPostActivity extends MaxisMainActivity {
 						array.put(img);
 					}
 					postJson.put("image", array);
-					
+
 					if (imageId.size() > 0) {
 						if (checkedIndex >= 0) {
 							String coverImage = imageId.get(checkedIndex);
@@ -800,6 +872,39 @@ public class DealPostActivity extends MaxisMainActivity {
 			removeImageIndex = 3;
 			showConfirmationDialog(CustomDialog.CONFIRMATION_DIALOG,
 					getString(R.string.remove_image_confirmation));
+			break;
+		case R.id.upArrow:
+			if (isAdvanceSearchLayoutOpen) {
+				isAdvanceSearchLayoutOpen = false;
+				advanceSearchLayout.setVisibility(View.GONE);
+			}
+			break;
+		case R.id.currentCity:
+			if (cityListString != null && cityListString.size() > 0) {
+				localityItems = null;
+				selectedLocalityindex = null;
+				Intent cityIntent = new Intent(DealPostActivity.this,
+						AdvanceSelectCity.class);
+				cityIntent.putExtra("CITY_LIST", cityListString);
+				cityIntent.putExtra("SELECTED_CITY", selectedCity);
+				startActivityForResult(cityIntent, AppConstants.CITY_REQUEST);
+			} else {
+				setSearchCity();
+			}
+			break;
+
+		case R.id.currentLocality:
+			if (localityItems != null && localityItems.size() > 0) {
+				Intent localityIntent = new Intent(DealPostActivity.this,
+						AdvanceSelectLocalityActivity.class);
+				localityIntent.putExtra("LOCALITY_LIST", localityItems);
+				localityIntent.putStringArrayListExtra("LOCALITY_INDEX",
+						selectedLocalityindex);
+				startActivityForResult(localityIntent,
+						AppConstants.LOCALITY_REQUEST);
+			} else {
+				setSearchLocality(city_id);
+			}
 			break;
 		default:
 			break;
@@ -924,7 +1029,7 @@ public class DealPostActivity extends MaxisMainActivity {
 
 						jArray.put("locality_id", localityArray);
 					}
-					
+
 				}
 			} else {
 				showAlertDialog("Please choose City.");
@@ -957,13 +1062,12 @@ public class DealPostActivity extends MaxisMainActivity {
 			showAlertDialog("Please select a future End Date.");
 			return null;
 		}
-		 if (!startDateStr
-		 .equals(getResources().getString(R.string.date_format))
-		 && calStartDate.after(calEndDate)) {
-		 showAlertDialog("End Date should not be less than Start Date.");
-		 return null;
-		 }
-		else {
+		if (!startDateStr
+				.equals(getResources().getString(R.string.date_format))
+				&& calStartDate.after(calEndDate)) {
+			showAlertDialog("End Date should not be less than Start Date.");
+			return null;
+		} else {
 			jArray.put("end_date", (calEndDate.getTime().getTime() / 1000));
 		}
 
@@ -1005,11 +1109,10 @@ public class DealPostActivity extends MaxisMainActivity {
 						&& voucherCode.length() >= 7
 						&& voucherCode.length() <= 10) {
 					jArray.put("voucher_code", voucherCode);
-				} else if(voucherCode.length() < 7 && voucherCode.length() > 0){
+				} else if (voucherCode.length() < 7 && voucherCode.length() > 0) {
 					showAlertDialog("Voucher Code should not be less than 7 characters.");
 					return null;
-				}
-				else{
+				} else {
 					showAlertDialog("Please enter Voucher Code.");
 					return null;
 				}
@@ -1079,9 +1182,9 @@ public class DealPostActivity extends MaxisMainActivity {
 						DealPostActivity.this, R.layout.spinner_item,
 						localityList);
 				// mLocalityDropDown.setAdapter(localityAdp);
-				localityItems = new ArrayList<String>();
+				localityItemlist = new ArrayList<String>();
 				for (PostDealCityOrLoc postDealCityOrLoc : localityList) {
-					localityItems.add(postDealCityOrLoc.getName());
+					localityItemlist.add(postDealCityOrLoc.getName());
 				}
 
 				// mLocalityDropDown.setItems(localityItems);
@@ -1111,12 +1214,57 @@ public class DealPostActivity extends MaxisMainActivity {
 				 */// resetImageView(mBitmap);
 				replaceImageView(removeImageIndex);
 				// removeImgView[removeImageIndex].setVisibility(View.GONE);
-//				 imgView[removeImageIndex].setPadding(10, 10, 10, 10);
+				// imgView[removeImageIndex].setPadding(10, 10, 10, 10);
 				imageId.remove(removeImageIndex);
 				showInfoDialog("Image has been successfully removed.");
 				// Toast.makeText(getApplicationContext(),
 				// "Image has been successfully removed.",
 				// Toast.LENGTH_LONG).show();
+			}
+		} else if (msg.arg2 == Events.CITY_LISTING) {
+			stopSppiner();
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+			} else {
+				CityTable cityTable = new CityTable(
+						(MyApplication) getApplication());
+				GenralListResponse glistRes = (GenralListResponse) msg.obj;
+				// cityTable.addCityList(glistRes.getCityOrLocalityList());
+				cityList = glistRes.getCityOrLocalityList();
+				// inflateCityList(cityList);
+				Intent intent = new Intent(DealPostActivity.this,
+						AdvanceSelectCity.class);
+				for (CityOrLocality cityOrLocality : cityList) {
+
+					cityListString.add(cityOrLocality.getName());
+				}
+				localityItems = null;
+				ids = null;
+				selectedLocalityindex = null;
+				currentLocality.setText("Choose your Area");
+				intent.putExtra("CITY_LIST", cityListString);
+				intent.putExtra("SELECTED_CITY", selectedCity);
+				startActivityForResult(intent, AppConstants.CITY_REQUEST);
+			}
+			stopSppiner();
+		} else if (msg.arg2 == Events.LOCALITY_LISTING) {
+			stopSppiner();
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+			} else {
+				GenralListResponse glistRes = (GenralListResponse) msg.obj;
+				localityList = glistRes.getCityOrLocalityList();
+				Intent intent = new Intent(DealPostActivity.this,
+						AdvanceSelectLocalityActivity.class);
+				localityItems = new ArrayList<String>();
+				for (CityOrLocality dealCityOrLoc : localityList) {
+					localityItems.add(dealCityOrLoc.getName());
+				}
+				intent.putExtra("LOCALITY_LIST", localityItems);
+				intent.putStringArrayListExtra("LOCALITY_INDEX",
+						selectedLocalityindex);
+				startActivityForResult(intent, AppConstants.LOCALITY_REQUEST);
+
 			}
 		}
 	}
@@ -1149,6 +1297,8 @@ public class DealPostActivity extends MaxisMainActivity {
 		} else if (event == Events.POST_IMAGE_EVENT) {
 			handler.sendMessage((Message) screenData);
 		} else if (event == Events.REMOVE_IMAGE_EVENT) {
+			handler.sendMessage((Message) screenData);
+		} else {
 			handler.sendMessage((Message) screenData);
 		}
 
@@ -1233,10 +1383,11 @@ public class DealPostActivity extends MaxisMainActivity {
 
 				uploadImagetoServer(newBitmap);
 
-			}
-			else
-			{
-				Toast.makeText(this, "Please select another image different from device's default.", Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(
+						this,
+						"Please select another image different from device's default.",
+						Toast.LENGTH_SHORT).show();
 			}
 			// System.out.println(getBase64Image());
 			// mImagePath = getFileNameByUri(selectedImage);
@@ -1244,7 +1395,65 @@ public class DealPostActivity extends MaxisMainActivity {
 			// mImagePath=getRealPathFromURI(selectedImage);
 			// System.out.println("real file path by URI"+mImagePath);
 			// dealImageV.setImageDrawable(fetchImageFromGallery());
-		} /*
+		} else if (resultCode == RESULT_OK
+				&& requestCode == AppConstants.CITY_REQUEST) {
+			if (!selectedCity
+					.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
+				localityItems = null;
+				ids = null;
+				selectedLocalityindex = null;
+				currentLocality.setText("Choose your Area");
+			}
+			selectedCity = data.getStringExtra("CITY_NAME");
+			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
+					+ "</b>"));
+			int index = data.getIntExtra("CITY_INDEX", 0);
+			if(index==-1)
+			{
+				city_id =-1;
+			}else
+			{
+			city_id = cityList.get(index).getId();
+			}
+
+		} else if (resultCode == RESULT_OK
+				&& requestCode == AppConstants.LOCALITY_REQUEST) {
+			String locality = "";
+
+			selectedLocalityItems = data
+					.getStringArrayListExtra("SELECTED_LOCALITIES");
+
+			selectedLocalityindex = data
+					.getStringArrayListExtra("SELECTED_LOCALITIES_INDEX");
+			if (selectedLocalityItems != null
+					&& selectedLocalityItems.size() > 0) {
+				for (int i = 0; i < selectedLocalityItems.size(); i++) {
+
+					if (i == selectedLocalityItems.size() - 1) {
+						locality += selectedLocalityItems.get(i);
+					} else {
+						locality += selectedLocalityItems.get(i) + ",";
+					}
+				}
+				currentLocality.setText(Html.fromHtml("Your Selected Area "
+						+ "<b>" + locality + "</b>"));
+			} else {
+				currentLocality.setText("Choose your Area");
+			}
+
+			ids = new ArrayList<String>();
+
+			if (selectedLocalityindex != null
+					&& selectedLocalityindex.size() > 0) {
+				for (int i = 0; i < selectedLocalityindex.size(); i++) {
+
+					ids.add(String.valueOf(localityList.get(
+							Integer.parseInt(selectedLocalityindex.get(i)))
+							.getId()));
+				}
+			}
+
+		}/*
 		 * else if (requestCode == IMAGE_REMOVE) { if (data == null ||
 		 * data.getData() == null) return; removeImageFromServer(mBitmap); }
 		 */
@@ -1372,7 +1581,7 @@ public class DealPostActivity extends MaxisMainActivity {
 				// radioBtns[i].setChecked(false);
 				radioBtns[i].setVisibility(radioBtns[i + 1].getVisibility());
 
-				 imgView[i].setPadding(0, 0, 0, 0);
+				imgView[i].setPadding(0, 0, 0, 0);
 				/* removeImgView[i].setVisibility(View.GONE); */
 			}
 			// imgView[3].setBackgroundResource(R.drawable.upload_photo_icon);
@@ -1490,13 +1699,13 @@ public class DealPostActivity extends MaxisMainActivity {
 		} else {
 			mSelectedItems.addAll(mSelectedCityPositionList);
 		}
-		
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		CharSequence[] charSequences = new CharSequence[totalItems.size()];
 		for (int i = 0; i < totalItems.size(); i++) {
 			charSequences[i] = totalItems.get(i);
 		}
-		
+
 		builder.setTitle(header)
 				.setMultiChoiceItems(charSequences, booleanArray,
 						new DialogInterface.OnMultiChoiceClickListener() {
@@ -1518,43 +1727,53 @@ public class DealPostActivity extends MaxisMainActivity {
 							public void onClick(DialogInterface dialog, int id) {
 								if (isLocality) {
 									mSelectedOutletPositionList.clear();
-									mSelectedOutletPositionList.addAll(mSelectedItems);
+									mSelectedOutletPositionList
+											.addAll(mSelectedItems);
 								} else {
 									mSelectedCityPositionList.clear();
-									mSelectedCityPositionList.addAll(mSelectedItems);
+									mSelectedCityPositionList
+											.addAll(mSelectedItems);
 								}
-								
+
 								if (mSelectedItems.size() > 0) {
-								selectedStrings = new ArrayList<String>();
-								StringBuffer selectedData = new StringBuffer();
-								for (int i = 0; i < mSelectedItems.size(); i++) {
-									selectedStrings.add(totalItems.get(i));
-									selectedData.append(totalItems.get(i));
-									if (i < mSelectedItems.size() - 1) {
-										selectedData.append(", ");
+									selectedStrings = new ArrayList<String>();
+									StringBuffer selectedData = new StringBuffer();
+									for (int i = 0; i < mSelectedItems.size(); i++) {
+										selectedStrings.add(totalItems.get(i));
+										selectedData.append(totalItems.get(i));
+										if (i < mSelectedItems.size() - 1) {
+											selectedData.append(", ");
+										}
 									}
-								}
-								if (!isLocality) {
-									mCityDropDown.setText(selectedData.toString());
-									mSelectedCitysList.addAll(selectedStrings);
-									clearCityLocalityLists(localityItems, mSelectedOutletPositionList);
+									if (!isLocality) {
+										mCityDropDown.setText(selectedData
+												.toString());
+										mSelectedCitysList
+												.addAll(selectedStrings);
+										clearCityLocalityLists(
+												localityItemlist,
+												mSelectedOutletPositionList);
+										mLocalityDropDown.setText("Select");
+										getLocality();
+									} else {
+										mLocalityDropDown.setText(selectedData
+												.toString());
+										selectedLocalities
+												.addAll(selectedStrings);
+									}
+								} else {
+									if (!isLocality) {
+										mCityDropDown.setText("Select");
+										clearCityLocalityLists(
+												localityItemlist,
+												mSelectedOutletPositionList);
+									} else {
+										clearCityLocalityLists(null,
+												mSelectedOutletPositionList);
+									}
 									mLocalityDropDown.setText("Select");
-									getLocality();
-								} else {
-									mLocalityDropDown.setText(selectedData
-											.toString());
-									selectedLocalities.addAll(selectedStrings);
 								}
-							} else {
-								if (!isLocality) {
-									mCityDropDown.setText("Select");
-									clearCityLocalityLists(localityItems, mSelectedOutletPositionList);
-								} else {
-									clearCityLocalityLists(null, mSelectedOutletPositionList);
-								}
-								mLocalityDropDown.setText("Select");
 							}
-				}
 
 						})
 				.setNegativeButton(R.string.cancel,
@@ -1593,6 +1812,45 @@ public class DealPostActivity extends MaxisMainActivity {
 			clController.requestService(postJsaon);
 		} else {
 			showAlertDialog("Please select a city.");
+		}
+	}
+
+	public String jsonForSearch() {
+
+		// {"city":{"city_id":5,"city_name":"adyui"},"locality":[{"locality_id":5,"locality_name":"adyui"},{"locality_id":5,"locality_name":"adyui"}]}
+		JSONObject jArray = new JSONObject();
+		try {
+
+			if (city_id != -1) {
+				JSONObject array = new JSONObject();
+				array.put("city_id", city_id + "");
+				array.put("city_name", selectedCity);
+
+				jArray.put("city", array);
+
+				if (ids != null && ids.size() > 0) {
+					JSONArray jsonArray = new JSONArray();
+					for (int i = 0; i < selectedLocalityItems.size(); i++) {
+						JSONObject localityArray = new JSONObject();
+						localityArray.put("locality_id", ids.get(i));
+						localityArray.put("locality_name",
+								selectedLocalityItems.get(i));
+						jsonArray.put(localityArray);
+
+					}
+					jArray.put("locality", jsonArray);
+				}
+				return jArray.toString();
+
+			}
+
+			else {
+				return null;
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
 		}
 	}
 

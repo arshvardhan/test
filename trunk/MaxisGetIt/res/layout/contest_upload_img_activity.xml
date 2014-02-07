@@ -11,14 +11,13 @@
         android:id="@+id/header_base_activity"
         layout="@layout/header_with_popdown_search" />
 
-    <include
+    <!-- <include
         android:id="@+id/footer_base_screen"
-        layout="@layout/footer_home_screen" />
+        layout="@layout/footer_home_screen" /> -->
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/footer_base_screen"
         android:layout_below="@+id/header_base_activity" >
 
         <LinearLayout

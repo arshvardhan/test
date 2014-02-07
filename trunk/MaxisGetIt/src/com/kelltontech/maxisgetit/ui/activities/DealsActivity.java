@@ -3,11 +3,16 @@ package com.kelltontech.maxisgetit.ui.activities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,13 +31,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.imageloader.ImageLoader;
 import com.kelltontech.framework.model.MaxisResponse;
 import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.adapters.CompanyListDealAdapter;
-import com.kelltontech.maxisgetit.adapters.DealsCategoryAdapter;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
@@ -41,24 +46,24 @@ import com.kelltontech.maxisgetit.controllers.CompanyDetailController;
 import com.kelltontech.maxisgetit.controllers.DownloadDealController;
 import com.kelltontech.maxisgetit.controllers.RefineAttributeController;
 import com.kelltontech.maxisgetit.dao.CategoryRefine;
+import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.CompanyDesc;
 import com.kelltontech.maxisgetit.dao.CompanyDetail;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
 import com.kelltontech.maxisgetit.dao.MaxisStore;
-import com.kelltontech.maxisgetit.dao.OutLetDetails;
 import com.kelltontech.maxisgetit.dao.SelectorDAO;
 import com.kelltontech.maxisgetit.dao.SubCategory;
-import com.kelltontech.maxisgetit.parsers.GenralResponseParser;
+import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.requests.CombinedListRequest;
 import com.kelltontech.maxisgetit.requests.DetailRequest;
 import com.kelltontech.maxisgetit.requests.DownloadDealReq;
 import com.kelltontech.maxisgetit.requests.RefineSearchRequest;
 import com.kelltontech.maxisgetit.response.CompanyListResponse;
+import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.response.RefineCategoryResponse;
 import com.kelltontech.maxisgetit.response.RefineSelectorResponse;
 import com.kelltontech.maxisgetit.response.SubCategoryResponse;
 import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
-import com.kelltontech.maxisgetit.ui.widgets.HorizontalListView;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
 public class DealsActivity extends MaxisMainActivity {
@@ -102,8 +107,26 @@ public class DealsActivity extends MaxisMainActivity {
 	String userNo;
 	String userName;
 
+	private boolean isAdvanceSearchLayoutOpen = false;
+	private LinearLayout advanceSearchLayout;
+	private TextView currentCity, currentLocality;
+	private ImageView upArrow;
+	private ArrayList<String> cityListString = new ArrayList<String>();
+	private ArrayList<String> localityItems;
+	ArrayList<CityOrLocality> cityList;
+	private String selectedCity = "Entire Malasyia";
+	private int city_id = -1;
+
+	private ArrayList<String> selectedLocalityItems;
+	ArrayList<CityOrLocality> localityList;
+	ArrayList<String> ids = new ArrayList<String>();
+	TextView mainSearchButton;
+	ArrayList<String> selectedLocalityindex;
+	LinearLayout wholeSearchBoxContainer;
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 1) {
 			if (resultCode == RESULT_OK) {
 				mIsFreshSearch = false;
@@ -136,8 +159,64 @@ public class DealsActivity extends MaxisMainActivity {
 				userNo = bundle.getString("phoneNo");
 				dealDownload();
 			}
+		} else if (resultCode == RESULT_OK
+				&& requestCode == AppConstants.CITY_REQUEST) {
+			if (!selectedCity
+					.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
+				localityItems = null;
+				ids = null;
+				selectedLocalityindex = null;
+				currentLocality.setText("Choose your Area");
+			}
+			selectedCity = data.getStringExtra("CITY_NAME");
+			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
+					+ "</b>"));
+			int index = data.getIntExtra("CITY_INDEX", 0);
+			if(index==-1)
+			{
+				city_id =-1;
+			}else
+			{
+			city_id = cityList.get(index).getId();
+			}
+
+		} else if (resultCode == RESULT_OK
+				&& requestCode == AppConstants.LOCALITY_REQUEST) {
+			String locality = "";
+
+			selectedLocalityItems = data
+					.getStringArrayListExtra("SELECTED_LOCALITIES");
+
+			selectedLocalityindex = data
+					.getStringArrayListExtra("SELECTED_LOCALITIES_INDEX");
+			if (selectedLocalityItems != null
+					&& selectedLocalityItems.size() > 0) {
+				for (int i = 0; i < selectedLocalityItems.size(); i++) {
+
+					if (i == selectedLocalityItems.size() - 1) {
+						locality += selectedLocalityItems.get(i);
+					} else {
+						locality += selectedLocalityItems.get(i) + ",";
+					}
+				}
+				currentLocality.setText(Html.fromHtml("Your Selected Area "
+						+ "<b>" + locality + "</b>"));
+			} else {
+				currentLocality.setText("Choose your Area");
+			}
+
+			ids = new ArrayList<String>();
+
+			if (selectedLocalityindex != null
+					&& selectedLocalityindex.size() > 0) {
+				for (int i = 0; i < selectedLocalityindex.size(); i++) {
+
+					ids.add(String.valueOf(localityList.get(
+							Integer.parseInt(selectedLocalityindex.get(i)))
+							.getId()));
+				}
+			}
 		}
-		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	@Override
@@ -272,7 +351,7 @@ public class DealsActivity extends MaxisMainActivity {
 					showDealListing();
 					mSelctorResp = null;
 				}
-				
+
 			}
 
 			@Override
@@ -288,9 +367,10 @@ public class DealsActivity extends MaxisMainActivity {
 				Log.e("manish", "inside onclick");
 
 				if (position == (mCompListDealAdapter.getCount() - 1)
-						&& position != 0 && mClResponse.getTotalrecordFound()>10) {
+						&& position != 0
+						&& mClResponse.getTotalrecordFound() > 10) {
 					// do nothing
-					
+
 				} else {
 					CompanyDetailController controller = new CompanyDetailController(
 							DealsActivity.this, Events.DEAL_DETAIL);
@@ -404,6 +484,39 @@ public class DealsActivity extends MaxisMainActivity {
 		} else {
 			showDealListing();
 		}
+
+		advanceSearchLayout = (LinearLayout) findViewById(R.id.advanceSearch);
+		advanceSearchLayout.setVisibility(View.GONE);
+
+		upArrow = (ImageView) findViewById(R.id.upArrow);
+		upArrow.setOnClickListener(this);
+
+		currentCity = (TextView) findViewById(R.id.currentCity);
+		currentLocality = (TextView) findViewById(R.id.currentLocality);
+		currentCity.setText(Html
+				.fromHtml("in " + "<b>" + selectedCity + "</b>"));
+
+		currentCity.setOnClickListener(this);
+		currentLocality.setOnClickListener(this);
+
+		mainSearchButton = (TextView) findViewById(R.id.mainSearchButton);
+		mainSearchButton.setOnClickListener(this);
+
+		wholeSearchBoxContainer = (LinearLayout) findViewById(R.id.whole_search_box_container);
+
+		mSearchEditText.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+
+				if (!isAdvanceSearchLayoutOpen) {
+					isAdvanceSearchLayoutOpen = true;
+					advanceSearchLayout.setVisibility(View.VISIBLE);
+				}
+				return false;
+			}
+		});
 	}
 
 	@Override
@@ -417,6 +530,11 @@ public class DealsActivity extends MaxisMainActivity {
 		switch (v.getId()) {
 		case R.id.search_toggler:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SEARCH_CLICK);
+			if (wholeSearchBoxContainer.getVisibility() == View.VISIBLE) {
+				wholeSearchBoxContainer.setVisibility(View.GONE);
+			} else {
+				wholeSearchBoxContainer.setVisibility(View.VISIBLE);
+			}
 			if (mSearchContainer.getVisibility() == View.VISIBLE) {
 				mSearchContainer.setVisibility(View.GONE);
 			} else {
@@ -427,10 +545,12 @@ public class DealsActivity extends MaxisMainActivity {
 			AnalyticsHelper.logEvent(FlurryEventsConstants.BACK_CLICK);
 			this.finish();
 			break;
-		case R.id.search_icon_button:
+		case R.id.mainSearchButton:
 			mSearchEditText
 					.setText(mSearchEditText.getText().toString().trim());
-			performSearch(mSearchEditText.getText().toString());
+
+			String JSON_EXTRA = jsonForSearch();
+			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
 			break;
 		case R.id.show_profile_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.SHOW_PROFILE_CLICK);
@@ -466,10 +586,10 @@ public class DealsActivity extends MaxisMainActivity {
 							"Please select a category first.",
 							Toast.LENGTH_SHORT).show();
 
-//					mCatchooser.getOnItemSelectedListener().onItemSelected(
-//							mCatchooser, mCatchooser.getSelectedView(),
-//							mCatchooser.getSelectedItemPosition(),
-//							mCatchooser.getSelectedItemId());
+					// mCatchooser.getOnItemSelectedListener().onItemSelected(
+					// mCatchooser, mCatchooser.getSelectedView(),
+					// mCatchooser.getSelectedItemPosition(),
+					// mCatchooser.getSelectedItemId());
 					mCatchooser.performClick();
 				} else {
 					refineSearch();
@@ -478,6 +598,39 @@ public class DealsActivity extends MaxisMainActivity {
 				refineSearch();
 			}
 			AnalyticsHelper.logEvent(FlurryEventsConstants.MODIFY_SEARCH_CLICK);
+			break;
+		case R.id.upArrow:
+			if (isAdvanceSearchLayoutOpen) {
+				isAdvanceSearchLayoutOpen = false;
+				advanceSearchLayout.setVisibility(View.GONE);
+			}
+			break;
+		case R.id.currentCity:
+			if (cityListString != null && cityListString.size() > 0) {
+				localityItems = null;
+				selectedLocalityindex = null;
+				Intent cityIntent = new Intent(DealsActivity.this,
+						AdvanceSelectCity.class);
+				cityIntent.putExtra("CITY_LIST", cityListString);
+				cityIntent.putExtra("SELECTED_CITY", selectedCity);
+				startActivityForResult(cityIntent, AppConstants.CITY_REQUEST);
+			} else {
+				setSearchCity();
+			}
+			break;
+
+		case R.id.currentLocality:
+			if (localityItems != null && localityItems.size() > 0) {
+				Intent localityIntent = new Intent(DealsActivity.this,
+						AdvanceSelectLocalityActivity.class);
+				localityIntent.putExtra("LOCALITY_LIST", localityItems);
+				localityIntent.putStringArrayListExtra("LOCALITY_INDEX",
+						selectedLocalityindex);
+				startActivityForResult(localityIntent,
+						AppConstants.LOCALITY_REQUEST);
+			} else {
+				setSearchLocality(city_id);
+			}
 			break;
 		}
 	}
@@ -493,6 +646,10 @@ public class DealsActivity extends MaxisMainActivity {
 			handler.sendMessage(catRefine);
 			return;
 		} else if (event == Events.DOWNLOAD_DEAL) {
+			Message message = (Message) screenData;
+			handler.sendMessage(message);
+		} else if (event == Events.CITY_LISTING
+				|| event == Events.LOCALITY_LISTING) {
 			Message message = (Message) screenData;
 			handler.sendMessage(message);
 		} else {
@@ -625,7 +782,7 @@ public class DealsActivity extends MaxisMainActivity {
 								mClRequest.getKeywordOrCategoryId());
 					intent.putExtra(AppConstants.COMP_DETAIL_DATA, compListResp);
 					intent.putExtra(AppConstants.DATA_LIST_REQUEST, mClRequest);
-					
+
 					// intent.putExtra(AppConstants.THUMB_URL,
 					// mCategoryThumbUrl);
 					// intent.putExtra(AppConstants.IS_DEAL_LIST,
@@ -658,9 +815,54 @@ public class DealsActivity extends MaxisMainActivity {
 				MaxisResponse genResp = (MaxisResponse) msg.obj;
 				showInfoDialog("Thank you for Download Deal. The message has been sent to your Phone Number.");
 			}
+			stopSppiner();
+		} else if (msg.arg2 == Events.CITY_LISTING) {
+			stopSppiner();
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+			} else {
+				CityTable cityTable = new CityTable(
+						(MyApplication) getApplication());
+				GenralListResponse glistRes = (GenralListResponse) msg.obj;
+				// cityTable.addCityList(glistRes.getCityOrLocalityList());
+				cityList = glistRes.getCityOrLocalityList();
+				// inflateCityList(cityList);
+				Intent intent = new Intent(DealsActivity.this,
+						AdvanceSelectCity.class);
+				for (CityOrLocality cityOrLocality : cityList) {
 
+					cityListString.add(cityOrLocality.getName());
+				}
+				localityItems = null;
+				ids = null;
+				selectedLocalityindex = null;
+				currentLocality.setText("Choose your Area");
+				intent.putExtra("CITY_LIST", cityListString);
+				intent.putExtra("SELECTED_CITY", selectedCity);
+				startActivityForResult(intent, AppConstants.CITY_REQUEST);
+			}
+			stopSppiner();
+		} else if (msg.arg2 == Events.LOCALITY_LISTING) {
+			stopSppiner();
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+			} else {
+				GenralListResponse glistRes = (GenralListResponse) msg.obj;
+				localityList = glistRes.getCityOrLocalityList();
+				Intent intent = new Intent(DealsActivity.this,
+						AdvanceSelectLocalityActivity.class);
+				localityItems = new ArrayList<String>();
+				for (CityOrLocality dealCityOrLoc : localityList) {
+					localityItems.add(dealCityOrLoc.getName());
+				}
+				intent.putExtra("LOCALITY_LIST", localityItems);
+				intent.putStringArrayListExtra("LOCALITY_INDEX",
+						selectedLocalityindex);
+				startActivityForResult(intent, AppConstants.LOCALITY_REQUEST);
+
+			}
 		}
-		stopSppiner();
+
 	}
 
 	@Override
@@ -734,7 +936,7 @@ public class DealsActivity extends MaxisMainActivity {
 				isModifySearchDialogOpen = false;
 
 			}
-//			
+			//
 		} else if (id == CustomDialog.DATA_USAGE_DIALOG) {
 			showMap();
 		} else {
@@ -870,4 +1072,42 @@ public class DealsActivity extends MaxisMainActivity {
 		startSppiner();
 		downloadDealController.requestService(dealReq);
 	}
+
+	public String jsonForSearch() {
+
+		// {"city":{"city_id":5,"city_name":"adyui"},"locality":[{"locality_id":5,"locality_name":"adyui"},{"locality_id":5,"locality_name":"adyui"}]}
+		JSONObject jArray = new JSONObject();
+		try {
+
+			if (city_id != -1) {
+				JSONObject array = new JSONObject();
+				array.put("city_id", city_id + "");
+				array.put("city_name", selectedCity);
+
+				jArray.put("city", array);
+
+				if (ids != null && ids.size() > 0) {
+					JSONArray jsonArray = new JSONArray();
+					for (int i = 0; i < selectedLocalityItems.size(); i++) {
+						JSONObject localityArray = new JSONObject();
+						localityArray.put("locality_id", ids.get(i));
+						localityArray.put("locality_name",
+								selectedLocalityItems.get(i));
+						jsonArray.put(localityArray);
+
+					}
+					jArray.put("locality", jsonArray);
+				}
+				return jArray.toString();
+
+			} else {
+				return null;
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }

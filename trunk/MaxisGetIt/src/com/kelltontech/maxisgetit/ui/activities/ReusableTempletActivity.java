@@ -58,7 +58,7 @@ public class ReusableTempletActivity extends MaxisMainActivity {
 		switch (v.getId()) {
 		case R.id.search_icon_button:
 			mSearchEditText.setText(mSearchEditText.getText().toString().trim());
-			performSearch(mSearchEditText.getText().toString());
+			performSearch(mSearchEditText.getText().toString(),"");
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);

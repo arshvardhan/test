@@ -4,8 +4,8 @@ public interface AppConstants {
 	
 	String API_VERSION = "1.2";
 	
-    // String BASE_SERVER = "http://192.168.13.3/webservice/trunk/"; // local Aaditya
-	// String BASE_SERVER = "http://192.168.12.224/webservice/trunk/"; // local Ankesh
+//     String BASE_SERVER = "http://192.168.13.3/webservice/trunk/"; // local Aaditya
+//	 String BASE_SERVER = "http://192.168.12.224/webservice/trunk/"; // local Ankesh
 	// String BASE_SERVER = "http://192.168.13.16/webservice/trunk/"; // local Diwakar
 	// String BASE_SERVER = "http://test.kelltontech.com/getitfms/"; //live dev
 	// String BASE_SERVER = "http://test.kelltontech.com/getitfms_qa/"; //QA
@@ -131,7 +131,7 @@ public interface AppConstants {
 	String	COMPANY_NAME_KEY							= "company_name_key";
 	String	EXTRA_SELECTED_CATEGORY						= "extra_selected_category";
 	String	EXTRA_SEARCH_KEYWORD						= "extra_search_keyword";
-	String	ADD_NEW_POI_KEY								= "add_new_poi_key";
+	String ADD_NEW_POI_KEY                              = "add_new_poi_key";
 	
 	//TnC Extra
 	int TNC_FROM_COMP = 0;
@@ -143,6 +143,9 @@ public interface AppConstants {
 	int ACTION_SELL_POST = 1111;
 	int ACTION_REPORT_ERROR = 1112;
 	int ACTION_ADD_FAV = 1113;
+	
+	int CITY_REQUEST = 999;
+	int LOCALITY_REQUEST = 1000;
 
 	/**
 	 * LogCat Tags

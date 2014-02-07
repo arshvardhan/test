@@ -23,6 +23,7 @@ import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
+import com.kelltontech.maxisgetit.controllers.CityAreaListController;
 import com.kelltontech.maxisgetit.controllers.CombindListingController;
 import com.kelltontech.maxisgetit.controllers.UserDetailController;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
@@ -108,7 +109,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		AnalyticsHelper.onActivityStop(this);
 	}*/
 
-	protected void performSearch(String searchText) {
+	protected void performSearch(String searchText , String postJsonPayload) {
 		if (searchText == null || searchText.trim().equals("")) {
 			showInfoDialog(getResources().getString(R.string.input_search));
 			return;
@@ -127,10 +128,42 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		
 		mListRequest.setLatitude(GPS_Data.getLatitude());
 		mListRequest.setLongitude(GPS_Data.getLongitude());
+		
+		if(postJsonPayload!=null)
+		mListRequest.setPostJsonPayload(postJsonPayload);
+		
 
 		CombindListingController listingController = new CombindListingController(MaxisMainActivity.this, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 		listingController.requestService(mListRequest);
 	}
+	
+//	protected void performSearch(String searchText) {
+//		if (searchText == null || searchText.trim().equals("")) {
+//			showInfoDialog(getResources().getString(R.string.input_search));
+//			return;
+//		}
+//		startSppiner();
+//		mListRequest = new CombinedListRequest(MaxisMainActivity.this);
+//		mListRequest.setBySearch(true);
+//		mListRequest.setCompanyListing(true);
+////		String encodedText=URLEncoder.encode(searchText.trim());
+////		mListRequest.setKeywordOrCategoryId(encodedText);
+//		mListRequest.setKeywordOrCategoryId(Uri.encode(searchText.trim()));
+//		
+//		HashMap<String,String>	map = new HashMap<String,String>();
+//		map.put(FlurryEventsConstants.HOME_SEARCH_TEXT, searchText);
+//		AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SCREEN_SEARCH,map);
+//		
+//		mListRequest.setLatitude(GPS_Data.getLatitude());
+//		mListRequest.setLongitude(GPS_Data.getLongitude());
+//		
+////		if(postJsonPayload!=null)
+////		mListRequest.setPostJsonPayload(postJsonPayload);
+//		
+//
+//		CombindListingController listingController = new CombindListingController(MaxisMainActivity.this, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
+//		listingController.requestService(mListRequest);
+//	}
 
 	protected void showCompanyDealListing(String categoryId, String categoryTitle,String thumbUrl, boolean iscompanyListing, String groupType, String groupActionType) {
 		startSppiner();
@@ -284,6 +317,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 	}
 	
 	public void showPlayStoreDialog(String info) {
+		stopSppiner();
 		CustomDialog customDialog = new CustomDialog(CustomDialog.PLAY_STORE_DIALOG, MaxisMainActivity.this);
 		mDialog = customDialog.createCustomDialog(info);
 	}
@@ -389,5 +423,25 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
         } else {
             return false;
         }
+	}
+	public void setSearchCity() {
+		// TODO
+		CityAreaListController clController = new CityAreaListController(
+				MaxisMainActivity.this, Events.CITY_LISTING);
+		startSppiner();
+		clController.requestService(null);
+
+	}
+
+	public void setSearchLocality(int city_id) {
+		// TODO
+		if (city_id != -1) {
+			CityAreaListController clController = new CityAreaListController(
+					MaxisMainActivity.this, Events.LOCALITY_LISTING);
+			startSppiner();
+			clController.requestService(city_id + "");
+		} else {
+			showAlertDialog("Please select a city.");
+		}
 	}
 }

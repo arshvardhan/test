@@ -195,7 +195,8 @@
     <string name="register_underline">Register</string>
     <string name="repost_underline"><u>Repost</u></string>
     <string name="req_to_remove_under"><u>Request to remove listing</u></string>
-    <string name="search_query">Search query</string>
+    <string name="search_query">Search Hotels, Restaurants, Malls etc.</string>
+     <string name="search_query_city">Search City</string>
     <string name="search">Search</string>
     <string name="save">Save</string>
     <string name="submit">Submit</string>
@@ -356,12 +357,12 @@
     <string name="add_new_poi">+ Add New POI</string>
     <string name="txtv_anp_header">Fill in the following details to add a new POI</string>
     <string name="dialog_anp_confirmation">No matching records found. Do you wish to add new POI in the list ?</string>
-    <string name="txtv_anp_company_detail">Company Detail</string>
+    <string name="txtv_anp_company_detail">Company Details</string>
     <string name="txtv_anp_company_name">Company Name</string>
     <string name="txtv_anp_company_address">Company Address</string>
     <string name="txtv_anp_business_type">Business Type</string>
     <string name="txtv_anp_company_number">Contact Number</string>
-    <string name="txtv_anp_user_detail">Your Detail</string>
+    <string name="txtv_anp_user_detail">Your Details</string>
     <string name="txtv_anp_user_name">Name</string>
     <string name="txtv_anp_user_number">Contact Number</string>
     <string name="submit_poi_btn_txt">Submit</string>
