@@ -11,9 +11,12 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -81,17 +84,34 @@ public class SaleTempletActivity extends MaxisMainActivity {
 	private ImageView mSearchToggler;
 	private LinearLayout mSearchContainer;
 	private ImageView mHeaderBackButton;
-	
+
 	private TextView mLableTitle;
 	private boolean isTitleMandatory = true;
 
+	private boolean isAdvanceSearchLayoutOpen = false;
+	private LinearLayout advanceSearchLayout;
+	private TextView currentCity, currentLocality;
+	private ImageView upArrow;
+	private ArrayList<String> cityListString = new ArrayList<String>();
+	private ArrayList<String> localityItems;
+	ArrayList<CityOrLocality> cityList;
+	private String selectedCity = "Entire Malasyia";
+	private int city_id = -1;
+
+	private ArrayList<String> selectedLocalityItems;
+	ArrayList<CityOrLocality> localityList;
+	ArrayList<String> ids = new ArrayList<String>();
+	TextView mainSearchButton;
+	ArrayList<String> selectedLocalityindex;
+	LinearLayout wholeSearchBoxContainer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_templet_list);
-		UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.tl_root_layout), this);
+		UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.tl_root_layout),
+				this);
 		mTermsAndConditionLink = (TextView) findViewById(R.id.atl_terms_link);
 		mTermsAndConditionLink.setOnClickListener(this);
 		mTermAgreement = (CheckBox) findViewById(R.id.atl_terms_check);
@@ -107,16 +127,21 @@ public class SaleTempletActivity extends MaxisMainActivity {
 		Bundle bundle = getIntent().getExtras();
 		mControlResp = bundle.getParcelable(AppConstants.TEMPLET_DATA);
 		// thumbImage = (ImageView) findViewById(R.id.tl_thumb_icon);
-		SubCategory selectedCategory = bundle.getParcelable(AppConstants.SELECTED_CAT_DATA);
+		SubCategory selectedCategory = bundle
+				.getParcelable(AppConstants.SELECTED_CAT_DATA);
 		String catName = selectedCategory.getCategoryTitle();
 		mCategoryId = selectedCategory.getCategoryId();
-		
-		
+
 		mLocalityContainer = (LinearLayout) findViewById(R.id.atl_locality_chooser_container);
 		mCityDropDown = (Spinner) findViewById(R.id.atl_city_chooser);
 		mLocalityDropDown = (Spinner) findViewById(R.id.atl_locality_chooser);
 		mDescFillDetailContent = (TextView) findViewById(R.id.atl_desc_content);
-		mDescFillDetailContent.setText(getResources().getString(R.string.fill_detail_selling1) + " " + catName + " " + getResources().getString(R.string.fill_detail_selling2));
+		mDescFillDetailContent.setText(getResources().getString(
+				R.string.fill_detail_selling1)
+				+ " "
+				+ catName
+				+ " "
+				+ getResources().getString(R.string.fill_detail_selling2));
 		mControlholder = (LinearLayout) findViewById(R.id.tl_control_holder);
 		for (int i = 0; i < mControlResp.getControlList().size(); i++) {
 			ControlDetails controlDetail = mControlResp.getControlList().get(i);
@@ -145,11 +170,11 @@ public class SaleTempletActivity extends MaxisMainActivity {
 				break;
 			}
 		}
-		
-		mLableTitle = (TextView)findViewById(R.id.atl_lbl_title);
-		if(isTitleMandatory)
-		{
-			mLableTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.required_icon, 0);
+
+		mLableTitle = (TextView) findViewById(R.id.atl_lbl_title);
+		if (isTitleMandatory) {
+			mLableTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+					R.drawable.required_icon, 0);
 		}
 		mTitle = (EditText) findViewById(R.id.atl_title);
 		mDescription = (EditText) findViewById(R.id.atl_desc);
@@ -158,41 +183,74 @@ public class SaleTempletActivity extends MaxisMainActivity {
 		mLayoutGuestDetail = (LinearLayout) findViewById(R.id.atl_guest_detail_controller);
 		if (mIsLoggedInUser) {
 			mUserId = mStore.getUserID();
-			mUsernameTxt.setText(getResources().getString(R.string.dear) + " " + mStore.getUserName());
+			mUsernameTxt.setText(getResources().getString(R.string.dear) + " "
+					+ mStore.getUserName());
 			mLayoutGuestDetail.setVisibility(View.GONE);
 		}
 		mEdUserName = (EditText) findViewById(R.id.atl_user_name);
 		mEdUserMobile = (EditText) findViewById(R.id.atl_user_mobile);
 		mSubmitBtn = (TextView) findViewById(R.id.atl_submit_btn);
 		mSubmitBtn.setOnClickListener(this);
-		
-		mSearchContainer=(LinearLayout) findViewById(R.id.search_box_container);
-		mSearchToggler=(ImageView) findViewById(R.id.search_toggler);
+
+		mSearchContainer = (LinearLayout) findViewById(R.id.search_box_container);
+		mSearchToggler = (ImageView) findViewById(R.id.search_toggler);
 		mSearchToggler.setOnClickListener(this);
 		mHeaderBackButton = (ImageView) findViewById(R.id.header_btn_back);
 		mHeaderBackButton.setOnClickListener(this);
-		
+
 		CityTable cityTable = new CityTable((MyApplication) getApplication());
 		ArrayList<CityOrLocality> cityList = cityTable.getAllCitiesList();
 		if (cityList != null && cityList.size() > 0)
 			inflateCityList(cityList);
 		else {
-			CityAreaListController clController = new CityAreaListController(SaleTempletActivity.this, Events.CITY_LISTING);
+			CityAreaListController clController = new CityAreaListController(
+					SaleTempletActivity.this, Events.SALE_CITY_LISTING);
 			startSppiner();
 			clController.requestService(null);
 		}
+
+		advanceSearchLayout = (LinearLayout) findViewById(R.id.advanceSearch);
+		advanceSearchLayout.setVisibility(View.GONE);
+
+		upArrow = (ImageView) findViewById(R.id.upArrow);
+		upArrow.setOnClickListener(this);
+
+		currentCity = (TextView) findViewById(R.id.currentCity);
+		currentLocality = (TextView) findViewById(R.id.currentLocality);
+		currentCity.setText(Html
+				.fromHtml("in " + "<b>" + selectedCity + "</b>"));
+
+		currentCity.setOnClickListener(this);
+		currentLocality.setOnClickListener(this);
+
+		mainSearchButton = (TextView) findViewById(R.id.mainSearchButton);
+		mainSearchButton.setOnClickListener(this);
+
+		wholeSearchBoxContainer = (LinearLayout) findViewById(R.id.whole_search_box_container);
+		mSearchEditText.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+
+				if (!isAdvanceSearchLayoutOpen) {
+					isAdvanceSearchLayoutOpen = true;
+					advanceSearchLayout.setVisibility(View.VISIBLE);
+				}
+				return false;
+			}
+		});
 	}
-	
+
 	@Override
 	protected void onResume() {
 		mIsLoggedInUser = mStore.isLoogedInUser();
 		if (mIsLoggedInUser) {
 			mUserId = mStore.getUserID();
-			mUsernameTxt.setText(getResources().getString(R.string.dear) + " " + mStore.getUserName());
+			mUsernameTxt.setText(getResources().getString(R.string.dear) + " "
+					+ mStore.getUserName());
 			mLayoutGuestDetail.setVisibility(View.GONE);
-		}
-		else
-		{
+		} else {
 			mUsernameTxt.setText(getResources().getString(R.string.dear_guest));
 			mUserId = mStore.getUserID();
 			mLayoutGuestDetail.setVisibility(View.VISIBLE);
@@ -211,16 +269,21 @@ public class SaleTempletActivity extends MaxisMainActivity {
 
 	private void inflateCityList(ArrayList<CityOrLocality> cityList) {
 		addDefaultSelect(cityList);
-		ArrayAdapter<CityOrLocality> cityAdp = new ArrayAdapter<CityOrLocality>(SaleTempletActivity.this, R.layout.spinner_item, cityList);
+		ArrayAdapter<CityOrLocality> cityAdp = new ArrayAdapter<CityOrLocality>(
+				SaleTempletActivity.this, R.layout.spinner_item, cityList);
 		mCityDropDown.setAdapter(cityAdp);
 		mCityDropDown.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
-			public void onItemSelected(AdapterView<?> adapter, View arg1, int position, long arg3) {
+			public void onItemSelected(AdapterView<?> adapter, View arg1,
+					int position, long arg3) {
 				if (position == 0) {
 					mLocalityContainer.setVisibility(View.GONE);
 				} else {
-					CityOrLocality city = (CityOrLocality) adapter.getItemAtPosition(position);
-					CityAreaListController clController = new CityAreaListController(SaleTempletActivity.this, Events.LOCALITY_LISTING);
+					CityOrLocality city = (CityOrLocality) adapter
+							.getItemAtPosition(position);
+					CityAreaListController clController = new CityAreaListController(
+							SaleTempletActivity.this,
+							Events.SALE_LOCALITY_LISTING);
 					startSppiner();
 					clController.requestService(city.getId() + "");
 				}
@@ -240,8 +303,8 @@ public class SaleTempletActivity extends MaxisMainActivity {
 		int titlePartCount = 0;
 		String descStr = mDescription.getText().toString().trim();
 		mDescription.setText(descStr);
-		
-		//Validation flow changed
+
+		// Validation flow changed
 		JSONObject postJson = new JSONObject();
 		String cityId = null;
 		String localityId = null;
@@ -249,33 +312,38 @@ public class SaleTempletActivity extends MaxisMainActivity {
 			showAlertDialog("Please select a City");
 			return null;
 		} else {
-			CityOrLocality city = (CityOrLocality) mCityDropDown.getSelectedItem();
+			CityOrLocality city = (CityOrLocality) mCityDropDown
+					.getSelectedItem();
 			cityId = city.getId() + "";
 			postJson.put("city_id", cityId);
 			if (mLocalityDropDown.getSelectedItemPosition() <= 0) {
 				showAlertDialog("Please select a Locality");
-				//mLocalityContainer.setVisibility(View.GONE);
+				// mLocalityContainer.setVisibility(View.GONE);
 				return null;
 			} else {
-				CityOrLocality locality = (CityOrLocality) mLocalityDropDown.getSelectedItem();
+				CityOrLocality locality = (CityOrLocality) mLocalityDropDown
+						.getSelectedItem();
 				localityId = locality.getId() + "";
 				postJson.put("locality_id", localityId);
 			}
 		}
-		
+
 		JSONArray selectorsArr = new JSONArray();
 		JSONObject selector = null;
 		JSONArray valuesJArray;// = new JSONArray();
 		for (int i = 0; i < mControlViewList.size(); i++) {
 			selector = new JSONObject();
-			ControlDetails controlDetail = (ControlDetails) mControlViewList.get(i).getTag();
+			ControlDetails controlDetail = (ControlDetails) mControlViewList
+					.get(i).getTag();
 			selector.put("column_id", controlDetail.getColumnId());
 			switch (controlDetail.getControlTypeId()) {
 			case DROP_DOWN:
 				valuesJArray = new JSONArray();
 				Spinner spinner = (Spinner) mControlViewList.get(i);
-				if (controlDetail.getRequired() == 1 && spinner.getSelectedItemPosition() == 0) {
-					showInfoDialog("Please select value for " + controlDetail.getDisplayName());
+				if (controlDetail.getRequired() == 1
+						&& spinner.getSelectedItemPosition() == 0) {
+					showInfoDialog("Please select value for "
+							+ controlDetail.getDisplayName());
 					return null;
 				}
 				if (spinner.getSelectedItemPosition() != 0) {
@@ -290,12 +358,16 @@ public class SaleTempletActivity extends MaxisMainActivity {
 				break;
 			case MULTI_SELECT_lIST_BOX:
 				ListView list = (ListView) mControlViewList.get(i);
-				MultiSelectListAdapter listAdapter = (MultiSelectListAdapter) list.getAdapter();
-				if (controlDetail.getRequired() == 1 && listAdapter.getSelectedValues().size() == 0) {
-					showInfoDialog("Please select values for " + controlDetail.getDisplayName());
+				MultiSelectListAdapter listAdapter = (MultiSelectListAdapter) list
+						.getAdapter();
+				if (controlDetail.getRequired() == 1
+						&& listAdapter.getSelectedValues().size() == 0) {
+					showInfoDialog("Please select values for "
+							+ controlDetail.getDisplayName());
 					return null;
 				}
-				ArrayList<String> selectedVals = listAdapter.getSelectedValues();
+				ArrayList<String> selectedVals = listAdapter
+						.getSelectedValues();
 				valuesJArray = new JSONArray();
 				for (int j = 0; j < selectedVals.size(); j++) {
 					valuesJArray.put(selectedVals.get(j));
@@ -309,8 +381,10 @@ public class SaleTempletActivity extends MaxisMainActivity {
 				break;
 			case RADIO_BTN:
 				RadioGroup radioGrp = (RadioGroup) mControlViewList.get(i);
-				if (controlDetail.getRequired() == 1 && radioGrp.getCheckedRadioButtonId() == -1) {
-					showInfoDialog("Please select values for " + controlDetail.getDisplayName());
+				if (controlDetail.getRequired() == 1
+						&& radioGrp.getCheckedRadioButtonId() == -1) {
+					showInfoDialog("Please select values for "
+							+ controlDetail.getDisplayName());
 					return null;
 				}
 				valuesJArray = new JSONArray();
@@ -330,12 +404,16 @@ public class SaleTempletActivity extends MaxisMainActivity {
 				break;
 			case CHECK_BOX:
 				ListView clist = (ListView) mControlViewList.get(i);
-				MultiSelectListAdapter clistAdapter = (MultiSelectListAdapter) clist.getAdapter();
-				if (controlDetail.getRequired() == 1 && clistAdapter.getSelectedValues().size() == 0) {
-					showInfoDialog("Please select values for " + controlDetail.getDisplayName());
+				MultiSelectListAdapter clistAdapter = (MultiSelectListAdapter) clist
+						.getAdapter();
+				if (controlDetail.getRequired() == 1
+						&& clistAdapter.getSelectedValues().size() == 0) {
+					showInfoDialog("Please select values for "
+							+ controlDetail.getDisplayName());
 					return null;
 				}
-				ArrayList<String> cSelectedVals = clistAdapter.getSelectedValues();
+				ArrayList<String> cSelectedVals = clistAdapter
+						.getSelectedValues();
 				valuesJArray = new JSONArray();
 				for (int j = 0; j < cSelectedVals.size(); j++) {
 					valuesJArray.put(cSelectedVals.get(j));
@@ -351,7 +429,8 @@ public class SaleTempletActivity extends MaxisMainActivity {
 				EditText edTxtBox = (EditText) mControlViewList.get(i);
 				String inputTxt = edTxtBox.getText().toString().trim();
 				if (controlDetail.getRequired() == 1 && inputTxt.length() == 0) {
-					showInfoDialog("Please Enter text for " + controlDetail.getDisplayName());
+					showInfoDialog("Please Enter text for "
+							+ controlDetail.getDisplayName());
 					return null;
 				}
 				valuesJArray = new JSONArray();
@@ -362,13 +441,13 @@ public class SaleTempletActivity extends MaxisMainActivity {
 			}
 
 		}
-		
+
 		if (titleStr.trim().length() == 0) {
 			showInfoDialog("Please enter title");
 			return null;
 		}
-		
-		//JSONObject postJson = new JSONObject();
+
+		// JSONObject postJson = new JSONObject();
 		if (!mIsLoggedInUser) {
 			String uName = mEdUserName.getText().toString().trim();
 			mEdUserName.setText(uName);
@@ -377,40 +456,35 @@ public class SaleTempletActivity extends MaxisMainActivity {
 				return null;
 			}
 			String mobile = mEdUserMobile.getText().toString();
-			//if (mobile.length() < 10 || mobile.indexOf('+',1)!=-1 || (mobile.indexOf('+')!=-1 && mobile.length()<=10)) {
-			if(mobile.length() < 7 || mobile.length() > 12)
-			{
+			// if (mobile.length() < 10 || mobile.indexOf('+',1)!=-1 ||
+			// (mobile.indexOf('+')!=-1 && mobile.length()<=10)) {
+			if (mobile.length() < 7 || mobile.length() > 12) {
 				showInfoDialog(getString(R.string.invalid_mobile));
 				return null;
 			}
 			postJson.put("name", uName);
 			postJson.put("mobile", Utility.getMobileNoForWS(this, mobile));
 		}
-		
+
 		postJson.put("selectors", selectorsArr);
 		postJson.put("description", descStr);
 		postJson.put("title", titleStr);
 		postJson.put("uid", mUserId);
 		postJson.put("cat_id", mCategoryId);
-		/*String cityId = null;
-		String localityId = null;
-		if (mCityDropDown.getSelectedItemPosition() == 0) {
-			showAlertDialog("Please select a City");
-			return null;
-		} else {
-			CityOrLocality city = (CityOrLocality) mCityDropDown.getSelectedItem();
-			cityId = city.getId() + "";
-			postJson.put("city_id", cityId);
-			if (mLocalityDropDown.getSelectedItemPosition() == 0) {
-				showAlertDialog("Please select a Locality");
-				return null;
-			} else {
-				CityOrLocality locality = (CityOrLocality) mLocalityDropDown.getSelectedItem();
-				localityId = locality.getId() + "";
-				postJson.put("locality_id", localityId);
-			}
-		}*/
-		
+		/*
+		 * String cityId = null; String localityId = null; if
+		 * (mCityDropDown.getSelectedItemPosition() == 0) {
+		 * showAlertDialog("Please select a City"); return null; } else {
+		 * CityOrLocality city = (CityOrLocality)
+		 * mCityDropDown.getSelectedItem(); cityId = city.getId() + "";
+		 * postJson.put("city_id", cityId); if
+		 * (mLocalityDropDown.getSelectedItemPosition() == 0) {
+		 * showAlertDialog("Please select a Locality"); return null; } else {
+		 * CityOrLocality locality = (CityOrLocality)
+		 * mLocalityDropDown.getSelectedItem(); localityId = locality.getId() +
+		 * ""; postJson.put("locality_id", localityId); } }
+		 */
+
 		if (!mTermAgreement.isChecked()) {
 			showInfoDialog("Please Accept the terms and conditions");
 			return null;
@@ -422,38 +496,48 @@ public class SaleTempletActivity extends MaxisMainActivity {
 	private View getSpacerView(int heightInDP) {
 		View view = new View(SaleTempletActivity.this);
 		final float scale = this.getResources().getDisplayMetrics().density;
-		view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (scale * heightInDP)));
+		view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+				(int) (scale * heightInDP)));
 		return view;
 	}
 
 	private View addMultiselectList2(ControlDetails conDetail) {
 		final float scale = this.getResources().getDisplayMetrics().density;
 		LinearLayout outerLayout = new LinearLayout(SaleTempletActivity.this);
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		outerLayout.setLayoutParams(params);
 		outerLayout.setBackgroundResource(R.drawable.shape_list_outer);
 		outerLayout.setOrientation(LinearLayout.VERTICAL);
 		TextView titleView = new TextView(SaleTempletActivity.this);
-		titleView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		titleView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT));
 		titleView.setText(conDetail.getDisplayName());
 		if (conDetail.getRequired() == 1) {
-			titleView.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.required_icon), null);
+			titleView.setCompoundDrawablesWithIntrinsicBounds(null, null,
+					getResources().getDrawable(R.drawable.required_icon), null);
 			titleView.setCompoundDrawablePadding(5);
 		}
 
 		titleView.setTextColor(this.getResources().getColor(R.color.white));
 		titleView.setTextSize(14);
 		titleView.setTypeface(Typeface.DEFAULT_BOLD);
-		titleView.setPadding((int) (scale * 10), (int) (scale * 10), (int) (scale * 5), (int) (scale * 5));
+		titleView.setPadding((int) (scale * 10), (int) (scale * 10),
+				(int) (scale * 5), (int) (scale * 5));
 		outerLayout.addView(titleView);
 
 		LinearLayout llLayout = new LinearLayout(SaleTempletActivity.this);
-		llLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (scale * 150)));
-		llLayout.setPadding((int) (scale * 5), (int) (scale * 5), (int) (scale * 5), (int) (scale * 5));
-		llLayout.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.shape_list_content_bg));
+		llLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+				(int) (scale * 150)));
+		llLayout.setPadding((int) (scale * 5), (int) (scale * 5),
+				(int) (scale * 5), (int) (scale * 5));
+		llLayout.setBackgroundDrawable(this.getResources().getDrawable(
+				R.drawable.shape_list_content_bg));
 		ListView list = new ListView(SaleTempletActivity.this);
-		list.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		MultiSelectListAdapter adapter = new MultiSelectListAdapter(SaleTempletActivity.this, conDetail.getValues());
+		list.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.WRAP_CONTENT));
+		MultiSelectListAdapter adapter = new MultiSelectListAdapter(
+				SaleTempletActivity.this, conDetail.getValues());
 		list.setAdapter(adapter);
 		llLayout.addView(list);
 		outerLayout.addView(llLayout);
@@ -466,31 +550,39 @@ public class SaleTempletActivity extends MaxisMainActivity {
 	private View addRadioButtonControl(ControlDetails conDetail) {
 		final float scale = this.getResources().getDisplayMetrics().density;
 		LinearLayout outerLayout = new LinearLayout(SaleTempletActivity.this);
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		outerLayout.setLayoutParams(params);
 		outerLayout.setBackgroundResource(R.drawable.shape_list_outer);
 		outerLayout.setOrientation(LinearLayout.VERTICAL);
 		TextView titleView = new TextView(SaleTempletActivity.this);
-		titleView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		titleView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT));
 		titleView.setText(conDetail.getDisplayName());
 		if (conDetail.getRequired() == 1)
-			titleView.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.required_icon), null);
+			titleView.setCompoundDrawablesWithIntrinsicBounds(null, null,
+					getResources().getDrawable(R.drawable.required_icon), null);
 		titleView.setTextColor(this.getResources().getColor(R.color.white));
 		titleView.setTextSize(14);
 		titleView.setTypeface(Typeface.DEFAULT_BOLD);
-		titleView.setPadding((int) (scale * 10), (int) (scale * 10), (int) (scale * 5), (int) (scale * 5));
+		titleView.setPadding((int) (scale * 10), (int) (scale * 10),
+				(int) (scale * 5), (int) (scale * 5));
 		outerLayout.addView(titleView);
 		LinearLayout llLayout = new LinearLayout(SaleTempletActivity.this);
 		llLayout.setLayoutParams(params);
-		llLayout.setPadding((int) (scale * 5), (int) (scale * 5), (int) (scale * 5), (int) (scale * 5));
-		llLayout.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.shape_list_content_bg));
+		llLayout.setPadding((int) (scale * 5), (int) (scale * 5),
+				(int) (scale * 5), (int) (scale * 5));
+		llLayout.setBackgroundDrawable(this.getResources().getDrawable(
+				R.drawable.shape_list_content_bg));
 		RadioGroup rg = new RadioGroup(SaleTempletActivity.this);
-		rg.setLayoutParams(new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		rg.setLayoutParams(new TableLayout.LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		rg.setOrientation(RadioGroup.VERTICAL);
 		rg.setTag(conDetail);
 		for (int i = 0; i < conDetail.getValues().size(); i++) {
 			RadioButton rb = new RadioButton(SaleTempletActivity.this);
-			rb.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			rb.setLayoutParams(new LinearLayout.LayoutParams(
+					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			rb.setText(conDetail.getValues().get(i));
 			rb.setButtonDrawable(R.drawable.selector_radio_button);
 			rg.addView(rb);
@@ -509,12 +601,16 @@ public class SaleTempletActivity extends MaxisMainActivity {
 
 	private View inflateEditTextControl(ControlDetails condDetail) {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		LinearLayout editTxtContainer = (LinearLayout) inflater.inflate(R.layout.edit_text_layout, null);
-		TextView v = (TextView) editTxtContainer.findViewById(R.id.etl_text_view);
+		LinearLayout editTxtContainer = (LinearLayout) inflater.inflate(
+				R.layout.edit_text_layout, null);
+		TextView v = (TextView) editTxtContainer
+				.findViewById(R.id.etl_text_view);
 		v.setText(condDetail.getDisplayName());
 		if (condDetail.getRequired() == 1)
-			v.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.required_icon), null);
-		EditText box = (EditText) editTxtContainer.findViewById(R.id.etl_edit_view);
+			v.setCompoundDrawablesWithIntrinsicBounds(null, null,
+					getResources().getDrawable(R.drawable.required_icon), null);
+		EditText box = (EditText) editTxtContainer
+				.findViewById(R.id.etl_edit_view);
 		box.setTag(condDetail);
 		mControlholder.addView(editTxtContainer);
 		return box;
@@ -523,14 +619,18 @@ public class SaleTempletActivity extends MaxisMainActivity {
 
 	private View inflateSpinnerControl(ControlDetails conDetail) {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		LinearLayout spinnerContainer = (LinearLayout) inflater.inflate(R.layout.spinner_layout, null);
+		LinearLayout spinnerContainer = (LinearLayout) inflater.inflate(
+				R.layout.spinner_layout, null);
 		TextView v = (TextView) spinnerContainer.findViewById(R.id.spin_txt);
 		v.setText(conDetail.getDisplayName());
 		if (conDetail.getRequired() == 1)
-			v.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.required_icon), null);
-		Spinner spinner = (Spinner) spinnerContainer.findViewById(R.id.spin_spin);
+			v.setCompoundDrawablesWithIntrinsicBounds(null, null,
+					getResources().getDrawable(R.drawable.required_icon), null);
+		Spinner spinner = (Spinner) spinnerContainer
+				.findViewById(R.id.spin_spin);
 		conDetail.insertDefaultSelectionValue();
-		ArrayAdapter<String> madapter = new ArrayAdapter<String>(this, R.layout.spinner_item, conDetail.getValues());
+		ArrayAdapter<String> madapter = new ArrayAdapter<String>(this,
+				R.layout.spinner_item, conDetail.getValues());
 		spinner.setAdapter(madapter);
 		mControlholder.addView(spinnerContainer);
 		spinner.setTag(conDetail);
@@ -541,20 +641,26 @@ public class SaleTempletActivity extends MaxisMainActivity {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.search_icon_button:
-			mSearchEditText.setText(mSearchEditText.getText().toString().trim());
-			performSearch(mSearchEditText.getText().toString());
+		case R.id.mainSearchButton:
+			mSearchEditText
+					.setText(mSearchEditText.getText().toString().trim());
+			String JSON_EXTRA = jsonForSearch();
+			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(SaleTempletActivity.this, HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			Intent intentHome = new Intent(SaleTempletActivity.this,
+					HomeActivity.class);
+			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			startActivity(intentHome);
 			break;
 		case R.id.show_profile_icon:
 			onProfileClick();
 			break;
 		case R.id.atl_terms_link:
-			Intent tcIntent = new Intent(SaleTempletActivity.this, TermsAndConditionActivity.class);
+			Intent tcIntent = new Intent(SaleTempletActivity.this,
+					TermsAndConditionActivity.class);
 			startActivity(tcIntent);
 			// showInfoDialog("Terms and Conditions");
 			break;
@@ -562,26 +668,69 @@ public class SaleTempletActivity extends MaxisMainActivity {
 			try {
 				JSONObject postJsonObject = verifyInput();
 				if (postJsonObject != null) {
-					PostClassifiedController controller = new PostClassifiedController(SaleTempletActivity.this, Events.POST_CLASSIFIED_EVENT);
+					PostClassifiedController controller = new PostClassifiedController(
+							SaleTempletActivity.this,
+							Events.POST_CLASSIFIED_EVENT);
 					controller.requestService(postJsonObject);
 					startSppiner();
 				}
 			} catch (JSONException e) {
 				showToast("Internal error : STA");
-				AnalyticsHelper.onError(FlurryEventsConstants.DATA_VALIDATION_ERR, "SaleTempletActivity : " + AppConstants.DATA_VALIDATION_ERROR_MSG, e);
+				AnalyticsHelper.onError(
+						FlurryEventsConstants.DATA_VALIDATION_ERR,
+						"SaleTempletActivity : "
+								+ AppConstants.DATA_VALIDATION_ERROR_MSG, e);
 			}
 			break;
 		case R.id.search_toggler:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SEARCH_CLICK);
-			if(mSearchContainer.getVisibility()==View.VISIBLE){
+			if (wholeSearchBoxContainer.getVisibility() == View.VISIBLE) {
+				wholeSearchBoxContainer.setVisibility(View.GONE);
+			} else {
+				wholeSearchBoxContainer.setVisibility(View.VISIBLE);
+			}
+			if (mSearchContainer.getVisibility() == View.VISIBLE) {
 				mSearchContainer.setVisibility(View.GONE);
-			}else{
+			} else {
 				mSearchContainer.setVisibility(View.VISIBLE);
 			}
 			break;
 		case R.id.header_btn_back:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.BACK_CLICK);
 			this.finish();
+			break;
+		case R.id.upArrow:
+			if (isAdvanceSearchLayoutOpen) {
+				isAdvanceSearchLayoutOpen = false;
+				advanceSearchLayout.setVisibility(View.GONE);
+			}
+			break;
+		case R.id.currentCity:
+			if (cityListString != null && cityListString.size() > 0) {
+				localityItems = null;
+				selectedLocalityindex = null;
+				Intent cityIntent = new Intent(SaleTempletActivity.this,
+						AdvanceSelectCity.class);
+				cityIntent.putExtra("CITY_LIST", cityListString);
+				cityIntent.putExtra("SELECTED_CITY", selectedCity);
+				startActivityForResult(cityIntent, AppConstants.CITY_REQUEST);
+			} else {
+				setSearchCity();
+			}
+			break;
+
+		case R.id.currentLocality:
+			if (localityItems != null && localityItems.size() > 0) {
+				Intent localityIntent = new Intent(SaleTempletActivity.this,
+						AdvanceSelectLocalityActivity.class);
+				localityIntent.putExtra("LOCALITY_LIST", localityItems);
+				localityIntent.putStringArrayListExtra("LOCALITY_INDEX",
+						selectedLocalityindex);
+				startActivityForResult(localityIntent,
+						AppConstants.LOCALITY_REQUEST);
+			} else {
+				setSearchLocality(city_id);
+			}
 			break;
 		default:
 			break;
@@ -591,16 +740,21 @@ public class SaleTempletActivity extends MaxisMainActivity {
 
 	@Override
 	public void updateUI(Message msg) {
-		if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE || msg.arg2 == Events.USER_DETAIL) {
+		if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE
+				|| msg.arg2 == Events.USER_DETAIL) {
 			super.updateUI(msg);
 		} else if (msg.arg2 == Events.POST_CLASSIFIED_EVENT) {
 			stopSppiner();
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				String text = mUsernameTxt.getText() + ", " + "your sell requirement has successfully be posted";
-				Intent notificationIntent = new Intent(SaleTempletActivity.this, AdPostNotificaitonActivity.class);
-				notificationIntent.putExtra(AppConstants.NOTIFICATION_TEXT, text);
+				String text = mUsernameTxt.getText() + ", "
+						+ "your sell requirement has successfully be posted";
+				Intent notificationIntent = new Intent(
+						SaleTempletActivity.this,
+						AdPostNotificaitonActivity.class);
+				notificationIntent.putExtra(AppConstants.NOTIFICATION_TEXT,
+						text);
 				startActivity(notificationIntent);
 				finish();
 			}
@@ -609,30 +763,82 @@ public class SaleTempletActivity extends MaxisMainActivity {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				CityTable cityTable = new CityTable((MyApplication) getApplication());
+				CityTable cityTable = new CityTable(
+						(MyApplication) getApplication());
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
 				cityTable.addCityList(glistRes.getCityOrLocalityList());
-				ArrayList<CityOrLocality> cityList = cityTable.getAllCitiesList();
+				ArrayList<CityOrLocality> cityList = cityTable
+						.getAllCitiesList();
 				inflateCityList(cityList);
 			}
+		} else if (msg.arg2 == Events.SALE_LOCALITY_LISTING) {
+			stopSppiner();
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+			} else {
+				GenralListResponse glistRes = (GenralListResponse) msg.obj;
+				ArrayList<CityOrLocality> localityList = glistRes
+						.getCityOrLocalityList();
+				addDefaultSelect(localityList);
+				ArrayAdapter<CityOrLocality> localityAdp = new ArrayAdapter<CityOrLocality>(
+						SaleTempletActivity.this, R.layout.spinner_item,
+						localityList);
+				mLocalityDropDown.setAdapter(localityAdp);
+				mLocalityContainer.setVisibility(View.VISIBLE);
+			}
+		} else if (msg.arg2 == Events.CITY_LISTING) {
+			stopSppiner();
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+			} else {
+				CityTable cityTable = new CityTable(
+						(MyApplication) getApplication());
+				GenralListResponse glistRes = (GenralListResponse) msg.obj;
+				// cityTable.addCityList(glistRes.getCityOrLocalityList());
+				cityList = glistRes.getCityOrLocalityList();
+				// inflateCityList(cityList);
+				Intent intent = new Intent(SaleTempletActivity.this,
+						AdvanceSelectCity.class);
+				for (CityOrLocality cityOrLocality : cityList) {
+
+					cityListString.add(cityOrLocality.getName());
+				}
+				localityItems = null;
+				ids = null;
+				selectedLocalityindex = null;
+				currentLocality.setText("Choose your Area");
+				intent.putExtra("CITY_LIST", cityListString);
+				intent.putExtra("SELECTED_CITY", selectedCity);
+				startActivityForResult(intent, AppConstants.CITY_REQUEST);
+			}
+			stopSppiner();
 		} else if (msg.arg2 == Events.LOCALITY_LISTING) {
 			stopSppiner();
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
-				ArrayList<CityOrLocality> localityList = glistRes.getCityOrLocalityList();
-				addDefaultSelect(localityList);
-				ArrayAdapter<CityOrLocality> localityAdp = new ArrayAdapter<CityOrLocality>(SaleTempletActivity.this, R.layout.spinner_item, localityList);
-				mLocalityDropDown.setAdapter(localityAdp);
-				mLocalityContainer.setVisibility(View.VISIBLE);
+				localityList = glistRes.getCityOrLocalityList();
+				Intent intent = new Intent(SaleTempletActivity.this,
+						AdvanceSelectLocalityActivity.class);
+				localityItems = new ArrayList<String>();
+				for (CityOrLocality dealCityOrLoc : localityList) {
+					localityItems.add(dealCityOrLoc.getName());
+				}
+				intent.putExtra("LOCALITY_LIST", localityItems);
+				intent.putStringArrayListExtra("LOCALITY_INDEX",
+						selectedLocalityindex);
+				startActivityForResult(intent, AppConstants.LOCALITY_REQUEST);
+
 			}
 		}
+
 	}
 
 	@Override
 	public void setScreenData(Object screenData, int event, long time) {
-		if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE || event == Events.USER_DETAIL) {
+		if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE
+				|| event == Events.USER_DETAIL) {
 			super.setScreenData(screenData, event, time);
 			return;
 		} else if (event == Events.POST_CLASSIFIED_EVENT) {
@@ -641,6 +847,112 @@ public class SaleTempletActivity extends MaxisMainActivity {
 			handler.sendMessage((Message) screenData);
 		} else if (event == Events.CITY_LISTING) {
 			handler.sendMessage((Message) screenData);
+		} else {
+			handler.sendMessage((Message) screenData);
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int reqCode, int resultCode, Intent data) {
+		super.onActivityResult(reqCode, resultCode, data);
+		// TODO Auto-generated method stub
+		if (resultCode == RESULT_OK && reqCode == AppConstants.CITY_REQUEST) {
+			if (!selectedCity
+					.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
+				localityItems = null;
+				ids = null;
+				selectedLocalityindex = null;
+				currentLocality.setText("Choose your Area");
+			}
+			selectedCity = data.getStringExtra("CITY_NAME");
+			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
+					+ "</b>"));
+			int index = data.getIntExtra("CITY_INDEX", 0);
+			if(index==-1)
+			{
+				city_id =-1;
+			}else
+			{
+			city_id = cityList.get(index).getId();
+			}
+
+		} else if (resultCode == RESULT_OK
+				&& reqCode == AppConstants.LOCALITY_REQUEST) {
+			String locality = "";
+
+			selectedLocalityItems = data
+					.getStringArrayListExtra("SELECTED_LOCALITIES");
+
+			selectedLocalityindex = data
+					.getStringArrayListExtra("SELECTED_LOCALITIES_INDEX");
+			if (selectedLocalityItems != null
+					&& selectedLocalityItems.size() > 0) {
+				for (int i = 0; i < selectedLocalityItems.size(); i++) {
+
+					if (i == selectedLocalityItems.size() - 1) {
+						locality += selectedLocalityItems.get(i);
+					} else {
+						locality += selectedLocalityItems.get(i) + ",";
+					}
+				}
+				currentLocality.setText(Html.fromHtml("Your Selected Area "
+						+ "<b>" + locality + "</b>"));
+			} else {
+				currentLocality.setText("Choose your Area");
+			}
+
+			ids = new ArrayList<String>();
+
+			if (selectedLocalityindex != null
+					&& selectedLocalityindex.size() > 0) {
+				for (int i = 0; i < selectedLocalityindex.size(); i++) {
+
+					ids.add(String.valueOf(localityList.get(
+							Integer.parseInt(selectedLocalityindex.get(i)))
+							.getId()));
+				}
+			}
+
+		}
+
+	}
+
+	public String jsonForSearch() {
+
+		// {"city":{"city_id":5,"city_name":"adyui"},"locality":[{"locality_id":5,"locality_name":"adyui"},{"locality_id":5,"locality_name":"adyui"}]}
+		JSONObject jArray = new JSONObject();
+		try {
+
+			if (city_id != -1) {
+				JSONObject array = new JSONObject();
+				array.put("city_id", city_id + "");
+				array.put("city_name", selectedCity);
+
+				jArray.put("city", array);
+
+				if (ids != null && ids.size() > 0) {
+					JSONArray jsonArray = new JSONArray();
+					for (int i = 0; i < selectedLocalityItems.size(); i++) {
+						JSONObject localityArray = new JSONObject();
+						localityArray.put("locality_id", ids.get(i));
+						localityArray.put("locality_name",
+								selectedLocalityItems.get(i));
+						jsonArray.put(localityArray);
+
+					}
+					jArray.put("locality", jsonArray);
+				}
+				return jArray.toString();
+
+			}
+
+			else {
+				return null;
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
 		}
 	}
 }

@@ -211,7 +211,7 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 				Toast.makeText(getApplicationContext(), "Please enter your contact number.", Toast.LENGTH_LONG).show();
 				return false;
 			} else if (userNumber.trim().length() < 7 || userNumber.trim().length() > 12) {
-				Toast.makeText(getApplicationContext(), getString(R.string.invalid_mobile), Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), "Please enter your valid contact number.", Toast.LENGTH_LONG).show();
 				return false;
 			} else if (mLattitudeN == 0 && mLattitude == 0) {
 				Toast.makeText(getApplicationContext(), "Location not available.", Toast.LENGTH_LONG).show();

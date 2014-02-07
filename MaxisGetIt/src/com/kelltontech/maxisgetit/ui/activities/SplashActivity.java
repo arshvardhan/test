@@ -166,28 +166,28 @@ public class SplashActivity extends MaxisMainActivity {
 			if( sessionTokenSuccess ) {
 				message.arg1 = 0;
 			} else {
-				message.obj = getResources().getString(R.string.communication_failure);
+				message.obj = getResources().getString(R.string.network_unavailable);
 			}
 		} else if (event == Events.ROOT_CATEGORY_EVENT ) {
 			Response response = (Response) screenData;
 			
 			if (response.isError()) {
-				message.obj = getResources().getString(R.string.communication_failure);
+				message.obj = getResources().getString(R.string.network_unavailable);
 			} else {
 				if (response.getPayload() instanceof RootCategoryResponse) {
 					RootCategoryResponse categoriesResp = (RootCategoryResponse) response.getPayload();
 					if (categoriesResp.isErrorFromServer()) {
-						message.obj = getResources().getString(R.string.communication_failure);
+						message.obj = getResources().getString(R.string.network_unavailable);
 					} else {
 						if (categoriesResp.getCategories().size() < 1) {
-							message.obj = getResources().getString(R.string.communication_failure);
+							message.obj = getResources().getString(R.string.network_unavailable);
 						} else {
 							message.arg1 = 0;
 							message.obj = categoriesResp;
 						}
 					}
 				} else {
-					message.obj = getResources().getString(R.string.communication_failure);
+					message.obj = getResources().getString(R.string.network_unavailable);
 				}
 			}
 		}

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityRoot"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#eeeeee" >
+
+        <include
+            android:id="@+id/header_base_activity"
+            layout="@layout/header_advance_search" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/listView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#eeeeee" >
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <com.kelltontech.maxisgetit.ui.widgets.SectionListView
+                android:id="@+id/section_list_view"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#eeeeee"
+                android:dividerHeight="1dp" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/list_index"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="right|center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="right|center"
+            android:background="@drawable/rounded_rectangle_shape"
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp" />
+    </FrameLayout>
+
+</LinearLayout>

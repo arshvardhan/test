@@ -82,6 +82,7 @@
     <color name="app_green_light_color">#4db848</color>
     <color name="black_light">#666666</color>
     <color name="footer_bg_color">#f2f2f2</color>
+    <color name ="section_side_text_color">#2899DB</color>
     
     <color name="common_bg_color_for_beta_version">#396091</color>
     <color name="common_text_color_yellow">#fff000</color>

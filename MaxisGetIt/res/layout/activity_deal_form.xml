@@ -3,16 +3,19 @@
     android:id="@+id/reg_root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_bg_base_col"
     android:orientation="vertical" >
+
     <include
         android:id="@+id/header_base_activity"
         layout="@layout/header_with_popdown_search" />
+
     <ScrollView
         android:id="@+id/reg_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/header_base_activity" >
+        android:layout_below="@id/header_base_activity"
+        android:background="@color/app_bg_base_col" >
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,13 +25,15 @@
             android:paddingRight="10dp"
             android:paddingTop="5dp"
             android:weightSum="1" >
+
             <ImageView
                 android:id="@+id/reg_profile_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/profile_icon" 
-                android:visibility="gone"/>
+                android:src="@drawable/profile_icon"
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/reg_user_title"
                 android:layout_width="260dp"
@@ -42,23 +47,26 @@
                 android:text="@string/welcome_guest"
                 android:textColor="@color/rainbow_green"
                 android:textSize="@dimen/sp_14"
-                android:textStyle="bold" 
-                android:visibility="gone"/>
+                android:textStyle="bold"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:weightSum="1" >
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".35"
+                    android:drawableRight="@drawable/required_icon"
                     android:padding="5dp"
                     android:text="@string/name"
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_13"
-					  android:drawableRight="@drawable/required_icon"
                     android:textStyle="bold" />
+
                 <EditText
                     android:id="@+id/reg_name"
                     android:layout_width="0dp"
@@ -72,26 +80,30 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_13" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:weightSum="1" >
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".35"
+                    android:drawableRight="@drawable/required_icon"
                     android:padding="5dp"
                     android:text="@string/mobile_no"
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_13"
-					  android:drawableRight="@drawable/required_icon"
                     android:textStyle="bold" />
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.65"
                     android:weightSum="1" >
+
                     <!--
                          <TextView
                         android:layout_width="wrap_content"
@@ -99,8 +111,9 @@
                         android:layout_marginRight="5dp"
                         android:text="@string/country_code"
                         android:textColor="@color/grey_country_code" 
-                        android:background="@drawable/text_field/>
+                        android:background="@drawable/text_field/>
                     -->
+
                     <EditText
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -113,6 +126,7 @@
                         android:text="@string/country_code"
                         android:textColor="@color/grey_country_code"
                         android:textSize="@dimen/sp_13" />
+
                     <EditText
                         android:id="@+id/reg_mobile"
                         android:layout_width="0dp"
@@ -128,6 +142,7 @@
                         android:textSize="@dimen/sp_13" />
                 </LinearLayout>
             </LinearLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -137,12 +152,14 @@
                 android:textColor="@color/red"
                 android:textSize="@dimen/sp_13"
                 android:visibility="gone" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:weightSum="1" 
-                android:visibility="gone">
+                android:visibility="gone"
+                android:weightSum="1" >
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -152,6 +169,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_13"
                     android:textStyle="bold" />
+
                 <EditText
                     android:id="@+id/reg_email"
                     android:layout_width="0dp"
@@ -166,6 +184,7 @@
                     android:textSize="@dimen/sp_13" />
                 <!-- android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ@._- 1234567890" -->
             </LinearLayout>
+
             <TextView
                 android:id="@+id/register_button"
                 android:layout_width="wrap_content"
@@ -180,4 +199,5 @@
                 android:textStyle="bold" />
         </LinearLayout>
     </ScrollView>
+
 </RelativeLayout>

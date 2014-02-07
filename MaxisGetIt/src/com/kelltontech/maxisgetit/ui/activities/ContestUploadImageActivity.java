@@ -54,7 +54,7 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 	private EditText mTitleEditTxt, mNameEditTxt, mNumberEditTxt;
 	private final int UPLOAD_IMAGE = 5;
 
-	private ImageView mLogo;
+	//private ImageView mLogo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,7 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 		findViewById(R.id.search_toggler).setVisibility(View.INVISIBLE);
 		findViewById(R.id.show_profile_icon).setOnClickListener(this);
 
-		findViewById(R.id.footer_facebook_icon).setOnClickListener(this);
+		/*findViewById(R.id.footer_facebook_icon).setOnClickListener(this);
 		findViewById(R.id.footer_twitterIcon).setOnClickListener(this);
 		mLogo = (ImageView) findViewById(R.id.logo);
 		mLogo.setOnClickListener(ContestUploadImageActivity.this);
@@ -83,7 +83,7 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 						GetItInfoActivity.class));
 
 			}
-		});
+		});*/
 
 		// UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.rootLayout),
 		// this);
@@ -180,7 +180,7 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 			onProfileClick();
 			break;
 		}
-		case R.id.footer_facebook_icon: {
+		/*case R.id.footer_facebook_icon: {
 			AnalyticsHelper.logEvent(FlurryEventsConstants.FACEBOOK_CLICK);
 			checkPreferenceAndOpenBrowser(AppConstants.FB_PAGE_URL);
 			break;
@@ -189,7 +189,7 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 			AnalyticsHelper.logEvent(FlurryEventsConstants.TWITTER_CLICK);
 			checkPreferenceAndOpenBrowser(AppConstants.TWITTER_PAGE_URL);
 			break;
-		}
+		}*/
 		case R.id.upload_btn: {
 			AnalyticsHelper.logEvent(FlurryEventsConstants.UPLOAD_IMAGE);
 			if (mLattitudeN == 0 && mLattitude == 0) {
