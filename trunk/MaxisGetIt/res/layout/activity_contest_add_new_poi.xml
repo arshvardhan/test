@@ -244,7 +244,7 @@
                     android:background="@drawable/bg_rounded_corner_edit_txt_grey"
                     android:padding="10dp"
                     android:inputType="none"
-                    android:maxLength="100"
+                    android:maxLength="30"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_15" />

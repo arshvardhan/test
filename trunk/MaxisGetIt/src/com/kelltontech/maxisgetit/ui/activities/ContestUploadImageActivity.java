@@ -218,9 +218,14 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 				Toast.makeText(getApplicationContext(),
 						"Please enter phone number.", Toast.LENGTH_LONG).show();
 				return;
+			} else if (phone.trim().startsWith("0")) {
+				Toast.makeText(getApplicationContext(),
+						"Please enter a valid phone number.", Toast.LENGTH_LONG)
+						.show();
+				return;
 			} else if (phone.trim().length() < 7 || phone.trim().length() > 12) {
 				Toast.makeText(getApplicationContext(),
-						getString(R.string.invalid_mobile), Toast.LENGTH_LONG)
+						"Contact number should be 7-12 digits.", Toast.LENGTH_LONG)
 						.show();
 				return;
 			}
@@ -251,9 +256,9 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 							Events.UPLOAD_IMAGE_EVENT);
 
 					// mRequestUploadPhoto.setImageData(getBase64Image());
-					String title = mTitleEditTxt.getText().toString();
-					String name = mNameEditTxt.getText().toString();
-					String phone = mNumberEditTxt.getText().toString();
+					String title = mTitleEditTxt.getText().toString().trim();
+					String name = mNameEditTxt.getText().toString().trim();
+					String phone = mNumberEditTxt.getText().toString().trim();
 					mRequestUploadPhoto.setTitle(title);
 					mRequestUploadPhoto.setName(name);
 					mRequestUploadPhoto.setNumber(phone);
