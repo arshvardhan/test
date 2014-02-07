@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.kelltontech.framework.model.MyError;
 import com.kelltontech.framework.utils.StorageUtils;
 import com.kelltontech.framework.utils.StringUtil;
+import com.kelltontech.framework.utils.UiUtils;
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
@@ -73,8 +74,8 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 			findViewById(R.id.search_toggler).setVisibility(View.INVISIBLE);
 			findViewById(R.id.show_profile_icon).setOnClickListener(this);
 
-			// UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.rootLayout),
-			// this);
+			 UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.rootLayout),
+			 this);
 			mSubmitBtn = (Button) findViewById(R.id.submit_btn);
 			mSubmitBtn.setOnClickListener(this);
 
@@ -201,8 +202,11 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 			} else if (StringUtil.isNullOrEmpty(companyAddress) ) {
 				Toast.makeText(getApplicationContext(), "Please enter company address.", Toast.LENGTH_LONG).show();
 				return false;
-			} else if (!StringUtil.isNullOrEmpty(companyContact) && (companyContact.trim().length() < 7 || companyContact.trim().length() > 12)) {
+			} else if (!StringUtil.isNullOrEmpty(companyContact) && (companyContact.trim().startsWith("0"))) {
 				Toast.makeText(getApplicationContext(), "Please enter a valid company contact number.", Toast.LENGTH_LONG).show();
+				return false;
+			} else if (!StringUtil.isNullOrEmpty(companyContact) && ((companyContact.trim().length() < 7) || (companyContact.trim().length() > 12))) {
+				Toast.makeText(getApplicationContext(), "Company contact number should be 7-12 digits.", Toast.LENGTH_LONG).show();
 				return false;
 			} else if (StringUtil.isNullOrEmpty(userName)) {
 				Toast.makeText(getApplicationContext(), "Please enter your name.", Toast.LENGTH_LONG).show();
@@ -210,8 +214,11 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 			} else if (StringUtil.isNullOrEmpty(userNumber)) {
 				Toast.makeText(getApplicationContext(), "Please enter your contact number.", Toast.LENGTH_LONG).show();
 				return false;
-			} else if (userNumber.trim().length() < 7 || userNumber.trim().length() > 12) {
+			} else if (userNumber.trim().startsWith("0")) {
 				Toast.makeText(getApplicationContext(), "Please enter your valid contact number.", Toast.LENGTH_LONG).show();
+				return false;
+			} else if ((userNumber.trim().length() < 7) || (userNumber.trim().length() > 12)) {
+				Toast.makeText(getApplicationContext(), "Your contact number should be 7-12 digits.", Toast.LENGTH_LONG).show();
 				return false;
 			} else if (mLattitudeN == 0 && mLattitude == 0) {
 				Toast.makeText(getApplicationContext(), "Location not available.", Toast.LENGTH_LONG).show();
@@ -236,12 +243,12 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 								ContestAddNewPoiActivity.this,
 								Events.ADD_NEW_POI_EVENT);
 
-						String companyName = mCompanyNameEditTxt.getText().toString();
-						String companyAddress = mCompanyAddressEditTxt.getText().toString();
-						String businessType = mBusinessTypeEditTxt.getText().toString();
-						String companyContact = mCompanyContactEditText.getText().toString();
-						String userName = mUserNameEditTxt.getText().toString();
-						String userNumber = mUserNumberEditTxt.getText().toString();
+						String companyName = mCompanyNameEditTxt.getText().toString().trim();
+						String companyAddress = mCompanyAddressEditTxt.getText().toString().trim();
+						String businessType = mBusinessTypeEditTxt.getText().toString().trim();
+						String companyContact = mCompanyContactEditText.getText().toString().trim();
+						String userName = mUserNameEditTxt.getText().toString().trim();
+						String userNumber = mUserNumberEditTxt.getText().toString().trim();
 						mRequestAddNewPOI.setCompanyName(companyName + "");
 						mRequestAddNewPOI.setCompanyAddress(companyAddress + "");
 						mRequestAddNewPOI.setBusinessType(businessType + "");

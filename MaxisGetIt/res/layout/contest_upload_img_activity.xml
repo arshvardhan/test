@@ -11,9 +11,10 @@
         android:id="@+id/header_base_activity"
         layout="@layout/header_with_popdown_search" />
 
-    <!-- <include
+    <!--
+         <include
         android:id="@+id/footer_base_screen"
-        layout="@layout/footer_home_screen" /> -->
+        layout="@layout/footer_home_screen" />   -->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -40,6 +41,7 @@
                 android:layout_marginBottom="2dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="15dp"
+                android:drawableRight="@drawable/required_icon"
                 android:text="@string/txtv_image_title"
                 android:textColor="@color/black" />
 
@@ -48,6 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
+                android:hint="@string/txtv_anp_hint"
                 android:imeOptions="actionNext"
                 android:inputType="none"
                 android:maxLength="30"
@@ -60,6 +63,7 @@
                 android:layout_marginBottom="2dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="15dp"
+                android:drawableRight="@drawable/required_icon"
                 android:text="@string/txtv_your_name"
                 android:textColor="@color/black" />
 
@@ -68,6 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
+                android:hint="@string/txtv_anp_hint"
                 android:imeOptions="actionNext"
                 android:inputType="textPersonName"
                 android:maxLength="30"
@@ -80,6 +85,7 @@
                 android:layout_marginBottom="2dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="15dp"
+                android:drawableRight="@drawable/required_icon"
                 android:text="@string/txtv_your_number"
                 android:textColor="@color/black" />
 
@@ -91,16 +97,19 @@
                 <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:editable="false"
-                    android:text="+60"
+                    android:clickable="false"
+                    android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
+                    android:inputType="none"
+                    android:text="@string/country_code"
                     android:textColor="@color/black" />
 
                 <EditText
                     android:id="@+id/phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/txtv_anp_hint"
                     android:imeOptions="actionDone"
                     android:inputType="phone"
                     android:maxLength="12"
