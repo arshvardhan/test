@@ -1136,7 +1136,13 @@ public class DealPostActivity extends MaxisMainActivity {
 		} else if (msg.arg2 == Events.POST_DEAL_EVENT) {
 			stopSppiner();
 			if (msg.arg1 == 1) {
-				showInfoDialog((String) msg.obj);
+				if (msg.obj != null) {
+					showInfoDialog((String) msg.obj);
+				} else {
+					showAlertDialog(getResources().getString(
+							R.string.internal_error));
+				}
+				// showInfoDialog((String) msg.obj);
 			} else {
 				setResult(RESULT_OK);
 				showFinalDialog("Your Deal is posted successfully.");
@@ -1144,10 +1150,17 @@ public class DealPostActivity extends MaxisMainActivity {
 		} else if (msg.arg2 == Events.POST_DEAL_CITY_LISTING) {
 			stopSppiner();
 			if (msg.arg1 == 1) {
-				showInfoDialog((String) msg.obj);
+				if (msg.obj != null) {
+					showInfoDialog((String) msg.obj);
+				} else {
+					showAlertDialog(getResources().getString(
+							R.string.no_result_found));
+				}
+				// showInfoDialog((String) msg.obj);
 				mEntireMalaysiaRadioBtn.setChecked(true);
 				// mLocalityDropDown.setSelection(0);
 			} else {
+
 				booleanFirstTime = false;
 				PostDealCityLocListResponse generalListRes = (PostDealCityLocListResponse) msg.obj;
 				ArrayList<PostDealCityOrLoc> cityList = generalListRes
@@ -1408,12 +1421,10 @@ public class DealPostActivity extends MaxisMainActivity {
 			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
 					+ "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
-			if(index==-1)
-			{
-				city_id =-1;
-			}else
-			{
-			city_id = cityList.get(index).getId();
+			if (index == -1) {
+				city_id = -1;
+			} else {
+				city_id = cityList.get(index).getId();
 			}
 
 		} else if (resultCode == RESULT_OK

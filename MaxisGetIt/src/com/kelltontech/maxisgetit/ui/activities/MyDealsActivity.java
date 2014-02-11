@@ -56,7 +56,7 @@ public class MyDealsActivity extends MaxisMainActivity {
 	private LinearLayout mSearchContainer;
 	private ImageView mSearchToggler;
 	private ImageView mHeaderBackButton;
-	
+
 	private boolean isAdvanceSearchLayoutOpen = false;
 	private LinearLayout advanceSearchLayout;
 	private TextView currentCity, currentLocality;
@@ -73,7 +73,7 @@ public class MyDealsActivity extends MaxisMainActivity {
 	TextView mainSearchButton;
 	ArrayList<String> selectedLocalityindex;
 	LinearLayout wholeSearchBoxContainer;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -85,17 +85,17 @@ public class MyDealsActivity extends MaxisMainActivity {
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
 		mSearchBtn.setOnClickListener(MyDealsActivity.this);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
-		mSearchContainer=(LinearLayout) findViewById(R.id.search_box_container);
-		mSearchToggler=(ImageView) findViewById(R.id.search_toggler);
+		mSearchContainer = (LinearLayout) findViewById(R.id.search_box_container);
+		mSearchToggler = (ImageView) findViewById(R.id.search_toggler);
 		mSearchToggler.setOnClickListener(this);
 		mHeaderBackButton = (ImageView) findViewById(R.id.header_btn_back);
 		mHeaderBackButton.setOnClickListener(this);
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
 		mSearchBtn.setOnClickListener(this);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
-		((TextView)findViewById(R.id.header_title)).setText(getResources().getString(R.string.acc_my_deals));
-		
-		
+		((TextView) findViewById(R.id.header_title)).setText(getResources()
+				.getString(R.string.acc_my_deals));
+
 		mDealPostBtn = (ImageView) findViewById(R.id.amd_post_deal_btn);
 		mDealPostBtn.setOnClickListener(this);
 		Bundle bundle = getIntent().getExtras();
@@ -107,8 +107,10 @@ public class MyDealsActivity extends MaxisMainActivity {
 		mLatestDealContainer = (LinearLayout) findViewById(R.id.amd_latest_deal_container);
 		if (mMyDealsResponse != null) {
 			if (mMyDealsResponse.getLatestDeal() != null) {
-				inflateCompanyDetail(mMyDealsResponse.getLatestDeal(), 1, mLatestDealContainer , true );
-				findViewById(R.id.amd_deal_unavailable).setVisibility(View.GONE);
+				inflateCompanyDetail(mMyDealsResponse.getLatestDeal(), 1,
+						mLatestDealContainer, true);
+				findViewById(R.id.amd_deal_unavailable)
+						.setVisibility(View.GONE);
 			}
 			displayDealListing();
 
@@ -159,7 +161,7 @@ public class MyDealsActivity extends MaxisMainActivity {
 			// }
 			// // #############-----------------------------###############
 		}
-		
+
 		advanceSearchLayout = (LinearLayout) findViewById(R.id.advanceSearch);
 		advanceSearchLayout.setVisibility(View.GONE);
 
@@ -195,43 +197,69 @@ public class MyDealsActivity extends MaxisMainActivity {
 
 	private void displayDealListing() {
 		mDealsGroupContainer.removeAllViews();
-		ArrayList<MyDealsList> dealGroupList = mMyDealsResponse.getDealGroupList();
+		ArrayList<MyDealsList> dealGroupList = mMyDealsResponse
+				.getDealGroupList();
 		for (MyDealsList dealGroup : dealGroupList) {
 			ArrayList<MyDeal> dealList = dealGroup.getDealList();
 			if (dealList == null && dealList.size() < 1)
 				continue;
-			View listRow = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.classified_list_row_base, null);
+			View listRow = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+					.inflate(R.layout.classified_list_row_base, null);
 			MyDeal temp = dealList.get(0);
-			TextView mListTxtView = ((TextView) listRow.findViewById(R.id.clrb_title));
+			TextView mListTxtView = ((TextView) listRow
+					.findViewById(R.id.clrb_title));
 			mListTxtView.setText(temp.getCategory());
 			mListTxtView.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					View parent = (View) v.getParent();
-					ArrayList<MyDeal> catList = (ArrayList<MyDeal>) parent.getTag();
-					LinearLayout innerlayout = (LinearLayout) parent.findViewById(R.id.clrb_inner_layout);
+					ArrayList<MyDeal> catList = (ArrayList<MyDeal>) parent
+							.getTag();
+					LinearLayout innerlayout = (LinearLayout) parent
+							.findViewById(R.id.clrb_inner_layout);
 					if (innerlayout.getVisibility() == View.VISIBLE) {
 						innerlayout.setVisibility(View.GONE);
-						((TextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.down_arrow), null);
+						((TextView) v).setCompoundDrawablesWithIntrinsicBounds(
+								null,
+								null,
+								getResources().getDrawable(
+										R.drawable.down_arrow), null);
 					} else {
-//						********************************
-						for (int i=0;i<mDealsGroupContainer.getChildCount();i++) {
-							View outerRowLayour=mDealsGroupContainer.getChildAt(i);
-							View innerContainer=outerRowLayour.findViewById(R.id.clrb_inner_layout);
-							if(innerContainer!=null){
+						// ********************************
+						for (int i = 0; i < mDealsGroupContainer
+								.getChildCount(); i++) {
+							View outerRowLayour = mDealsGroupContainer
+									.getChildAt(i);
+							View innerContainer = outerRowLayour
+									.findViewById(R.id.clrb_inner_layout);
+							if (innerContainer != null) {
 								innerContainer.setVisibility(View.GONE);
-								((TextView)outerRowLayour.findViewById(R.id.clrb_title)).setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.down_arrow), null);
+								((TextView) outerRowLayour
+										.findViewById(R.id.clrb_title))
+										.setCompoundDrawablesWithIntrinsicBounds(
+												null,
+												null,
+												getResources().getDrawable(
+														R.drawable.down_arrow),
+												null);
 							}
 						}
-//						********************************
+						// ********************************
 						innerlayout.setVisibility(View.VISIBLE);
-						((TextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.up_arrow), null);
+						((TextView) v)
+								.setCompoundDrawablesWithIntrinsicBounds(
+										null,
+										null,
+										getResources().getDrawable(
+												R.drawable.up_arrow), null);
 						if (catList != null && innerlayout.getChildCount() == 0) {
 							for (int j = 0; j < catList.size(); j++) {
-								inflateCompanyDetail(catList.get(j), j + 1, innerlayout , false );
+								inflateCompanyDetail(catList.get(j), j + 1,
+										innerlayout, false);
 							}
 						}
-						View firstVu = innerlayout.getChildCount() > 0 ? innerlayout.getChildAt(0) : null;
+						View firstVu = innerlayout.getChildCount() > 0 ? innerlayout
+								.getChildAt(0) : null;
 						if (firstVu != null) {
 							firstVu.setFocusable(true);
 							firstVu.setFocusableInTouchMode(true);
@@ -245,65 +273,81 @@ public class MyDealsActivity extends MaxisMainActivity {
 		}
 	}
 
-
-	private void inflateCompanyDetail(MyDeal deal, int countIndex, LinearLayout container , boolean isLatest) {
-		if(isLatest)
+	private void inflateCompanyDetail(MyDeal deal, int countIndex,
+			LinearLayout container, boolean isLatest) {
+		if (isLatest)
 			container.removeAllViews();
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		LinearLayout compContainer = (LinearLayout) inflater.inflate(R.layout.mydeal_item_layout, null);
-		TextView counterTxt = (TextView) compContainer.findViewById(R.id.mydeal_id);
+		LinearLayout compContainer = (LinearLayout) inflater.inflate(
+				R.layout.mydeal_item_layout, null);
+		TextView counterTxt = (TextView) compContainer
+				.findViewById(R.id.mydeal_id);
 		counterTxt.setText(deal.getId());
-		TextView compTitle = (TextView) compContainer.findViewById(R.id.mydeal_title);
+		TextView compTitle = (TextView) compContainer
+				.findViewById(R.id.mydeal_title);
 		compTitle.setText(deal.getTitle());
-		TextView validity = (TextView) compContainer.findViewById(R.id.mydeal_validity);
+		TextView validity = (TextView) compContainer
+				.findViewById(R.id.mydeal_validity);
 		try {
 			SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 			formatter.setTimeZone(TimeZone.getDefault());
 			Date date = new Date(Long.parseLong(deal.getValidity()) * 1000);
 			validity.setText(formatter.format(date));
 		} catch (Exception e) {
-			AnalyticsHelper.onError(FlurryEventsConstants.DATE_ERR, "MyDealsActivity" + AppConstants.DATE_ERROR_MSG, e);
+			AnalyticsHelper.onError(FlurryEventsConstants.DATE_ERR,
+					"MyDealsActivity" + AppConstants.DATE_ERROR_MSG, e);
 		}
-		TextView listingType = (TextView) compContainer.findViewById(R.id.mydeal_type);
-		listingType.setText(deal.getDealType()?MyDeal.DEAL_TYPE_VOUCHERED:MyDeal.DEAL_TYPE_NON_VOUCHERED);
-//		%%%%%%%
+		TextView listingType = (TextView) compContainer
+				.findViewById(R.id.mydeal_type);
+		listingType.setText(deal.getDealType() ? MyDeal.DEAL_TYPE_VOUCHERED
+				: MyDeal.DEAL_TYPE_NON_VOUCHERED);
+		// %%%%%%%
 		String adStatus = deal.getDealStatus();
 		if (adStatus != null) {
 
-			if (adStatus.equalsIgnoreCase("Active") || adStatus.equalsIgnoreCase("Incomplete") || adStatus.equalsIgnoreCase("Reject")) {
+			if (adStatus.equalsIgnoreCase("Active")
+					|| adStatus.equalsIgnoreCase("Incomplete")
+					|| adStatus.equalsIgnoreCase("Reject")) {
 				// edit
-				ImageView editLink = (ImageView) compContainer.findViewById(R.id.mydeal_edit_link);
+				ImageView editLink = (ImageView) compContainer
+						.findViewById(R.id.mydeal_edit_link);
 				editLink.setVisibility(View.GONE);
 				editLink.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						showToast(MyDealsActivity.this.getResources().getString(R.string.under_implement));
+						showToast(MyDealsActivity.this.getResources()
+								.getString(R.string.under_implement));
 					}
 				});
 				if (adStatus.equalsIgnoreCase("Active")) {
 					// stop
-					ImageView stop = (ImageView) compContainer.findViewById(R.id.mydeal_stop);
+					ImageView stop = (ImageView) compContainer
+							.findViewById(R.id.mydeal_stop);
 					stop.setVisibility(View.GONE);
 					stop.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							showToast(MyDealsActivity.this.getResources().getString(R.string.under_implement));
+							showToast(MyDealsActivity.this.getResources()
+									.getString(R.string.under_implement));
 						}
 					});
 				}
-			} else if (adStatus.equalsIgnoreCase("Stop") || adStatus.equalsIgnoreCase("Expire")) {
+			} else if (adStatus.equalsIgnoreCase("Stop")
+					|| adStatus.equalsIgnoreCase("Expire")) {
 				// repost
-				ImageView repost = (ImageView) compContainer.findViewById(R.id.mydeal_repost);
+				ImageView repost = (ImageView) compContainer
+						.findViewById(R.id.mydeal_repost);
 				repost.setVisibility(View.GONE);
 				repost.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						showToast(MyDealsActivity.this.getResources().getString(R.string.under_implement));
+						showToast(MyDealsActivity.this.getResources()
+								.getString(R.string.under_implement));
 					}
 				});
 			}
 		}
-//		%%%%%%%%%%%
+		// %%%%%%%%%%%
 		container.addView(compContainer);
 	}
 
@@ -315,11 +359,13 @@ public class MyDealsActivity extends MaxisMainActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK && resultCode == 0) {
-			MyDealsController mdController = new MyDealsController(MyDealsActivity.this, Events.MY_DEALS_LIST);
+		if (resultCode == RESULT_OK && requestCode == 0) {
+			MyDealsController mdController = new MyDealsController(
+					MyDealsActivity.this, Events.MY_DEALS_LIST);
 			startSppiner();
 			mdController.requestService(mUserId);
-		}if (resultCode == RESULT_OK && requestCode == AppConstants.CITY_REQUEST) {
+		}
+		if (resultCode == RESULT_OK && requestCode == AppConstants.CITY_REQUEST) {
 			if (!selectedCity
 					.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
 				localityItems = null;
@@ -331,12 +377,10 @@ public class MyDealsActivity extends MaxisMainActivity {
 			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
 					+ "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
-			if(index==-1)
-			{
-				city_id =-1;
-			}else
-			{
-			city_id = cityList.get(index).getId();
+			if (index == -1) {
+				city_id = -1;
+			} else {
+				city_id = cityList.get(index).getId();
 			}
 
 		} else if (resultCode == RESULT_OK
@@ -383,29 +427,51 @@ public class MyDealsActivity extends MaxisMainActivity {
 		switch (v.getId()) {
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(MyDealsActivity.this, HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			Intent intentHome = new Intent(MyDealsActivity.this,
+					HomeActivity.class);
+			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			startActivity(intentHome);
 			break;
 		case R.id.show_profile_icon:
-			//finish();
+			// finish();
 			onProfileClick();
 			break;
 		case R.id.amd_post_deal_btn:
-//			CityTable cityTable=new CityTable((MyApplication) MyDealsActivity.this.getApplication());
-//			ArrayList<CityOrLocality> cityList=cityTable.getAllCitiesList();
-//			if(cityList==null || cityList.size()<1){
-//				CityAreaListController clController=new CityAreaListController(MyDealsActivity.this, Events.CITY_LISTING);
-//				startSppiner();
-//				clController.requestService(null);
-//			}else{
-				Intent dealPostIntent = new Intent(MyDealsActivity.this, DealPostActivity.class);
-				dealPostIntent.putExtra(AppConstants.MY_DEALS_RESPONSE, mMyDealsResponse);
-				startActivityForResult(dealPostIntent,0);
-//			}
-//			MyDealsController mdController = new MyDealsController(MyDealsActivity.this, Events.DEAL_CATEGORIES_LIST);
-//			startSppiner();
-//			mdController.requestService(userId);
+			// CityTable cityTable=new CityTable((MyApplication)
+			// MyDealsActivity.this.getApplication());
+			// ArrayList<CityOrLocality> cityList=cityTable.getAllCitiesList();
+			// if(cityList==null || cityList.size()<1){
+			// CityAreaListController clController=new
+			// CityAreaListController(MyDealsActivity.this,
+			// Events.CITY_LISTING);
+			// startSppiner();
+			// clController.requestService(null);
+			// }else{
+			if (mMyDealsResponse.getCompCategoryList() != null
+					&& mMyDealsResponse.getCompCategoryList().size() > 1
+					&& mMyDealsResponse.getCompCategoryList().get(1)
+							.getCategoryList() != null
+					&& mMyDealsResponse.getCompCategoryList().get(1)
+							.getCompanyId() != null
+					&& mMyDealsResponse.getCompCategoryList().get(0)
+							.getCategoryList().size() >= 1) {
+				Intent dealPostIntent = new Intent(MyDealsActivity.this,
+						DealPostActivity.class);
+				dealPostIntent.putExtra(AppConstants.MY_DEALS_RESPONSE,
+						mMyDealsResponse);
+				startActivityForResult(dealPostIntent, 0);
+
+			} else {
+				showInfoDialog(getResources().getString(
+						R.string.category_list_not_found));
+			}
+			// }
+			// MyDealsController mdController = new
+			// MyDealsController(MyDealsActivity.this,
+			// Events.DEAL_CATEGORIES_LIST);
+			// startSppiner();
+			// mdController.requestService(userId);
 			break;
 		case R.id.mainSearchButton:
 			mSearchEditText
@@ -420,9 +486,9 @@ public class MyDealsActivity extends MaxisMainActivity {
 			} else {
 				wholeSearchBoxContainer.setVisibility(View.VISIBLE);
 			}
-			if(mSearchContainer.getVisibility()==View.VISIBLE){
+			if (mSearchContainer.getVisibility() == View.VISIBLE) {
 				mSearchContainer.setVisibility(View.GONE);
-			}else{
+			} else {
 				mSearchContainer.setVisibility(View.VISIBLE);
 			}
 			break;
@@ -471,14 +537,16 @@ public class MyDealsActivity extends MaxisMainActivity {
 
 	@Override
 	public void updateUI(Message msg) {
-		if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE || msg.arg2 == Events.USER_DETAIL) {
+		if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE
+				|| msg.arg2 == Events.USER_DETAIL) {
 			super.updateUI(msg);
 		} else if (msg.arg2 == Events.MY_DEALS_LIST) {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
 				mMyDealsResponse = (DealsListResponse) msg.obj;
-				inflateCompanyDetail(mMyDealsResponse.getLatestDeal(), 1, mLatestDealContainer , true );
+				inflateCompanyDetail(mMyDealsResponse.getLatestDeal(), 1,
+						mLatestDealContainer, true);
 				displayDealListing();
 			}
 			stopSppiner();
@@ -538,16 +606,18 @@ public class MyDealsActivity extends MaxisMainActivity {
 
 	@Override
 	public void setScreenData(Object screenData, int event, long time) {
-		if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE || event == Events.USER_DETAIL) {
+		if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE
+				|| event == Events.USER_DETAIL) {
 			super.setScreenData(screenData, event, time);
 			return;
-		} else if (event == Events.CITY_LISTING || event == Events.LOCALITY_LISTING) {
+		} else if (event == Events.CITY_LISTING
+				|| event == Events.LOCALITY_LISTING) {
 			handler.sendMessage((Message) screenData);
 		} else if (event == Events.MY_DEALS_LIST) {
 			handler.sendMessage((Message) screenData);
 		}
 	}
-	
+
 	public String jsonForSearch() {
 
 		// {"city":{"city_id":5,"city_name":"adyui"},"locality":[{"locality_id":5,"locality_name":"adyui"},{"locality_id":5,"locality_name":"adyui"}]}

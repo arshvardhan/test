@@ -386,7 +386,6 @@
         </activity>
         <activity
             android:name="com.kelltontech.maxisgetit.ui.activities.AdvanceSelectLocalityActivity"
-            android:label="@string/title_activity_advance_select_locality" 
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
