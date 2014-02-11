@@ -49,7 +49,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.internal.ar;
 import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
@@ -1144,6 +1143,7 @@ public class DealPostActivity extends MaxisMainActivity {
 				}
 				// showInfoDialog((String) msg.obj);
 			} else {
+				AnalyticsHelper.logEvent(FlurryEventsConstants.POST_DEAL_SUBMIT_CLICK);
 				setResult(RESULT_OK);
 				showFinalDialog("Your Deal is posted successfully.");
 			}

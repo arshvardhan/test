@@ -77,6 +77,7 @@ public class MyDealsActivity extends MaxisMainActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_MY_DEALS);
 		setContentView(R.layout.activity_mydeals);
 		mHomeIconView = (ImageView) findViewById(R.id.goto_home_icon);
 		mHomeIconView.setOnClickListener(this);

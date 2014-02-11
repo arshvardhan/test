@@ -204,6 +204,8 @@ public class DealDetailActivity extends MaxisMainActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_DEAL_DETAIL);
 		setContentView(R.layout.activity_deal_detail);
 
 		circleIndicator = (LinearLayout) findViewById(R.id.indicatorlinearlayout);
@@ -302,18 +304,15 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			nearOutLets.setBackgroundResource(R.drawable.center_btnselected);
 			tNc.setBackgroundResource(R.drawable.right_btn);
 
+			setUpMapIfNeeded();
 			if (outLets != null && outLets.size() > 0) {
 				if (!StringUtil.isNullOrEmpty(outLetResponse.getOutlet().get(0)
 						.getAddress())) {
 					dealDesc.setText(outLets.get(0).getTitle() + ", "
 							+ outLets.get(0).getAddress());
 				}
-				setUpMapIfNeeded();
-
 			} else {
-				showInfoDialog(getResources().getString(
-						R.string.no_result_found));
-				dealDesc.setText("Nearest Outlet Address not available .");
+				dealDesc.setText("Nearest OutLet Address not available .");
 			}
 			break;
 
@@ -371,18 +370,14 @@ public class DealDetailActivity extends MaxisMainActivity implements
 
 		case R.id.deal_download:
 			// TODO
+			AnalyticsHelper.logEvent(FlurryEventsConstants.GET_INFO_CLICK);
 			getDownloadDetails();
 			break;
 
 		case R.id.deal_all_outlet:
 			isNearestOutlet = false;
-			if (outLets != null && outLets.size() > 0) {
-				setUpMapIfNeeded();
-				addOutLets();
-			} else {
-				showInfoDialog(getResources().getString(
-						R.string.no_result_found));
-			}
+			setUpMapIfNeeded();
+			addOutLets();
 			break;
 		case textId:
 			int index = Integer.parseInt(v.getTag().toString());

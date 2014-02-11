@@ -2,8 +2,9 @@ package com.kelltontech.maxisgetit.constants;
 
 /**
  * 
- * @author arshvardhan.atreya Created on: 08-11-2013 Modified on:12-11-2013 Description: FlurryEventsConstants class
- *         includes all the constants to define logs for FlurryAgent analytics tool
+ * @author arshvardhan.atreya Created on: 08-11-2013 Modified on:12-11-2013
+ *         Description: FlurryEventsConstants class includes all the constants
+ *         to define logs for FlurryAgent analytics tool
  * 
  */
 
@@ -24,7 +25,6 @@ public class FlurryEventsConstants {
 	// Footer
 	public static final String FACEBOOK_CLICK = "Facebook icon is clicked";
 	public static final String TWITTER_CLICK = "Twitter icon is clicked";
-	public static final String ADD_NEW_POI = "AddNewPOI icon is clicked";
 
 	// Home Screen, Category, and Sub-Category Events
 	public static final String APPLICATION_HOME = "Application Home Screen";
@@ -48,6 +48,11 @@ public class FlurryEventsConstants {
 	public static final String MODIFY_SEARCH_CLICK = "ModifySearch button is clicked";
 	public static final String HOT_DEALS_CLICK = "HotDeals button is clicked";
 
+	// Deals Listing and Deals Detail Screen Events
+	public static final String APPLICATION_DEALS = "Deals Screen";
+	public static final String GET_INFO_CLICK = "GetInfo button is clicked";
+	public static final String DEAL_LIST_ITEM_CLICK = "User tabs a deal in Deal Listing";
+
 	// Login Screen Events
 	public static final String APPLICATION_LOGIN = "Login Screen";
 	public static final String USER_LOGGED_IN = "User logged in";
@@ -65,10 +70,18 @@ public class FlurryEventsConstants {
 	public static final String MY_COMPANY_CLICK = "MyCompany button is clicked";
 	public static final String MY_CLASSIFIEDS_CLICK = "MyClassifieds button is clicked";
 	public static final String MY_DEALS_CLICK = "MyDeals button is clicked";
+	public static final String MY_FAVOURITE_CLICK = "My Favourite(s) button is clicked";
 
 	// EditProfile Screen Events
 	public static final String APPLICATION_EDIT_PROFILE = "EditProfile Screen";
 	public static final String EDIT_PROFILE_SUBMIT_CLICK = "EditProfileSubmit button is clicked";
+
+	// My Deals Screen Events
+	public static final String APPLICATION_MY_DEALS = "My Deals Screen";
+	public static final String POST_DEAL_CLICK = "PostADeal button is clicked";
+
+	// Post a Deal Screen Events
+	public static final String POST_DEAL_SUBMIT_CLICK = "User posts a new deal";
 
 	// Photo Contest Screen Events
 	public static final String APPLICATION_CONTEST = "Photo Contest Screen";
@@ -82,17 +95,35 @@ public class FlurryEventsConstants {
 
 	public static final String UPLOAD_IMAGE = "UploadYourImage button is clicked";
 	public static final String CAPTURE_ANOTHER_IMAGE = "CaptureAnotherImage button is clicked";
-	
-	public static final String SUBMIT_ADD_NEW_POI = "SubmitAddNewPOI button is clicked";
+
+	public static final String APPLICATION_ADD_NEW_POI = "AddNewPOI Screen";
+	public static final String ADD_NEW_POI = "AddNewPOI button is clicked";
+	public static final String SUBMIT_ADD_NEW_POI = "User adds a new POI";
 
 	// Category Screen Events
 	public static final String APPLICATION_CATEGORY = "Category Screen";
 
 	// Company Detail Screen Events
 	public static final String APPLICATION_COMPANY_DETAIL = "CompanyDetail Screen";
+	
+	// Company Detail Screen Events
+	public static final String APPLICATION_DEAL_DETAIL = "DealsDetail Screen";
 
 	// Company Detail Map Screen Events
 	public static final String APPLICATION_COMPANY_DETAIL_MAP = "CompanyDetailMap Screen";
+	public static final String ADD_TO_FAV_CLICK = "User adds a company to Favourite(s)";
+	public static final String REMOVE_FAV_CLICK = "User removes a company from Favourite(s)";
+
+	// My Favourite(s) Screen Events
+	public static final String APPLICATION_MY_FAVOURITES = "My Favourite(s) Screen";
+	public static final String FAV_LIST_ITEM_LONG_PRESS = "User removes a compnay from the Favourite(s) list";
+	public static final String DELETE_FAV_CLICK = "User removes one or more company from the Favourite(s) list";
+	public static final String EDIT_FAV_CLICK = "Edit Favourite(s) list button is clicked";
+	
+	// Force Update Dialog Events
+	public static final String UPDATE_CLICK = "Force update performed";
+	public static final String Current_API_Version = "Current API version";
+	
 
 	/*
 	 * Error constants for flurry

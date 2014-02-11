@@ -564,6 +564,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 	}
 
 	private void addToFav() {
+		AnalyticsHelper.logEvent(FlurryEventsConstants.ADD_TO_FAV_CLICK);
 		mFavBtnView.setImageResource(R.drawable.selector_cd_fav_remove_btn);
 		Toast.makeText(CompanyDetailActivity.this,
 				getString(R.string.company_add_to_fav), Toast.LENGTH_SHORT)
@@ -580,6 +581,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 	}
 
 	private void removeFromFav() {
+		AnalyticsHelper.logEvent(FlurryEventsConstants.REMOVE_FAV_CLICK);
 		mFavBtnView.setImageResource(R.drawable.selector_cd_fav_btn);
 		// showInfoDialog(getString(R.string.company_remove_from_fav));
 		Toast.makeText(CompanyDetailActivity.this,
@@ -1037,6 +1039,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 		if (postJson == null) {
 			return;
 		}
+		
 		CompanyDetailAddFavController addFavController = new CompanyDetailAddFavController(
 				CompanyDetailActivity.this, Events.COMPANY_DETAIL_ADD_FAV);
 		startSppiner();

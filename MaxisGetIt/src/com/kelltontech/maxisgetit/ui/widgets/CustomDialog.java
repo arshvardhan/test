@@ -1,12 +1,13 @@
 package com.kelltontech.maxisgetit.ui.widgets;
 
+import java.util.HashMap;
+
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
-import android.text.Html;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,14 +18,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kelltontech.framework.ui.BaseMainActivity;
+import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
+import com.kelltontech.maxisgetit.constants.AppConstants;
+import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
 import com.kelltontech.maxisgetit.dao.MaxisStore;
 import com.kelltontech.maxisgetit.service.AppSharedPreference;
 import com.kelltontech.maxisgetit.service.ContestLocationFinderService;
 import com.kelltontech.maxisgetit.ui.activities.ContestHomeActivity;
 import com.kelltontech.maxisgetit.ui.activities.ContestPoiSearchActivity;
 import com.kelltontech.maxisgetit.ui.activities.MaxisFragmentBaseActivity;
-import com.kelltontech.maxisgetit.ui.activities.MaxisMainActivity;
+import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 import com.kelltontech.maxisgetit.utils.Utility;
 
 public class CustomDialog implements OnKeyListener {
@@ -382,6 +386,13 @@ public class CustomDialog implements OnKeyListener {
 			okBtn.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					if (!StringUtil.isNullOrEmpty(AppConstants.API_VERSION)) {
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put(FlurryEventsConstants.Current_API_Version, AppConstants.API_VERSION);
+					AnalyticsHelper.logEvent(FlurryEventsConstants.UPDATE_CLICK, map);
+					} else {
+						AnalyticsHelper.logEvent(FlurryEventsConstants.UPDATE_CLICK);
+					}
 					mActivity.runOnUiThread(new Runnable()
 				    {           
 				        @Override

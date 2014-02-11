@@ -362,6 +362,7 @@ public class ContestPoiSearchActivity extends ContestBaseActivity {
 	}
 
 	private void addNewPOIClick() {
+		AnalyticsHelper.logEvent(FlurryEventsConstants.ADD_NEW_POI);
 		mCurrentEventType = Events.ADD_NEW_POI_EVENT;
 		Intent addNewPOIIntent = new Intent(ContestPoiSearchActivity.this,
 				ContestAddNewPoiActivity.class);
