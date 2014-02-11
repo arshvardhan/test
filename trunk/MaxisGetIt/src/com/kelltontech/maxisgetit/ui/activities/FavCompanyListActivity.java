@@ -483,7 +483,7 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 				Toast.makeText(FavCompanyListActivity.this,
 						getString(R.string.selected_company_remove_from_fav),
 						Toast.LENGTH_SHORT).show();
-				if ((favList != null && record - favList.size() > 0)) {
+				 if ((!isCompanyListLongPressed) && (favList != null) && (record - favList.size() > 0)) {
 					record = record - favList.size();
 					mRecordsFoundView.setText(record
 							+ " "

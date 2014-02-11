@@ -196,7 +196,8 @@
     <string name="register_underline">Register</string>
     <string name="repost_underline"><u>Repost</u></string>
     <string name="req_to_remove_under"><u>Request to remove listing</u></string>
-    <string name="search_query">Search query</string>
+     <string name="search_query">Search Hotels, Restaurants, Malls etc.</string>
+     <string name="search_query_city">Search City</string>
     <string name="search">Search</string>
     <string name="save">Save</string>
     <string name="submit">Submit</string>
@@ -385,4 +386,5 @@
     <string name="title_activity_deal_detail">DealDetailActivity</string>
     <string name="title_activity_deal_form">DealForm</string>
 
+    
 </resources>

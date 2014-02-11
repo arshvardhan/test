@@ -914,7 +914,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			}
 			break;
 		case R.id.cd_fav_btn:
-			startSppiner();
+
 			if (!mIsAddedToFav) {
 				handleAddFavourites();
 			} else {
@@ -1039,6 +1039,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 		}
 		CompanyDetailAddFavController addFavController = new CompanyDetailAddFavController(
 				CompanyDetailActivity.this, Events.COMPANY_DETAIL_ADD_FAV);
+		startSppiner();
 		addFavController.requestService(postJson);
 	}
 
@@ -1057,6 +1058,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 		}
 		CompanyDetailRemoveFavController removeFavController = new CompanyDetailRemoveFavController(
 				CompanyDetailActivity.this, Events.COMPANY_DETAIL_REMOVE_FAV);
+		startSppiner();
 		removeFavController.requestService(postJson);
 	}
 
@@ -1214,12 +1216,10 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
 					+ "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
-			if(index==-1)
-			{
-				city_id =-1;
-			}else
-			{
-			city_id = cityList.get(index).getId();
+			if (index == -1) {
+				city_id = -1;
+			} else {
+				city_id = cityList.get(index).getId();
 			}
 
 		} else if (resultCode == RESULT_OK
@@ -1293,7 +1293,6 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 		}
 	}
 
-
 	public String jsonForSearch() {
 
 		// {"city":{"city_id":5,"city_name":"adyui"},"locality":[{"locality_id":5,"locality_name":"adyui"},{"locality_id":5,"locality_name":"adyui"}]}
@@ -1321,8 +1320,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 				}
 				return jArray.toString();
 
-			}
-			else {
+			} else {
 				return null;
 			}
 		} catch (JSONException e) {

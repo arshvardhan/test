@@ -441,7 +441,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 			startSppiner();
 			clController.requestService(city_id + "");
 		} else {
-			showAlertDialog("Please select a city.");
+			showAlertDialog("Please select a City.");
 		}
 	}
 }
