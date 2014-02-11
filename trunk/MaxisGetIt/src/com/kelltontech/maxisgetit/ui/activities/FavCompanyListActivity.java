@@ -140,7 +140,7 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_fav_company_list);
 		AnalyticsHelper.logEvent(
-				FlurryEventsConstants.APPLICATION_COMBINED_LIST, true);
+				FlurryEventsConstants.APPLICATION_MY_FAVOURITES, true);
 		UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.cl_root_layout),
 				this);
 		mHeaderTitle = (TextView) findViewById(R.id.header_title);
@@ -179,6 +179,7 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 
 			@Override
 			public void onClick(View v) {
+				AnalyticsHelper.logEvent(FlurryEventsConstants.EDIT_FAV_CLICK);
 				isEdit = true;
 				isAllChecked = false;
 				mEditFunLayout.setVisibility(View.GONE);
@@ -484,12 +485,14 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 						getString(R.string.selected_company_remove_from_fav),
 						Toast.LENGTH_SHORT).show();
 				 if ((!isCompanyListLongPressed) && (favList != null) && (record - favList.size() > 0)) {
+					AnalyticsHelper.logEvent(FlurryEventsConstants.DELETE_FAV_CLICK);
 					record = record - favList.size();
 					mRecordsFoundView.setText(record
 							+ " "
 							+ getResources().getString(
 									R.string.fav_companies_found));
 				} else if (isCompanyListLongPressed && (record - 1 > 0)) {
+					AnalyticsHelper.logEvent(FlurryEventsConstants.FAV_LIST_ITEM_LONG_PRESS);
 					record = record - 1;
 					mRecordsFoundView.setText(record
 							+ " "
@@ -650,7 +653,7 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 			isEdit = false;
 			AnalyticsHelper.logEvent(FlurryEventsConstants.BACK_CLICK);
 			AnalyticsHelper
-					.endTimedEvent(FlurryEventsConstants.APPLICATION_COMBINED_LIST);
+					.endTimedEvent(FlurryEventsConstants.APPLICATION_MY_FAVOURITES);
 			this.finish();
 			break;
 		case R.id.col_refine_search:

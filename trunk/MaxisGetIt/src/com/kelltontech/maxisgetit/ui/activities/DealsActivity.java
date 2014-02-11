@@ -222,6 +222,7 @@ public class DealsActivity extends MaxisMainActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_DEALS);
 		setContentView(R.layout.activity_mydeals_activity1);
 		store = MaxisStore.getStore(this);
 
@@ -364,6 +365,7 @@ public class DealsActivity extends MaxisMainActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
+				AnalyticsHelper.logEvent(FlurryEventsConstants.DEAL_LIST_ITEM_CLICK);
 				Log.e("manish", "inside onclick");
 
 				if (position == (mCompListDealAdapter.getCount() - 1)

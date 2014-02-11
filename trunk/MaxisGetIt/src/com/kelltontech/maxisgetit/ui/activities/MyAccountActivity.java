@@ -380,6 +380,7 @@ public class MyAccountActivity extends MaxisMainActivity {
 			}
 			break;
 		case R.id.amc_shortlisted:
+			AnalyticsHelper.logEvent(FlurryEventsConstants.MY_FAVOURITE_CLICK);
 			// showAlertDialog(getResources().getString(R.string.under_implement));
 			FavouriteController mfController = new FavouriteController(
 					MyAccountActivity.this, Events.FAV_COMP_LIST);

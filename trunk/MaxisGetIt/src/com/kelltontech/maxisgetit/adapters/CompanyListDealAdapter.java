@@ -22,8 +22,10 @@ import android.widget.Toast;
 import com.kelltontech.framework.imageloader.ImageLoader;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
+import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
 import com.kelltontech.maxisgetit.dao.CompanyDesc;
 import com.kelltontech.maxisgetit.ui.activities.DealsActivity;
+import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
 public class CompanyListDealAdapter extends BaseAdapter {
 	private Context mContext;
@@ -152,6 +154,7 @@ public class CompanyListDealAdapter extends BaseAdapter {
 				
 				DealsActivity activity = (DealsActivity)mContext;
 				activity.getDownloadDetails(mContext,compDesc.getCompId());
+				AnalyticsHelper.logEvent(FlurryEventsConstants.GET_INFO_CLICK);
 			}
 		});
 		

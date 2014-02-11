@@ -2,7 +2,7 @@ package com.kelltontech.maxisgetit.constants;
 
 public interface AppConstants {
 	
-	String API_VERSION = "1.2";
+	String API_VERSION = "1.3";
 	
 //     String BASE_SERVER = "http://192.168.13.3/webservice/trunk/"; // local Aaditya0
 //	 String BASE_SERVER = "http://192.168.12.224/webservice/trunk/"; // local Ankesh

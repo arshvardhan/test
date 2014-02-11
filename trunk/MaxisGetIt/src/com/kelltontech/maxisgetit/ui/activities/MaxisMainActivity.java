@@ -92,7 +92,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 
 	}
 	
-	/*@Override
+	@Override
 	protected void onStart() {
 		super.onStart();
 		AnalyticsHelper.onActivityStart(this);
@@ -107,7 +107,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 	protected void onStop() {
 		super.onStop();
 		AnalyticsHelper.onActivityStop(this);
-	}*/
+	}
 
 	protected void performSearch(String searchText , String postJsonPayload) {
 		if (searchText == null || searchText.trim().equals("")) {

@@ -64,6 +64,7 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 		@Override
 		protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
+			AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_ADD_NEW_POI);
 			setContentView(R.layout.activity_contest_add_new_poi);
 
 			((TextView) findViewById(R.id.header_title))
