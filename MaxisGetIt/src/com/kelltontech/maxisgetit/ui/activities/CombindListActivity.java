@@ -38,6 +38,8 @@ import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
 import com.kelltontech.maxisgetit.controllers.CombindListingController;
 import com.kelltontech.maxisgetit.controllers.CompanyDetailController;
 import com.kelltontech.maxisgetit.controllers.RefineAttributeController;
+import com.kelltontech.maxisgetit.controllers.SubCategoryController;
+import com.kelltontech.maxisgetit.dao.CategoryGroup;
 import com.kelltontech.maxisgetit.dao.CategoryRefine;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.CompanyDesc;
@@ -52,8 +54,10 @@ import com.kelltontech.maxisgetit.response.CompanyListResponse;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.response.RefineCategoryResponse;
 import com.kelltontech.maxisgetit.response.RefineSelectorResponse;
+import com.kelltontech.maxisgetit.response.SubCategoryResponse;
 import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
+import com.kelltontech.maxisgetit.utils.Utility;
 
 public class CombindListActivity extends MaxisMainActivity {
 	private ListView mCompanyList;
@@ -157,12 +161,10 @@ public class CombindListActivity extends MaxisMainActivity {
 			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
 					+ "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
-			if(index==-1)
-			{
-				city_id =-1;
-			}else
-			{
-			city_id = cityList.get(index).getId();
+			if (index == -1) {
+				city_id = -1;
+			} else {
+				city_id = cityList.get(index).getId();
 			}
 
 		} else if (resultCode == RESULT_OK
@@ -561,7 +563,12 @@ public class CombindListActivity extends MaxisMainActivity {
 				|| event == Events.LOCALITY_LISTING) {
 			Message message = (Message) screenData;
 			handler.sendMessage(message);
-		} else {
+		}else if(event==Events.DEALCATEGORY_EVENT){
+			Message message = (Message) screenData;
+			handler.sendMessage(message);
+		}
+		
+		else {
 			Response response = (Response) screenData;
 			Message message = new Message();
 			message.arg2 = event;
@@ -765,11 +772,24 @@ public class CombindListActivity extends MaxisMainActivity {
 				intent.putExtra("LOCALITY_LIST", localityItems);
 				intent.putStringArrayListExtra("LOCALITY_INDEX",
 						selectedLocalityindex);
-				intent.putExtra("SELECTED_LOCALITIES",
-						selectedLocalityItems);
+				intent.putExtra("SELECTED_LOCALITIES", selectedLocalityItems);
 				startActivityForResult(intent, AppConstants.LOCALITY_REQUEST);
 
 			}
+		}else if (msg.arg2 == Events.DEALCATEGORY_EVENT) {
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+			} else {
+				SubCategoryResponse categoriesResp = (SubCategoryResponse) msg.obj;
+
+				// TODO TEMPORARY :: change for hot deals
+				Intent intent = new Intent(CombindListActivity.this,
+						DealsActivity.class);
+				intent.putExtra(AppConstants.DATA_SUBCAT_RESPONSE,
+						categoriesResp);
+				startActivity(intent);
+			}
+			stopSppiner();
 		}
 
 	}
@@ -820,7 +840,14 @@ public class CombindListActivity extends MaxisMainActivity {
 		// getResources().getString(R.string.modify_to_filter));
 		// break;
 		case R.id.col_deal_btn:
-			showDealListing(mClRequest.getKeywordOrCategoryId());
+			
+			CategoryGroup cat = new CategoryGroup();
+			cat.setmGroupActionType(AppConstants.GROUP_ACTION_TYPE_DEAL);
+			cat.setMgroupType(AppConstants.GROUP_TYPE_CATEGORY);
+			cat.setCategoryId("");
+			cat.setCategoryTitle("");
+			showDealcategories(cat);
+//			showDealListing(mClRequest.getKeywordOrCategoryId());
 			// CombindListingController listingController = new
 			// CombindListingController(CombindListActivity.this,
 			// Events.COMBIND_LISTING_NEW_LISTING_PAGE);
@@ -1006,32 +1033,39 @@ public class CombindListActivity extends MaxisMainActivity {
 		super.onNegativeDialogbutton(id);
 	}
 
-	private void showDealListing(String cat) {
-		CombindListingController listingController = new CombindListingController(
-				CombindListActivity.this,
-				Events.COMBIND_DEAL_LISTING_NEW_LISTING_PAGE);
-		// mClRequest = new CombinedListRequest(CombindListActivity.this);
-		mdealRequest = new CombinedListRequest(CombindListActivity.this);
-		mdealRequest.setCompanyListing(false);
-		// mClRequest.setKeywordOrCategoryId("-1");
-		mdealRequest.setKeywordOrCategoryId(cat);
-		mdealRequest.setLatitude(GPS_Data.getLatitude());
-		mdealRequest.setLongitude(GPS_Data.getLongitude());
-		// mClRequest.setCategoryTitle(cat.getCategoryTitle());
-		// mClRequest.setParentThumbUrl(cat.getThumbUrl());
-
-		mdealRequest.setGroupActionType(AppConstants.GROUP_ACTION_TYPE_DEAL);
-		mdealRequest.setGroupType(AppConstants.GROUP_TYPE_SUB_CATEGORY);
-		if (mClRequest.isBySearch()) {
-			mdealRequest.setBySearch(true);
-		} else {
-			mdealRequest.setBySearch(false);
-		}
-		setRequest(mdealRequest);
-		startSppiner();
-		listingController.requestService(mdealRequest);
-
-	}
+//	private void showDealListing(String cat) {
+//		CombindListingController listingController = new CombindListingController(
+//				CombindListActivity.this,
+//				Events.COMBIND_DEAL_LISTING_NEW_LISTING_PAGE);
+//		// mClRequest = new CombinedListRequest(CombindListActivity.this);
+//		mdealRequest = new CombinedListRequest(CombindListActivity.this);
+//		mdealRequest.setCompanyListing(false);
+//		// mClRequest.setKeywordOrCategoryId("-1");
+//
+////		if (StringUtil.isNullOrEmpty(mClResponse.g)) {
+//			mdealRequest.setKeywordOrCategoryId(cat);
+////		} else {
+////			mdealRequest.setKeywordOrCategoryId(mClResponse.getCategoryList()
+////					.get(0).getCategoryId());
+////		}
+//
+//		mdealRequest.setLatitude(GPS_Data.getLatitude());
+//		mdealRequest.setLongitude(GPS_Data.getLongitude());
+//		// mClRequest.setCategoryTitle(cat.getCategoryTitle());
+//		// mClRequest.setParentThumbUrl(cat.getThumbUrl());
+//
+//		mdealRequest.setGroupActionType(AppConstants.GROUP_ACTION_TYPE_DEAL);
+//		mdealRequest.setGroupType(AppConstants.GROUP_TYPE_SUB_CATEGORY);
+//		if (mClRequest.isBySearch()) {
+//			mdealRequest.setBySearch(true);
+//		} else {
+//			mdealRequest.setBySearch(false);
+//		}
+//		setRequest(mdealRequest);
+//		startSppiner();
+//		listingController.requestService(mdealRequest);
+//
+//	}
 
 	public String jsonForSearch() {
 
@@ -1072,4 +1106,13 @@ public class CombindListActivity extends MaxisMainActivity {
 		}
 
 	}
+	
+
+	protected void showDealcategories(CategoryGroup cat) {
+		SubCategoryController controller = new SubCategoryController(
+				CombindListActivity.this, Events.DEALCATEGORY_EVENT);
+		controller.requestService(cat);
+		startSppiner();
+	}
+
 }
