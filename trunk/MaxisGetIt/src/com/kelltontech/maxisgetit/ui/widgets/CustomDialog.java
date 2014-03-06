@@ -58,6 +58,7 @@ public class CustomDialog implements OnKeyListener {
 	public static final int		LOGIN_CONFIRMATION_DIALOG			= 19;
 	public static final int		DELETE_CONFIRMATION_DIALOG			= 20;
 	public static final int		ADD_NEW_POI_CONFIRMATION_DIALOG		= 21;
+	public static final int		PLAY_VIDEO_DIALOG		= 22;
 	
 	
 	private BaseMainActivity mActivity;
@@ -282,6 +283,7 @@ public class CustomDialog implements OnKeyListener {
 		case DATA_USAGE_DIALOG_FOR_FACEBOOK:
 		case DATA_USAGE_DIALOG_FOR_TWITTER:
 		case DATA_USAGE_DIALOG_FOR_CALL:
+		case PLAY_VIDEO_DIALOG:
 			dialog = new Dialog(mActivity, R.style.Theme_Almost_full_transparent);
 			dialog.setContentView(R.layout.dialog_remember_me);
 			TextView contentUsageDialog = (TextView) dialog.findViewById(R.id.dialog_content);

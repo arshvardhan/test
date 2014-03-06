@@ -10,9 +10,13 @@
         android:id="@+id/header_base_activity"
         layout="@layout/header_with_popdown_search" />
     
-    <include
+   <!--  <include
         android:id="@+id/footer_base_screen"
-        layout="@layout/footer_home_screen" />
+        layout="@layout/footer_home_screen" /> -->
+        
+        <include
+        android:id="@+id/footer_base_screen"
+        layout="@layout/footer_new" />
 
     <LinearLayout
         android:id="@+id/root_category_title"
@@ -52,7 +56,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/root_category_title"
         android:layout_above="@id/footer_base_screen"
-        android:divider="@drawable/single_line_seprator"
+        android:divider="@null"
         >
         </ListView>
 

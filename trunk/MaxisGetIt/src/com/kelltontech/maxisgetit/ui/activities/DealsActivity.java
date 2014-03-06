@@ -114,7 +114,7 @@ public class DealsActivity extends MaxisMainActivity {
 	private ArrayList<String> cityListString = new ArrayList<String>();
 	private ArrayList<String> localityItems;
 	ArrayList<CityOrLocality> cityList;
-	private String selectedCity = "Entire Malasyia";
+	private String selectedCity = "Entire Malaysia";
 	private int city_id = -1;
 
 	private ArrayList<String> selectedLocalityItems;
@@ -130,9 +130,6 @@ public class DealsActivity extends MaxisMainActivity {
 		if (requestCode == 1) {
 			if (resultCode == RESULT_OK) {
 				mIsFreshSearch = false;
-				// mRefineSearchView.setImageDrawable(getResources().getDrawable(R.drawable.modify_search));
-				// mRefineSearchView.setText(getResources().getString(
-				// R.string.cl_modify_search));
 				Bundle bundle = data.getExtras();
 				mClResponse = bundle.getParcelable(AppConstants.COMP_LIST_DATA);
 				mLocalitySelectorDao = bundle
@@ -251,8 +248,6 @@ public class DealsActivity extends MaxisMainActivity {
 
 		mCompanyList = (ListView) findViewById(R.id.col_company_list);
 
-		// mCategoryListView = (HorizontalListView)
-		// findViewById(R.id.category_list);
 
 		mHeaderTitle = (TextView) findViewById(R.id.header_title);
 		mHeaderTitle.setText("Deals");
@@ -285,35 +280,6 @@ public class DealsActivity extends MaxisMainActivity {
 			mCatchooser.setVisibility(View.GONE);
 		}
 
-		/*
-		 * mCatAdapter = new DealsCategoryAdapter(DealsActivity.this);
-		 * mCatAdapter.setData(mSubcatResponse.getCategories());
-		 * mCategoryListView.setAdapter(mCatAdapter);
-		 * mCategoryListView.setVisibility(View.GONE);
-		 * mCategoryListView.setOnItemClickListener(new OnItemClickListener() {
-		 * 
-		 * @Override public void onItemClick(AdapterView<?> adapter, View arg1,
-		 * int position, long arg3) {
-		 * 
-		 * mSelectdCategory = (SubCategory) adapter
-		 * .getItemAtPosition(position); if
-		 * (!StringUtil.isNullOrEmpty(mSelectdCategory
-		 * .getCategoryTitle().trim()) &&
-		 * !StringUtil.isNullOrEmpty(mSelectdCategory .getCategoryId().trim()))
-		 * { HashMap<String, String> map = new HashMap<String, String>();
-		 * map.put(FlurryEventsConstants.Sub_Category_Title,
-		 * mSelectdCategory.getCategoryTitle().trim());
-		 * map.put(FlurryEventsConstants.Sub_Category_Id,
-		 * mSelectdCategory.getCategoryId().trim()); AnalyticsHelper.logEvent(
-		 * FlurryEventsConstants.SUB_CATEGORY, map); }
-		 * 
-		 * 
-		 * if (mSelectdCategory .getmGroupActionType() .trim()
-		 * .equalsIgnoreCase( AppConstants.GROUP_ACTION_TYPE_DEAL)) {
-		 * showDealListing(mSelectdCategory); }
-		 * 
-		 * } });
-		 */
 
 		mCatchooser.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -322,12 +288,6 @@ public class DealsActivity extends MaxisMainActivity {
 					int position, long arg3) {
 				if (position > 0) {
 					mRefineSearchView1.setText("Modify Result(s)");
-					// mSelectdCategory = (SubCategory) adapter
-					// .getItemAtPosition(position);
-					// if (!StringUtil.isNullOrEmpty(mSelectdCategory
-					// .getCategoryTitle().trim())
-					// && !StringUtil.isNullOrEmpty(mSelectdCategory
-					// .getCategoryId().trim())) {
 					HashMap<String, String> map = new HashMap<String, String>();
 					map.put(FlurryEventsConstants.Sub_Category_Title,
 							mSubcatResponse.getCategories().get(position - 1)
@@ -337,12 +297,6 @@ public class DealsActivity extends MaxisMainActivity {
 									.getCategoryId().trim());
 					AnalyticsHelper.logEvent(
 							FlurryEventsConstants.SUB_CATEGORY, map);
-					// }
-					// if (mSelectdCategory
-					// .getmGroupActionType()
-					// .trim()
-					// .equalsIgnoreCase(
-					// AppConstants.GROUP_ACTION_TYPE_DEAL)) {
 					showDealListing(mSubcatResponse.getCategories().get(
 							position - 1));
 					mSelctorResp = null;
@@ -587,11 +541,6 @@ public class DealsActivity extends MaxisMainActivity {
 					Toast.makeText(getApplicationContext(),
 							"Please select a category first.",
 							Toast.LENGTH_SHORT).show();
-
-					// mCatchooser.getOnItemSelectedListener().onItemSelected(
-					// mCatchooser, mCatchooser.getSelectedView(),
-					// mCatchooser.getSelectedItemPosition(),
-					// mCatchooser.getSelectedItemId());
 					mCatchooser.performClick();
 				} else {
 					refineSearch();
@@ -755,9 +704,6 @@ public class DealsActivity extends MaxisMainActivity {
 				oldResponse.appendCompListAtEnd(
 						mClResponse.getCompanyArrayList(), false);
 				mClResponse.setCompanyList(oldResponse.getCompanyArrayList());
-				// TODO append result set in existing
-				// changeNavigationButtonState(mClResponse.getPagesCount(),
-				// mClResponse.getPageNumber());
 				if (mClResponse.getPageNumber() == 10
 						|| mClResponse.getTotalrecordFound() == mClResponse
 								.getCompanyArrayList().size()) {
@@ -785,10 +731,6 @@ public class DealsActivity extends MaxisMainActivity {
 					intent.putExtra(AppConstants.COMP_DETAIL_DATA, compListResp);
 					intent.putExtra(AppConstants.DATA_LIST_REQUEST, mClRequest);
 
-					// intent.putExtra(AppConstants.THUMB_URL,
-					// mCategoryThumbUrl);
-					// intent.putExtra(AppConstants.IS_DEAL_LIST,
-					// !mClRequest.isCompanyListing());
 					startActivity(intent);
 				} else {
 					showInfoDialog(getResources().getString(

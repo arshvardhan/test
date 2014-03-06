@@ -72,6 +72,7 @@ public class RootCategoryAdapter extends BaseAdapter {
 			viewholder.iconField = (ImageView) convertView.findViewById(R.id.home_icon_view);
 			viewholder.titleField = (TextView) convertView.findViewById(R.id.home_title_field);
 			viewholder.btnPhotoContest = (Button) convertView.findViewById(R.id.home_btn_photo_contest);
+			viewholder.seprator = (View)convertView.findViewById(R.id.seprator);
 			viewholder.btnPhotoContest.setOnClickListener(new OnClickListener() {
 				
 				@Override
@@ -91,6 +92,7 @@ public class RootCategoryAdapter extends BaseAdapter {
 		{
 			viewholder.btnPhotoContest.setVisibility(View.VISIBLE);
 			viewholder.rootListItem.setVisibility(View.GONE);
+			viewholder.seprator.setVisibility(View.GONE);
 		}
 		else{
 			viewholder.btnPhotoContest.setVisibility(View.GONE);
@@ -112,5 +114,6 @@ public class RootCategoryAdapter extends BaseAdapter {
 		TextView titleField;
 		Button btnPhotoContest;
 		LinearLayout rootListItem;
+		View seprator;
 	}
 }

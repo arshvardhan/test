@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.Html;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -33,20 +32,16 @@ import com.kelltontech.maxisgetit.adapters.SubCategoryListAdapter;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
-import com.kelltontech.maxisgetit.controllers.CityAreaListController;
 import com.kelltontech.maxisgetit.controllers.CombindListingController;
-import com.kelltontech.maxisgetit.controllers.PostDealCityLocalityListController;
 import com.kelltontech.maxisgetit.controllers.SubCategoryController;
 import com.kelltontech.maxisgetit.controllers.TypeByCategoryController;
 import com.kelltontech.maxisgetit.dao.CategoryGroup;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
-import com.kelltontech.maxisgetit.dao.PostDealCityOrLoc;
 import com.kelltontech.maxisgetit.dao.SubCategory;
 import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.requests.CombinedListRequest;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
-import com.kelltontech.maxisgetit.response.PostDealCityLocListResponse;
 import com.kelltontech.maxisgetit.response.SubCategoryResponse;
 import com.kelltontech.maxisgetit.response.TypeByCategoryResponse;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
@@ -83,7 +78,7 @@ public class SubCategoryListActivity extends MaxisMainActivity {
 	private ArrayList<String> cityListString = new ArrayList<String>();
 	private ArrayList<String> localityItems;
 	ArrayList<CityOrLocality> cityList;
-	private String selectedCity = "Entire Malasyia";
+	private String selectedCity = "Entire Malaysia";
 	private int city_id = -1;
 
 	private ArrayList<String> selectedLocalityItems;
@@ -92,7 +87,11 @@ public class SubCategoryListActivity extends MaxisMainActivity {
 	TextView mainSearchButton;
 	ArrayList<String> selectedLocalityindex;
 	LinearLayout wholeSearchBoxContainer;
-	
+
+	ImageView box;
+	LinearLayout followus;
+	View seprator;
+	boolean footerVisible = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -148,8 +147,8 @@ public class SubCategoryListActivity extends MaxisMainActivity {
 
 		mainSearchButton = (TextView) findViewById(R.id.mainSearchButton);
 		mainSearchButton.setOnClickListener(this);
-		
-		wholeSearchBoxContainer = (LinearLayout)findViewById(R.id.whole_search_box_container);
+
+		wholeSearchBoxContainer = (LinearLayout) findViewById(R.id.whole_search_box_container);
 
 		mParentTitle = (TextView) findViewById(R.id.parent_title_field);
 		mGridView = (ListView) findViewById(R.id.grid_list);
@@ -163,8 +162,15 @@ public class SubCategoryListActivity extends MaxisMainActivity {
 		} else {
 			mActionType = ACTION_DEAL;
 		}
-		mParentTitle.setText(mSubcatResponse.getCategories().size()
-				+ " Categories Found For " + parCategory.getCategoryTitle());
+		if (mSubcatResponse.getCategories().size() > 1) {
+			mParentTitle
+					.setText(mSubcatResponse.getCategories().size()
+							+ " Categories Found For "
+							+ parCategory.getCategoryTitle());
+		} else {
+			mParentTitle.setText(mSubcatResponse.getCategories().size()
+					+ " Category Found For " + parCategory.getCategoryTitle());
+		}
 		// ImageLoader.start(parCategory.getThumbUrl(), mParentImage,
 		// mHeaderDummyDrawable, mHeaderErrorDrawable);
 		mSubCatAdapter.setData(mSubcatResponse.getCategories());
@@ -202,6 +208,10 @@ public class SubCategoryListActivity extends MaxisMainActivity {
 			}
 		});
 
+		box = (ImageView) findViewById(R.id.box);
+		box.setOnClickListener(this);
+		followus = (LinearLayout) findViewById(R.id.footer_followus);
+		seprator = (View) findViewById(R.id.seprator);
 	}
 
 	protected void gotoScreen(AdapterView<?> adapter, int position) {
@@ -398,19 +408,17 @@ public class SubCategoryListActivity extends MaxisMainActivity {
 		switch (v.getId()) {
 		case R.id.search_toggler:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SEARCH_CLICK);
-			if(wholeSearchBoxContainer.getVisibility()==View.VISIBLE)
-			{
+			if (wholeSearchBoxContainer.getVisibility() == View.VISIBLE) {
 				wholeSearchBoxContainer.setVisibility(View.GONE);
-			}else
-			{
+			} else {
 				wholeSearchBoxContainer.setVisibility(View.VISIBLE);
 			}
 			if (mSearchContainer.getVisibility() == View.VISIBLE) {
 				mSearchContainer.setVisibility(View.GONE);
-//				if (isAdvanceSearchLayoutOpen) {
-//					isAdvanceSearchLayoutOpen = false;
-//					advanceSearchLayout.setVisibility(View.GONE);
-//				}
+				// if (isAdvanceSearchLayoutOpen) {
+				// isAdvanceSearchLayoutOpen = false;
+				// advanceSearchLayout.setVisibility(View.GONE);
+				// }
 			} else {
 				mSearchContainer.setVisibility(View.VISIBLE);
 			}
@@ -475,7 +483,7 @@ public class SubCategoryListActivity extends MaxisMainActivity {
 		case R.id.currentCity:
 			if (cityListString != null && cityListString.size() > 0) {
 				localityItems = null;
-				selectedLocalityindex =null;
+				selectedLocalityindex = null;
 				Intent cityIntent = new Intent(SubCategoryListActivity.this,
 						AdvanceSelectCity.class);
 				cityIntent.putExtra("CITY_LIST", cityListString);
@@ -500,6 +508,21 @@ public class SubCategoryListActivity extends MaxisMainActivity {
 				setSearchLocality(city_id);
 			}
 			break;
+
+		case R.id.box:
+			if (!footerVisible) {
+				box.setImageResource(R.drawable.box_down);
+				seprator.setVisibility(View.VISIBLE);
+				followus.setVisibility(View.VISIBLE);
+				footerVisible = true;
+			} else {
+				box.setImageResource(R.drawable.upbox);
+				seprator.setVisibility(View.GONE);
+				followus.setVisibility(View.GONE);
+				footerVisible = false;
+			}
+			break;
+
 		}
 	}
 
@@ -568,7 +591,6 @@ public class SubCategoryListActivity extends MaxisMainActivity {
 		super.onDestroy();
 	}
 
-
 	@Override
 	protected void onActivityResult(int reqCode, int resultCode, Intent data) {
 		super.onActivityResult(reqCode, resultCode, data);
@@ -585,12 +607,10 @@ public class SubCategoryListActivity extends MaxisMainActivity {
 			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
 					+ "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
-			if(index==-1)
-			{
-				city_id =-1;
-			}else
-			{
-			city_id = cityList.get(index).getId();
+			if (index == -1) {
+				city_id = -1;
+			} else {
+				city_id = cityList.get(index).getId();
 			}
 
 		} else if (resultCode == RESULT_OK

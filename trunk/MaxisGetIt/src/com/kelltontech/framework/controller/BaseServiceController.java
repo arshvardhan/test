@@ -156,6 +156,7 @@ public abstract class BaseServiceController implements IServiceController {
 	protected String[] getApiHeaderValuesArray2() {
 		String sessionId = AppSharedPreference.getString(AppSharedPreference.API_SESSION_ID, "", (Activity)mScreen);
 		String authToken = AppSharedPreference.getString(AppSharedPreference.API_TOKEN, "", (Activity)mScreen);
+		
 		try {
 			if( ! StringUtil.isNullOrEmpty(authToken) ) {
 				authToken = new String(Base64.decode(authToken, Base64.DEFAULT));
@@ -166,6 +167,8 @@ public abstract class BaseServiceController implements IServiceController {
 			if( ! StringUtil.isNullOrEmpty(authToken) ) {
 				authToken = Utility.getMD5Hash(authToken);
 			}
+			
+			
 		} catch( Exception e) {
 			// ignore
 		}

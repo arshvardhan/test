@@ -206,7 +206,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#ebebeb"
-                android:maxLength="350"
                 android:padding="10dp"
                 android:text="Use your Maybank Card to avail a discount of flat 20% on food and beverages at BBQ Plaza.\nThis offer cannot be clubbed with any otheroffer."
                 android:textColor="#808080" />

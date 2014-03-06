@@ -45,7 +45,27 @@ public class CompanyDetail extends MaxisResponse implements Parcelable,IModel{
 	private String cid;
 	private String termsNdCondition;
 	
+	private String mapIcon = "";
 	
+	private String videoUrl = "";
+	
+	
+	public String getVideoUrl() {
+		return videoUrl;
+	}
+
+	public void setVideoUrl(String videoUrl) {
+		this.videoUrl = videoUrl;
+	}
+
+	public String getMapIcon() {
+		return mapIcon;
+	}
+
+	public void setMapIcon(String mapIcon) {
+		this.mapIcon = mapIcon;
+	}
+
 	public String getTermsNdCondition() {
 		return termsNdCondition;
 	}
@@ -181,6 +201,7 @@ public class CompanyDetail extends MaxisResponse implements Parcelable,IModel{
 		in.readTypedList(nearoutlets, NearOutLets.CREATOR);
 		cid =  in.readString();
 		termsNdCondition= in.readString();
+		videoUrl = in.readString();
 		
 	}
 
@@ -325,6 +346,7 @@ public class CompanyDetail extends MaxisResponse implements Parcelable,IModel{
 		dest.writeTypedList(nearoutlets);
 		dest.writeString(cid);
 		dest.writeString(termsNdCondition);
+		dest.writeString(videoUrl);
 		}
 
 	public ArrayList<AttributeGroup> getAttrGroups() {

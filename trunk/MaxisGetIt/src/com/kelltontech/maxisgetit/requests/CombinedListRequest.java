@@ -1,6 +1,8 @@
 package com.kelltontech.maxisgetit.requests;
 
 import java.util.Hashtable;
+
+import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.utils.NativeHelper;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.constants.AppConstants;
@@ -25,6 +27,7 @@ public class CombinedListRequest implements Parcelable {
 	private static final String RESULT_COMP = "COMPANY";
 	private static final String KEY_RESULT_TYPE = "type";
 	public static final String KEY_GROUP_ACTION_TYPE = "action_type";
+	
 	private int pageNumber = 1;
 	private String keywordOrCategoryId;
 	private String selectedCategoryBySearch;
@@ -40,6 +43,7 @@ public class CombinedListRequest implements Parcelable {
 	private String postJsonPayload;
 	private String groupType;
 	private String groupActionType;
+	private String deviceId = MyApplication.getDeviceId();
 
 	public CombinedListRequest(Parcel in) {
 		pageNumber = in.readInt();
@@ -161,6 +165,8 @@ public class CombinedListRequest implements Parcelable {
 				+ GPS_Data.getLatitude() + "");
 		ht.append("&" + MaxisBaseRequest.KEY_LONGITUDE + "="
 				+ GPS_Data.getLongitude() + "");
+		
+//		ht.append("&" +MaxisBaseRequest.DEVICE_ID + "=" + deviceId+"");
 		if (isBySearch) {
 			ht.append("&" + "keyword" + "=" + keywordOrCategoryId);
 			if (!StringUtil.isNullOrEmpty(selectedCategoryBySearch)
@@ -193,6 +199,8 @@ public class CombinedListRequest implements Parcelable {
 		ht.put(MaxisBaseRequest.KEY_LANGUAGE, localeCode);
 		ht.put(MaxisBaseRequest.KEY_LATITUDE, GPS_Data.getLatitude() + "");
 		ht.put(MaxisBaseRequest.KEY_LONGITUDE, GPS_Data.getLongitude() + "");
+		
+//		ht.put(MaxisBaseRequest.DEVICE_ID,deviceId+"");
 		if (isBySearch) {
 			ht.put("keyword", keywordOrCategoryId);
 			if (!StringUtil.isNullOrEmpty(groupActionType))
@@ -223,6 +231,9 @@ public class CombinedListRequest implements Parcelable {
 		ht.put(MaxisBaseRequest.KEY_LONGITUDE, GPS_Data.getLongitude() + "");
 		ht.put("keyword", keywordOrCategoryId);
 		ht.put("page_number", pageNumber + "");
+		
+//		ht.put(MaxisBaseRequest.DEVICE_ID,deviceId+"");
+		
 		if (isCompanyListing)
 			ht.put(KEY_RESULT_TYPE, RESULT_COMP);
 		else

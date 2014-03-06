@@ -48,6 +48,8 @@ public class FlurryEventsConstants {
 	public static final String MODIFY_SEARCH_CLICK = "ModifySearch button is clicked";
 	public static final String HOT_DEALS_CLICK = "HotDeals button is clicked";
 
+	public static final String VIDEO_THUMBNAIL_CLICK = "video thumbnail is clicked";
+	
 	// Deals Listing and Deals Detail Screen Events
 	public static final String APPLICATION_DEALS = "Deals Screen";
 	public static final String GET_INFO_CLICK = "GetInfo button is clicked";
@@ -108,6 +110,10 @@ public class FlurryEventsConstants {
 	
 	// Company Detail Screen Events
 	public static final String APPLICATION_DEAL_DETAIL = "DealsDetail Screen";
+	
+	//Video Play Screen
+	
+	public static final String APPLICATION_VIDEO_PLAY = "VideoPlayActivity Screen";
 
 	// Company Detail Map Screen Events
 	public static final String APPLICATION_COMPANY_DETAIL_MAP = "CompanyDetailMap Screen";

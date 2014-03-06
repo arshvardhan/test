@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:orientation="vertical" >
+
+    <!--
+         <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/vertical_line_seprator" />
+    -->
+
+    <ImageView
+        android:id="@+id/box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:src="@drawable/upbox" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#ececec"
+        android:orientation="vertical"
+        android:weightSum="1" >
+
+        <View
+            android:id="@+id/seprator1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/seprator"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/footer_followus"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_weight=".5"
+            android:background="#ececec"
+            android:gravity="center"
+            android:visibility="gone" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:text="@string/follow_us_colon"
+                android:textSize="@dimen/sp_15" />
+
+            <ImageView
+                android:id="@+id/footer_facebook_icon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/selector_facebook_btn"
+                android:clickable="true" />
+
+            <ImageView
+                android:id="@+id/footer_twitterIcon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/selector_twitter_btn"
+                android:clickable="true" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/seprator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/seprator" 
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:layout_gravity="center"
+            android:layout_weight=".5"
+            android:src="@drawable/getit_logo" />
+    </LinearLayout>
+
+</LinearLayout>

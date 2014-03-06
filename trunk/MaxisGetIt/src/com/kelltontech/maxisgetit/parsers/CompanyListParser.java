@@ -46,6 +46,8 @@ public class CompanyListParser extends AbstractSAXParser {
 	private static final String TAG_END_DATE = "End_Date";
 	private static final String TAG_VALID_IN = "ValidIn";
 	
+	private static final String TAG_VIDEO = "CVideo";
+	
 	
 	private CompanyListResponse clResponse = new CompanyListResponse();
 	private CategoryRefine category;
@@ -142,6 +144,8 @@ public class CompanyListParser extends AbstractSAXParser {
 			compDesc.setEnd_date(getNodeValue());
 		}else if (localName.equalsIgnoreCase(TAG_VALID_IN)) {
 			compDesc.setValid_in(getNodeValue());
+		}else if (localName.equalsIgnoreCase(TAG_VIDEO)) {
+			compDesc.setVideo_url(getNodeValue());
 		}
 
 	}

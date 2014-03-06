@@ -113,7 +113,7 @@ public class SplashActivity extends MaxisMainActivity {
 			RootCategoryController controller = new RootCategoryController(SplashActivity.this, Events.ROOT_CATEGORY_EVENT);
 			controller.requestService(null);
 		} else {
-			new BGAsyncTask().execute(null);
+			new BGAsyncTask().execute();
 		}
 	}
 

@@ -2,17 +2,19 @@ package com.kelltontech.maxisgetit.constants;
 
 public interface AppConstants {
 	
-	String API_VERSION = "1.2";
+	String API_VERSION = "1.3";
 	
-//     String BASE_SERVER = "http://192.168.13.3/webservice/trunk/"; // local Aaditya0
-	 String BASE_SERVER = "http://192.168.12.224/webservice/trunk/"; // local Ankesh
-	// String BASE_SERVER = "http://192.168.13.16/webservice/trunk/"; // local Diwakar
+	 boolean PRODUCTION = false;
+	
+//     String BASE_SERVER = "http://192.168.13.3/webservice/trunk/"; // local Aaditya
+//	 String BASE_SERVER = "http://192.168.12.224/webservice/trunk/"; // local Ankesh
+//	 String BASE_SERVER = "http://192.168.13.16/webservice/trunk/"; // local Diwakar
 	// String BASE_SERVER = "http://test.kelltontech.com/getitfms/"; //live dev
 	// String BASE_SERVER = "http://test.kelltontech.com/getitfms_qa/"; //QA
 	// String BASE_SERVER = "https://staging.findit.com.my/";// staging new
 	// String BASE_SERVER = "http://203.115.222.57:8070/"; //staging 8070
 	
-//	 String BASE_SERVER = "http://203.115.222.57/"; //staging
+	 String BASE_SERVER = "http://203.115.222.57/"; //staging
 	
 //	 String BASE_SERVER = "http://203.115.222.69/";// Pre Production
 	 
@@ -23,6 +25,8 @@ public interface AppConstants {
 
 	String BASE_URL 			= BASE_SERVER + "restapi/";
 	String BASE_URL_CONTEST 	= BASE_SERVER + "restapicontest/"; 
+	
+	String BASE_URL_VIDEOS  = "http://";
 		
 	/**
 	 * string constant with following common parameters and their values-
@@ -89,11 +93,15 @@ public interface AppConstants {
 	String IS_FOR_ERROR_LOG = "IS_FOR_ERROR_LOG";
 	String IS_FROM_COMP_DETAIL_ADD_FAV = "IS_FROM_COMP_DETAIL_ADD_FAV";
 	
+	String VIDEO_URL = "VIDEO_URL"; 
+	
 	String PHOTO_CONTEST_CAT_ID = "PHOTO_CONTEST";
 	
 	String GLOBAL_SEARCH_KEYWORD = "GLOBAL_SEARCH_KEYWORD";
 	
 	String CATEGORY_ID = "CATEGORY_ID";
+	
+	
 	
 	//TnC Extra
 	String TNC_FROM = "TNC_FROM";
