@@ -4,6 +4,7 @@ import java.util.Hashtable;
 
 import android.content.Context;
 
+import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.utils.NativeHelper;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
 import com.kelltontech.maxisgetit.dao.MaxisStore;
@@ -51,11 +52,15 @@ public abstract class MaxisBaseRequest {
 	private Context mContext;
 	protected String mLocaleCode;
 	protected String mScreenType;
+	private String deviceId = "";
+//	public static final String DEVICE_ID = "device_id";
+	
 	public MaxisBaseRequest(Context context) {
 		this.mContext = context;
 		MaxisStore store=MaxisStore.getStore(mContext);
 		mLocaleCode=store.getLocaleCode();
 		mScreenType=NativeHelper.getDisplayDensity(mContext);
+		deviceId = MyApplication.getDeviceId();
 	}
 
 	public Hashtable<String, String> getDefaultHeaders() {
@@ -64,6 +69,7 @@ public abstract class MaxisBaseRequest {
 		hashtable.put(KEY_PLATFORM, VALUE_PLATFORM);
 		hashtable.put(KEY_SCREEN_TYPE, mScreenType);
 		hashtable.put(KEY_LANGUAGE, mLocaleCode);
+//		hashtable.put(DEVICE_ID,deviceId);
 		return hashtable;
 	}
 	
@@ -77,6 +83,7 @@ public abstract class MaxisBaseRequest {
 		hashtable.put(KEY_PAGE_NUMBER, String.valueOf(pageNumber));
 		hashtable.put(KEY_COMP_ID, compId);
 		hashtable.put(KEY_CAT_ID, catId);
+//		hashtable.put(DEVICE_ID,deviceId);
 		return hashtable;
 	}
 	
@@ -92,6 +99,7 @@ public abstract class MaxisBaseRequest {
 		hashtable.put(KEY_LANGUAGE, mLocaleCode);
 		hashtable.put(KEY_LATITUDE, GPS_Data.getLatitude()+"");
 		hashtable.put(KEY_LONGITUDE, GPS_Data.getLongitude()+"");
+//		hashtable.put(DEVICE_ID,deviceId);
 		return hashtable;
 	}
 	public abstract Hashtable getRequestHeaders();

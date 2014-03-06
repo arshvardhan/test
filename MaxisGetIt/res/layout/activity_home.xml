@@ -9,10 +9,14 @@
     <include
         android:id="@+id/header_base_activity"
         layout="@layout/header_base_screen" />
-
+<!-- 
     <include
         android:id="@+id/footer_base_screen"
-        layout="@layout/footer_home_screen" />
+        layout="@layout/footer_home_screen" /> -->
+    
+     <include
+        android:id="@+id/footer_base_screen"
+        layout="@layout/footer_new" />
 
     <com.kelltontech.maxisgetit.ui.widgets.CustomGallery
         android:id="@+id/home_gallery"
@@ -26,9 +30,10 @@
     <View
         android:id="@+id/home_vertical_seprator"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         android:layout_below="@id/home_gallery"
-        android:background="@color/vertical_line_seprator" />
+        android:background="@color/vertical_line_seprator" 
+        android:visibility="gone"/>
 
     <ListView
         android:id="@+id/home_category_list"
@@ -37,8 +42,7 @@
         android:layout_above="@+id/btn_photo_contest"
         android:layout_below="@id/home_vertical_seprator"
         android:cacheColorHint="@android:color/transparent"
-        android:divider="@drawable/single_line_seprator"
-        android:footerDividersEnabled="false"
+        android:divider="@null"
         android:visibility="visible" />
 
     <Button

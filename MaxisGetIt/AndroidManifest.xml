@@ -4,13 +4,14 @@
     android:versionCode="5"
     android:versionName="1.22" >
 
-    <!--above version are updated 
-    Package should be com.findit333 -->
+    <!--
+    above version are updated 
+    Package should be com.findit333
+    -->
     <!-- Current version code/name on play: code:4, name:1.21 -->
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="15" />
     <!-- for card.io card scanning -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -192,7 +193,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
-        </activity>
+        </activity>
         -->
         <activity
             android:name="com.kelltontech.maxisgetit.ui.activities.ClassifiedScrollActivity"
@@ -387,6 +388,11 @@
         <activity
             android:name="com.kelltontech.maxisgetit.ui.activities.AdvanceSelectLocalityActivity"
             android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.kelltontech.maxisgetit.ui.activities.VideoPlayActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenLayout|screenSize"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
     </application>

@@ -27,7 +27,7 @@
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
             android:clickable="true"
-            android:src="@drawable/findit_header_logo" />
+            android:src="@drawable/logo1" />
 
         <ImageView
             android:id="@+id/show_profile_icon"
@@ -43,7 +43,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/vertical_line_seprator" />
+        android:background="@color/vertical_line_seprator" 
+        android:visibility="gone"/>
 
    <TextView style="@style/common_style_for_beta_version_header" 
        android:visibility="gone"/>
@@ -59,12 +60,15 @@
             android:layout_width="200dp"
             android:layout_height="50dp" >
 
+            <!--INCLUDED IN BELOW LAYOUT 
+            android:layout_margin="10dp"
+                android:layout_marginLeft="2dp" -->
+            
             <EditText
                 android:id="@+id/search_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_marginLeft="2dp"
+                
                 android:background="@drawable/search_bar"
                 android:drawableLeft="@drawable/search_iconleft"
                 android:hint="@string/search_query"

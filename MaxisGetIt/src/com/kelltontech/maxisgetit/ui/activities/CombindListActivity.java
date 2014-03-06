@@ -44,7 +44,6 @@ import com.kelltontech.maxisgetit.dao.CategoryRefine;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.CompanyDesc;
 import com.kelltontech.maxisgetit.dao.CompanyDetail;
-import com.kelltontech.maxisgetit.dao.GPS_Data;
 import com.kelltontech.maxisgetit.dao.SelectorDAO;
 import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.requests.CombinedListRequest;
@@ -57,7 +56,6 @@ import com.kelltontech.maxisgetit.response.RefineSelectorResponse;
 import com.kelltontech.maxisgetit.response.SubCategoryResponse;
 import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
-import com.kelltontech.maxisgetit.utils.Utility;
 
 public class CombindListActivity extends MaxisMainActivity {
 	private ListView mCompanyList;
@@ -108,7 +106,7 @@ public class CombindListActivity extends MaxisMainActivity {
 	private ArrayList<String> cityListString = new ArrayList<String>();
 	private ArrayList<String> localityItems;
 	ArrayList<CityOrLocality> cityList;
-	private String selectedCity = "Entire Malasyia";
+	private String selectedCity = "Entire Malaysia";
 	private int city_id = -1;
 
 	private ArrayList<String> selectedLocalityItems = new ArrayList<String>();
@@ -449,7 +447,7 @@ public class CombindListActivity extends MaxisMainActivity {
 						if (mClResponse.getPageNumber() < AppConstants.MAX_RECORD_COUNT / 10) {
 							loadPageData(mClResponse.getPageNumber() + 1);
 						}
-					} else if (number == AppConstants.MAX_RECORD_COUNT + 1
+					} else if (number == AppConstants.MAX_RECORD_COUNT 
 							&& !isModifySearchDialogOpen && mScrollUp) {
 						showConfirmationDialog(
 								CustomDialog.CONFIRMATION_DIALOG,

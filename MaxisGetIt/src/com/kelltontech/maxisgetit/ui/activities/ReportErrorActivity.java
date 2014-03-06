@@ -68,7 +68,7 @@ public class ReportErrorActivity extends MaxisMainActivity {
 	private ArrayList<String> cityListString = new ArrayList<String>();
 	private ArrayList<String> localityItems;
 	ArrayList<CityOrLocality> cityList;
-	private String selectedCity = "Entire Malasyia";
+	private String selectedCity = "Entire Malaysia";
 	private int city_id = -1;
 
 	private ArrayList<String> selectedLocalityItems;
@@ -334,7 +334,7 @@ public class ReportErrorActivity extends MaxisMainActivity {
 			if (mobile.equals("")) {
 				showInfoDialog(getString(R.string.number_empty));
 				return false;
-			} else if (mobile.length() < 7 || mobile.length() > 12) {
+			} else if (mobile.length() <= 7 || mobile.length() >= 12 ||  mobile.startsWith("0")) {
 				showInfoDialog(getString(R.string.invalid_mobile));
 				return false;
 			} else {

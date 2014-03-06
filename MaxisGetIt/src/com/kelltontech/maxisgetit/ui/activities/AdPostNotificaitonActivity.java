@@ -41,7 +41,7 @@ public class AdPostNotificaitonActivity extends MaxisMainActivity {
 	private ArrayList<String> cityListString = new ArrayList<String>();
 	private ArrayList<String> localityItems;
 	ArrayList<CityOrLocality> cityList;
-	private String selectedCity = "Entire Malasyia";
+	private String selectedCity = getResources().getString(R.string.entire_malaysia);
 	private int city_id = -1;
 
 	private ArrayList<String> selectedLocalityItems;

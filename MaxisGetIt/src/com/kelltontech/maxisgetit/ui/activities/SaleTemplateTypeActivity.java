@@ -69,7 +69,7 @@ public class SaleTemplateTypeActivity extends MaxisMainActivity {
 	private ArrayList<String> cityListString = new ArrayList<String>();
 	private ArrayList<String> localityItems;
 	ArrayList<CityOrLocality> cityList;
-	private String selectedCity = "Entire Malasyia";
+	private String selectedCity = "Entire Malaysia";
 	private int city_id = -1;
 
 	private ArrayList<String> selectedLocalityItems;

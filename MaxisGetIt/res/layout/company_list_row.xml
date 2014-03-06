@@ -11,6 +11,7 @@
         android:background="@drawable/selector_home_list_item_bg"
         android:paddingBottom="5dp"
         android:paddingLeft="5dp"
+        android:layout_toLeftOf="@+id/videoIcon"
         android:paddingTop="5dp" >
         <!--
                  android:layout_width="wrap_content"
@@ -69,6 +70,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/app_txt" 
                 android:singleLine="true"
+               android:ellipsize="end"
+               android:maxEms="20"
                 android:textSize="@dimen/sp_12" />
              <TextView
                 android:id="@+id/cl_comp_addi_info2"
@@ -94,4 +97,16 @@
             <!-- </RelativeLayout> -->
         </LinearLayout>
     </LinearLayout>
+    
+    <ImageView 
+        android:id="@+id/videoIcon"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/video_icon"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="5dp"
+        android:visibility="visible"
+        />
+    
 </RelativeLayout>

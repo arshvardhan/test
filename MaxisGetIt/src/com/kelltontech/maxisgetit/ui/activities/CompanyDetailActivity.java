@@ -43,7 +43,6 @@ import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
-import com.kelltontech.maxisgetit.controllers.CityAreaListController;
 import com.kelltontech.maxisgetit.controllers.CompanyDetailAddFavController;
 import com.kelltontech.maxisgetit.controllers.CompanyDetailController;
 import com.kelltontech.maxisgetit.controllers.CompanyDetailRemoveFavController;
@@ -118,7 +117,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 	private ArrayList<String> cityListString = new ArrayList<String>();
 	private ArrayList<String> localityItems;
 	ArrayList<CityOrLocality> cityList;
-	private String selectedCity = "Entire Malasyia";
+	private String selectedCity = "Entire Malaysia";
 	private int city_id = -1;
 
 	private ArrayList<String> selectedLocalityItems;
@@ -127,6 +126,10 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 	TextView mainSearchButton;
 	ArrayList<String> selectedLocalityindex;
 	LinearLayout wholeSearchBoxContainer;
+
+	LinearLayout videoContainer;
+	View seprator;
+	ImageView videoThumbnail;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -207,6 +210,13 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 		mainSearchButton.setOnClickListener(this);
 
 		wholeSearchBoxContainer = (LinearLayout) findViewById(R.id.whole_search_box_container);
+
+		// to visible the video container
+
+		videoContainer = (LinearLayout) findViewById(R.id.cd_video_container);
+		seprator = (View) findViewById(R.id.seprator);
+		videoThumbnail = (ImageView) findViewById(R.id.img_video_thumbnail);
+		videoThumbnail.setOnClickListener(this);
 
 		boolean isDeal = getIntent().getExtras().getBoolean(
 				AppConstants.IS_DEAL_LIST);
@@ -432,6 +442,14 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 				|| mCompanyDetail.getContacts().size() == 0) {
 			mCallBtnView.setEnabled(false);
 		}
+		if (StringUtil.isNullOrEmpty(mCompanyDetail.getVideoUrl())) {
+			videoContainer.setVisibility(View.GONE);
+			seprator.setVisibility(View.GONE);
+		} else {
+			videoContainer.setVisibility(View.VISIBLE);
+			seprator.setVisibility(View.VISIBLE);
+		}
+
 	}
 
 	private String getAddressText() {
@@ -1022,6 +1040,20 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 				setSearchLocality(city_id);
 			}
 			break;
+
+		case R.id.img_video_thumbnail:
+			
+			Log.e("manish","tab");
+//			AnalyticsHelper
+//					.logEvent(FlurryEventsConstants.VIDEO_THUMBNAIL_CLICK);
+			if (isDialogToBeShown()) {
+				showConfirmationDialog(CustomDialog.PLAY_VIDEO_DIALOG,
+						getResources().getString(R.string.cd_msg_data_usage));
+			} else {
+				playVideo();
+			}
+
+			break;
 		}
 
 	}
@@ -1039,7 +1071,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 		if (postJson == null) {
 			return;
 		}
-		
+
 		CompanyDetailAddFavController addFavController = new CompanyDetailAddFavController(
 				CompanyDetailActivity.this, Events.COMPANY_DETAIL_ADD_FAV);
 		startSppiner();
@@ -1166,7 +1198,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 					FullMapActivity.class);
 			intent.putExtra(AppConstants.GLOBAL_SEARCH_KEYWORD, mSearchKeyword);
 			intent.putExtra(AppConstants.COMP_DETAIL_DATA, mCompanyDetail);
-			intent.putExtra(AppConstants.THUMB_URL, mCategoryThumbUrl);
+			intent.putExtra(AppConstants.THUMB_URL, mCompanyDetail.getMapIcon());
 			intent.putExtra(AppConstants.IS_DEAL_LIST, getIntent().getExtras()
 					.getBoolean(AppConstants.IS_DEAL_LIST));
 			startActivity(intent);
@@ -1280,6 +1312,8 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 		} else if (id == CustomDialog.DATA_USAGE_DIALOG_FOR_CALL) {
 			NativeHelper
 					.makeCall(CompanyDetailActivity.this, mNumberToBeCalled);
+		} else if (id == CustomDialog.PLAY_VIDEO_DIALOG) {
+			playVideo();
 		} else {
 			super.onPositiveDialogButton(id);
 		}
@@ -1331,5 +1365,14 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	private void playVideo()
+	{
+		Intent videoIntent = new Intent(CompanyDetailActivity.this,
+				VideoPlayActivity.class);
+		videoIntent.putExtra(AppConstants.VIDEO_URL,
+				mCompanyDetail.getVideoUrl());
+		startActivity(videoIntent);
 	}
 }

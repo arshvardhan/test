@@ -164,7 +164,7 @@
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:paddingTop="4dp"
-                android:src="@drawable/detail_cross" />
+	                android:src="@drawable/detail_cross" />
             <!-- android:background="@drawable/shape_flat_box" -->
 
             <RelativeLayout
@@ -408,6 +408,57 @@
                         android:layout_gravity="center_vertical"
                         android:clickable="true"
                         android:src="@drawable/add_contact" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            
+              <ImageView
+                  android:id="@+id/seprator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/bar_light_grey" 
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/cd_video_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:paddingBottom="7dp"
+                android:paddingTop="7dp"
+                android:weightSum="1" 
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".12"
+                    android:src="@drawable/video_icon" />
+
+                <ImageView
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/bar_light_grey" />
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight=".87"
+                    android:padding="5dp" >
+
+
+                    <ImageView
+                        android:id="@+id/img_video_thumbnail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_gravity="center_vertical"
+                        android:clickable="true"
+                        android:src="@drawable/video_thumb" />
                 </RelativeLayout>
             </LinearLayout>
 

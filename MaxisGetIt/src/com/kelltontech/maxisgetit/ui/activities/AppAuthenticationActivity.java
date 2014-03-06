@@ -56,7 +56,7 @@ public class AppAuthenticationActivity extends MaxisMainActivity {
 
 	private void validateAndSubmit() {
 		mMobile = mEdMobile.getText().toString().trim();
-		if (mMobile.length() < 7 || mMobile.length() > 12) {
+		if (mMobile.length() <= 7 || mMobile.length() >= 12 || mMobile.startsWith("0")) {
 			showInfoDialog(getString(R.string.invalid_mobile));
 			return;
 		}

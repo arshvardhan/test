@@ -28,7 +28,6 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,19 +42,15 @@ import com.kelltontech.maxisgetit.adapters.RootCategoryAdapter;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
-import com.kelltontech.maxisgetit.controllers.CityAreaListController;
 import com.kelltontech.maxisgetit.controllers.CombindListingController;
-import com.kelltontech.maxisgetit.controllers.PostDealCityLocalityListController;
 import com.kelltontech.maxisgetit.controllers.SubCategoryController;
 import com.kelltontech.maxisgetit.controllers.TypeByCategoryController;
 import com.kelltontech.maxisgetit.dao.CategoryGroup;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
-import com.kelltontech.maxisgetit.dao.PostDealCityOrLoc;
 import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.requests.CombinedListRequest;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
-import com.kelltontech.maxisgetit.response.PostDealCityLocListResponse;
 import com.kelltontech.maxisgetit.response.SubCategoryResponse;
 import com.kelltontech.maxisgetit.service.AppSharedPreference;
 import com.kelltontech.maxisgetit.service.LocationFinderService;
@@ -81,13 +76,19 @@ public class HomeActivity extends MaxisMainActivity {
 	private ArrayList<String> cityListString = new ArrayList<String>();
 	private ArrayList<String> localityItems;
 	ArrayList<CityOrLocality> cityList;
-	private String selectedCity = "Entire Malasyia";
+	private String selectedCity = "Entire Malaysia";
 	private int city_id = -1;
 	private ArrayList<String> selectedLocalityItems;
 	ArrayList<CityOrLocality> localityList;
 	ArrayList<String> ids = new ArrayList<String>();
 	TextView mainSearchButton;
 	ArrayList<String> selectedLocalityindex;
+	
+	ImageView box;
+	LinearLayout followus;
+	View seprator;
+	boolean footerVisible = false;
+	
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -232,6 +233,49 @@ public class HomeActivity extends MaxisMainActivity {
 			}
 		});
 
+//		advanceSearchLayout.setOnTouchListener(new OnTouchListener() {
+//			private float mInitialX;
+//			private float mInitialY;
+//
+//			@Override
+//			public boolean onTouch(View v, MotionEvent event) {
+//
+//				switch (event.getAction()) {
+//				case MotionEvent.ACTION_DOWN:
+//					mInitialX = event.getX();
+//					mInitialY = event.getY();
+//					// mScrollDown = true;
+//					return true;
+//				case MotionEvent.ACTION_MOVE:
+//					final float x = event.getX();
+//					final float y = event.getY();
+//					final float yDiff = y - mInitialY;
+//					if (yDiff > 0.0) {
+//						Log.d("maxis", "SCROLL DOWN");
+//						// mScrollUp = false;
+//						break;
+//
+//					} else if (yDiff < 0.0) {
+//						Log.d("maxis", "SCROLL up");
+//						// mScrollUp = true;q
+//						if (isAdvanceSearchLayoutOpen) {
+//							isAdvanceSearchLayoutOpen = false;
+//							advanceSearchLayout.setVisibility(View.GONE);
+//						}
+//
+//						break;
+//					}
+//					break;
+//				}
+//				return false;
+//			}
+//		});
+		
+		box = (ImageView)findViewById(R.id.box);
+		box.setOnClickListener(this);
+		followus = (LinearLayout)findViewById(R.id.footer_followus);
+		seprator = (View)findViewById(R.id.seprator);
+
 	}
 
 	protected void gotoScreen(int position) {
@@ -298,7 +342,7 @@ public class HomeActivity extends MaxisMainActivity {
 	@Override
 	protected void onResume() {
 		Log.d("maxis", "HomeActivity.onResume()");
-//		mSearchEditText.setText("");
+		// mSearchEditText.setText("");
 		// for banner fliping
 		// startFlipping();
 		if (isLocationAware()) {
@@ -511,7 +555,7 @@ public class HomeActivity extends MaxisMainActivity {
 				}
 				localityItems = null;
 				ids = null;
-				selectedLocalityindex =null;
+				selectedLocalityindex = null;
 				currentLocality.setText("Choose your Area");
 				intent.putExtra("CITY_LIST", cityListString);
 				intent.putExtra("SELECTED_CITY", selectedCity);
@@ -636,6 +680,24 @@ public class HomeActivity extends MaxisMainActivity {
 				setSearchLocality(city_id);
 			}
 			break;
+			
+		case R.id.box:
+			if(!footerVisible)
+			{
+			box.setImageResource(R.drawable.box_down);
+			seprator.setVisibility(View.VISIBLE);
+			followus.setVisibility(View.VISIBLE);
+			footerVisible = true;
+			}
+			else
+			{
+				box.setImageResource(R.drawable.upbox);
+				seprator.setVisibility(View.GONE);
+				followus.setVisibility(View.GONE);
+				footerVisible = false;
+			}
+			break;
+			
 		default:
 			break;
 		}
@@ -662,7 +724,6 @@ public class HomeActivity extends MaxisMainActivity {
 		startSppiner();
 	}
 
-
 	@Override
 	protected void onActivityResult(int reqCode, int resultCode, Intent data) {
 		super.onActivityResult(reqCode, resultCode, data);
@@ -679,12 +740,10 @@ public class HomeActivity extends MaxisMainActivity {
 			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
 					+ "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
-			if(index==-1)
-			{
-				city_id =-1;
-			}else
-			{
-			city_id = cityList.get(index).getId();
+			if (index == -1) {
+				city_id = -1;
+			} else {
+				city_id = cityList.get(index).getId();
 			}
 		} else if (resultCode == RESULT_OK
 				&& reqCode == AppConstants.LOCALITY_REQUEST) {

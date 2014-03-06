@@ -76,7 +76,7 @@ public class LoginActivity extends MaxisMainActivity {
 	private ArrayList<String> cityListString = new ArrayList<String>();
 	private ArrayList<String> localityItems;
 	ArrayList<CityOrLocality> cityList;
-	private String selectedCity = "Entire Malasyia";
+	private String selectedCity = "Entire Malaysia";
 	private int city_id = -1;
 
 	private ArrayList<String> selectedLocalityItems;
@@ -150,8 +150,8 @@ public class LoginActivity extends MaxisMainActivity {
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
 		mSearchBtn.setOnClickListener(this);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
-		if (!StringUtil.isNullOrEmpty(mSearchKeyword))
-			mSearchEditText.setText(mSearchKeyword);
+//		if (!StringUtil.isNullOrEmpty(mSearchKeyword))
+//			mSearchEditText.setText(mSearchKeyword);
 
 		findViewById(R.id.login_forget_password).setOnClickListener(this);
 

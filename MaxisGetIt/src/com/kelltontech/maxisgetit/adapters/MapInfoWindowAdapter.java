@@ -120,6 +120,7 @@ public class MapInfoWindowAdapter implements InfoWindowAdapter {
 		return convertView;
 	}
 	
+	
 	public CompanyDesc getValue(String id)
 	{
 		CompanyDesc desc = null;

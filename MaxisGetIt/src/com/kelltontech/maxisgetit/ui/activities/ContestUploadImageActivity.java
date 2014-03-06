@@ -1,21 +1,28 @@
 package com.kelltontech.maxisgetit.ui.activities;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.location.Location;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -35,6 +42,7 @@ import com.kelltontech.maxisgetit.model.uploadImage.RequestUploadPhoto;
 import com.kelltontech.maxisgetit.model.uploadImage.ResponseUploadPhoto;
 import com.kelltontech.maxisgetit.service.AppSharedPreference;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
+import com.kelltontech.maxisgetit.utils.BitmapCalculation;
 
 /**
  * This screen is shown after taking image from camera to upload it on server.
@@ -53,6 +61,7 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 	private boolean isFetchingBase64;
 	private EditText mTitleEditTxt, mNameEditTxt, mNumberEditTxt;
 	private final int UPLOAD_IMAGE = 5;
+	private Bitmap newBitmap;
 
 	//private ImageView mLogo;
 
@@ -136,8 +145,31 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 				finish();
 				return;
 			}
-			mBitmap = (Bitmap) dataObj;
+			mBitmap = (Bitmap) dataObj; 
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+			if(mBitmap.getDensity() > 400)
+			{
+//				
+//		     mBitmap.
+
+				Uri uri = data.getData();
+				String imagePath = getRealPathFromURI(uri);
+				mBitmap = BitmapCalculation.decodeSampledBitmapFromPath(imagePath,
+						650, 650);
+
+				// TODO:: SET ORIENTATION
+				newBitmap = null;
+				if (mBitmap != null) {
+			
+			mBitmap = decodeSampledBitmapFromFile(imagePath,650,650);
+			newBitmap = setOrientation(mBitmap, imagePath);
+			mBitmap = newBitmap;
+				}
+
+			System.out.println(mBitmap.getDensity());
+			System.out.println(mBitmap.getHeight());
+			System.out.println(mBitmap.getWidth());
 			mBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 75,
 					os);
 			String directoryPath = Environment.getExternalStorageDirectory()
@@ -161,7 +193,9 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 					Toast.LENGTH_LONG).show();
 			finish();
 		}
+		}
 	}
+	
 
 	@Override
 	public void onClick(View v) {
@@ -223,9 +257,9 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 						"Please enter a valid phone number.", Toast.LENGTH_LONG)
 						.show();
 				return;
-			} else if (phone.trim().length() < 7 || phone.trim().length() > 12) {
+			} else if (phone.trim().length() <= 7 || phone.trim().length() >= 12) {
 				Toast.makeText(getApplicationContext(),
-						"Contact number should be 7-12 digits.", Toast.LENGTH_LONG)
+						"Contact number should be 8-11 digits.", Toast.LENGTH_LONG)
 						.show();
 				return;
 			}
@@ -644,4 +678,80 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 	public Activity getMyActivityReference() {
 		return this;
 	}
+	
+	public static Bitmap decodeSampledBitmapFromFile(String filename, int reqWidth, int reqHeight) {
+
+		  // First decode with inJustDecodeBounds=true to check dimensions
+		  final BitmapFactory.Options options = new BitmapFactory.Options();
+		  options.inJustDecodeBounds = true;
+		  BitmapFactory.decodeFile(filename, options);
+
+		  // Calculate inSampleSize
+		  options.inSampleSize = calculateInSampleSize(options, 650);
+
+		  // If we're running on Honeycomb or newer, try to use inBitmap
+//		  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//		   addInBitmapOptions(options);
+//		  }
+
+		  // Decode bitmap with inSampleSize set
+		  options.inJustDecodeBounds = false;
+		  return BitmapFactory.decodeFile(filename, options);
+		 }
+		 public static int calculateInSampleSize(BitmapFactory.Options options, int maxImageSize) {
+		  // Raw height and width of image
+		  final int height = options.outHeight;
+		  final int width = options.outWidth;
+		  int inSampleSize = 1;
+
+		  inSampleSize = (int) Math.pow(2.0,
+		    (int) Math.round(Math.log(maxImageSize / (double) Math.max(height, width)) / Math.log(0.5)));
+
+		  return inSampleSize;
+		 }
+
+public Uri getImageUri(Context inContext, Bitmap inImage) {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+    String path = Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+    return Uri.parse(path);
+}
+
+public String getRealPathFromURI(Uri uri) {
+    Cursor cursor = getContentResolver().query(uri, null, null, null, null); 
+    cursor.moveToFirst(); 
+    int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA); 
+    return cursor.getString(idx); 
+}
+
+public Bitmap setOrientation(Bitmap sourceBitmap, String photo) {
+	ExifInterface exif = null;
+	try {
+		exif = new ExifInterface(photo);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+			ExifInterface.ORIENTATION_NORMAL);
+	Log.e("Exif Orientation", "oreination" + orientation);
+	Matrix matrix = new Matrix();
+	switch (orientation) {
+	case ExifInterface.ORIENTATION_ROTATE_90:
+		matrix.postRotate(90);
+		break;
+	case ExifInterface.ORIENTATION_ROTATE_180:
+		matrix.postRotate(180);
+		break;
+	case ExifInterface.ORIENTATION_ROTATE_270:
+		matrix.postRotate(270);
+		break;
+	}
+
+	Bitmap originalImage = Bitmap
+			.createBitmap(sourceBitmap, 0, 0, sourceBitmap.getWidth(),
+					sourceBitmap.getHeight(), matrix, true);
+
+	return originalImage;
+ }
 }

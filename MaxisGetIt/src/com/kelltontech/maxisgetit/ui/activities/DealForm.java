@@ -57,7 +57,7 @@ public class DealForm extends MaxisMainActivity {
 	private ArrayList<String> cityListString = new ArrayList<String>();
 	private ArrayList<String> localityItems;
 	ArrayList<CityOrLocality> cityList;
-	private String selectedCity = "Entire Malasyia";
+	private String selectedCity = "Entire Malaysia";
 	private int city_id = -1;
 
 	private ArrayList<String> selectedLocalityItems;
@@ -219,8 +219,9 @@ public class DealForm extends MaxisMainActivity {
 			Toast.makeText(getApplicationContext(), "Please enter Name.",
 					Toast.LENGTH_SHORT).show();
 		} else if (StringUtil.isNullOrEmpty((phoneNo.getText().toString()))
-				|| phoneNo.getText().length() > 12
-				|| phoneNo.getText().length() < 7) {
+				|| phoneNo.getText().length() >= 12
+				|| phoneNo.getText().length() <= 7
+				|| phoneNo.getText().toString().startsWith("0")) {
 			Toast.makeText(getApplicationContext(),
 					"Please enter Mobile Number correctly.", Toast.LENGTH_SHORT)
 					.show();
