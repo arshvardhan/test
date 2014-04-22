@@ -28,7 +28,8 @@ public class PostDealCityLocalityListController extends BaseServiceController {
 
 	private Context mActivity;
 
-	public PostDealCityLocalityListController(IActionController screen, int eventType) {
+	public PostDealCityLocalityListController(IActionController screen,
+			int eventType) {
 		super(screen, eventType);
 		mActivity = (Context) screen;
 	}
@@ -36,7 +37,7 @@ public class PostDealCityLocalityListController extends BaseServiceController {
 	@Override
 	public void initService() {
 	}
-	
+
 	@Override
 	public void requestService(Object requestData) {
 		try {
@@ -59,24 +60,28 @@ public class PostDealCityLocalityListController extends BaseServiceController {
 
 			String url = AppConstants.BASE_URL;
 			Hashtable<String, String> urlParams;
-			
+
 			GenralRequest genralRequest = new GenralRequest(mActivity);
 
 			if (mEventType == Events.POST_DEAL_CITY_LISTING) {
 				PostDealCityLocalityRequest cityLocalityReq = (PostDealCityLocalityRequest) requestData;
 				url += GenralRequest.POST_DEAL_CITY_LIST_METHOD;
-				urlParams = genralRequest.getPostDealCityListHeader(cityLocalityReq.getUserId(), cityLocalityReq.getCompanyId(), cityLocalityReq.getCategoryId());
+				urlParams = genralRequest.getPostDealCityListHeader(
+						cityLocalityReq.getUserId(),
+						cityLocalityReq.getCompanyId(),
+						cityLocalityReq.getCategoryId());
 				serviceRq.setUrl(HttpHelper.getURLWithPrams(url, urlParams));
 				serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
 			} else {
 				// In case of PostDealLocalityListing
 				url += GenralRequest.POST_DEAL_LOCALITY_LIST_METHOD;
-				urlParams = genralRequest.getDefaultHeaders();
+				urlParams = genralRequest.getDefaultHeaders(AppConstants.Deal_Post);
 				JSONObject dealJson = (JSONObject) requestData;
 				Log.d("maxis", "post data" + dealJson.toString());
 				serviceRq.setUrl(HttpHelper.getURLWithPrams(url, urlParams));
 				serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
-				serviceRq.setPostData(new ByteArrayEntity(dealJson.toString().getBytes()));
+				serviceRq.setPostData(new ByteArrayEntity(dealJson.toString()
+						.getBytes()));
 			}
 
 			HttpClientConnection.getInstance().addRequest(serviceRq);
@@ -100,8 +105,8 @@ public class PostDealCityLocalityListController extends BaseServiceController {
 			message.obj = response.getErrorText();
 		} else {
 			try {
-				response.setPayload(new PostDealCityLocalityListParser().parse(response
-						.getResponseText()));
+				response.setPayload(new PostDealCityLocalityListParser()
+						.parse(response.getResponseText()));
 			} catch (Exception e) {
 				logResponseException(e, "PostDealCityLocalityListController");
 			}
@@ -109,12 +114,17 @@ public class PostDealCityLocalityListController extends BaseServiceController {
 			if (response.getPayload() instanceof PostDealCityLocListResponse) {
 				PostDealCityLocListResponse clResp = (PostDealCityLocListResponse) response
 						.getPayload();
-				if (clResp.getCityOrLocalityList().size() < 1) {
+				if (clResp.getCityOrLocalityList() != null) {
+					if (clResp.getCityOrLocalityList().size() < 1) {
+						message.obj = mActivity.getResources().getString(
+								R.string.no_result_found);
+					} else {
+						message.arg1 = 0;
+						message.obj = clResp;
+					}
+				} else {
 					message.obj = mActivity.getResources().getString(
 							R.string.no_result_found);
-				} else {
-					message.arg1 = 0;
-					message.obj = clResp;
 				}
 			} else {
 				message.obj = mActivity.getResources().getString(

@@ -10,6 +10,7 @@ import org.apache.http.entity.ByteArrayEntity;
 import android.content.Context;
 
 import com.kelltontech.framework.controller.BaseServiceController;
+import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.model.MyError;
 import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.network.HttpClientConnection;
@@ -19,6 +20,7 @@ import com.kelltontech.framework.utils.NativeHelper;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.model.uploadImage.RequestUploadPhoto;
 import com.kelltontech.maxisgetit.model.uploadImage.ResponseUploadPhoto;
+import com.kelltontech.maxisgetit.requests.MaxisBaseRequest;
 
 
 public class ContestUploadImageController extends BaseServiceController {
@@ -57,7 +59,7 @@ public class ContestUploadImageController extends BaseServiceController {
 			
 			serviceRq.setRequestTimeOut(AppConstants.MILLIS_3_MINUTE);
 			
-			String url = AppConstants.BASE_URL_CONTEST + "saveImage?" + AppConstants.URL_ENCODED_PARAMS;
+			String url = AppConstants.BASE_URL_CONTEST + "saveImage?" + AppConstants.URL_ENCODED_PARAMS+"&"+MaxisBaseRequest.DEVICE_ID+"="+MyApplication.getDeviceId();
 			serviceRq.setUrl(url);
 			
 			RequestUploadPhoto requestUpload = (RequestUploadPhoto) requestData;  

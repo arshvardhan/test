@@ -65,7 +65,9 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 	private ArrayList<String> cityListString = new ArrayList<String>();
 	private ArrayList<String> localityItems;
 	ArrayList<CityOrLocality> cityList;
+	private String selectedCityForHeaders = "Entire Malaysia";
 	private String selectedCity = "Entire Malaysia";
+	ArrayList<String> localitiesForHeaders;
 	ArrayList<String> localities;
 	private int city_id = -1;
 
@@ -101,13 +103,15 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 		mClRequest = bundle.getParcelable(AppConstants.DATA_LIST_REQUEST);
 		currentLocality = (TextView) findViewById(R.id.currentLocality);
 
+		selectedCityForHeaders = getIntent().getStringExtra("SELECTED_CITY_FOR_HEADERS");
 		selectedCity = getIntent().getStringExtra("SELECTED_CITY");
+		localitiesForHeaders = getIntent().getStringArrayListExtra("SELECTED_LOCALITY_FOR_HEADERS");
 		localities = getIntent().getStringArrayListExtra("SELECTED_LOCALITY");
 		
-		if(localities!=null && localities.size()>0)
+		if(localitiesForHeaders!=null && localitiesForHeaders.size()>0)
 		{
 		currentLocality.setText(Html.fromHtml("Your Selected Area "
-				+ "<b>" + localities.get(0) + "</b>"));
+				+ "<b>" + localitiesForHeaders.get(0) + "</b>"));
 		}
 		mClRequest.setPageNumber(1);
 		if (mClRequest.isBySearch())
@@ -123,10 +127,14 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 		upArrow.setOnClickListener(this);
 
 		currentCity = (TextView) findViewById(R.id.currentCity);
-		
+		if(selectedCityForHeaders!=null)
+		{
 		currentCity.setText(Html
-				.fromHtml("in " + "<b>" + selectedCity + "</b>"));
-
+				.fromHtml("in " + "<b>" + selectedCityForHeaders + "</b>"));
+		}else{
+			currentCity.setText(Html
+					.fromHtml("in " + "<b>" + "Entire Malaysia" + "</b>"));
+		}
 		currentCity.setOnClickListener(this);
 		currentLocality.setOnClickListener(this);
 
@@ -256,7 +264,7 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 				selectedLocalityindex = null;
 				currentLocality.setText("Choose your Area");
 				intent.putExtra("CITY_LIST", cityListString);
-				intent.putExtra("SELECTED_CITY", selectedCity);
+				intent.putExtra("SELECTED_CITY", selectedCityForHeaders);
 				startActivityForResult(intent, AppConstants.CITY_REQUEST);
 			}
 			stopSppiner();
@@ -315,9 +323,9 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 		// jsonObject.put("category_id", clRequest.getKeywordOrCategoryId());
 
 		if (!StringUtil.isNullOrEmpty(selectedCity)
-				&& !selectedCity.equalsIgnoreCase("Entire Malasyia")) {
+				&& !selectedCity.equalsIgnoreCase("Entire Malaysia")) {
 			jsonObject.put("city_name", selectedCity);
-			if (localities != null && localities.size() > 0) {
+			if (localitiesForHeaders != null && localities.size() > 0) {
 				if (!StringUtil.isNullOrEmpty(localities.get(0))) {
 					jsonSelector.put("locality_name", localities.get(0));
 				}
@@ -345,11 +353,7 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(RefineSearchCategoryActivity.this,
-					HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			showHomeScreen();
 			break;
 		case R.id.show_profile_icon:
 			onProfileClick();
@@ -404,7 +408,7 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 						RefineSearchCategoryActivity.this,
 						AdvanceSelectCity.class);
 				cityIntent.putExtra("CITY_LIST", cityListString);
-				cityIntent.putExtra("SELECTED_CITY", selectedCity);
+				cityIntent.putExtra("SELECTED_CITY", selectedCityForHeaders);
 				startActivityForResult(cityIntent, AppConstants.CITY_REQUEST);
 			} else {
 				setSearchCity();
@@ -433,15 +437,15 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 		super.onActivityResult(reqCode, resultCode, data);
 		// TODO Auto-generated method stub
 		if (resultCode == RESULT_OK && reqCode == AppConstants.CITY_REQUEST) {
-			if (!selectedCity
+			if (!selectedCityForHeaders
 					.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
 				localityItems = null;
 				ids = null;
 				selectedLocalityindex = null;
 				currentLocality.setText("Choose your Area");
 			}
-			selectedCity = data.getStringExtra("CITY_NAME");
-			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
+			selectedCityForHeaders = data.getStringExtra("CITY_NAME");
+			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCityForHeaders
 					+ "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
 			if (index == -1) {
@@ -500,7 +504,7 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 			if (city_id != -1) {
 				JSONObject array = new JSONObject();
 				array.put("city_id", city_id + "");
-				array.put("city_name", selectedCity);
+				array.put("city_name", selectedCityForHeaders);
 
 				jArray.put("city", array);
 

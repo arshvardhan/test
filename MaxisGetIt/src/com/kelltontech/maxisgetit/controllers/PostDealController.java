@@ -53,7 +53,7 @@ public class PostDealController extends BaseServiceController {
 			
 			serviceRq.setRequestTimeOut(AppConstants.MILLIS_3_MINUTE);
 			
-			String url = AppConstants.BASE_URL + GenralRequest.POST_DEAL_METHOD + new GenralRequest(mActivity).getDefaultParameterString();
+			String url = AppConstants.BASE_URL + GenralRequest.POST_DEAL_METHOD + new GenralRequest(mActivity).getDefaultParameterString(AppConstants.MyDeals);
 			Log.d("maxis", "url " + url);
 			serviceRq.setUrl(url);
 			

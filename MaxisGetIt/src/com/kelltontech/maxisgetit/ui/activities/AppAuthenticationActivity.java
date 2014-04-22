@@ -11,10 +11,12 @@ import android.widget.TextView;
 
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.framework.model.MaxisResponse;
+import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.framework.utils.UiUtils;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.controllers.AppAuthenticationController;
+import com.kelltontech.maxisgetit.dao.MaxisStore;
 import com.kelltontech.maxisgetit.utils.Utility;
 
 public class AppAuthenticationActivity extends MaxisMainActivity {
@@ -22,11 +24,13 @@ public class AppAuthenticationActivity extends MaxisMainActivity {
 	private EditText mEdMobile;
 	private TextView mConfirmBtn;
 	private String mMobile;
+	private MaxisStore mStore;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_app_authentication);
+		mStore = MaxisStore.getStore(AppAuthenticationActivity.this);
 		UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.reg_root_layout), this);
 		mHomeIconView = (ImageView) findViewById(R.id.goto_home_icon);
 		mHomeIconView.setOnClickListener(this);
@@ -56,8 +60,13 @@ public class AppAuthenticationActivity extends MaxisMainActivity {
 
 	private void validateAndSubmit() {
 		mMobile = mEdMobile.getText().toString().trim();
-		if (mMobile.length() <= 7 || mMobile.length() >= 12 || mMobile.startsWith("0")) {
-			showInfoDialog(getString(R.string.invalid_mobile));
+		if(StringUtil.isNullOrEmpty(mMobile))
+		{
+			showInfoDialog(getString(R.string.number_empty));
+			return;
+		}
+		else if (mMobile.length() <= 7 || mMobile.length() >= 12 || !mMobile.startsWith("1")) {
+			showInfoDialog(getString(R.string.mobile_number_validation));
 			return;
 		}
 		mMobile = Utility.getMobileNoForWS(this, mMobile);
@@ -71,6 +80,7 @@ public class AppAuthenticationActivity extends MaxisMainActivity {
 		}*/
 		AppAuthenticationController appAuthController = new AppAuthenticationController(AppAuthenticationActivity.this, Events.APP_AUTHENTICATION);
 		startSppiner();
+		mStore.setAuthMobileNumber(mMobile);
 		appAuthController.requestService(mMobile);
 	}
 

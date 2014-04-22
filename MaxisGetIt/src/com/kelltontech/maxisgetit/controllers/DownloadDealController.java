@@ -25,6 +25,8 @@ import com.kelltontech.maxisgetit.response.UserDetailResponse;
 
 public class DownloadDealController extends BaseServiceController {
 	private Context mActivity;
+	public boolean fromDeal;
+	String screenName;
 
 	public DownloadDealController(IActionController screen, int eventType) {
 		super(screen, eventType);
@@ -63,10 +65,17 @@ public class DownloadDealController extends BaseServiceController {
 
 			DownloadDealReq downloadDealReq = (DownloadDealReq) requestData;
 			GenralRequest genralRequest = new GenralRequest(mActivity);
+			if(fromDeal)
+			{
+				screenName = AppConstants.Deal_Listing;
+			}else
+			{
+				screenName = AppConstants.Deal_Detail;
+			}
 			Hashtable<String, String> urlParams = genralRequest
 					.getDownloadDealHeaders(downloadDealReq.getName(),
 							downloadDealReq.getPhoneNo(),
-							downloadDealReq.getDeal_id());
+							downloadDealReq.getDeal_id(),screenName);
 			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, urlParams));
 
 			HttpClientConnection.getInstance().addRequest(serviceRq);

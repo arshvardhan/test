@@ -31,6 +31,9 @@ public class CompanyDesc implements Parcelable {
 	private String valid_in;
 	private String video_url;
 	
+	
+
+
 	public String getVideo_url() {
 		return video_url;
 	}
@@ -115,6 +118,7 @@ public class CompanyDesc implements Parcelable {
 		valid_in = in.readString();
 		in.readTypedList(attrGroups, AttributeGroup.CREATOR);
 		video_url = in.readString();
+		
 	}
 
 	public static final Creator<CompanyDesc> CREATOR = new Creator<CompanyDesc>() {
@@ -237,6 +241,7 @@ public class CompanyDesc implements Parcelable {
 		dest.writeString(valid_in);
 		dest.writeTypedList(attrGroups);
 		dest.writeString(video_url);
+		
 	}
 
 	public String getCity() {

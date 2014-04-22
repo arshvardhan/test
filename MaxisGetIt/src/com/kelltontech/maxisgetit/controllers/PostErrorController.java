@@ -51,7 +51,7 @@ public class PostErrorController extends BaseServiceController {
 			serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
 			
 			GenralRequest genralRequest = new GenralRequest(mActivity);
-			String url = AppConstants.BASE_URL + GenralRequest.SAVE_ERROR_REPORT + genralRequest.getDefaultParameterString();
+			String url = AppConstants.BASE_URL + GenralRequest.SAVE_ERROR_REPORT + genralRequest.getDefaultParameterString(AppConstants.Company_detail);
 			Log.d("maxis", "url " + url);
 			serviceRq.setUrl(url);
 			
@@ -65,6 +65,8 @@ public class PostErrorController extends BaseServiceController {
 			jsonObject.put(GenralRequest.KEY_NAME, postErrorRequest.getName());
 			jsonObject.put(GenralRequest.KEY_MOBILE, postErrorRequest.getMobile());
 			serviceRq.setPostData(new ByteArrayEntity(jsonObject.toString().getBytes()));
+			
+			Log.d("maxis", "json" + jsonObject );
 			
 			HttpClientConnection.getInstance().addRequest(serviceRq);
 		} catch (Exception e) {

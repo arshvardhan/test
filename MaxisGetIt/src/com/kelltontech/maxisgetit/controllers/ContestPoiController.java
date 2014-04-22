@@ -7,6 +7,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.kelltontech.framework.controller.BaseServiceController;
+import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.model.MyError;
 import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.network.HttpClientConnection;
@@ -18,6 +19,7 @@ import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.model.listModel.ResponseList;
 import com.kelltontech.maxisgetit.model.poiModel.RequestPoiSearch;
 import com.kelltontech.maxisgetit.model.poiModel.ResponsePoi;
+import com.kelltontech.maxisgetit.requests.MaxisBaseRequest;
 
 
 public class ContestPoiController extends BaseServiceController{
@@ -55,9 +57,9 @@ public class ContestPoiController extends BaseServiceController{
 			int pageNumber=requestPoiSearch.getPageNumber();
 			String url =null;
 			if (requestPoiSearch.getSearchText()==null||requestPoiSearch.getSearchText().length()==0) {
-				url = AppConstants.BASE_URL_CONTEST + "getPOICount?" + AppConstants.URL_ENCODED_PARAMS + "&latitude="+requestPoiSearch.getLatitude()+"&longitude="+requestPoiSearch.getLongitude();	
+				url = AppConstants.BASE_URL_CONTEST + "getPOICount?" + AppConstants.URL_ENCODED_PARAMS + "&latitude="+requestPoiSearch.getLatitude()+"&longitude="+requestPoiSearch.getLongitude()+"&"+MaxisBaseRequest.DEVICE_ID+"="+MyApplication.getDeviceId();	
 			} else {
-				url = AppConstants.BASE_URL_CONTEST + "search?" + AppConstants.URL_ENCODED_PARAMS + "&latitude="+requestPoiSearch.getLatitude()+"&longitude="+requestPoiSearch.getLongitude()+"&keyword="+Uri.encode(requestPoiSearch.getSearchText())+"&per_page_record="+recordPerPage+"&page_number="+pageNumber;;	
+				url = AppConstants.BASE_URL_CONTEST + "search?" + AppConstants.URL_ENCODED_PARAMS + "&latitude="+requestPoiSearch.getLatitude()+"&longitude="+requestPoiSearch.getLongitude()+"&keyword="+Uri.encode(requestPoiSearch.getSearchText())+"&per_page_record="+recordPerPage+"&page_number="+pageNumber+"&"+MaxisBaseRequest.DEVICE_ID+"="+MyApplication.getDeviceId();	
 			}
 
 			ServiceRequest serviceRq = new ServiceRequest();

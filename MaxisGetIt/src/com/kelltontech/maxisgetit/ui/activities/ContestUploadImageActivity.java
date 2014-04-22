@@ -38,6 +38,7 @@ import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
 import com.kelltontech.maxisgetit.controllers.ContestUploadImageController;
+import com.kelltontech.maxisgetit.dao.MaxisStore;
 import com.kelltontech.maxisgetit.model.uploadImage.RequestUploadPhoto;
 import com.kelltontech.maxisgetit.model.uploadImage.ResponseUploadPhoto;
 import com.kelltontech.maxisgetit.service.AppSharedPreference;
@@ -62,8 +63,9 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 	private EditText mTitleEditTxt, mNameEditTxt, mNumberEditTxt;
 	private final int UPLOAD_IMAGE = 5;
 	private Bitmap newBitmap;
+	private MaxisStore store;
 
-	//private ImageView mLogo;
+	// private ImageView mLogo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,22 +79,23 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 		findViewById(R.id.goto_home_icon).setOnClickListener(this);
 		findViewById(R.id.search_toggler).setVisibility(View.INVISIBLE);
 		findViewById(R.id.show_profile_icon).setOnClickListener(this);
+		store = MaxisStore.getStore(this);
 
-		/*findViewById(R.id.footer_facebook_icon).setOnClickListener(this);
-		findViewById(R.id.footer_twitterIcon).setOnClickListener(this);
-		mLogo = (ImageView) findViewById(R.id.logo);
-		mLogo.setOnClickListener(ContestUploadImageActivity.this);
-
-		mLogo.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				startActivity(new Intent(ContestUploadImageActivity.this,
-						GetItInfoActivity.class));
-
-			}
-		});*/
+		/*
+		 * findViewById(R.id.footer_facebook_icon).setOnClickListener(this);
+		 * findViewById(R.id.footer_twitterIcon).setOnClickListener(this); mLogo
+		 * = (ImageView) findViewById(R.id.logo);
+		 * mLogo.setOnClickListener(ContestUploadImageActivity.this);
+		 * 
+		 * mLogo.setOnClickListener(new OnClickListener() {
+		 * 
+		 * @Override public void onClick(View v) {
+		 * 
+		 * startActivity(new Intent(ContestUploadImageActivity.this,
+		 * GetItInfoActivity.class));
+		 * 
+		 * } });
+		 */
 
 		// UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.rootLayout),
 		// this);
@@ -107,16 +110,23 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 		mNumberEditTxt = ((EditText) findViewById(R.id.phone));
 		String number = AppSharedPreference.getString(
 				AppSharedPreference.MOBILE_NUMBER, "", getApplicationContext());
-		if (number.length() > 0)
-			mNumberEditTxt.setText(number);
-		else {
-			TelephonyManager mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-			String yourNumber = mTelephonyMgr.getLine1Number();
 
-			if (yourNumber != null && yourNumber.length() > 0) {
-				mNumberEditTxt.setText(yourNumber);
-			}
+		if (store.isLoogedInUser()) {
+			mNumberEditTxt.setText(store.getUserMobileNumberToDispaly());
+		} else {
+			mNumberEditTxt.setText(store.getAuthMobileNumber().substring(2));
 		}
+		// if (number.length() > 0)
+		// mNumberEditTxt.setText(number);
+		// else {
+		// TelephonyManager mTelephonyMgr = (TelephonyManager)
+		// getSystemService(Context.TELEPHONY_SERVICE);
+		// String yourNumber = mTelephonyMgr.getLine1Number();
+		//
+		// if (yourNumber != null && yourNumber.length() > 0) {
+		// mNumberEditTxt.setText(yourNumber);
+		// }
+		// }
 		mNameEditTxt = ((EditText) findViewById(R.id.name));
 		mNameEditTxt.setText(AppSharedPreference.getString(
 				AppSharedPreference.USER_NAME, "", getApplicationContext()));
@@ -145,31 +155,36 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 				finish();
 				return;
 			}
-			mBitmap = (Bitmap) dataObj; 
+			mBitmap = (Bitmap) dataObj;
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 
-			if(mBitmap.getDensity() > 400)
-			{
-//				
-//		     mBitmap.
-
+			// if(mBitmap.getDensity() > 400)
+			// {
+			// //
+			// mBitmap.
+			try {
 				Uri uri = data.getData();
 				String imagePath = getRealPathFromURI(uri);
-				mBitmap = BitmapCalculation.decodeSampledBitmapFromPath(imagePath,
-						650, 650);
+				mBitmap = BitmapCalculation.decodeSampledBitmapFromPath(
+						imagePath, 650, 650);
 
 				// TODO:: SET ORIENTATION
 				newBitmap = null;
 				if (mBitmap != null) {
-			
-			mBitmap = decodeSampledBitmapFromFile(imagePath,650,650);
-			newBitmap = setOrientation(mBitmap, imagePath);
-			mBitmap = newBitmap;
+
+					mBitmap = decodeSampledBitmapFromFile(imagePath, 650, 650);
+
+					newBitmap = setOrientation(mBitmap, imagePath);
+					mBitmap = newBitmap;
 				}
 
-			System.out.println(mBitmap.getDensity());
-			System.out.println(mBitmap.getHeight());
-			System.out.println(mBitmap.getWidth());
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+			// System.out.println(mBitmap.getDensity());
+			// System.out.println(mBitmap.getHeight());
+			// System.out.println(mBitmap.getWidth());
 			mBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 75,
 					os);
 			String directoryPath = Environment.getExternalStorageDirectory()
@@ -187,15 +202,14 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 			}
 			mImagePath = directoryPath + "/" + imageFileName;
 			manupulateExif();
-		} else {
-			Toast.makeText(getApplicationContext(),
-					getString(R.string.toast_some_error_try_again),
-					Toast.LENGTH_LONG).show();
-			finish();
-		}
+			// } else {
+			// Toast.makeText(getApplicationContext(),
+			// getString(R.string.toast_some_error_try_again),
+			// Toast.LENGTH_LONG).show();
+			// finish();
+			// }
 		}
 	}
-	
 
 	@Override
 	public void onClick(View v) {
@@ -214,18 +228,18 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 			onProfileClick();
 			break;
 		}
-		/*case R.id.footer_facebook_icon: {
-			AnalyticsHelper.logEvent(FlurryEventsConstants.FACEBOOK_CLICK);
-			checkPreferenceAndOpenBrowser(AppConstants.FB_PAGE_URL);
-			break;
-		}
-		case R.id.footer_twitterIcon: {
-			AnalyticsHelper.logEvent(FlurryEventsConstants.TWITTER_CLICK);
-			checkPreferenceAndOpenBrowser(AppConstants.TWITTER_PAGE_URL);
-			break;
-		}*/
+		/*
+		 * case R.id.footer_facebook_icon: {
+		 * AnalyticsHelper.logEvent(FlurryEventsConstants.FACEBOOK_CLICK);
+		 * checkPreferenceAndOpenBrowser(AppConstants.FB_PAGE_URL); break; }
+		 * case R.id.footer_twitterIcon: {
+		 * AnalyticsHelper.logEvent(FlurryEventsConstants.TWITTER_CLICK);
+		 * checkPreferenceAndOpenBrowser(AppConstants.TWITTER_PAGE_URL); break;
+		 * }
+		 */
 		case R.id.upload_btn: {
 			AnalyticsHelper.logEvent(FlurryEventsConstants.UPLOAD_IMAGE);
+			// TODO
 			if (mLattitudeN == 0 && mLattitude == 0) {
 				Toast.makeText(getApplicationContext(),
 						"Location not available.", Toast.LENGTH_LONG).show();
@@ -250,17 +264,22 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 			String phone = mNumberEditTxt.getText().toString();
 			if (phone == null || phone.trim().length() == 0) {
 				Toast.makeText(getApplicationContext(),
-						"Please enter phone number.", Toast.LENGTH_LONG).show();
-				return;
-			} else if (phone.trim().startsWith("0")) {
-				Toast.makeText(getApplicationContext(),
-						"Please enter a valid phone number.", Toast.LENGTH_LONG)
+						getString(R.string.number_empty), Toast.LENGTH_LONG)
 						.show();
 				return;
-			} else if (phone.trim().length() <= 7 || phone.trim().length() >= 12) {
-				Toast.makeText(getApplicationContext(),
-						"Contact number should be 8-11 digits.", Toast.LENGTH_LONG)
-						.show();
+				// Need TO Be Change Message.
+			} else if (!phone.trim().startsWith("1")) {
+				Toast.makeText(
+						getApplicationContext(),
+						getString(R.string.mobile_number_validation_contestapp),
+						Toast.LENGTH_LONG).show();
+				return;
+			} else if (phone.trim().length() <= 7
+					|| phone.trim().length() >= 12) {
+				Toast.makeText(
+						getApplicationContext(),
+						getString(R.string.mobile_number_validation_contestapp),
+						Toast.LENGTH_LONG).show();
 				return;
 			}
 
@@ -295,7 +314,9 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 					String phone = mNumberEditTxt.getText().toString().trim();
 					mRequestUploadPhoto.setTitle(title);
 					mRequestUploadPhoto.setName(name);
-					mRequestUploadPhoto.setNumber(phone);
+					mRequestUploadPhoto.setNumber("60" + phone);
+					// IF NEED TO CHANGE
+					// mRequestUploadPhoto.setNumber(phone);
 					/*
 					 * requestUploadPhoto.setLatitude(mLatitude==0?mLatitudeN:
 					 * mLatitude);
@@ -678,80 +699,92 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 	public Activity getMyActivityReference() {
 		return this;
 	}
-	
-	public static Bitmap decodeSampledBitmapFromFile(String filename, int reqWidth, int reqHeight) {
 
-		  // First decode with inJustDecodeBounds=true to check dimensions
-		  final BitmapFactory.Options options = new BitmapFactory.Options();
-		  options.inJustDecodeBounds = true;
-		  BitmapFactory.decodeFile(filename, options);
+	public static Bitmap decodeSampledBitmapFromFile(String filename,
+			int reqWidth, int reqHeight) {
 
-		  // Calculate inSampleSize
-		  options.inSampleSize = calculateInSampleSize(options, 650);
+		// First decode with inJustDecodeBounds=true to check dimensions
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(filename, options);
 
-		  // If we're running on Honeycomb or newer, try to use inBitmap
-//		  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//		   addInBitmapOptions(options);
-//		  }
+		// Calculate inSampleSize
+		options.inSampleSize = calculateInSampleSize(options, 650);
 
-		  // Decode bitmap with inSampleSize set
-		  options.inJustDecodeBounds = false;
-		  return BitmapFactory.decodeFile(filename, options);
-		 }
-		 public static int calculateInSampleSize(BitmapFactory.Options options, int maxImageSize) {
-		  // Raw height and width of image
-		  final int height = options.outHeight;
-		  final int width = options.outWidth;
-		  int inSampleSize = 1;
+		// If we're running on Honeycomb or newer, try to use inBitmap
+		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		// addInBitmapOptions(options);
+		// }
 
-		  inSampleSize = (int) Math.pow(2.0,
-		    (int) Math.round(Math.log(maxImageSize / (double) Math.max(height, width)) / Math.log(0.5)));
-
-		  return inSampleSize;
-		 }
-
-public Uri getImageUri(Context inContext, Bitmap inImage) {
-    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-    inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-    String path = Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-    return Uri.parse(path);
-}
-
-public String getRealPathFromURI(Uri uri) {
-    Cursor cursor = getContentResolver().query(uri, null, null, null, null); 
-    cursor.moveToFirst(); 
-    int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA); 
-    return cursor.getString(idx); 
-}
-
-public Bitmap setOrientation(Bitmap sourceBitmap, String photo) {
-	ExifInterface exif = null;
-	try {
-		exif = new ExifInterface(photo);
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-			ExifInterface.ORIENTATION_NORMAL);
-	Log.e("Exif Orientation", "oreination" + orientation);
-	Matrix matrix = new Matrix();
-	switch (orientation) {
-	case ExifInterface.ORIENTATION_ROTATE_90:
-		matrix.postRotate(90);
-		break;
-	case ExifInterface.ORIENTATION_ROTATE_180:
-		matrix.postRotate(180);
-		break;
-	case ExifInterface.ORIENTATION_ROTATE_270:
-		matrix.postRotate(270);
-		break;
+		// Decode bitmap with inSampleSize set
+		options.inJustDecodeBounds = false;
+		return BitmapFactory.decodeFile(filename, options);
 	}
 
-	Bitmap originalImage = Bitmap
-			.createBitmap(sourceBitmap, 0, 0, sourceBitmap.getWidth(),
-					sourceBitmap.getHeight(), matrix, true);
+	public static int calculateInSampleSize(BitmapFactory.Options options,
+			int maxImageSize) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
 
-	return originalImage;
- }
+		inSampleSize = (int) Math.pow(
+				2.0,
+				(int) Math.round(Math.log(maxImageSize
+						/ (double) Math.max(height, width))
+						/ Math.log(0.5)));
+
+		return inSampleSize;
+	}
+
+	public Uri getImageUri(Context inContext, Bitmap inImage) {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+		String path = Images.Media.insertImage(inContext.getContentResolver(),
+				inImage, "Title", null);
+		return Uri.parse(path);
+	}
+
+	public String getRealPathFromURI(Uri uri) {
+		Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+		} else {
+			Toast.makeText(getApplicationContext(), "manish",
+					Toast.LENGTH_SHORT).show();
+		}
+		int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+		return cursor.getString(idx);
+	}
+
+	public Bitmap setOrientation(Bitmap sourceBitmap, String photo) {
+		ExifInterface exif = null;
+		try {
+			exif = new ExifInterface(photo);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+				ExifInterface.ORIENTATION_NORMAL);
+		Log.e("Exif Orientation", "oreination" + orientation);
+		Matrix matrix = new Matrix();
+		switch (orientation) {
+		case ExifInterface.ORIENTATION_ROTATE_90:
+			matrix.postRotate(90);
+			break;
+		case ExifInterface.ORIENTATION_ROTATE_180:
+			matrix.postRotate(180);
+			break;
+		case ExifInterface.ORIENTATION_ROTATE_270:
+			matrix.postRotate(270);
+			break;
+		}
+
+		Bitmap originalImage = Bitmap
+				.createBitmap(sourceBitmap, 0, 0, sourceBitmap.getWidth(),
+						sourceBitmap.getHeight(), matrix, true);
+
+		return originalImage;
+	}
 }

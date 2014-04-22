@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kelltontech.framework.db.MyApplication;
+import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
@@ -146,11 +147,8 @@ public class ForgetPasswordActivity extends MaxisMainActivity {
 			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
 			break;
 		case R.id.goto_home_icon:
-			Intent intentHome = new Intent(ForgetPasswordActivity.this,
-					HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
+			showHomeScreen();
 			break;
 		case R.id.show_profile_icon:
 			onProfileClick();
@@ -175,8 +173,13 @@ public class ForgetPasswordActivity extends MaxisMainActivity {
 			String mobile = mEdPhone.getText().toString();
 			// if (mobile.length() < 10 || mobile.indexOf('+',1)!=-1 ||
 			// (mobile.indexOf('+')!=-1 && mobile.length()<=10)) {
-			if (mobile.length() <= 7 || mobile.length() >= 12 ||  mobile.startsWith("0")) {
-				showAlertDialog(getString(R.string.invalid_mobile));
+			if(StringUtil.isNullOrEmpty(mobile))
+			{
+				showAlertDialog(getString(R.string.number_empty));
+				return;
+			}
+			else if (mobile.length() <= 7 || mobile.length() >= 12 || !mobile.startsWith("1")) {
+				showAlertDialog(getString(R.string.mobile_number_validation));
 				return;
 			}
 			resetPassword(Utility.getMobileNoForWS(this, mobile));

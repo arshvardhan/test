@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.framework.controller.BaseServiceController;
+import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.network.HttpClientConnection;
 import com.kelltontech.framework.network.ServiceRequest;
@@ -15,6 +16,7 @@ import com.kelltontech.framework.utils.NativeHelper;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.requests.GenralRequest;
+import com.kelltontech.maxisgetit.requests.MaxisBaseRequest;
 import com.kelltontech.maxisgetit.service.AppSharedPreference;
 
 public class SessionTokenController extends BaseServiceController {
@@ -55,7 +57,7 @@ public class SessionTokenController extends BaseServiceController {
 			serviceRq.setPriority(HttpClientConnection.PRIORITY.LOW);
 
 			//String url = "http://192.168.12.224/trunk/restapi/testToken.xml?plateform=IOS&language_code=en";
-			String url = AppConstants.BASE_URL + GenralRequest.SESSION_TOKEN_METHOD + "?" + AppConstants.URL_ENCODED_PARAMS;
+			String url = AppConstants.BASE_URL + GenralRequest.SESSION_TOKEN_METHOD + "?" + AppConstants.URL_ENCODED_PARAMS+"&"+MaxisBaseRequest.DEVICE_ID+"="+MyApplication.getDeviceId();
 			Log.d("maxis", "url " + url);
 			serviceRq.setUrl(url);
 			

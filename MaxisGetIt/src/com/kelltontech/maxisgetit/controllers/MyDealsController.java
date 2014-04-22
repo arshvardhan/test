@@ -65,7 +65,7 @@ public class MyDealsController extends BaseServiceController {
 			Log.d("maxis", "url " + url);
 
 			GenralRequest genralRequest = new GenralRequest(mActivity);
-			Hashtable<String, String> urlParams = genralRequest.getHeadersWithUID(userId);
+			Hashtable<String, String> urlParams = genralRequest.getHeadersWithUID(userId,AppConstants.MyDeals);
 			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, urlParams));
 
 			HttpClientConnection.getInstance().addRequest(serviceRq);

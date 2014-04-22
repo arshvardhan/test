@@ -80,9 +80,10 @@ public class ContestUploadMoreActivity extends MaxisMainActivity {
 		}
 		case R.id.upload_btn: {
 			AnalyticsHelper.logEvent(FlurryEventsConstants.CAPTURE_ANOTHER_IMAGE);
-			Intent intent = new Intent(ContestUploadMoreActivity.this, ContestHomeActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
+//			Intent intent = new Intent(ContestUploadMoreActivity.this, ContestHomeActivity.class);
+//			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//			startActivity(intent);
+			finish();
 			break;
 		}
 		/*case R.id.footer_facebook_icon: {

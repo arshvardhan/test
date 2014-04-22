@@ -6,6 +6,7 @@ import org.apache.http.Header;
  * Storage class to pass data from {@link HttpClientConnection} to children of {@link BaseDataHandler}
  */
 public class ServiceResponse {
+	
 	/**
 	 * Constant that is set in {@link ServiceRequest#setDataType(int)}
 	 */

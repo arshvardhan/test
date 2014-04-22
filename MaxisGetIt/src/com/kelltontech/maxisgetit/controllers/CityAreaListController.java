@@ -49,6 +49,7 @@ public class CityAreaListController extends BaseServiceController {
 			serviceRq.setDataType(mEventType);
 			serviceRq.setPriority(HttpClientConnection.PRIORITY.LOW);	
 			serviceRq.setHttpHeaders( API_HEADER_NAMES_ARRAY_2, getApiHeaderValuesArray2());
+			serviceRq.setRequestTimeOut(30000);
 			
 			String url = AppConstants.BASE_URL;
 			Hashtable<String, String> urlParams;
@@ -56,10 +57,11 @@ public class CityAreaListController extends BaseServiceController {
 
 			if (mEventType == Events.CITY_LISTING ) {
 				url += GenralRequest.CITY_LIST_METHOD;
-				urlParams = genralRequest.getDefaultHeaders();
+				urlParams = genralRequest.getDefaultHeaders(AppConstants.CityScreen);
 			} else {
 				url += GenralRequest.AREA_LIST_METHOD;
 				urlParams = genralRequest.getAreaHeaders((String)requestData);
+				
 			}
 
 			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, urlParams));

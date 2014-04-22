@@ -10,6 +10,7 @@
         layout="@layout/header_with_popdown_search" />
 
     <com.kelltontech.maxisgetit.ui.widgets.CustomScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/cl_deals_footer"
@@ -209,6 +210,13 @@
                 android:padding="10dp"
                 android:text="Use your Maybank Card to avail a discount of flat 20% on food and beverages at BBQ Plaza.\nThis offer cannot be clubbed with any otheroffer."
                 android:textColor="#808080" />
+
+            <View
+    			android:id="@+id/outlet_seprator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey" 
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:id="@+id/outlets_names"

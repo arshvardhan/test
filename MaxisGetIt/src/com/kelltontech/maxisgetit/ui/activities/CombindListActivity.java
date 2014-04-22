@@ -1,11 +1,13 @@
 package com.kelltontech.maxisgetit.ui.activities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,15 +16,19 @@ import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.kelltontech.framework.db.MyApplication;
@@ -106,15 +112,31 @@ public class CombindListActivity extends MaxisMainActivity {
 	private ArrayList<String> cityListString = new ArrayList<String>();
 	private ArrayList<String> localityItems;
 	ArrayList<CityOrLocality> cityList;
-	private String selectedCity = "Entire Malaysia";
+	private String selectedCityforHeader = "Entire Malaysia";
 	private int city_id = -1;
 
+	private ArrayList<String> selectedLocalityItemsforHeader = new ArrayList<String>();
+	
+	private String selectedCity = "Entire Malaysia";
 	private ArrayList<String> selectedLocalityItems = new ArrayList<String>();
 	ArrayList<CityOrLocality> localityList;
 	ArrayList<String> ids = new ArrayList<String>();
 	TextView mainSearchButton;
 	ArrayList<String> selectedLocalityindex;
 	LinearLayout wholeSearchBoxContainer;
+	private int mPreviousSelectedIndex;
+	private String mPreviousDistance;
+
+	@SuppressWarnings("unchecked")
+	ArrayList<String> filter = new ArrayList(Arrays.asList("1 km", "2 km",
+			"3 km", "4 km", "5 km", "10 km", "15 km", "20 km", "All"));
+	private ArrayAdapter<String> mDistanceFilterAdapter;
+	private Spinner mDistanceChooser;
+	private TextView nearMe;
+	boolean isFirstTime = false;
+	boolean isSuccessfull = false;
+	boolean isFromNearMe = false;
+	boolean isFromSearch = false;
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -145,18 +167,33 @@ public class CombindListActivity extends MaxisMainActivity {
 						.getCompanyArrayList();
 				mCompListAdapter.setData(compListData);
 				mCompListAdapter.notifyDataSetChanged();
+
+				if (MaxisMainActivity.isCitySelected) {
+
+					mDistanceChooser.setVisibility(View.GONE);
+					nearMe.setVisibility(View.VISIBLE);
+				} else {
+					nearMe.setVisibility(View.GONE);
+					mDistanceChooser.setVisibility(View.VISIBLE);
+					isSuccessfull = true;
+					String search_distance = mClResponse.getSearch_distance();
+					int index = setDistanceFilter(search_distance);
+					mDistanceChooser.setSelection(index);
+				}
+
 			}
 		} else if (resultCode == RESULT_OK
 				&& requestCode == AppConstants.CITY_REQUEST) {
-			if (!selectedCity
+			if (!selectedCityforHeader
 					.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
 				localityItems = null;
 				ids = null;
 				selectedLocalityindex = null;
 				currentLocality.setText("Choose your Area");
 			}
+			selectedCityforHeader = data.getStringExtra("CITY_NAME");
 			selectedCity = data.getStringExtra("CITY_NAME");
-			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
+			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCityforHeader
 					+ "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
 			if (index == -1) {
@@ -169,19 +206,20 @@ public class CombindListActivity extends MaxisMainActivity {
 				&& requestCode == AppConstants.LOCALITY_REQUEST) {
 			String locality = "";
 
-			selectedLocalityItems = data
+			selectedLocalityItemsforHeader = data
 					.getStringArrayListExtra("SELECTED_LOCALITIES");
+			selectedLocalityItems = selectedLocalityItemsforHeader;
 
 			selectedLocalityindex = data
 					.getStringArrayListExtra("SELECTED_LOCALITIES_INDEX");
-			if (selectedLocalityItems != null
-					&& selectedLocalityItems.size() > 0) {
-				for (int i = 0; i < selectedLocalityItems.size(); i++) {
+			if (selectedLocalityItemsforHeader != null
+					&& selectedLocalityItemsforHeader.size() > 0) {
+				for (int i = 0; i < selectedLocalityItemsforHeader.size(); i++) {
 
-					if (i == selectedLocalityItems.size() - 1) {
-						locality += selectedLocalityItems.get(i);
+					if (i == selectedLocalityItemsforHeader.size() - 1) {
+						locality += selectedLocalityItemsforHeader.get(i);
 					} else {
-						locality += selectedLocalityItems.get(i) + ",";
+						locality += selectedLocalityItemsforHeader.get(i) + ",";
 					}
 				}
 				currentLocality.setText(Html.fromHtml("Your Selected Area "
@@ -206,6 +244,7 @@ public class CombindListActivity extends MaxisMainActivity {
 
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -214,6 +253,7 @@ public class CombindListActivity extends MaxisMainActivity {
 				FlurryEventsConstants.APPLICATION_COMBINED_LIST, true);
 		UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.cl_root_layout),
 				this);
+
 		mHeaderTitle = (TextView) findViewById(R.id.header_title);
 		ImageLoader.initialize(CombindListActivity.this);
 		mProfileIconView = (ImageView) findViewById(R.id.show_profile_icon);
@@ -236,9 +276,10 @@ public class CombindListActivity extends MaxisMainActivity {
 		Bundle bundle = getIntent().getExtras();
 		mClRequest = bundle.getParcelable(AppConstants.DATA_LIST_REQUEST);
 		if (mClRequest != null
-				&& !StringUtil.isNullOrEmpty(mClRequest.getCategoryTitle()))
+				&& !StringUtil.isNullOrEmpty(mClRequest.getCategoryTitle())) {
 			mHeaderTitle.setText(Html.fromHtml(mClRequest.getCategoryTitle()));
-		mCategoryThumbUrl = mClRequest.getParentThumbUrl();
+			mCategoryThumbUrl = mClRequest.getParentThumbUrl();
+		}
 		mRefineSearchView = (TextView) findViewById(R.id.col_refine_search);
 		mRefineSearchView.setOnClickListener(this);
 
@@ -253,7 +294,7 @@ public class CombindListActivity extends MaxisMainActivity {
 		currentCity = (TextView) findViewById(R.id.currentCity);
 		currentLocality = (TextView) findViewById(R.id.currentLocality);
 		currentCity.setText(Html
-				.fromHtml("in " + "<b>" + selectedCity + "</b>"));
+				.fromHtml("in " + "<b>" + selectedCityforHeader + "</b>"));
 
 		currentCity.setOnClickListener(this);
 		currentLocality.setOnClickListener(this);
@@ -272,15 +313,16 @@ public class CombindListActivity extends MaxisMainActivity {
 				int cityId = jObject.getInt("city_id");
 				String city_name = jObject.getString("city_name");
 
+				selectedCityforHeader = city_name;
 				selectedCity = city_name;
 				city_id = cityId;
 
-				currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
+				currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCityforHeader
 						+ "</b>"));
 
 				JSONArray jArray = jsonObject.getJSONArray("locality");
 				ids.clear();
-				selectedLocalityItems.clear();
+				selectedLocalityItemsforHeader.clear();
 				for (int i = 0; i < jArray.length(); i++) {
 					try {
 						JSONObject object = jArray.getJSONObject(i);
@@ -289,20 +331,21 @@ public class CombindListActivity extends MaxisMainActivity {
 						String locality_name = object
 								.getString("locality_name");
 						ids.add(locality_id + "");
+						selectedLocalityItemsforHeader.add(locality_name);
 						selectedLocalityItems.add(locality_name);
 
 					} catch (JSONException e) {
 					}
 				}
 				String locality = "";
-				if (selectedLocalityItems != null
-						&& selectedLocalityItems.size() > 0) {
-					for (int i = 0; i < selectedLocalityItems.size(); i++) {
+				if (selectedLocalityItemsforHeader != null
+						&& selectedLocalityItemsforHeader.size() > 0) {
+					for (int i = 0; i < selectedLocalityItemsforHeader.size(); i++) {
 
-						if (i == selectedLocalityItems.size() - 1) {
-							locality += selectedLocalityItems.get(i);
+						if (i == selectedLocalityItemsforHeader.size() - 1) {
+							locality += selectedLocalityItemsforHeader.get(i);
 						} else {
-							locality += selectedLocalityItems.get(i) + ",";
+							locality += selectedLocalityItemsforHeader.get(i) + ",";
 						}
 					}
 					currentLocality.setText(Html.fromHtml("Your Selected Area "
@@ -447,8 +490,9 @@ public class CombindListActivity extends MaxisMainActivity {
 						if (mClResponse.getPageNumber() < AppConstants.MAX_RECORD_COUNT / 10) {
 							loadPageData(mClResponse.getPageNumber() + 1);
 						}
-					} else if (number == AppConstants.MAX_RECORD_COUNT 
-							&& !isModifySearchDialogOpen && mScrollUp) {
+					} else if (number >= AppConstants.MAX_RECORD_COUNT
+							&& !isModifySearchDialogOpen && mScrollUp
+							&& mClResponse.getTotalrecordFound() > 100) {
 						showConfirmationDialog(
 								CustomDialog.CONFIRMATION_DIALOG,
 								getResources().getString(
@@ -516,6 +560,78 @@ public class CombindListActivity extends MaxisMainActivity {
 		// mClResponse.getCompanyArrayList().add(desc);
 		// }
 
+		mDistanceChooser = (Spinner) findViewById(R.id.distance_filter_chooser);
+		nearMe = (TextView) findViewById(R.id.nearMe);
+		nearMe.setOnClickListener(this);
+
+		// TO Be CHANGE
+
+		if (MaxisMainActivity.isCitySelected
+				|| mClRequest.getLongitude() == 0.0
+				|| mClRequest.getLatitude() == 0.0) {
+
+			mDistanceChooser.setVisibility(View.GONE);
+			nearMe.setVisibility(View.VISIBLE);
+		} else {
+			nearMe.setVisibility(View.GONE);
+			mDistanceChooser.setVisibility(View.VISIBLE);
+		}
+
+		mDistanceFilterAdapter = new ArrayAdapter<String>(
+				CombindListActivity.this, R.layout.spinner_item, filter);
+		mDistanceChooser.setAdapter(mDistanceFilterAdapter);
+		String search_distance = mClResponse.getSearch_distance();
+		mDistanceChooser.setSelection(setDistanceFilter(search_distance));
+
+		mDistanceChooser
+				.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+					String distance = "";
+
+					@Override
+					public void onItemSelected(AdapterView<?> arg0, View arg1,
+							int pos, long arg3) {
+						// TODO Auto-generated method stub
+						if (filter.get(pos).equalsIgnoreCase("All")) {
+							distance = "1000000";
+
+						} else {
+							distance = filter.get(pos).replace(" km", "");
+						}
+
+						if (isFirstTime) {
+
+							if (mPreviousSelectedIndex != pos && !isFromNearMe) {
+								mClRequest.setSearch_distance(distance);
+								mClRequest.setPageNumber(1);
+								CombindListingController listingController = new CombindListingController(
+										CombindListActivity.this,
+										Events.COMBIND_LISTING_NEW_LISTING_PAGE);
+								startSppiner();
+								listingController.requestService(mClRequest);
+
+							} else {
+								// Do NOthing
+							}
+						} else {
+							isFirstTime = true;
+							mClRequest.setSearch_distance(distance);
+						}
+						// if (isSuccessfull) {
+						// mPreviousSelectedIndex = pos;
+						// mPreviousDistance = distance;
+						// isSuccessfull = false;
+						// }
+
+					}
+
+					@Override
+					public void onNothingSelected(AdapterView<?> arg0) {
+						// TODO Auto-generated method stub
+
+					}
+				});
+
 	}
 
 	/*
@@ -549,8 +665,7 @@ public class CombindListActivity extends MaxisMainActivity {
 	 */
 	@Override
 	public void setScreenData(Object screenData, int event, long time) {
-		if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE
-				|| event == Events.USER_DETAIL) {
+		if (event == Events.USER_DETAIL) {
 			super.setScreenData(screenData, event, time);
 			return;
 		} else if (event == Events.REFINE_ATTRIBUTES) {
@@ -561,11 +676,15 @@ public class CombindListActivity extends MaxisMainActivity {
 				|| event == Events.LOCALITY_LISTING) {
 			Message message = (Message) screenData;
 			handler.sendMessage(message);
-		}else if(event==Events.DEALCATEGORY_EVENT){
+		} else if (event == Events.DEALCATEGORY_EVENT) {
 			Message message = (Message) screenData;
 			handler.sendMessage(message);
+		}else if(event == Events.COMBIND_LISTING_NEW_LISTING_PAGE && isFromSearch)
+		{
+			super.setScreenData(screenData, event, time);
+			return;
 		}
-		
+
 		else {
 			Response response = (Response) screenData;
 			Message message = new Message();
@@ -574,7 +693,8 @@ public class CombindListActivity extends MaxisMainActivity {
 			if (response.isError()) {
 				message.obj = response.getErrorText();
 			} else {
-				if (event == Events.COMBIND_LISTING_PAGINATION) {
+				if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE
+						|| event == Events.COMBIND_LISTING_PAGINATION) {
 					if (response.getPayload() instanceof CompanyListResponse) {
 						CompanyListResponse compListResponse = (CompanyListResponse) response
 								.getPayload();
@@ -639,8 +759,7 @@ public class CombindListActivity extends MaxisMainActivity {
 
 	@Override
 	public void updateUI(Message msg) {
-		if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE
-				|| msg.arg2 == Events.USER_DETAIL) {
+		if (msg.arg2 == Events.USER_DETAIL) {
 			super.updateUI(msg);
 		} else if (msg.arg2 == Events.COMPANY_DETAIL) {
 			if (msg.arg1 == 1) {
@@ -685,8 +804,54 @@ public class CombindListActivity extends MaxisMainActivity {
 					desc.setCompId("-1");
 					mClResponse.getCompanyArrayList().add(desc);
 				}
+
 				mCompListAdapter.setData(mClResponse.getCompanyArrayList());
 				mCompListAdapter.notifyDataSetChanged();
+			}
+			stopSppiner();
+		} else if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE && !isFromSearch) {
+			isFromNearMe = false;
+			
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+				isSuccessfull = false;
+				mDistanceChooser.setSelection(mPreviousSelectedIndex);
+				mClRequest.setSearch_distance(mPreviousDistance);
+			} else {
+				isSuccessfull = true;
+				// CompanyListResponse oldResponse = new CompanyListResponse();
+				mClResponse = (CompanyListResponse) msg.obj;
+				String search_distance = mClResponse.getSearch_distance();
+				int index = setDistanceFilter(search_distance);
+				mDistanceChooser.setSelection(index);
+				mClRequest.setSearch_distance(search_distance);
+
+				if (MaxisMainActivity.isCitySelected) {
+					mDistanceChooser.setVisibility(View.GONE);
+					nearMe.setVisibility(View.VISIBLE);
+				} else {
+					nearMe.setVisibility(View.GONE);
+					mDistanceChooser.setVisibility(View.VISIBLE);
+				}
+				if (mClResponse.getPageNumber() == 10
+						|| mClResponse.getTotalrecordFound() == mClResponse
+								.getCompanyArrayList().size()) {
+				}
+				mRecordsFoundView
+						.setText(mClResponse.getTotalrecordFound()
+								+ " "
+								+ getResources().getString(
+										R.string.record_found));
+				
+				mCompListAdapter.setData(mClResponse.getCompanyArrayList());
+				mCompListAdapter.notifyDataSetChanged();
+				mCompanyList.setAdapter(mCompListAdapter);
+				System.out.println(mClResponse.getPageNumber());
+				if (mClRequest != null
+						&& !StringUtil.isNullOrEmpty(mClRequest.getCategoryTitle())) {
+					mHeaderTitle.setText(Html.fromHtml(mClRequest.getCategoryTitle()));
+					mCategoryThumbUrl = mClRequest.getParentThumbUrl();
+				}
 			}
 			stopSppiner();
 		} else if (msg.arg2 == Events.REFINE_ATTRIBUTES) {
@@ -750,7 +915,7 @@ public class CombindListActivity extends MaxisMainActivity {
 				selectedLocalityindex = null;
 				currentLocality.setText("Choose your Area");
 				intent.putExtra("CITY_LIST", cityListString);
-				intent.putExtra("SELECTED_CITY", selectedCity);
+				intent.putExtra("SELECTED_CITY", selectedCityforHeader);
 				startActivityForResult(intent, AppConstants.CITY_REQUEST);
 			}
 			stopSppiner();
@@ -770,11 +935,11 @@ public class CombindListActivity extends MaxisMainActivity {
 				intent.putExtra("LOCALITY_LIST", localityItems);
 				intent.putStringArrayListExtra("LOCALITY_INDEX",
 						selectedLocalityindex);
-				intent.putExtra("SELECTED_LOCALITIES", selectedLocalityItems);
+				intent.putExtra("SELECTED_LOCALITIES", selectedLocalityItemsforHeader);
 				startActivityForResult(intent, AppConstants.LOCALITY_REQUEST);
 
 			}
-		}else if (msg.arg2 == Events.DEALCATEGORY_EVENT) {
+		} else if (msg.arg2 == Events.DEALCATEGORY_EVENT) {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
@@ -788,6 +953,10 @@ public class CombindListActivity extends MaxisMainActivity {
 				startActivity(intent);
 			}
 			stopSppiner();
+		}else if(msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE && isFromSearch)
+		{
+			isFromSearch = false;
+			super.updateUI(msg);
 		}
 
 	}
@@ -826,6 +995,7 @@ public class CombindListActivity extends MaxisMainActivity {
 			AnalyticsHelper.logEvent(FlurryEventsConstants.BACK_CLICK);
 			AnalyticsHelper
 					.endTimedEvent(FlurryEventsConstants.APPLICATION_COMBINED_LIST);
+			MaxisMainActivity.isCitySelected = false;
 			this.finish();
 			break;
 		case R.id.col_refine_search:
@@ -838,14 +1008,14 @@ public class CombindListActivity extends MaxisMainActivity {
 		// getResources().getString(R.string.modify_to_filter));
 		// break;
 		case R.id.col_deal_btn:
-			
+
 			CategoryGroup cat = new CategoryGroup();
 			cat.setmGroupActionType(AppConstants.GROUP_ACTION_TYPE_DEAL);
 			cat.setMgroupType(AppConstants.GROUP_TYPE_CATEGORY);
 			cat.setCategoryId("");
 			cat.setCategoryTitle("");
 			showDealcategories(cat);
-//			showDealListing(mClRequest.getKeywordOrCategoryId());
+			// showDealListing(mClRequest.getKeywordOrCategoryId());
 			// CombindListingController listingController = new
 			// CombindListingController(CombindListActivity.this,
 			// Events.COMBIND_LISTING_NEW_LISTING_PAGE);
@@ -869,14 +1039,17 @@ public class CombindListActivity extends MaxisMainActivity {
 
 			String JSON_EXTRA = jsonForSearch();
 			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
+			mClRequest.setKeywordOrCategoryId(mSearchEditText.getText()
+					.toString());
+			mClRequest.setCategoryTitle(mSearchEditText.getText()
+					.toString());
+			isFromSearch = true;
+			
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(CombindListActivity.this,
-					HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			showHomeScreen();
+			MaxisMainActivity.isCitySelected = false;
 			break;
 		case R.id.show_profile_icon:
 			onProfileClick();
@@ -903,7 +1076,7 @@ public class CombindListActivity extends MaxisMainActivity {
 				Intent cityIntent = new Intent(CombindListActivity.this,
 						AdvanceSelectCity.class);
 				cityIntent.putExtra("CITY_LIST", cityListString);
-				cityIntent.putExtra("SELECTED_CITY", selectedCity);
+				cityIntent.putExtra("SELECTED_CITY", selectedCityforHeader);
 				startActivityForResult(cityIntent, AppConstants.CITY_REQUEST);
 			} else {
 				setSearchCity();
@@ -916,7 +1089,7 @@ public class CombindListActivity extends MaxisMainActivity {
 						AdvanceSelectLocalityActivity.class);
 				localityIntent.putExtra("LOCALITY_LIST", localityItems);
 				localityIntent.putExtra("SELECTED_LOCALITIES",
-						selectedLocalityItems);
+						selectedLocalityItemsforHeader);
 				localityIntent.putStringArrayListExtra("LOCALITY_INDEX",
 						selectedLocalityindex);
 				startActivityForResult(localityIntent,
@@ -925,8 +1098,34 @@ public class CombindListActivity extends MaxisMainActivity {
 				setSearchLocality(city_id);
 			}
 			break;
-		}
 
+		case R.id.nearMe:
+
+			if (mClRequest.getLongitude() == 0.0
+					|| mClRequest.getLatitude() == 0.0) {
+				showAlertDialog(getResources().getString(
+						R.string.location_unavailable_switch_gps));
+			} else {
+				mSelctorResp = null;
+				
+				 selectedCity = null;
+				 selectedLocalityItems = null;
+
+				mDistanceChooser.setVisibility(View.VISIBLE);
+				nearMe.setVisibility(View.GONE);
+				mClRequest.setSearch_distance("");
+
+				mClRequest.setPostJsonPayload("");
+				MaxisMainActivity.isCitySelected = false;
+				isFromNearMe = true;
+				CombindListingController listingController = new CombindListingController(
+						CombindListActivity.this,
+						Events.COMBIND_LISTING_NEW_LISTING_PAGE);
+				startSppiner();
+				listingController.requestService(mClRequest);
+			}
+			break;
+		}
 	}
 
 	private void refineSearch() {
@@ -953,6 +1152,8 @@ public class CombindListActivity extends MaxisMainActivity {
 				intent.putExtra(AppConstants.DATA_LIST_REQUEST, mClRequest);
 				intent.putExtra("SELECTED_CITY", selectedCity);
 				intent.putExtra("SELECTED_LOCALITY", selectedLocalityItems);
+				intent.putExtra("SELECTED_CITY_FOR_HEADERS", selectedCityforHeader);
+				intent.putExtra("SELECTED_LOCALITY_FOR_HEADERS", selectedLocalityItemsforHeader);
 				startActivityForResult(intent, 1);
 			} else {
 				if (mSelctorResp != null) {
@@ -978,6 +1179,14 @@ public class CombindListActivity extends MaxisMainActivity {
 		startSppiner();
 		RefineSearchRequest refineSearchRequest = new RefineSearchRequest();
 		refineSearchRequest.setCategoryId(categoryId);
+		//TODO For MORE REFINE ATTRIBUTES
+		if(mClRequest.isBySearch())
+		{
+			refineSearchRequest.setSearchKeyword(mClRequest.getKeywordOrCategoryId());
+		}else
+		{
+			refineSearchRequest.setSearchKeyword("");	
+		}
 		refineSearchRequest.setDeal(!mClRequest.isCompanyListing());
 		refineController.requestService(refineSearchRequest);
 	}
@@ -991,6 +1200,11 @@ public class CombindListActivity extends MaxisMainActivity {
 		intent.putExtra(AppConstants.DATA_LIST_REQUEST, mClRequest);
 		intent.putExtra(AppConstants.THUMB_URL, mCategoryThumbUrl);
 		intent.putExtra(AppConstants.LOCALITY_DAO_DATA, mLocalitySelectorDao);
+		if(mClResponse.getCategoryList().size()>0)
+		{
+		intent.putExtra("categoryId", mClResponse.getCategoryList().get(0)
+				.getCategoryId());
+		}
 		startActivityForResult(intent, 1);
 	}
 
@@ -1031,39 +1245,40 @@ public class CombindListActivity extends MaxisMainActivity {
 		super.onNegativeDialogbutton(id);
 	}
 
-//	private void showDealListing(String cat) {
-//		CombindListingController listingController = new CombindListingController(
-//				CombindListActivity.this,
-//				Events.COMBIND_DEAL_LISTING_NEW_LISTING_PAGE);
-//		// mClRequest = new CombinedListRequest(CombindListActivity.this);
-//		mdealRequest = new CombinedListRequest(CombindListActivity.this);
-//		mdealRequest.setCompanyListing(false);
-//		// mClRequest.setKeywordOrCategoryId("-1");
-//
-////		if (StringUtil.isNullOrEmpty(mClResponse.g)) {
-//			mdealRequest.setKeywordOrCategoryId(cat);
-////		} else {
-////			mdealRequest.setKeywordOrCategoryId(mClResponse.getCategoryList()
-////					.get(0).getCategoryId());
-////		}
-//
-//		mdealRequest.setLatitude(GPS_Data.getLatitude());
-//		mdealRequest.setLongitude(GPS_Data.getLongitude());
-//		// mClRequest.setCategoryTitle(cat.getCategoryTitle());
-//		// mClRequest.setParentThumbUrl(cat.getThumbUrl());
-//
-//		mdealRequest.setGroupActionType(AppConstants.GROUP_ACTION_TYPE_DEAL);
-//		mdealRequest.setGroupType(AppConstants.GROUP_TYPE_SUB_CATEGORY);
-//		if (mClRequest.isBySearch()) {
-//			mdealRequest.setBySearch(true);
-//		} else {
-//			mdealRequest.setBySearch(false);
-//		}
-//		setRequest(mdealRequest);
-//		startSppiner();
-//		listingController.requestService(mdealRequest);
-//
-//	}
+	// private void showDealListing(String cat) {
+	// CombindListingController listingController = new
+	// CombindListingController(
+	// CombindListActivity.this,
+	// Events.COMBIND_DEAL_LISTING_NEW_LISTING_PAGE);
+	// // mClRequest = new CombinedListRequest(CombindListActivity.this);
+	// mdealRequest = new CombinedListRequest(CombindListActivity.this);
+	// mdealRequest.setCompanyListing(false);
+	// // mClRequest.setKeywordOrCategoryId("-1");
+	//
+	// // if (StringUtil.isNullOrEmpty(mClResponse.g)) {
+	// mdealRequest.setKeywordOrCategoryId(cat);
+	// // } else {
+	// // mdealRequest.setKeywordOrCategoryId(mClResponse.getCategoryList()
+	// // .get(0).getCategoryId());
+	// // }
+	//
+	// mdealRequest.setLatitude(GPS_Data.getLatitude());
+	// mdealRequest.setLongitude(GPS_Data.getLongitude());
+	// // mClRequest.setCategoryTitle(cat.getCategoryTitle());
+	// // mClRequest.setParentThumbUrl(cat.getThumbUrl());
+	//
+	// mdealRequest.setGroupActionType(AppConstants.GROUP_ACTION_TYPE_DEAL);
+	// mdealRequest.setGroupType(AppConstants.GROUP_TYPE_SUB_CATEGORY);
+	// if (mClRequest.isBySearch()) {
+	// mdealRequest.setBySearch(true);
+	// } else {
+	// mdealRequest.setBySearch(false);
+	// }
+	// setRequest(mdealRequest);
+	// startSppiner();
+	// listingController.requestService(mdealRequest);
+	//
+	// }
 
 	public String jsonForSearch() {
 
@@ -1074,17 +1289,17 @@ public class CombindListActivity extends MaxisMainActivity {
 			if (city_id != -1) {
 				JSONObject array = new JSONObject();
 				array.put("city_id", city_id + "");
-				array.put("city_name", selectedCity);
+				array.put("city_name", selectedCityforHeader);
 
 				jArray.put("city", array);
 
 				if (ids != null && ids.size() > 0) {
 					JSONArray jsonArray = new JSONArray();
-					for (int i = 0; i < selectedLocalityItems.size(); i++) {
+					for (int i = 0; i < selectedLocalityItemsforHeader.size(); i++) {
 						JSONObject localityArray = new JSONObject();
 						localityArray.put("locality_id", ids.get(i));
 						localityArray.put("locality_name",
-								selectedLocalityItems.get(i));
+								selectedLocalityItemsforHeader.get(i));
 						jsonArray.put(localityArray);
 
 					}
@@ -1104,13 +1319,40 @@ public class CombindListActivity extends MaxisMainActivity {
 		}
 
 	}
-	
 
 	protected void showDealcategories(CategoryGroup cat) {
 		SubCategoryController controller = new SubCategoryController(
 				CombindListActivity.this, Events.DEALCATEGORY_EVENT);
 		controller.requestService(cat);
+		controller.isForDeal = true;
 		startSppiner();
+	}
+
+	@SuppressLint("NewApi")
+	public int setDistanceFilter(String search_distance) {
+		// String search_distance = mClResponse.getSearch_distance();
+		int index = 0;
+		if (search_distance == null || Integer.valueOf(search_distance) >= 21
+				|| search_distance.isEmpty()) {
+
+			index = 8;
+			mPreviousSelectedIndex = 8;
+			mPreviousDistance = "100000";
+
+		} else {
+			search_distance = search_distance + " km";
+			index = filter.indexOf(search_distance);
+			mPreviousSelectedIndex = index;
+			mPreviousDistance = search_distance;
+
+		}
+		return index;
+	}
+
+	@Override
+	public void onBackPressed() {
+		MaxisMainActivity.isCitySelected = false;
+		super.onBackPressed();
 	}
 
 }

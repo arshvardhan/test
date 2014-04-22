@@ -48,6 +48,8 @@ public class CompanyListParser extends AbstractSAXParser {
 	
 	private static final String TAG_VIDEO = "CVideo";
 	
+	private static final String TAG_SEARCH_DISTANCE = "Search_Distance";
+	
 	
 	private CompanyListResponse clResponse = new CompanyListResponse();
 	private CategoryRefine category;
@@ -146,6 +148,8 @@ public class CompanyListParser extends AbstractSAXParser {
 			compDesc.setValid_in(getNodeValue());
 		}else if (localName.equalsIgnoreCase(TAG_VIDEO)) {
 			compDesc.setVideo_url(getNodeValue());
+		}else if (localName.equalsIgnoreCase(TAG_SEARCH_DISTANCE)) {
+			clResponse.setSearch_distance(getNodeValue());
 		}
 
 	}

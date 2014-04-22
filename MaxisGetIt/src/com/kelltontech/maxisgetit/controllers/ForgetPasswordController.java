@@ -44,7 +44,7 @@ public class ForgetPasswordController extends BaseServiceController {
 			}
 			String mobileNo = (String)requestData;
 			GenralRequest genralRequest = new GenralRequest(mActivity);
-			Hashtable<String, String> urlParams = genralRequest.getHeadersWithMobile(mobileNo);
+			Hashtable<String, String> urlParams = genralRequest.getHeadersWithMobile(mobileNo,AppConstants.Forget_Password);
 			
 			ServiceRequest serviceRq = new ServiceRequest();
 			serviceRq.setRequestData(requestData);

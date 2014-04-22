@@ -109,7 +109,7 @@
                         android:digits="0123456789+"
                         android:hint="@string/mobile_no"
                         android:inputType="phone"
-                        android:maxLength="12"
+                        android:maxLength="11"
                         android:padding="5dp"
                         android:paddingLeft="2dp"
                         android:singleLine="true"

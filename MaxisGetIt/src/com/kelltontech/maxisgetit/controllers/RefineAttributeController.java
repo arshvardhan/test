@@ -26,6 +26,7 @@ import com.kelltontech.maxisgetit.response.RefineSelectorResponse;
 
 public class RefineAttributeController extends BaseServiceController {
 	private Context mActivity;
+	private String screenName;
 
 	public RefineAttributeController(IActionController screen, int eventType) {
 		super(screen, eventType);
@@ -71,12 +72,25 @@ public class RefineAttributeController extends BaseServiceController {
 				{
 					url += "&type=" + AppConstants.COMP_TYPE_DEAL;
 				}
+				
+				url += "&pageView=" + AppConstants.Modify_screen;
 				serviceRq.setUrl(url);
 				serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
 				serviceRq.setPostData(new ByteArrayEntity(refineSearchRequest.getPostData().toString().getBytes()));
 			} else if (mEventType == Events.REFINE_ATTRIBUTES) {
 				url += GenralRequest.REFINE_ATTRI_METHOD;
-				Hashtable<String, String> urlParams = baseRequest.getCategoryheaders(refineSearchRequest.getCategoryId());
+				if(refineSearchRequest.isDeal())
+				{
+					screenName =  AppConstants.Modify_screen;//Deal_Listing;
+				}
+				else
+				{
+					screenName =  AppConstants.Modify_screen;//Company_listing;
+					
+				}
+				
+				
+				Hashtable<String, String> urlParams = baseRequest.getCategoryheadersForRefine(refineSearchRequest.getCategoryId(),screenName,refineSearchRequest.getSearchKeyword());
 				url = HttpHelper.getURLWithPrams(url, urlParams);
 				if(refineSearchRequest.isDeal())
 				{

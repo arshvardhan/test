@@ -3,6 +3,7 @@ package com.kelltontech.maxisgetit.ui.activities;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -31,8 +32,10 @@ import com.kelltontech.maxisgetit.response.RootCategoryResponse;
 import com.kelltontech.maxisgetit.service.AppSharedPreference;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
+@SuppressLint("NewApi")
 public class SplashActivity extends MaxisMainActivity {
 	MaxisStore mStore;
+	@SuppressLint("NewApi")
 	public class BGAsyncTask extends AsyncTask<Void, Void, Void> {
 
 		@Override
@@ -68,6 +71,7 @@ public class SplashActivity extends MaxisMainActivity {
 			finish();*/
 		}
 
+		@SuppressLint("NewApi")
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();

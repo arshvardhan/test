@@ -53,7 +53,7 @@ public class ReportErrorMandatoryFieldsController extends BaseServiceController 
 			url = url + GenralRequest.ERROR_MENDATORY_FIELDS;
 			Log.d("maxis", "url " + url);
 			
-			serviceRq.setUrl(HttpHelper.getURLWithPrams(url,genralRequest.getDefaultHeaders()));
+			serviceRq.setUrl(HttpHelper.getURLWithPrams(url,genralRequest.getDefaultHeaders(AppConstants.ReportanError)));
 			serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
 			
 			HttpClientConnection.getInstance().addRequest(serviceRq);

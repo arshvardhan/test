@@ -53,7 +53,8 @@ public class LocalSearchController extends BaseServiceController {
 			
 			GenralRequest baseReq = new GenralRequest(mActivity);
 			String mobileNumber = (String) requestData;
-			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, baseReq.getHeadersWithMobile(mobileNumber)));
+			mobileNumber = mobileNumber.replace("+", "");
+			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, baseReq.getHeadersWithMobile(mobileNumber,AppConstants.MyCompany)));
 			serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
 			HttpClientConnection.getInstance().addRequest(serviceRq);
 

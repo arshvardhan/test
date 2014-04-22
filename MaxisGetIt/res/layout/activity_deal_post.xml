@@ -55,8 +55,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
                     android:layout_gravity="center_vertical|left"
+                    android:padding="5dp"
                     android:text="@string/enter_basic_detail"
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_13"
@@ -71,10 +71,10 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|left"
                         android:layout_weight=".35"
                         android:drawableRight="@drawable/required_icon"
                         android:padding="5dp"
-                        android:layout_gravity="center_vertical|left"
                         android:text="@string/deal_title"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sp_13" />
@@ -102,9 +102,9 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|left"
                         android:layout_weight=".35"
                         android:drawableRight="@drawable/required_icon"
-                        android:layout_gravity="center_vertical|left"
                         android:padding="5dp"
                         android:text="@string/deal_desc"
                         android:textColor="@color/black"
@@ -133,9 +133,9 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|left"
                         android:layout_weight=".35"
                         android:drawableRight="@drawable/required_icon"
-                        android:layout_gravity="center_vertical|left"
                         android:padding="5dp"
                         android:text="@string/choose_company"
                         android:textColor="@color/black"
@@ -173,9 +173,9 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|left"
                         android:layout_weight=".35"
                         android:drawableRight="@drawable/required_icon"
-                        android:layout_gravity="center_vertical|left"
                         android:padding="5dp"
                         android:text="@string/choose_category"
                         android:textColor="@color/black"
@@ -592,210 +592,217 @@
                             android:textSize="@dimen/sp_13" />
                     </LinearLayout>
                 </LinearLayout>
-
-             
             </LinearLayout>
-               <LinearLayout
-                    android:layout_width="match_parent"
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:baselineAligned="false"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="5dp"
-                    android:baselineAligned="false"
-                    android:gravity="center"
-                    android:orientation="horizontal" >
+                    android:layout_weight="1"
+                    android:orientation="vertical" >
 
-                    <LinearLayout
-                        android:layout_width="0dp"
+                    <FrameLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical" >
+                        android:layout_gravity="right"
+                        android:layout_marginTop="2dp" >
 
-                        <FrameLayout
+                        <ImageView
+                            android:id="@+id/adp_deal_image"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:layout_marginTop="2dp" >
+                            android:background="@drawable/upload_photo_icon_bg"
+                            android:clickable="true"
+                            android:contentDescription="@string/cover_image"
+                            android:src="@drawable/upload_photo_icon" />
 
-                            <ImageView
-                                android:id="@+id/adp_deal_image"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/upload_photo_icon_bg"
-                                android:clickable="true"
-                                android:contentDescription="@string/cover_image"
-                                android:src="@drawable/upload_photo_icon" />
-
-                            <ImageView
-                                android:id="@+id/adp_deal_image_cross"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="right|top"
-                                android:clickable="true"
-                                android:contentDescription="@string/close_cover_image"
-                                android:src="@drawable/cross_icon"
-                                android:visibility="gone" />
-                        </FrameLayout>
-
-                        <RadioButton
-                            android:id="@+id/adp_cover_photo"
+                        <ImageView
+                            android:id="@+id/adp_deal_image_cross"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="Cover Image"
-                            android:visibility="invisible" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical" >
-
-                        <FrameLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            android:layout_gravity="right|top"
                             android:layout_marginRight="2dp"
-                            android:layout_marginTop="2dp" >
+                            android:layout_marginTop="1dp"
+                            android:clickable="true"
+                            android:contentDescription="@string/close_cover_image"
+                            android:src="@drawable/cross_icon"
+                            android:visibility="gone" />
+                    </FrameLayout>
 
-                            <ImageView
-                                android:id="@+id/adp_deal_image2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="left"
-                                android:background="@drawable/upload_photo_icon_bg"
-                                android:clickable="true"
-                                android:contentDescription="@string/first_image"
-                                android:src="@drawable/upload_photo_icon" />
-
-                            <ImageView
-                                android:id="@+id/adp_deal_image_cross2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="right|top"
-                                android:clickable="true"
-                                android:contentDescription="@string/close_first_image"
-                                android:src="@drawable/cross_icon"
-                                android:visibility="gone" />
-                        </FrameLayout>
-
-                        <RadioButton
-                            android:id="@+id/adp_cover_photo2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="Cover Image"
-                            android:visibility="invisible" />
-                    </LinearLayout>
+                    <RadioButton
+                        android:id="@+id/adp_cover_photo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Cover Image"
+                        android:visibility="invisible" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:baselineAligned="false"
-                    android:gravity="center"
-                    android:orientation="horizontal" >
+                    android:layout_weight="1"
+                    android:orientation="vertical" >
 
-                    <LinearLayout
-                        android:layout_width="0dp"
+                    <FrameLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical" >
+                        android:layout_gravity="left"
+                        android:layout_marginRight="2dp"
+                        android:layout_marginTop="2dp" >
 
-                        <FrameLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:layout_marginRight="2dp"
-                            android:layout_marginTop="2dp" >
-
-                            <ImageView
-                                android:id="@+id/adp_deal_image3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="right"
-                                android:background="@drawable/upload_photo_icon_bg"
-                                android:clickable="true"
-                                android:contentDescription="@string/second_image"
-                                android:src="@drawable/upload_photo_icon" />
-
-                            <ImageView
-                                android:id="@+id/adp_deal_image_cross3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="right|top"
-                                android:clickable="true"
-                                android:contentDescription="@string/close_second_image"
-                                android:src="@drawable/cross_icon"
-                                android:visibility="gone" />
-                        </FrameLayout>
-
-                        <RadioButton
-                            android:id="@+id/adp_cover_photo3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="Cover Image"
-                            android:visibility="invisible" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical" >
-
-                        <FrameLayout
+                        <ImageView
+                            android:id="@+id/adp_deal_image2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="left"
-                            android:layout_marginRight="2dp"
-                            android:layout_marginTop="2dp" >
+                            android:background="@drawable/upload_photo_icon_bg"
+                            android:clickable="true"
+                            android:contentDescription="@string/first_image"
+                            android:src="@drawable/upload_photo_icon" />
 
-                            <ImageView
-                                android:id="@+id/adp_deal_image4"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="left"
-                                android:background="@drawable/upload_photo_icon_bg"
-                                android:clickable="true"
-                                android:contentDescription="@string/third_image"
-                                android:src="@drawable/upload_photo_icon" />
-
-                            <ImageView
-                                android:id="@+id/adp_deal_image_cross4"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="right|top"
-                                android:clickable="true"
-                                android:contentDescription="@string/close_third_image"
-                                android:src="@drawable/cross_icon"
-                                android:visibility="gone" />
-                        </FrameLayout>
-
-                        <RadioButton
-                            android:id="@+id/adp_cover_photo4"
+                        <ImageView
+                            android:id="@+id/adp_deal_image_cross2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="Cover Image"
-                            android:visibility="invisible" />
-                    </LinearLayout>
+                            android:layout_gravity="right|top"
+                            android:layout_marginRight="2dp"
+                            android:layout_marginTop="1dp"
+                            android:clickable="true"
+                            android:contentDescription="@string/close_first_image"
+                            android:src="@drawable/cross_icon"
+                            android:visibility="gone" />
+                    </FrameLayout>
+
+                    <RadioButton
+                        android:id="@+id/adp_cover_photo2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Cover Image"
+                        android:visibility="invisible" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:baselineAligned="false"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical" >
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginRight="2dp"
+                        android:layout_marginTop="2dp" >
+
+                        <ImageView
+                            android:id="@+id/adp_deal_image3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:background="@drawable/upload_photo_icon_bg"
+                            android:clickable="true"
+                            android:contentDescription="@string/second_image"
+                            android:src="@drawable/upload_photo_icon" />
+
+                        <ImageView
+                            android:id="@+id/adp_deal_image_cross3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right|top"
+                            android:layout_marginRight="2dp"
+                            android:layout_marginTop="1dp"
+                            android:clickable="true"
+                            android:contentDescription="@string/close_second_image"
+                            android:src="@drawable/cross_icon"
+                            android:visibility="gone" />
+                    </FrameLayout>
+
+                    <RadioButton
+                        android:id="@+id/adp_cover_photo3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Cover Image"
+                        android:visibility="invisible" />
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/adp_submit"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="30dp"
-                    android:background="@drawable/shape_green_curved_box"
-                    android:clickable="true"
-                    android:text="Post Deal"
-                    android:textColor="@color/white"
-                    android:textStyle="bold" />
+                    android:layout_weight="1"
+                    android:orientation="vertical" >
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginRight="2dp"
+                        android:layout_marginTop="2dp" >
+
+                        <ImageView
+                            android:id="@+id/adp_deal_image4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:background="@drawable/upload_photo_icon_bg"
+                            android:clickable="true"
+                            android:contentDescription="@string/third_image"
+                            android:src="@drawable/upload_photo_icon" />
+
+                        <ImageView
+                            android:id="@+id/adp_deal_image_cross4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right|top"
+                            android:layout_marginRight="2dp"
+                            android:layout_marginTop="1dp"
+                            android:clickable="true"
+                            android:contentDescription="@string/close_third_image"
+                            android:src="@drawable/cross_icon"
+                            android:visibility="gone" />
+                    </FrameLayout>
+
+                    <RadioButton
+                        android:id="@+id/adp_cover_photo4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Cover Image"
+                        android:visibility="invisible" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/adp_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/shape_green_curved_box"
+                android:clickable="true"
+                android:text="Post Deal"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
         </LinearLayout>
     </ScrollView>
 

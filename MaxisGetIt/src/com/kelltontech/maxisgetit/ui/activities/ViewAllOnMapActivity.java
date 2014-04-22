@@ -232,14 +232,16 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 				builder.include(toPosition);
 			}
 		}
+		
 		LatLngBounds bounds = builder.build();
 		int padding = 100; // offset from edges of the map in pixels
 		CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+//		CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(fromPosition, padding);
 		mMap.animateCamera(cu);
 		final CameraPosition cameraPosition = new CameraPosition.Builder()
 				.target(fromPosition) // Sets the center of the map to Mountain
 										// View
-				.zoom(15) // Sets the zoom
+				.zoom(18) // Sets the zoom
 				.bearing(90) // Sets the orientation of the camera to east
 				.tilt(30) // Sets the tilt of the camera to 30 degrees
 				.build();
@@ -366,11 +368,7 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(ViewAllOnMapActivity.this,
-					HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			showHomeScreen();
 			break;
 		case R.id.upArrow:
 			if (isAdvanceSearchLayoutOpen) {

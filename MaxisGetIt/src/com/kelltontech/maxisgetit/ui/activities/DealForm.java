@@ -170,10 +170,7 @@ public class DealForm extends MaxisMainActivity {
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(DealForm.this, HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			showHomeScreen();
 			break;
 		case R.id.upArrow:
 			if (isAdvanceSearchLayoutOpen) {
@@ -218,13 +215,17 @@ public class DealForm extends MaxisMainActivity {
 		if (StringUtil.isNullOrEmpty(name.getText().toString())) {
 			Toast.makeText(getApplicationContext(), "Please enter Name.",
 					Toast.LENGTH_SHORT).show();
-		} else if (StringUtil.isNullOrEmpty((phoneNo.getText().toString()))
-				|| phoneNo.getText().length() >= 12
+		} else if (StringUtil.isNullOrEmpty((phoneNo.getText().toString()))) {
+			Toast.makeText(getApplicationContext(),
+					getString(R.string.number_empty),
+					Toast.LENGTH_SHORT).show();
+		} else if (phoneNo.getText().length() >= 12
 				|| phoneNo.getText().length() <= 7
 				|| phoneNo.getText().toString().startsWith("0")) {
-			Toast.makeText(getApplicationContext(),
-					"Please enter Mobile Number correctly.", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(
+					getApplicationContext(),
+					getString(R.string.mobile_number_validation),
+					Toast.LENGTH_SHORT).show();
 		} else {
 			Intent returnIntent = new Intent();
 			returnIntent.putExtra("name", name.getText().toString());
@@ -250,12 +251,10 @@ public class DealForm extends MaxisMainActivity {
 			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
 					+ "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
-			if(index==-1)
-			{
-				city_id =-1;
-			}else
-			{
-			city_id = cityList.get(index).getId();
+			if (index == -1) {
+				city_id = -1;
+			} else {
+				city_id = cityList.get(index).getId();
 			}
 
 		} else if (resultCode == RESULT_OK
@@ -337,7 +336,7 @@ public class DealForm extends MaxisMainActivity {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public void setScreenData(Object screenData, int event, long time) {
 		if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE
@@ -351,12 +350,13 @@ public class DealForm extends MaxisMainActivity {
 			handler.sendMessage((Message) screenData);
 		}
 	}
+
 	@Override
 	public void updateUI(Message msg) {
 		if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE
 				|| msg.arg2 == Events.USER_DETAIL) {
 			super.updateUI(msg);
-		}  else if (msg.arg2 == Events.CITY_LISTING) {
+		} else if (msg.arg2 == Events.CITY_LISTING) {
 			stopSppiner();
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);

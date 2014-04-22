@@ -32,6 +32,30 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_12"
                 android:textStyle="bold" />
+            <Spinner
+                android:id="@+id/distance_filter_chooser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/col_records_found"
+                android:background="@drawable/dropdown_box"
+                android:paddingRight="25dp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_13" 
+                android:visibility="gone"
+                
+                />
+
+            <TextView
+                android:id="@+id/nearMe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+				android:layout_alignParentRight="true"
+                android:background="@drawable/around_me_btn"
+                android:layout_marginRight="8dp"
+                android:visibility="visible"/>
+            
         </RelativeLayout>
     </LinearLayout>
     <LinearLayout

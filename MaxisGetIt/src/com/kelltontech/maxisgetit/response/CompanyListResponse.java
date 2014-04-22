@@ -18,6 +18,17 @@ public class CompanyListResponse extends MaxisResponse implements IModel,
 	private int pageNumber;
 	private ArrayList<CompanyDesc> companyArrayList = new ArrayList<CompanyDesc>();
 	private ArrayList<CategoryRefine> categoryList = new ArrayList<CategoryRefine>();
+	private String search_distance;
+	
+	
+	
+	public String getSearch_distance() {
+		return search_distance;
+	}
+
+	public void setSearch_distance(String search_distance) {
+		this.search_distance = search_distance;
+	}
 
 	public void setCompanyList(ArrayList<CompanyDesc> compList) {
 		companyArrayList = compList;
@@ -76,6 +87,7 @@ public class CompanyListResponse extends MaxisResponse implements IModel,
 		recordsPerPage = in.readInt();
 		in.readTypedList(companyArrayList, CompanyDesc.CREATOR);
 		in.readTypedList(categoryList, CategoryRefine.CREATOR);
+		search_distance= in.readString();
 	}
 
 	public int getTotalrecordFound() {
@@ -137,6 +149,7 @@ public class CompanyListResponse extends MaxisResponse implements IModel,
 		dest.writeInt(recordsPerPage);
 		dest.writeTypedList(companyArrayList);
 		dest.writeTypedList(categoryList);
+		dest.writeString(search_distance);
 	}
 
 }

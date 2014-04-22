@@ -43,6 +43,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 	private MaxisStore mStore;
 	private String	mUrlToBeOpenedWithChooser;
 	protected String mSearchKeyword;
+	public static boolean isCitySelected= false;
 
 	protected boolean isLocationAware() {
 		return mStore.isLocalized();
@@ -91,8 +92,8 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		}
 
 	}
-	
-/*	@Override
+	//TODO FOR FLURRY
+	@Override
 	protected void onStart() {
 		super.onStart();
 		AnalyticsHelper.onActivityStart(this);
@@ -108,7 +109,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		super.onStop();
 		AnalyticsHelper.onActivityStop(this);
 	}
-*/
+
 	protected void performSearch(String searchText , String postJsonPayload) {
 		if (searchText == null || searchText.trim().equals("")) {
 			showInfoDialog(getResources().getString(R.string.input_search));
@@ -130,8 +131,13 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		mListRequest.setLongitude(GPS_Data.getLongitude());
 		
 		if(postJsonPayload!=null)
-		mListRequest.setPostJsonPayload(postJsonPayload);
-		
+		{
+			isCitySelected = true;
+			mListRequest.setPostJsonPayload(postJsonPayload);
+		}
+		else{
+			isCitySelected = false;
+		}
 
 		CombindListingController listingController = new CombindListingController(MaxisMainActivity.this, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 		listingController.requestService(mListRequest);
@@ -200,7 +206,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 				showInfoDialog((String) msg.obj);
 			} else {
 				Intent intent = new Intent(MaxisMainActivity.this, MyAccountActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				intent.putExtra(AppConstants.GLOBAL_SEARCH_KEYWORD, mSearchKeyword);
 				intent.putExtra(AppConstants.USER_DETAIL_DATA, (UserDetailResponse)msg.obj);
 				startActivity(intent);
@@ -353,6 +359,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		Intent intentHome = new Intent(this, HomeActivity.class);
 		intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		startActivity(intentHome);
+		HomeActivity.fromHomeClick = true;
 	}
 	
 	/**

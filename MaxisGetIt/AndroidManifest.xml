@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kelltontech.maxisgetit"
-    android:versionCode="5"
-    android:versionName="1.22" >
+    android:versionCode="6"
+    android:versionName="1.23" >
 
     <!--
     above version are updated 
     Package should be com.findit333
     -->
-    <!-- Current version code/name on play: code:4, name:1.21 -->
+    <!-- Current version code/name on play: code:5, name:1.22 -->
 
     <uses-sdk
-        android:targetSdkVersion="15" />
+        android:minSdkVersion="8"
+        android:targetSdkVersion="19" />
     <!-- for card.io card scanning -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -30,7 +31,8 @@
 
     <permission
         android:name="com.kelltontech.maxisgetit.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature" />
+        android:protectionLevel="signature" 
+        android:hardwareAccelerated="true"/>
 
     <uses-permission android:name="com.kelltontech.maxisgetit.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -52,7 +54,8 @@
         android:debuggable="true"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+         android:hardwareAccelerated="true" >
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyD_YqXS8m5-0B6KJNo6ALDZSgDKNXy-VSM" />

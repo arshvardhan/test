@@ -14,7 +14,6 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -376,10 +375,10 @@ public class NativeHelper {
 		/** read count */
 		int read = 0;
 		/** data will be read in chunks */
-
-		byte[] data = new byte[1024];
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		
 		try {
+			byte[] data = new byte[1024];
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			while ((read = is.read(data)) != -1) {
 				baos.write(data, 0, read);
 			}

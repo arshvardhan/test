@@ -3,7 +3,6 @@ package com.kelltontech.maxisgetit.ui.activities;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.TimeZone;
 
 import org.json.JSONArray;
@@ -16,7 +15,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,7 +30,6 @@ import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
-import com.kelltontech.maxisgetit.controllers.CityAreaListController;
 import com.kelltontech.maxisgetit.controllers.MyDealsController;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.MyDeal;
@@ -428,11 +425,7 @@ public class MyDealsActivity extends MaxisMainActivity {
 		switch (v.getId()) {
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(MyDealsActivity.this,
-					HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			showHomeScreen();
 			break;
 		case R.id.show_profile_icon:
 			// finish();

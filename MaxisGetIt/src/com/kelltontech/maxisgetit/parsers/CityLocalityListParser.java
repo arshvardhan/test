@@ -2,9 +2,12 @@ package com.kelltontech.maxisgetit.parsers;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+
 import android.util.Log;
+
 import com.kelltontech.framework.model.IModel;
 import com.kelltontech.framework.parser.AbstractSAXParser;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;

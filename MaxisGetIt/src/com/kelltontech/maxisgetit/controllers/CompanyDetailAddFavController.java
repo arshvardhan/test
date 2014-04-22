@@ -54,7 +54,7 @@ public class CompanyDetailAddFavController extends BaseServiceController {
 			serviceRq.setRequestTimeOut(AppConstants.MILLIS_3_MINUTE);
 
 			String url = AppConstants.BASE_URL + GenralRequest.COMPANY_DETAIL_ADD_FAV_METHOD
-					+ new GenralRequest(mActivity).getDefaultParameterString();
+					+ new GenralRequest(mActivity).getDefaultParameterString(AppConstants.Company_detail);
 			//String url = "http://192.168.13.3/newfms/trunk/restapi/" + GenralRequest.COMPANY_DETAIL_ADD_FAV_METHOD + new GenralRequest(mActivity).getDefaultParameterString();
 			Log.d("maxis", "url " + url);
 			serviceRq.setUrl(url);

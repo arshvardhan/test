@@ -88,7 +88,7 @@
             android:paddingBottom="2dp"
             android:layout_gravity="center"
             android:layout_weight=".5"
-            android:src="@drawable/getit_logo" />
+            android:src="@drawable/getit_logo4" />
     </LinearLayout>
 
 </LinearLayout>

@@ -302,11 +302,7 @@ public class SaleTemplateTypeActivity extends MaxisMainActivity {
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(SaleTemplateTypeActivity.this,
-					HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			showHomeScreen();
 			break;
 		case R.id.sale_template_type_btn:
 			if (("-1").equalsIgnoreCase(mSelectedType.getType())) {

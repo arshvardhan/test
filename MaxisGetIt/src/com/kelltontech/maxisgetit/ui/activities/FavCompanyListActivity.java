@@ -42,7 +42,6 @@ import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
 import com.kelltontech.maxisgetit.controllers.CompanyDetailController;
 import com.kelltontech.maxisgetit.controllers.CompanyDetailRemoveFavController;
 import com.kelltontech.maxisgetit.controllers.FavouriteController;
-import com.kelltontech.maxisgetit.controllers.RefineAttributeController;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.CompanyDesc;
 import com.kelltontech.maxisgetit.dao.CompanyDetail;
@@ -53,7 +52,6 @@ import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.db.FavCompanysTable;
 import com.kelltontech.maxisgetit.requests.DetailRequest;
 import com.kelltontech.maxisgetit.requests.FavCompanyListRequest;
-import com.kelltontech.maxisgetit.requests.RefineSearchRequest;
 import com.kelltontech.maxisgetit.response.CompanyListResponse;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.response.RefineSelectorResponse;
@@ -672,11 +670,7 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(FavCompanyListActivity.this,
-					HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			showHomeScreen();
 			break;
 		case R.id.show_profile_icon:
 			onProfileClick();
@@ -755,15 +749,6 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 	 * fetchRefineAttribute(mClRequest.getKeywordOrCategoryId()); } }
 	 */
 
-	private void fetchRefineAttribute(String categoryId) {
-		RefineAttributeController refineController = new RefineAttributeController(
-				FavCompanyListActivity.this, Events.REFINE_ATTRIBUTES);
-		startSppiner();
-		RefineSearchRequest refineSearchRequest = new RefineSearchRequest();
-		refineSearchRequest.setCategoryId(categoryId);
-		refineSearchRequest.setDeal(false);
-		refineController.requestService(refineSearchRequest);
-	}
 
 	private void displayRefineWithAttributeSpinnersPreloaded(
 			RefineSelectorResponse selectorRes, int selectionMode) {
@@ -847,6 +832,7 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 		}
 		CompanyDetailRemoveFavController removeFavController = new CompanyDetailRemoveFavController(
 				FavCompanyListActivity.this, Events.COMPANY_DETAIL_REMOVE_FAV);
+		removeFavController.fromComapnyList =  false;
 		removeFavController.requestService(postJson);
 	}
 
@@ -875,6 +861,7 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 		}
 		CompanyDetailRemoveFavController removeFavController = new CompanyDetailRemoveFavController(
 				FavCompanyListActivity.this, Events.COMPANY_DETAIL_REMOVE_FAV);
+		removeFavController.fromComapnyList =  false;
 		removeFavController.requestService(postJson);
 	}
 

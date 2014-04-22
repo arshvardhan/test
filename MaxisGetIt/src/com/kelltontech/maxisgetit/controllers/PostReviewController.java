@@ -52,7 +52,7 @@ public class PostReviewController extends BaseServiceController {
 			
 			GenralRequest genralRequest = new GenralRequest(mActivity);
 			String url = AppConstants.BASE_URL + GenralRequest.POST_REVIEW;
-			url += genralRequest.getDefaultParameterString();
+			url += genralRequest.getDefaultParameterString(AppConstants.Company_detail);
 			Log.d("maxis", "url " + url);
 			serviceRq.setUrl(url);
 			

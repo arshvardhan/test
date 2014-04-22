@@ -1,8 +1,10 @@
 package com.kelltontech.maxisgetit.ui.activities;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -15,7 +17,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -33,6 +37,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.utils.StringUtil;
@@ -83,12 +88,14 @@ public class HomeActivity extends MaxisMainActivity {
 	ArrayList<String> ids = new ArrayList<String>();
 	TextView mainSearchButton;
 	ArrayList<String> selectedLocalityindex;
-	
+
 	ImageView box;
 	LinearLayout followus;
 	View seprator;
 	boolean footerVisible = false;
-	
+
+	public static boolean fromHomeClick = false;
+	public String countryName = "";
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -233,48 +240,56 @@ public class HomeActivity extends MaxisMainActivity {
 			}
 		});
 
-//		advanceSearchLayout.setOnTouchListener(new OnTouchListener() {
-//			private float mInitialX;
-//			private float mInitialY;
-//
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//
-//				switch (event.getAction()) {
-//				case MotionEvent.ACTION_DOWN:
-//					mInitialX = event.getX();
-//					mInitialY = event.getY();
-//					// mScrollDown = true;
-//					return true;
-//				case MotionEvent.ACTION_MOVE:
-//					final float x = event.getX();
-//					final float y = event.getY();
-//					final float yDiff = y - mInitialY;
-//					if (yDiff > 0.0) {
-//						Log.d("maxis", "SCROLL DOWN");
-//						// mScrollUp = false;
-//						break;
-//
-//					} else if (yDiff < 0.0) {
-//						Log.d("maxis", "SCROLL up");
-//						// mScrollUp = true;q
-//						if (isAdvanceSearchLayoutOpen) {
-//							isAdvanceSearchLayoutOpen = false;
-//							advanceSearchLayout.setVisibility(View.GONE);
-//						}
-//
-//						break;
-//					}
-//					break;
-//				}
-//				return false;
-//			}
-//		});
-		
-		box = (ImageView)findViewById(R.id.box);
+		// advanceSearchLayout.setOnTouchListener(new OnTouchListener() {
+		// private float mInitialX;
+		// private float mInitialY;
+		//
+		// @Override
+		// public boolean onTouch(View v, MotionEvent event) {
+		//
+		// switch (event.getAction()) {
+		// case MotionEvent.ACTION_DOWN:
+		// mInitialX = event.getX();
+		// mInitialY = event.getY();
+		// // mScrollDown = true;
+		// return true;
+		// case MotionEvent.ACTION_MOVE:
+		// final float x = event.getX();
+		// final float y = event.getY();
+		// final float yDiff = y - mInitialY;
+		// if (yDiff > 0.0) {
+		// Log.d("maxis", "SCROLL DOWN");
+		// // mScrollUp = false;
+		// break;
+		//
+		// } else if (yDiff < 0.0) {
+		// Log.d("maxis", "SCROLL up");
+		// // mScrollUp = true;q
+		// if (isAdvanceSearchLayoutOpen) {
+		// isAdvanceSearchLayoutOpen = false;
+		// advanceSearchLayout.setVisibility(View.GONE);
+		// }
+		//
+		// break;
+		// }
+		// break;
+		// }
+		// return false;
+		// }
+		// });
+
+		box = (ImageView) findViewById(R.id.box);
 		box.setOnClickListener(this);
-		followus = (LinearLayout)findViewById(R.id.footer_followus);
-		seprator = (View)findViewById(R.id.seprator);
+		followus = (LinearLayout) findViewById(R.id.footer_followus);
+		seprator = (View) findViewById(R.id.seprator);
+
+		if (!StringUtil.isNullOrEmpty(countryName)) {
+			if (!countryName.equalsIgnoreCase("Malaysia")) {
+				// TODO
+				// Toast.makeText(getApplicationContext(),
+				// "You are outside the country", Toast.LENGTH_SHORT).show();
+			}
+		}
 
 	}
 
@@ -342,7 +357,18 @@ public class HomeActivity extends MaxisMainActivity {
 	@Override
 	protected void onResume() {
 		Log.d("maxis", "HomeActivity.onResume()");
-		// mSearchEditText.setText("");
+		if (fromHomeClick) {
+			selectedCity = "Entire Malaysia";
+			mSearchEditText.setText("");
+			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
+					+ "</b>"));
+			currentLocality.setText("Choose your Area");
+
+			cityListString = new ArrayList<String>();
+			city_id = -1;
+			localityItems = null;
+		}
+
 		// for banner fliping
 		// startFlipping();
 		if (isLocationAware()) {
@@ -363,6 +389,7 @@ public class HomeActivity extends MaxisMainActivity {
 	protected void onPause() {
 		Log.d("maxis", "HomeActivity.onPause()");
 		stopFlipping();
+		fromHomeClick = false;
 		super.onPause();
 	}
 
@@ -456,6 +483,24 @@ public class HomeActivity extends MaxisMainActivity {
 					if (latitude != 0 && longitude != 0) {
 						GPS_Data.setLatitude(latitude);
 						GPS_Data.setLongitude(longitude);
+						Geocoder geoCoder = new Geocoder(getBaseContext(),
+								Locale.getDefault());
+						try {
+							List<Address> addresses = geoCoder.getFromLocation(
+									GPS_Data.getLatitude(),
+									GPS_Data.getLongitude(), 1);
+
+							if (addresses.size() > 0) {
+								System.out.println(addresses.get(0)
+										.getLocality());
+								System.out.println(addresses.get(0)
+										.getCountryName());
+								countryName = addresses.get(0).getCountryName();
+
+							}
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
 					}
 				}
 			}
@@ -475,7 +520,9 @@ public class HomeActivity extends MaxisMainActivity {
 						}
 					}
 				}
+
 			}
+
 		} catch (Exception e) {
 			AnalyticsHelper.onError(
 					FlurryEventsConstants.CURRENT_LOCATION_NOT_SET_ERR,
@@ -680,24 +727,21 @@ public class HomeActivity extends MaxisMainActivity {
 				setSearchLocality(city_id);
 			}
 			break;
-			
+
 		case R.id.box:
-			if(!footerVisible)
-			{
-			box.setImageResource(R.drawable.box_down);
-			seprator.setVisibility(View.VISIBLE);
-			followus.setVisibility(View.VISIBLE);
-			footerVisible = true;
-			}
-			else
-			{
+			if (!footerVisible) {
+				box.setImageResource(R.drawable.box_down);
+				seprator.setVisibility(View.VISIBLE);
+				followus.setVisibility(View.VISIBLE);
+				footerVisible = true;
+			} else {
 				box.setImageResource(R.drawable.upbox);
 				seprator.setVisibility(View.GONE);
 				followus.setVisibility(View.GONE);
 				footerVisible = false;
 			}
 			break;
-			
+
 		default:
 			break;
 		}
@@ -713,6 +757,7 @@ public class HomeActivity extends MaxisMainActivity {
 	protected void showSubcategories(CategoryGroup cat) {
 		SubCategoryController controller = new SubCategoryController(
 				HomeActivity.this, Events.SUBCATEGORY_EVENT);
+		controller.isForDeal = false;
 		controller.requestService(cat);
 		startSppiner();
 	}
@@ -720,6 +765,7 @@ public class HomeActivity extends MaxisMainActivity {
 	protected void showDealcategories(CategoryGroup cat) {
 		SubCategoryController controller = new SubCategoryController(
 				HomeActivity.this, Events.DEALCATEGORY_EVENT);
+		controller.isForDeal = true;
 		controller.requestService(cat);
 		startSppiner();
 	}
@@ -811,6 +857,7 @@ public class HomeActivity extends MaxisMainActivity {
 					}
 					jArray.put("locality", jsonArray);
 				}
+
 				return jArray.toString();
 
 			}

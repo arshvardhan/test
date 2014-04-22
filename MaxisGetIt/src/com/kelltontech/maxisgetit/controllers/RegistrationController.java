@@ -44,7 +44,7 @@ public class RegistrationController extends BaseServiceController {
 			}
 			
 			RegistrationRequest regRquest = (RegistrationRequest) requestData;
-			Hashtable<String, String> urlParams = regRquest.getRequestHeaders();
+			Hashtable<String, String> urlParams = regRquest.getRequestHeaders(AppConstants.Registration_Screen);
 
 			ServiceRequest serviceRq = new ServiceRequest();
 			serviceRq.setRequestData(requestData);

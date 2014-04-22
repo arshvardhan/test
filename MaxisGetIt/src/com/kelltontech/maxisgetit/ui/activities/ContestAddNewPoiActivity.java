@@ -31,6 +31,7 @@ import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
 import com.kelltontech.maxisgetit.controllers.ContestAddNewPOIController;
+import com.kelltontech.maxisgetit.dao.MaxisStore;
 import com.kelltontech.maxisgetit.model.uploadImage.RequestAddNewPOI;
 import com.kelltontech.maxisgetit.model.uploadImage.ResponseUploadPhoto;
 import com.kelltontech.maxisgetit.service.AppSharedPreference;
@@ -53,6 +54,7 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 		private boolean isFetchingBase64;
 		private EditText mCompanyNameEditTxt, mCompanyAddressEditTxt, mBusinessTypeEditTxt, mCompanyContactEditText, mUserNameEditTxt, mUserNumberEditTxt;
 		private final int UPLOAD_IMAGE = 5;
+		private MaxisStore store;
 
 /*		private ImageView mLogo;*/
 		
@@ -74,6 +76,8 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 			findViewById(R.id.goto_home_icon).setOnClickListener(this);
 			findViewById(R.id.search_toggler).setVisibility(View.INVISIBLE);
 			findViewById(R.id.show_profile_icon).setOnClickListener(this);
+			
+			store = MaxisStore.getStore(this);
 
 			 UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.rootLayout),
 			 this);
@@ -89,16 +93,24 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 			mUserNumberEditTxt = ((EditText) findViewById(R.id.user_contact));
 			String userNumber = AppSharedPreference.getString(
 					AppSharedPreference.MOBILE_NUMBER, "", getApplicationContext());
-			if (userNumber.length() > 0)
-				mUserNumberEditTxt.setText(userNumber);
-			else {
-				TelephonyManager mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-				String yourNumber = mTelephonyMgr.getLine1Number();
+			
+			if (store.isLoogedInUser()) {
+				mUserNumberEditTxt.setText(store.getUserMobileNumberToDispaly());
+			} else {
+				mUserNumberEditTxt.setText(store.getAuthMobileNumber().substring(2));
 
-				if (yourNumber != null && yourNumber.length() > 0) {
-					mUserNumberEditTxt.setText(yourNumber);
-				}
 			}
+			
+//			if (userNumber.length() > 0)
+//				mUserNumberEditTxt.setText(userNumber);
+//			else {
+//				TelephonyManager mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+//				String yourNumber = mTelephonyMgr.getLine1Number();
+//
+//				if (yourNumber != null && yourNumber.length() > 0) {
+//					mUserNumberEditTxt.setText(yourNumber);
+//				}
+//			}
 			mUserNameEditTxt = ((EditText) findViewById(R.id.user_name));
 			mUserNameEditTxt.setText(AppSharedPreference.getString(
 					AppSharedPreference.USER_NAME, "", getApplicationContext()));
@@ -203,11 +215,14 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 			} else if (StringUtil.isNullOrEmpty(companyAddress) ) {
 				Toast.makeText(getApplicationContext(), "Please enter company address.", Toast.LENGTH_LONG).show();
 				return false;
-			} else if (!StringUtil.isNullOrEmpty(companyContact) && (companyContact.trim().startsWith("0"))) {
-				Toast.makeText(getApplicationContext(), "Please enter a valid company contact number.", Toast.LENGTH_LONG).show();
-				return false;
-			} else if (!StringUtil.isNullOrEmpty(companyContact) && ((companyContact.trim().length() < 7) || (companyContact.trim().length() > 12))) {
-				Toast.makeText(getApplicationContext(), "Company contact number should be 7-12 digits.", Toast.LENGTH_LONG).show();
+			}
+//			else if (!StringUtil.isNullOrEmpty(companyContact)) {
+//				
+//				Toast.makeText(getApplicationContext(), "Please enter company contact number.", Toast.LENGTH_LONG).show();
+//				return false;
+//			}
+			else if (!StringUtil.isNullOrEmpty(companyContact) && ((companyContact.trim().length() <= 7) || (companyContact.trim().length() >= 12)) || (!companyContact.trim().startsWith("1"))) {
+				Toast.makeText(getApplicationContext(), getString(R.string.mobile_number_validation_contestapp_company), Toast.LENGTH_LONG).show();
 				return false;
 			} else if (StringUtil.isNullOrEmpty(userName)) {
 				Toast.makeText(getApplicationContext(), "Please enter your name.", Toast.LENGTH_LONG).show();
@@ -215,11 +230,11 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 			} else if (StringUtil.isNullOrEmpty(userNumber)) {
 				Toast.makeText(getApplicationContext(), "Please enter your contact number.", Toast.LENGTH_LONG).show();
 				return false;
-			} else if (userNumber.trim().startsWith("0")) {
-				Toast.makeText(getApplicationContext(), "Please enter your valid contact number.", Toast.LENGTH_LONG).show();
+			} else if (!userNumber.trim().startsWith("1")) {
+				Toast.makeText(getApplicationContext(), getString(R.string.mobile_number_validation_contestapp), Toast.LENGTH_LONG).show();
 				return false;
-			} else if ((userNumber.trim().length() < 7) || (userNumber.trim().length() > 12)) {
-				Toast.makeText(getApplicationContext(), "Your contact number should be 7-12 digits.", Toast.LENGTH_LONG).show();
+			} else if ((userNumber.trim().length() <= 7) || (userNumber.trim().length() > 11)) {
+				Toast.makeText(getApplicationContext(), getString(R.string.mobile_number_validation_contestapp), Toast.LENGTH_LONG).show();
 				return false;
 			} else if (mLattitudeN == 0 && mLattitude == 0) {
 				Toast.makeText(getApplicationContext(), "Location not available.", Toast.LENGTH_LONG).show();

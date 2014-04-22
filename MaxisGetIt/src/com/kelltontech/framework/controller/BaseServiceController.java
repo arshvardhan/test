@@ -5,16 +5,12 @@
  */
 package com.kelltontech.framework.controller;
 
-import org.apache.http.entity.mime.Header;
-
 import android.app.Activity;
 import android.util.Base64;
-import android.util.Log;
 
 import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.network.HttpClientConnection;
 import com.kelltontech.framework.network.ServiceResponse;
-import com.kelltontech.framework.ui.BaseMainActivity;
 import com.kelltontech.framework.ui.IActionController;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
@@ -24,7 +20,6 @@ import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
 import com.kelltontech.maxisgetit.controllers.SessionTokenController;
 import com.kelltontech.maxisgetit.service.AppSharedPreference;
 import com.kelltontech.maxisgetit.ui.activities.MaxisMainActivity;
-import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 import com.kelltontech.maxisgetit.utils.Utility;
 
@@ -112,11 +107,11 @@ public abstract class BaseServiceController implements IServiceController {
 				    });
 					return;
 				}
+				Response response = new Response();
 				StringBuffer buffer = new StringBuffer();
 				if( serviceResponse.getResponseData() != null ) {
 					buffer = new StringBuffer(new String(serviceResponse.getResponseData()));
 				}
-				Response response = new Response();
 				response.setResponseText(buffer.toString());
 				responseService(response);
 			} catch (Exception e) {

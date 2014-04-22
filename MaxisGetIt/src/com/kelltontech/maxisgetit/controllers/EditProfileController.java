@@ -61,7 +61,7 @@ public class EditProfileController extends BaseServiceController {
 			serviceRq.setPostData(new ByteArrayEntity(jsonObject.toString().getBytes()));
 			
 			GenralRequest genralRequest = new GenralRequest(mActivity);
-			String url = AppConstants.BASE_URL + GenralRequest.EDIT_PROFILE_METHOD + genralRequest.getDefaultParameterString();;
+			String url = AppConstants.BASE_URL + GenralRequest.EDIT_PROFILE_METHOD + genralRequest.getDefaultParameterString(AppConstants.MyAccount);;
 			
 			Log.d("maxis", "url " + url);
 			Log.d("json",jsonObject.toString());

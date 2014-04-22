@@ -288,6 +288,7 @@ public abstract class MaxixBaseWithPopDownSearch extends BaseMainActivity {
 			Intent intentHome = new Intent(MaxixBaseWithPopDownSearch.this, HomeActivity.class);
 			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			startActivity(intentHome);
+			HomeActivity.fromHomeClick = true;
 			break;
 		}
 	}

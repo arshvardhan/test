@@ -6,6 +6,7 @@ import android.content.Context;
 
 import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.utils.NativeHelper;
+import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
 import com.kelltontech.maxisgetit.dao.MaxisStore;
 
@@ -53,7 +54,7 @@ public abstract class MaxisBaseRequest {
 	protected String mLocaleCode;
 	protected String mScreenType;
 	private String deviceId = "";
-//	public static final String DEVICE_ID = "device_id";
+	public static final String DEVICE_ID = "device_id";
 	
 	public MaxisBaseRequest(Context context) {
 		this.mContext = context;
@@ -63,13 +64,15 @@ public abstract class MaxisBaseRequest {
 		deviceId = MyApplication.getDeviceId();
 	}
 
-	public Hashtable<String, String> getDefaultHeaders() {
+	public Hashtable<String, String> getDefaultHeaders(String screenName) {
 		Hashtable<String, String> hashtable = new Hashtable<String, String>();
 		hashtable.put(KEY_APP_KEY, VALUE_APP_KEY);
 		hashtable.put(KEY_PLATFORM, VALUE_PLATFORM);
 		hashtable.put(KEY_SCREEN_TYPE, mScreenType);
 		hashtable.put(KEY_LANGUAGE, mLocaleCode);
-//		hashtable.put(DEVICE_ID,deviceId);
+		hashtable.put(DEVICE_ID,deviceId);
+		hashtable.put(AppConstants.KEY_PAGE_REVIEW, screenName);
+		
 		return hashtable;
 	}
 	
@@ -83,12 +86,13 @@ public abstract class MaxisBaseRequest {
 		hashtable.put(KEY_PAGE_NUMBER, String.valueOf(pageNumber));
 		hashtable.put(KEY_COMP_ID, compId);
 		hashtable.put(KEY_CAT_ID, catId);
-//		hashtable.put(DEVICE_ID,deviceId);
+		hashtable.put(DEVICE_ID,deviceId);
+		hashtable.put(AppConstants.KEY_PAGE_REVIEW,AppConstants.Company_detail);
 		return hashtable;
 	}
 	
-	public String getDefaultParameterString(){
-		String str="?"+KEY_PLATFORM+"="+VALUE_PLATFORM+"&"+KEY_LANGUAGE+"="+mLocaleCode+"&"+KEY_APP_KEY+"="+VALUE_APP_KEY;
+	public String getDefaultParameterString(String ScreenName){
+		String str="?"+KEY_PLATFORM+"="+VALUE_PLATFORM+"&"+KEY_LANGUAGE+"="+mLocaleCode+"&"+KEY_APP_KEY+"="+VALUE_APP_KEY+"&" +MaxisBaseRequest.DEVICE_ID + "=" + deviceId+""+"&"+AppConstants.KEY_PAGE_REVIEW+"="+ScreenName+"";
 		return str;
 	}
 	public Hashtable<String, String> getDefaultHeadersWithGPS() {
@@ -99,10 +103,23 @@ public abstract class MaxisBaseRequest {
 		hashtable.put(KEY_LANGUAGE, mLocaleCode);
 		hashtable.put(KEY_LATITUDE, GPS_Data.getLatitude()+"");
 		hashtable.put(KEY_LONGITUDE, GPS_Data.getLongitude()+"");
-//		hashtable.put(DEVICE_ID,deviceId);
+		hashtable.put(DEVICE_ID,deviceId);
 		return hashtable;
 	}
-	public abstract Hashtable getRequestHeaders();
+	
+	public Hashtable<String, String> getDefaultHeadersWithGPSandPageView() {
+		Hashtable<String, String> hashtable = new Hashtable<String, String>();
+		hashtable.put(KEY_APP_KEY, VALUE_APP_KEY);
+		hashtable.put(KEY_PLATFORM, VALUE_PLATFORM);
+		hashtable.put(KEY_SCREEN_TYPE, mScreenType);
+		hashtable.put(KEY_LANGUAGE, mLocaleCode);
+		hashtable.put(KEY_LATITUDE, GPS_Data.getLatitude()+"");
+		hashtable.put(KEY_LONGITUDE, GPS_Data.getLongitude()+"");
+		hashtable.put(DEVICE_ID,deviceId);
+		hashtable.put(AppConstants.KEY_PAGE_REVIEW,AppConstants.Home_Screen);
+		return hashtable;
+	}
+	public abstract Hashtable getRequestHeaders(String screenName);
 
 	public String getLocaleCode() {
 		return mLocaleCode;
