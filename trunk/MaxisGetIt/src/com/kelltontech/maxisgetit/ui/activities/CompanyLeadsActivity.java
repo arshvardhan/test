@@ -110,9 +110,7 @@ public class CompanyLeadsActivity extends MaxisMainActivity {
 		switch (v.getId()) {
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(CompanyLeadsActivity.this, HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			showHomeScreen();
 			break;
 		case R.id.show_profile_icon:
 			finish();

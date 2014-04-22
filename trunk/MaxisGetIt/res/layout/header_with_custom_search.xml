@@ -72,6 +72,7 @@
                 android:background="@drawable/search_bar"
                 android:drawableLeft="@drawable/search_iconleft"
                 android:hint="@string/search_query"
+                android:imeOptions="actionDone"
                 android:singleLine="true"
                 android:textSize="@dimen/sp_12" />
         </android.support.v4.widget.DrawerLayout>

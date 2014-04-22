@@ -454,11 +454,7 @@ public class SubCategoryListActivity extends MaxisMainActivity {
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(SubCategoryListActivity.this,
-					HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			showHomeScreen();
 			break;
 		case R.id.footer_facebook_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.FACEBOOK_CLICK);

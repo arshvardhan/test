@@ -48,7 +48,7 @@ public class RootCategoryController extends BaseServiceController {
 			Log.d("maxis", "url " + url);
 
 			GenralRequest baseRequest = new GenralRequest(mActivity);
-			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, baseRequest.getDefaultHeadersWithGPS()));
+			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, baseRequest.getDefaultHeadersWithGPSandPageView()));
 			serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
 			HttpClientConnection.getInstance().addRequest(serviceRq);
 		} catch (Exception e) {

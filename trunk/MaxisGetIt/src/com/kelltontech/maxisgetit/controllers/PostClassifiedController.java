@@ -51,9 +51,9 @@ public class PostClassifiedController extends BaseServiceController {
 			serviceRq.setHttpHeaders( API_HEADER_NAMES_ARRAY_2, getApiHeaderValuesArray2());
 			String url = AppConstants.BASE_URL + GenralRequest.POST_CLASSIFIED_METHOD;
 			GenralRequest genralRequest = new GenralRequest(mActivity);
-			url+=genralRequest.getDefaultParameterString();
+//			url+=genralRequest.getDefaultParameterString();
 			Log.d("maxis", "url " + url);
-			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, (genralRequest.getDefaultHeaders())));
+			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, (genralRequest.getDefaultHeaders(AppConstants.Add_Post))));
 			serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
 			
 			JSONObject	classifiedJasonObject = (JSONObject) requestData;

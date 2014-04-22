@@ -56,7 +56,7 @@ public class ClassifiedListController extends BaseServiceController {
 
 			String userId = (String) requestData;
 			GenralRequest baseReq = new GenralRequest(mActivity);
-			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, baseReq.getHeadersWithUID(userId)));
+			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, baseReq.getHeadersWithUID(userId,AppConstants.MyClassifieds)));
 			
 			HttpClientConnection.getInstance().addRequest(serviceRq);
 		} catch (Exception e) {

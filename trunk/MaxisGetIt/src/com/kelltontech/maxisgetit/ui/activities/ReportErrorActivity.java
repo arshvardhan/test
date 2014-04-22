@@ -102,6 +102,7 @@ public class ReportErrorActivity extends MaxisMainActivity {
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
 		mEdUserName = (EditText) findViewById(R.id.atl_user_name);
 		mEdUserMobile = (EditText) findViewById(R.id.atl_user_mobile);
+//		mEdUserMobile.setKeyListener(null);
 		mGuestDetailController = (LinearLayout) findViewById(R.id.atl_guest_detail_controller);
 
 		mMandatoryFieldsDropDown = (Spinner) findViewById(R.id.are_error_chooser);
@@ -189,6 +190,7 @@ public class ReportErrorActivity extends MaxisMainActivity {
 			mGuestDetailController.setVisibility(View.GONE);
 		} else {
 			mGuestDetailController.setVisibility(View.VISIBLE);
+			mEdUserMobile.setText(mStore.getAuthMobileNumber().substring(2));
 		}
 	}
 
@@ -209,11 +211,7 @@ public class ReportErrorActivity extends MaxisMainActivity {
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(ReportErrorActivity.this,
-					HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			showHomeScreen();
 			break;
 		case R.id.show_profile_icon:
 			onProfileClick();
@@ -325,17 +323,17 @@ public class ReportErrorActivity extends MaxisMainActivity {
 			String uName = mEdUserName.getText().toString().trim();
 			String mobile = mEdUserMobile.getText().toString();
 			mEdUserName.setText(uName);
-			if (uName.equals("")) {
-				showInfoDialog(getString(R.string.name_empty));
-				return false;
-			}
+//			if (uName.equals("")) {
+//				showInfoDialog(getString(R.string.name_empty));
+//				return false;
+//			}
 			// if (mobile.length() < 10 || mobile.indexOf('+',1)!=-1 ||
 			// (mobile.indexOf('+')!=-1 && mobile.length()<=10)) {
 			if (mobile.equals("")) {
 				showInfoDialog(getString(R.string.number_empty));
 				return false;
-			} else if (mobile.length() <= 7 || mobile.length() >= 12 ||  mobile.startsWith("0")) {
-				showInfoDialog(getString(R.string.invalid_mobile));
+			} else if (mobile.length() <= 7 || mobile.length() >= 12 ||  !mobile.startsWith("1")) {
+				showInfoDialog(getString(R.string.mobile_number_validation));
 				return false;
 			} else {
 				return true;

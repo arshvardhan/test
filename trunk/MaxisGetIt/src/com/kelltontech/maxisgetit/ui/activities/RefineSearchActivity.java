@@ -31,6 +31,7 @@ import com.kelltontech.maxisgetit.R;
 import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.imageloader.ImageLoader;
 import com.kelltontech.framework.model.Response;
+import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.framework.utils.UiUtils;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
@@ -96,6 +97,7 @@ public class RefineSearchActivity extends MaxisMainActivity {
 	TextView mainSearchButton;
 	ArrayList<String> selectedLocalityindex;
 	LinearLayout wholeSearchBoxContainer;
+	String categoryId = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +123,8 @@ public class RefineSearchActivity extends MaxisMainActivity {
 		mClRequest = bundle.getParcelable(AppConstants.DATA_LIST_REQUEST);
 		mLocalitySelectorDao = bundle
 				.getParcelable(AppConstants.LOCALITY_DAO_DATA);
+		
+		categoryId = bundle.getString("categoryId");
 		mClRequest.setPageNumber(1);
 		mCatResponse = (RefineCategoryResponse) bundle
 				.get(AppConstants.REFINE_CAT_RESPONSE);
@@ -321,8 +325,12 @@ public class RefineSearchActivity extends MaxisMainActivity {
 							refineSearchRequest.setCategoryId(mClRequest
 									.getSelectedCategoryBySearch());
 						} else {
-							refineSearchRequest.setCategoryId(mClRequest
-									.getKeywordOrCategoryId());
+							if (!StringUtil.isNullOrEmpty(categoryId)) {
+								refineSearchRequest.setCategoryId(categoryId);
+							} else {
+								refineSearchRequest.setCategoryId(mClRequest
+										.getKeywordOrCategoryId());
+							}
 						}
 						// refineSearchRequest.setCategoryId(mClRequest.getKeywordOrCategoryId());
 						refineSearchRequest.setDeal(!mClRequest
@@ -531,6 +539,13 @@ public class RefineSearchActivity extends MaxisMainActivity {
 		jsonObject.put("selector", jsonSelector);
 		System.out.println(mSelctorResp);
 		System.out.println(jsonObject);
+		if (jsonObject.has(AppConstants.KEYWORD_CITY_OF_REFINE)) {
+			MaxisMainActivity.isCitySelected = true;
+			mClRequest.setSearch_distance("");
+		} else {
+			MaxisMainActivity.isCitySelected = false;
+		}
+
 		return jsonObject;
 	}
 
@@ -584,11 +599,7 @@ public class RefineSearchActivity extends MaxisMainActivity {
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(RefineSearchActivity.this,
-					HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			showHomeScreen();
 			break;
 
 		case R.id.upArrow:
@@ -651,12 +662,10 @@ public class RefineSearchActivity extends MaxisMainActivity {
 			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
 					+ "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
-			if(index==-1)
-			{
-				city_id =-1;
-			}else
-			{
-			city_id = cityList.get(index).getId();
+			if (index == -1) {
+				city_id = -1;
+			} else {
+				city_id = cityList.get(index).getId();
 			}
 
 		} else if (resultCode == RESULT_OK

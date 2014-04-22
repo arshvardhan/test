@@ -373,7 +373,7 @@ public class DealsActivity extends MaxisMainActivity {
 							loadPageData(mClResponse.getPageNumber() + 1);
 						}
 					} else if (number == AppConstants.MAX_RECORD_COUNT + 1
-							&& !isModifySearchDialogOpen && mScrollUp) {
+							&& !isModifySearchDialogOpen && mScrollUp && mClResponse.getTotalrecordFound()>100) {
 						showConfirmationDialog(
 								CustomDialog.CONFIRMATION_DIALOG,
 								getResources().getString(
@@ -515,11 +515,7 @@ public class DealsActivity extends MaxisMainActivity {
 
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(DealsActivity.this,
-					HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			showHomeScreen();
 			break;
 		case R.id.col_view_on_map:
 		case R.id.col_view_on_map1:
@@ -757,7 +753,7 @@ public class DealsActivity extends MaxisMainActivity {
 				showInfoDialog((String) msg.obj);
 			} else if (msg.arg1 == 0) {
 				MaxisResponse genResp = (MaxisResponse) msg.obj;
-				showInfoDialog("Thank you for Download Deal. The message has been sent to your Phone Number.");
+				showInfoDialog(getString(R.string.download_deal));
 			}
 			stopSppiner();
 		} else if (msg.arg2 == Events.CITY_LISTING) {
@@ -993,13 +989,16 @@ public class DealsActivity extends MaxisMainActivity {
 		dealID = id;
 
 		if (store.isLoogedInUser()) {
-			userNo = store.getUserMobileNumberToDispaly();
+			userNo = "60"+store.getUserMobileNumberToDispaly();
 			userName = store.getUserName();
 			dealDownload();
 
 		} else {
-			Intent intent = new Intent(context, DealForm.class);
-			((Activity) context).startActivityForResult(intent, 2);
+			userNo = store.getAuthMobileNumber();
+			userName = "";
+			dealDownload();
+//			Intent intent = new Intent(context, DealForm.class);
+//			((Activity) context).startActivityForResult(intent, 2);
 
 		}
 
@@ -1008,11 +1007,12 @@ public class DealsActivity extends MaxisMainActivity {
 	public void dealDownload() {
 		DownloadDealReq dealReq = new DownloadDealReq();
 		dealReq.setName(userName);
-		dealReq.setPhoneNo("60" + userNo);
+		dealReq.setPhoneNo(userNo);
 		dealReq.setDeal_id(dealID);
 
 		DownloadDealController downloadDealController = new DownloadDealController(
 				DealsActivity.this, Events.DOWNLOAD_DEAL);
+		downloadDealController.fromDeal = true;
 		startSppiner();
 		downloadDealController.requestService(dealReq);
 	}

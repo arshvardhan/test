@@ -5,6 +5,8 @@
  */
 package com.kelltontech.framework.model;
 
+import java.io.InputStream;
+
 /**
  *
  */

@@ -98,7 +98,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 	private DealMapInfoWindowAdapter mMapInfoWindowAdapter;
 
 	private GoogleMap mMap;
-	private Marker sourceMarker;
+	// private Marker sourceMarker;
 	private String comp_id;
 	private String deal_id;
 	private String l3cat_id;
@@ -130,6 +130,9 @@ public class DealDetailActivity extends MaxisMainActivity implements
 	TextView mainSearchButton;
 	ArrayList<String> selectedLocalityindex;
 	LinearLayout wholeSearchBoxContainer;
+	boolean onTapNearestOutletEnable = false;
+
+	View seprator_outlet;
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -154,12 +157,10 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
 					+ "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
-			if(index==-1)
-			{
-				city_id =-1;
-			}else
-			{
-			city_id = cityList.get(index).getId();
+			if (index == -1) {
+				city_id = -1;
+			} else {
+				city_id = cityList.get(index).getId();
 			}
 
 		} else if (resultCode == RESULT_OK
@@ -204,7 +205,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_DEAL_DETAIL);
 		setContentView(R.layout.activity_deal_detail);
 
@@ -216,6 +217,8 @@ public class DealDetailActivity extends MaxisMainActivity implements
 				.getParcelable(AppConstants.COMP_DETAIL_DATA);
 		mClRequest = bundle.getParcelable(AppConstants.DATA_LIST_REQUEST);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
+		seprator_outlet = (View) findViewById(R.id.outlet_seprator);
+		dealDesc = (TextView) findViewById(R.id.deal_desc);
 
 		if (compDetailResponse == null) {
 			try {
@@ -275,6 +278,61 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			}
 		});
 
+		dealDesc.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				if (onTapNearestOutletEnable) {
+					String catId = outLets.get(0).getCatid();
+					String comp_id = outLets.get(0).getId();
+
+					Intent intent = new Intent(DealDetailActivity.this,
+							CompanyDetailActivity.class);
+
+					Bundle bundle = new Bundle();
+					bundle.putString(AppConstants.COMP_ID, comp_id);
+					bundle.putString(AppConstants.GLOBAL_SEARCH_KEYWORD,
+							mSearchKeyword);
+					bundle.putBoolean(AppConstants.IS_DEAL_LIST, true);
+					intent.putExtra(AppConstants.CATEGORY_ID_KEY, catId);
+					intent.putExtras(bundle);
+					startActivity(intent);
+				}
+
+			}
+		});
+
+		final com.kelltontech.maxisgetit.ui.widgets.CustomScrollView mainScrollView = (com.kelltontech.maxisgetit.ui.widgets.CustomScrollView) findViewById(R.id.scroll_view);
+		View transparentImageView = (View) findViewById(R.id.trans_img);
+
+		transparentImageView.setOnTouchListener(new View.OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				int action = event.getAction();
+				switch (action) {
+				case MotionEvent.ACTION_DOWN:
+					// Disallow ScrollView to intercept touch events.
+					mainScrollView.requestDisallowInterceptTouchEvent(true);
+					// Disable touch on transparent view
+					return false;
+
+				case MotionEvent.ACTION_UP:
+					// Allow ScrollView to intercept touch events.
+					mainScrollView.requestDisallowInterceptTouchEvent(false);
+					return true;
+
+				case MotionEvent.ACTION_MOVE:
+					mainScrollView.requestDisallowInterceptTouchEvent(true);
+					return false;
+
+				default:
+					return true;
+				}
+			}
+		});
+
 	}
 
 	@Override
@@ -289,10 +347,12 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		case R.id.about_deal:
 			Log.e("manish", "inside onclick");
 			isNearestOutlet = false;
+			onTapNearestOutletEnable = false;
 			aboutUs.setBackgroundResource(R.drawable.left_btnselected);
 			nearOutLets.setBackgroundResource(R.drawable.center_btn);
 			tNc.setBackgroundResource(R.drawable.right_btn);
 			outLetsName.setVisibility(View.GONE);
+			seprator_outlet.setVisibility(View.GONE);
 			if (!StringUtil.isNullOrEmpty(compDetailResponse.getDescription()))
 				dealDesc.setText(compDetailResponse.getDescription());
 
@@ -303,6 +363,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			aboutUs.setBackgroundResource(R.drawable.left_btn);
 			nearOutLets.setBackgroundResource(R.drawable.center_btnselected);
 			tNc.setBackgroundResource(R.drawable.right_btn);
+			seprator_outlet.setVisibility(View.GONE);
 
 			setUpMapIfNeeded();
 			if (outLets != null && outLets.size() > 0) {
@@ -310,9 +371,11 @@ public class DealDetailActivity extends MaxisMainActivity implements
 						.getAddress())) {
 					dealDesc.setText(outLets.get(0).getTitle() + ", "
 							+ outLets.get(0).getAddress());
+					onTapNearestOutletEnable = true;
 				}
 			} else {
 				dealDesc.setText("Nearest OutLet Address not available .");
+				onTapNearestOutletEnable = false;
 			}
 			break;
 
@@ -324,6 +387,8 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			tNc.setBackgroundResource(R.drawable.right_btnselected);
 
 			dealDesc.setText(termsNdcond);
+			onTapNearestOutletEnable = false;
+			seprator_outlet.setVisibility(View.GONE);
 
 			break;
 		case R.id.search_toggler:
@@ -358,11 +423,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(DealDetailActivity.this,
-					HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			showHomeScreen();
 			break;
 		case R.id.show_profile_icon:
 			onProfileClick();
@@ -376,8 +437,13 @@ public class DealDetailActivity extends MaxisMainActivity implements
 
 		case R.id.deal_all_outlet:
 			isNearestOutlet = false;
-			setUpMapIfNeeded();
-			addOutLets();
+			try {
+				setUpMapIfNeeded();
+				addOutLets();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			break;
 		case textId:
 			int index = Integer.parseInt(v.getTag().toString());
@@ -492,7 +558,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 
 	private void setUpMap() {
 		mMap.setMyLocationEnabled(true);
-		Location loc = mMap.getMyLocation();
+		// Location loc = mMap.getMyLocation();
 		// loc.getLatitude()!=0&&loc.getLongitude()!=0
 		LatLng fromPosition = new LatLng(GPS_Data.getLatitude(),
 				GPS_Data.getLongitude());
@@ -501,14 +567,15 @@ public class DealDetailActivity extends MaxisMainActivity implements
 
 		// LatLng toPosition=new LatLng(28.393213,77.248878);
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
-		builder.include(fromPosition);
-		sourceMarker = mMap.addMarker(new MarkerOptions()
-				.position(fromPosition)
-				.title("You are here")
-				.icon(BitmapDescriptorFactory
-						.fromResource(R.drawable.map_user_marker)));
+		// builder.include(fromPosition);
+		// sourceMarker = mMap.addMarker(new MarkerOptions()
+		// .position(fromPosition)
+		// .title("You are here")
+		// .icon(BitmapDescriptorFactory
+		// .fromResource(R.drawable.map_user_marker)));
 		// builder.include(sourceMarker.getPosition());
 		LatLng toPosition = null;
+		LatLng nearestPosition = null;
 		if (outLets != null) {
 			for (int i = 0; i < outLets.size(); i++) {
 
@@ -528,15 +595,27 @@ public class DealDetailActivity extends MaxisMainActivity implements
 					builder.include(toPosition);
 				}
 			}
+
+			nearestPosition = new LatLng(Double.parseDouble(outLets.get(0)
+					.getLat()), Double.parseDouble(outLets.get(0).getLongt()));
+		}
+		if (nearestPosition == null) {
+			nearestPosition = fromPosition;
 		}
 		LatLngBounds bounds = builder.build();
-		int padding = 100; // offset from edges of the map in pixels
-		CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+		int padding = 50; // offset from edges of the map in pixels
+		// CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds,
+		// padding);
+		CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(nearestPosition,
+				14.0f);
+
 		mMap.animateCamera(cu);
+
 		final CameraPosition cameraPosition = new CameraPosition.Builder()
-				.target(fromPosition) // Sets the center of the map to Mountain
-										// View
-				.zoom(15) // Sets the zoom
+				.target(nearestPosition) // Sets the center of the map to
+											// Mountain
+											// View
+				.zoom(14) // Sets the zoom
 				.bearing(90) // Sets the orientation of the camera to east
 				.tilt(30) // Sets the tilt of the camera to 30 degrees
 				.build();
@@ -597,8 +676,9 @@ public class DealDetailActivity extends MaxisMainActivity implements
 				if (location.getLatitude() != 0 && location.getLongitude() != 0) {
 					GPS_Data.setLatitude(location.getLatitude());
 					GPS_Data.setLongitude(location.getLongitude());
-					sourceMarker.setPosition(new LatLng(GPS_Data.getLatitude(),
-							GPS_Data.getLongitude()));
+					// sourceMarker.setPosition(new
+					// LatLng(GPS_Data.getLatitude(),
+					// GPS_Data.getLongitude()));
 				}
 			}
 		});
@@ -624,15 +704,20 @@ public class DealDetailActivity extends MaxisMainActivity implements
 	}
 
 	public void getOutLets() {
-		OutLetDetailtController detailtController = new OutLetDetailtController(
-				DealDetailActivity.this, Events.OUTLET_DETAIL);
-		OutLetDetailRequest detailRequest = new OutLetDetailRequest();
+		try {
 
-		detailRequest.setComp_id(comp_id);
-		detailRequest.setDeal_id(deal_id);
-		detailRequest.setL3cat_id(l3cat_id);
-		startSppiner();
-		detailtController.requestService(detailRequest);
+			OutLetDetailtController detailtController = new OutLetDetailtController(
+					DealDetailActivity.this, Events.OUTLET_DETAIL);
+			OutLetDetailRequest detailRequest = new OutLetDetailRequest();
+
+			detailRequest.setComp_id(comp_id);
+			detailRequest.setDeal_id(deal_id);
+			detailRequest.setL3cat_id(l3cat_id);
+			startSppiner();
+			detailtController.requestService(detailRequest);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
 	@Override
@@ -657,24 +742,29 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			}
 
 			else if (event == Events.OUTLET_DETAIL) {
-				if (response.getPayload() instanceof OutLetDetails) {
-					OutLetDetails outLetDetails = (OutLetDetails) response
-							.getPayload();
-					if (outLetDetails.getErrorCode() != 0) {
-						message.obj = getResources().getString(
-								R.string.communication_failure);
-					} else {
-						if (outLetDetails.getOutlet().size() < 1) {
-							message.obj = new String(getResources().getString(
-									R.string.no_result_found));
+
+				try {
+					if (response.getPayload() instanceof OutLetDetails) {
+						OutLetDetails outLetDetails = (OutLetDetails) response
+								.getPayload();
+						if (outLetDetails.getErrorCode() != 0) {
+							message.obj = getResources().getString(
+									R.string.communication_failure);
 						} else {
-							message.arg1 = 0;
-							message.obj = outLetDetails;
+							if (outLetDetails.getOutlet().size() < 1) {
+								message.obj = new String(getResources()
+										.getString(R.string.no_result_found));
+							} else {
+								message.arg1 = 0;
+								message.obj = outLetDetails;
+							}
 						}
+					} else {
+						message.obj = new String(getResources().getString(
+								R.string.communication_failure));
 					}
-				} else {
-					message.obj = new String(getResources().getString(
-							R.string.communication_failure));
+				} catch (Exception e) {
+					// TODO: handle exception
 				}
 			} else if (event == Events.DEAL_DETAIL) {
 				if (response.getPayload() instanceof CompanyDetail) {
@@ -699,20 +789,24 @@ public class DealDetailActivity extends MaxisMainActivity implements
 	@Override
 	public void updateUI(Message msg) {
 		if (msg.arg2 == Events.OUTLET_DETAIL) {
-			if (msg.arg1 == 1) {
-				showInfoDialog((String) msg.obj);
-			} else {
-				outLetResponse = (OutLetDetails) msg.obj;
-				outLets = outLetResponse.getOutlet();
-				setUpMapIfNeeded();
+			try {
+				if (msg.arg1 == 1) {
+					showInfoDialog((String) msg.obj);
+				} else {
+					outLetResponse = (OutLetDetails) msg.obj;
+					outLets = outLetResponse.getOutlet();
+					setUpMapIfNeeded();
+				}
+				stopSppiner();
+			} catch (Exception e) {
+				// TODO: handle exception
 			}
-			stopSppiner();
 		} else if (msg.arg2 == Events.DOWNLOAD_DEAL) {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else if (msg.arg1 == 0) {
 				MaxisResponse genResp = (MaxisResponse) msg.obj;
-				showInfoDialog("Thank you for Download Deal. The message has been sent to your Phone Number.");
+				showInfoDialog(getString(R.string.download_deal));
 			}
 			stopSppiner();
 		} else if (msg.arg2 == Events.DEAL_DETAIL) {
@@ -735,7 +829,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 							R.string.no_result_found));
 				}
 			}
-//			stopSppiner();
+			// stopSppiner();
 		} else if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE
 				|| msg.arg2 == Events.USER_DETAIL) {
 			super.updateUI(msg);
@@ -790,13 +884,17 @@ public class DealDetailActivity extends MaxisMainActivity implements
 	public void getDownloadDetails() {
 
 		if (store.isLoogedInUser()) {
-			userNo = store.getUserMobileNumberToDispaly();
+			userNo = "60" + store.getUserMobileNumberToDispaly();
 			userName = store.getUserName();
 			dealDownload();
 
 		} else {
-			Intent intent = new Intent(getApplicationContext(), DealForm.class);
-			startActivityForResult(intent, 2);
+			userNo = store.getAuthMobileNumber();
+			userName = "";
+			dealDownload();
+			// Intent intent = new Intent(getApplicationContext(),
+			// DealForm.class);
+			// startActivityForResult(intent, 2);
 
 		}
 
@@ -807,7 +905,6 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		// outLets = compDetailResponse.getNearoutlets();
 
 		mSearchContainer = (LinearLayout) findViewById(R.id.search_box_container);
-		
 
 		mHeaderText = (TextView) findViewById(R.id.header_title);
 		mDealTitle = (TextView) findViewById(R.id.txt_deal_name);
@@ -816,7 +913,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		aboutUs = (TextView) findViewById(R.id.about_deal);
 		nearOutLets = (TextView) findViewById(R.id.nearest_outlet);
 		tNc = (TextView) findViewById(R.id.tnc);
-		dealDesc = (TextView) findViewById(R.id.deal_desc);
+
 		// dealDownload = (Button)findViewById(R.id.);
 		downloadDeal = (TextView) findViewById(R.id.deal_download);
 		viewAllOutlets = (TextView) findViewById(R.id.deal_all_outlet);
@@ -906,6 +1003,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			// getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			// View view = inflater.inflate(
 			// R.layout.offerlistheader, null, true);
+			seprator_outlet.setVisibility(View.VISIBLE);
 			if (!viewAdded) {
 				viewAdded = true;
 				for (OutLet title : outLets) {
@@ -939,11 +1037,12 @@ public class DealDetailActivity extends MaxisMainActivity implements
 	public void dealDownload() {
 		DownloadDealReq dealReq = new DownloadDealReq();
 		dealReq.setName(userName);
-		dealReq.setPhoneNo("60" + userNo);
+		dealReq.setPhoneNo(userNo);
 		dealReq.setDeal_id(deal_id);
 
 		DownloadDealController downloadDealController = new DownloadDealController(
 				DealDetailActivity.this, Events.DOWNLOAD_DEAL);
+		downloadDealController.fromDeal = false;
 		startSppiner();
 		downloadDealController.requestService(dealReq);
 	}

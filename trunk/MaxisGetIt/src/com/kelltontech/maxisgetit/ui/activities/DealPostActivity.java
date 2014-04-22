@@ -150,6 +150,8 @@ public class DealPostActivity extends MaxisMainActivity {
 	TextView mainSearchButton;
 	ArrayList<String> selectedLocalityindex;
 	LinearLayout wholeSearchBoxContainer;
+	
+	String selectedCat;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -236,15 +238,16 @@ public class DealPostActivity extends MaxisMainActivity {
 								if (mMyDealResp.getCompCategoryList().size() == 2) {
 									request.setCompanyId(mSingalCompCat
 											.getCompanyId());
-									request.setCategoryId(mSingalCompCat
-											.getCategoryList().get(1)
-											.getCategoryId());
+									request.setCategoryId(selectedCat);
 								} else {
 									request.setCompanyId(selectedComp
 											.getCompanyId());
-									request.setCategoryId(selectedComp
-											.getCategoryList().get(1)
-											.getCategoryId());
+//									request.setCategoryId(selectedComp
+//											.getCategoryList().get(1)
+//											.getCategoryId());
+									request.setCategoryId(selectedCat);
+											
+											
 								}
 								PostDealCityLocalityListController clController = new PostDealCityLocalityListController(
 										DealPostActivity.this,
@@ -443,9 +446,16 @@ public class DealPostActivity extends MaxisMainActivity {
 			mCategoryAdapter = new ArrayAdapter<CategoryWithCharge>(
 					DealPostActivity.this, R.layout.spinner_item,
 					mSingalCompCat.getCategoryList());
-			mCatChooser.setAdapter(mCategoryAdapter);
-			mCatChooser.setSelection(1, true);
-			mCatChooser.setEnabled(false);
+			if (mSingalCompCat.getCategoryList().size() == 2) {
+
+				mCatChooser.setAdapter(mCategoryAdapter);
+				mCatChooser.setSelection(1, true);
+				mCatChooser.setEnabled(false);
+			} else {
+				mCatChooser.setAdapter(mCategoryAdapter);
+				mCatChooser.setEnabled(true);
+			}
+
 		} else {
 			mCompanyAdapter = new ArrayAdapter<CompanyCategory>(
 					DealPostActivity.this, R.layout.spinner_item,
@@ -469,8 +479,15 @@ public class DealPostActivity extends MaxisMainActivity {
 										DealPostActivity.this,
 										R.layout.spinner_item, selectedComp
 												.getCategoryList());
-								mCatChooser.setEnabled(true);
-								mCatChooser.setAdapter(mCategoryAdapter);
+								if (selectedComp.getCategoryList().size() == 2) {
+
+									mCatChooser.setAdapter(mCategoryAdapter);
+									mCatChooser.setSelection(1, true);
+									mCatChooser.setEnabled(false);
+								} else {
+									mCatChooser.setAdapter(mCategoryAdapter);
+									mCatChooser.setEnabled(true);
+								}
 								mCategorySpinnerContainer
 										.setVisibility(View.VISIBLE);
 							}
@@ -488,6 +505,10 @@ public class DealPostActivity extends MaxisMainActivity {
 				public void onItemSelected(AdapterView<?> parent, View view,
 						int position, long id) {
 					mEntireMalaysiaRadioBtn.setChecked(true);
+					
+					selectedCat = selectedComp
+					.getCategoryList().get(position)
+					.getCategoryId();
 				}
 
 				@Override
@@ -738,11 +759,7 @@ public class DealPostActivity extends MaxisMainActivity {
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(DealPostActivity.this,
-					HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			showHomeScreen();
 			break;
 		case R.id.show_profile_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.SHOW_PROFILE_CLICK);
@@ -1143,7 +1160,8 @@ public class DealPostActivity extends MaxisMainActivity {
 				}
 				// showInfoDialog((String) msg.obj);
 			} else {
-				AnalyticsHelper.logEvent(FlurryEventsConstants.POST_DEAL_SUBMIT_CLICK);
+				AnalyticsHelper
+						.logEvent(FlurryEventsConstants.POST_DEAL_SUBMIT_CLICK);
 				setResult(RESULT_OK);
 				showFinalDialog("Your Deal is posted successfully.");
 			}
@@ -1592,7 +1610,7 @@ public class DealPostActivity extends MaxisMainActivity {
 				// radioBtns[i].setChecked(false);
 				radioBtns[i].setVisibility(radioBtns[i + 1].getVisibility());
 
-				imgView[i].setPadding(0, 0, 0, 0);
+				imgView[i].setPadding(10, 10, 10, 10);
 				/* removeImgView[i].setVisibility(View.GONE); */
 			}
 			// imgView[3].setBackgroundResource(R.drawable.upload_photo_icon);

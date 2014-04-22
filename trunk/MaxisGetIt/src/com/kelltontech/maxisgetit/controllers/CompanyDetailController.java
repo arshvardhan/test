@@ -19,6 +19,7 @@ public class CompanyDetailController extends BaseServiceController {
 	private Activity mActivity;
 	// private DetailRequest mDetailRequest;
 	private boolean isDeal;
+	private String screenName;
 
 	public CompanyDetailController(IActionController screen, int eventType) {
 		super(screen, eventType);
@@ -59,8 +60,15 @@ public class CompanyDetailController extends BaseServiceController {
 			String url = AppConstants.BASE_URL + detailRequest.getMethodName();
 
 			Log.d("maxis", "url " + url);
+			if(isDeal)
+			{
+			screenName = AppConstants.Deal_Detail;
+			}
+			else{
+				screenName = AppConstants.Company_detail;
+			}
 			serviceRq.setUrl(HttpHelper.getURLWithPrams(url,
-					detailRequest.getRequestHeaders()));
+					detailRequest.getRequestHeaders(screenName)));
 			HttpClientConnection.getInstance().addRequest(serviceRq);
 		} catch (Exception e) {
 			logRequestException(e, "CompanyDetailsController");

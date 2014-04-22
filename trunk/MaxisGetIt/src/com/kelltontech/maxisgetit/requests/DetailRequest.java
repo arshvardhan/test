@@ -2,6 +2,8 @@ package com.kelltontech.maxisgetit.requests;
 
 import java.util.Hashtable;
 
+import com.kelltontech.maxisgetit.constants.AppConstants;
+
 import android.content.Context;
 
 public class DetailRequest extends MaxisBaseRequest {
@@ -24,14 +26,16 @@ public class DetailRequest extends MaxisBaseRequest {
 	}
 
 	@Override
-	public Hashtable<String, String> getRequestHeaders() {
+	public Hashtable<String, String> getRequestHeaders(String screenName) {
 		Hashtable<String, String> ht = getDefaultHeadersWithGPS();
 		if (isDeal) {
 			ht.put(KEY_DEAL_ID, id);
 		} else {
 			ht.put(KEY_COMPANY_ID, id);
 			ht.put(KEY_CATEGORY_ID, catId);
+			
 		}
+		ht.put(AppConstants.KEY_PAGE_REVIEW,screenName);
 		return ht;
 	}
 

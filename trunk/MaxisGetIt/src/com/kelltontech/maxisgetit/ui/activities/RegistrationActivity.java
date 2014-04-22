@@ -186,14 +186,11 @@ public class RegistrationActivity extends MaxisMainActivity {
 		// break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(RegistrationActivity.this,
-					HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
+			showHomeScreen();
 			break;
 		case R.id.show_profile_icon:
-			onProfileClick();
+//			onProfileClick();
 			// Intent intentRegister = new Intent(RegistrationActivity.this,
 			// RegistrationActivity.class);
 			// intentRegister.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -209,8 +206,12 @@ public class RegistrationActivity extends MaxisMainActivity {
 			String mobile = mEdPhone.getText().toString();
 			// if (mobile.length() < 10 || mobile.indexOf('+',1)!=-1 ||
 			// (mobile.indexOf('+')!=-1 && mobile.length()<=10)){
-			if (mobile.length() <= 7 || mobile.length() >= 12 || mobile.startsWith("0")) {
-				showAlertDialog(getString(R.string.invalid_mobile));
+			if (StringUtil.isNullOrEmpty(mobile)) {
+				showAlertDialog(getString(R.string.number_empty));
+				return;
+			} else if (mobile.length() <= 7 || mobile.length() >= 12
+					|| !mobile.startsWith("1")) {
+				showAlertDialog(getString(R.string.mobile_number_validation));
 				return;
 			}
 			String email = mEdEmail.getText().toString().trim();
@@ -411,12 +412,10 @@ public class RegistrationActivity extends MaxisMainActivity {
 			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
 					+ "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
-			if(index==-1)
-			{
-				city_id =-1;
-			}else
-			{
-			city_id = cityList.get(index).getId();
+			if (index == -1) {
+				city_id = -1;
+			} else {
+				city_id = cityList.get(index).getId();
 			}
 
 		} else if (resultCode == RESULT_OK

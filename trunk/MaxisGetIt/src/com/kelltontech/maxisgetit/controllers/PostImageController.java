@@ -54,7 +54,7 @@
 				
 				serviceRq.setRequestTimeOut(AppConstants.MILLIS_3_MINUTE);
 				
-				String url = AppConstants.BASE_URL + GenralRequest.POST_IMAGE_METHOD + new GenralRequest(mActivity).getDefaultParameterString();
+				String url = AppConstants.BASE_URL + GenralRequest.POST_IMAGE_METHOD + new GenralRequest(mActivity).getDefaultParameterString(AppConstants.Deal_Post);
 				Log.d("maxis", "url " + url);
 				serviceRq.setUrl(url);
 				

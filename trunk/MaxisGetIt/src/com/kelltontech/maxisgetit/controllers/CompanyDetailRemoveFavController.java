@@ -21,6 +21,8 @@ import com.kelltontech.maxisgetit.requests.GenralRequest;
 
 public class CompanyDetailRemoveFavController extends BaseServiceController {
 	private Context mActivity;
+	public boolean fromComapnyList;
+	private String screenName ="";
 
 	public CompanyDetailRemoveFavController(IActionController screen, int eventType) {
 		super(screen, eventType);
@@ -57,8 +59,18 @@ public class CompanyDetailRemoveFavController extends BaseServiceController {
 			serviceRq.setHttpHeaders(API_HEADER_NAMES_ARRAY_2, getApiHeaderValuesArray2());
 			serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
 			serviceRq.setRequestTimeOut(AppConstants.MILLIS_3_MINUTE);
+			
+			if(fromComapnyList)
+			{
+				screenName = AppConstants.Company_detail;
+			}else
+			{
+				screenName  = AppConstants.MyFavourite;
+			}
+			
+			
 			String url = AppConstants.BASE_URL + GenralRequest.COMPANY_DETAIL_REMOVE_FAV_METHOD
-					+ new GenralRequest(mActivity).getDefaultParameterString();
+					+ new GenralRequest(mActivity).getDefaultParameterString(screenName);
 			Log.d("maxis", "url " + url);
 			serviceRq.setUrl(url);
 			//serviceRq.setUrl(HttpHelper.getURLWithPrams(url, urlParams));

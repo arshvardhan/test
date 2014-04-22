@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.Html;
@@ -32,13 +34,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kelltontech.framework.db.MyApplication;
-import com.kelltontech.framework.utils.NativeHelper;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
-import com.kelltontech.maxisgetit.controllers.CityAreaListController;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.CompanyDetail;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
@@ -50,6 +50,7 @@ import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
 import com.kelltontech.maxisgetit.ui.widgets.MyCompassView;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
+@SuppressLint("NewApi")
 public class CompassDirectionActivity extends MaxisMainActivity implements SensorEventListener{
 	private ImageView mProfileIconView;
     private MyCompassView compassView;
@@ -253,7 +254,8 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 	public Activity getMyActivityReference() {
 		return null;
 	}
-	 @Override
+	 @SuppressLint("NewApi")
+	@Override
 	    protected void onResume() {
 	        super.onResume();
 	        
@@ -304,9 +306,7 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 		switch (v.getId()) {
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(CompassDirectionActivity.this, HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			showHomeScreen();
 			break;
 		case R.id.show_profile_icon:
 			onProfileClick();
@@ -392,10 +392,15 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 	
 	private void showFullMapActivity() {
 		if(isLocationAvailable()){
-			Intent intent = new Intent(CompassDirectionActivity.this, FullMapActivity.class);
-			intent.putExtra(AppConstants.COMP_DETAIL_DATA, mCompanyDetail);
-			//intent.putExtra(AppConstants.THUMB_URL, mCategoryThumbUrl);
-			intent.putExtra(AppConstants.IS_DEAL_LIST, getIntent().getExtras().getBoolean(AppConstants.IS_DEAL_LIST));
+//			Intent intent = new Intent(CompassDirectionActivity.this, FullMapActivity.class);
+//			intent.putExtra(AppConstants.COMP_DETAIL_DATA, mCompanyDetail);
+//			//intent.putExtra(AppConstants.THUMB_URL, mCategoryThumbUrl);
+//			intent.putExtra(AppConstants.IS_DEAL_LIST, getIntent().getExtras().getBoolean(AppConstants.IS_DEAL_LIST));
+//			startActivity(intent);
+			//TODO for google Maps
+			String url = "http://maps.google.com/maps?saddr="+GPS_Data.getLatitude()+","+GPS_Data.getLongitude()+"&daddr="+mCompanyDetail.getLatitude()+","+mCompanyDetail.getLongitude()+"&mode=driving";
+			Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url));
+			intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
 			startActivity(intent);
 		}
 	}

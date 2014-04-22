@@ -34,6 +34,7 @@ import android.widget.TextView;
 
 import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.imageloader.ImageLoader;
+import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.framework.utils.UiUtils;
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.adapters.MultiSelectListAdapter;
@@ -458,8 +459,12 @@ public class SaleTempletActivity extends MaxisMainActivity {
 			String mobile = mEdUserMobile.getText().toString();
 			// if (mobile.length() < 10 || mobile.indexOf('+',1)!=-1 ||
 			// (mobile.indexOf('+')!=-1 && mobile.length()<=10)) {
-			if (mobile.length() <= 7 || mobile.length() >= 12 || mobile.startsWith("0")) {
-				showInfoDialog(getString(R.string.invalid_mobile));
+			if (StringUtil.isNullOrEmpty(mobile)) {
+				showInfoDialog(getString(R.string.number_empty));
+				return null;
+			} else if (mobile.length() <= 7 || mobile.length() >= 12
+					|| !mobile.startsWith("1")) {
+				showInfoDialog(getString(R.string.mobile_number_validation));
 				return null;
 			}
 			postJson.put("name", uName);
@@ -649,11 +654,7 @@ public class SaleTempletActivity extends MaxisMainActivity {
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(SaleTempletActivity.this,
-					HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			showHomeScreen();
 			break;
 		case R.id.show_profile_icon:
 			onProfileClick();
@@ -868,12 +869,10 @@ public class SaleTempletActivity extends MaxisMainActivity {
 			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
 					+ "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
-			if(index==-1)
-			{
-				city_id =-1;
-			}else
-			{
-			city_id = cityList.get(index).getId();
+			if (index == -1) {
+				city_id = -1;
+			} else {
+				city_id = cityList.get(index).getId();
 			}
 
 		} else if (resultCode == RESULT_OK

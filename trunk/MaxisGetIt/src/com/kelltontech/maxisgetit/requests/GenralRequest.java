@@ -1,12 +1,12 @@
 package com.kelltontech.maxisgetit.requests;
 
-import static com.kelltontech.maxisgetit.requests.MaxisBaseRequest.KEY_COMPANY_ID;
-
 import java.util.Hashtable;
 
 import android.content.Context;
 
 import com.kelltontech.framework.db.MyApplication;
+import com.kelltontech.maxisgetit.constants.AppConstants;
+import com.kelltontech.maxisgetit.controllers.SubCategoryController;
 import com.kelltontech.maxisgetit.dao.CatgoryBase;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
 
@@ -64,25 +64,43 @@ public class GenralRequest extends MaxisBaseRequest {
 	public Hashtable<String, String> getCategoryheaders(String categoryId) {
 		Hashtable<String, String> ht = getDefaultHeadersWithGPS();
 		ht.put(KEY_CATEGORY_ID, categoryId);
-//		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(AppConstants.KEY_PAGE_REVIEW, AppConstants.Template_Sell_Buy);
+		return ht;
+	}
+	public Hashtable<String, String> getCategoryheadersForRefine(String categoryId, String ScreenName ,String keywordForSearch) {
+		Hashtable<String, String> ht = getDefaultHeadersWithGPS();
+		ht.put(KEY_CATEGORY_ID, categoryId);
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(AppConstants.KEY_PAGE_REVIEW, ScreenName);
+		ht.put("keyword", keywordForSearch);
 		return ht;
 	}
 
-	public Hashtable<String, String> getSubCategoryheaders(CatgoryBase cat) {
+	public Hashtable<String, String> getSubCategoryheaders(CatgoryBase cat , boolean isForDeal) {
 		Hashtable<String, String> ht = getDefaultHeadersWithGPS();
 		ht.put(KEY_CATEGORY_ID, cat.getCategoryId());
 		ht.put(KEY_GROUP_ACTION_TYPE, cat.getmGroupActionType());
 		ht.put(KEY_GROUP_TYPE, cat.getMgroupType());
-//		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		
+		if(isForDeal)
+		{
+			ht.put(AppConstants.KEY_PAGE_REVIEW,AppConstants.Deal_Listing);
+		}else
+		{
+			ht.put(AppConstants.KEY_PAGE_REVIEW,AppConstants.Category_Screen);
+		}
+	
 		return ht;
 	}
 
 	public Hashtable<String, String> getVerifyRegistrationHeaders(
 			String verificationCode, String mobile) {
-		Hashtable<String, String> ht = getDefaultHeaders();
+		Hashtable<String, String> ht = getDefaultHeaders(AppConstants.Home_Screen);
 		ht.put(KEY_VERIFY_CODE, verificationCode);
 		ht.put(KEY_MOBILE, mobile);
-//		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		return ht;
 	}
 
@@ -91,7 +109,8 @@ public class GenralRequest extends MaxisBaseRequest {
 		Hashtable<String, String> ht = getDefaultHeadersWithGPS();
 		ht.put(KEY_CATEGORY_ID, categoryId);
 		ht.put(KEY_TEMPLATE_TYPE, templateType);
-//		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(AppConstants.KEY_PAGE_REVIEW, AppConstants.Template_Sell_Buy);
 		return ht;
 	}
 
@@ -101,7 +120,7 @@ public class GenralRequest extends MaxisBaseRequest {
 		ht.put(KEY_USER_ID, userId);
 		ht.put(KEY_COMPANY_ID, companyId);
 		ht.put(KEY_CATEGORY_ID, categoryId);
-//		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		return ht;
 	}
 
@@ -111,14 +130,17 @@ public class GenralRequest extends MaxisBaseRequest {
 		ht.put(KEY_UID, userId);
 		ht.put(KEY_COMP_ID, companyId);
 		ht.put(KEY_POST_DEAL_CATEGORY_ID, categoryId);
-//		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(AppConstants.KEY_PAGE_REVIEW,AppConstants.Deal_Post);
+		
 		return ht;
 	}
 
 	public Hashtable<String, String> getPostDealRemoveImgHeader(String imageName) {
 		Hashtable<String, String> ht = getDefaultHeadersWithGPS();
 		ht.put(KEY_POST_DEAL_REMOVE_IMG_NAME, imageName);
-//		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(AppConstants.KEY_PAGE_REVIEW, AppConstants.Deal_Post);
 		return ht;
 	}
 
@@ -133,20 +155,21 @@ public class GenralRequest extends MaxisBaseRequest {
 	// }
 
 	public Hashtable<String, String> getLoginRequestHeaders(String mobile,
-			String passwd) {
-		Hashtable<String, String> ht = getDefaultHeaders();
+			String passwd , String screenName) {
+		Hashtable<String, String> ht = getDefaultHeaders(screenName);
 		ht.put(KEY_MOBILE, mobile);
 		ht.put(KEY_PASSWD, passwd);
-//		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		
 		return ht;
 	}
 
 	public Hashtable<String, String> getAppActivationHeaders(String mobile,
 			String uuid, String appVersion) {
-		Hashtable<String, String> ht = getDefaultHeaders();
+		Hashtable<String, String> ht = getDefaultHeaders(AppConstants.AppAuthenticationCode);
 		ht.put(KEY_MOBILE_NUM, mobile);
 		ht.put(KEY_IMSI, uuid);
-
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		if (appVersion != null)
 			ht.put(KEY_HANDSET_INFO, appVersion);
 		return ht;
@@ -154,59 +177,61 @@ public class GenralRequest extends MaxisBaseRequest {
 
 	public Hashtable<String, String> getAppActiVerificationHeaders(
 			String mobile, String verificationCode) {
-		Hashtable<String, String> ht = getDefaultHeaders();
+		Hashtable<String, String> ht = getDefaultHeaders(AppConstants.TnC);
 		ht.put(KEY_MOBILE_NUM, mobile);
 		ht.put(KEY_APP_CODE, verificationCode);
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		return ht;
 	}
 
-	public Hashtable<String, String> getHeadersWithMobile(String mobile) {
-		Hashtable<String, String> ht = getDefaultHeaders();
+	public Hashtable<String, String> getHeadersWithMobile(String mobile , String screenName) {
+		Hashtable<String, String> ht = getDefaultHeaders(screenName);
 		ht.put(KEY_MOBILE, mobile);
-//		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		
 		return ht;
 	}
 
-	public Hashtable<String, String> getHeadersWithUID(String uId) {
-		Hashtable<String, String> ht = getDefaultHeaders();
-//		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+	public Hashtable<String, String> getHeadersWithUID(String uId,String screenName) {
+		Hashtable<String, String> ht = getDefaultHeaders(screenName);
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		ht.put(KEY_UID, uId);
 		return ht;
 	}
 
 	public Hashtable<String, String> getHeadersWithUIDandPageNo(String uId,
 			String pageNo) {
-		Hashtable<String, String> ht = getDefaultHeaders();
+		Hashtable<String, String> ht = getDefaultHeaders(AppConstants.MyFavourite);
 		ht.put(KEY_UID, uId);
 		ht.put("page_number", pageNo);
 		ht.put(MaxisBaseRequest.KEY_LATITUDE, GPS_Data.getLatitude() + "");
 		ht.put(MaxisBaseRequest.KEY_LONGITUDE, GPS_Data.getLongitude() + "");
-//		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		return ht;
 	}
 
 	public Hashtable<String, String> getHeadersWithCompanyID(String cId) {
-		Hashtable<String, String> ht = getDefaultHeaders();
+		Hashtable<String, String> ht = getDefaultHeaders(AppConstants.MyCompany);
 		ht.put(KEY_COMPANY_ID, cId);
-//		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		return ht;
 	}
 
 	public Hashtable<String, String> getHeadersWithCompanyIDndDealID(
 			String cId, String dealId, String l3catId) {
-		Hashtable<String, String> ht = getDefaultHeaders();
+		Hashtable<String, String> ht = getDefaultHeaders(AppConstants.Deal_Detail);
 		ht.put(KEY_COMP_ID, cId);
 		ht.put(KEY_DEAL_ID, dealId);
 		ht.put(KEY_L3CAT_ID, l3catId);
 		ht.put(MaxisBaseRequest.KEY_LATITUDE, GPS_Data.getLatitude() + "");
 		ht.put(MaxisBaseRequest.KEY_LONGITUDE, GPS_Data.getLongitude() + "");
-//		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		return ht;
 	}
 
 	public Hashtable<String, String> getUserDetailHeaders(String mobile) {
-		Hashtable<String, String> ht = getDefaultHeaders();
-//		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		Hashtable<String, String> ht = getDefaultHeaders(AppConstants.MyAccount);
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		ht.put(KEY_MOBILE, mobile);
 		return ht;
 	}
@@ -223,29 +248,29 @@ public class GenralRequest extends MaxisBaseRequest {
 				+ GPS_Data.getLatitude() + "");
 		ht.append("&" + MaxisBaseRequest.KEY_LONGITUDE + "="
 				+ GPS_Data.getLongitude() + "");
-//		ht.append("&" +MaxisBaseRequest.DEVICE_ID + "=" + deviceId+"");
+		ht.append("&" +MaxisBaseRequest.DEVICE_ID + "=" + deviceId+"");
 		return ht.toString();
 	}
 
 	@Override
-	public Hashtable getRequestHeaders() {
+	public Hashtable getRequestHeaders(String screenName) {
 		return null;
 	}
 
 	public Hashtable getAreaHeaders(String cityId) {
-		Hashtable<String, String> ht = getDefaultHeaders();
+		Hashtable<String, String> ht = getDefaultHeaders(AppConstants.Locality_Screen);
 		ht.put(KEY_CITY_ID, cityId);
-//		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		return ht;
 	}
 
 	public Hashtable<String, String> getDownloadDealHeaders(String name,
-			String number, String dealId) {
-		Hashtable<String, String> ht = getDefaultHeaders();
+			String number, String dealId , String screenName) {
+		Hashtable<String, String> ht = getDefaultHeaders(screenName);
 		ht.put(KEY_NAME, name);
 		ht.put(KEY_NUMBER, number);
 		ht.put(KEY_DEAL_ID, dealId);
-//		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		return ht;
 	}
 }

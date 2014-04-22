@@ -79,6 +79,7 @@
             android:drawableLeft="@drawable/search_iconleft"
             android:hint="@string/search_query_city"
             android:inputType="none"
+            android:imeOptions="actionDone"
             android:singleLine="true"
             android:textSize="@dimen/sp_12" />
 

@@ -141,8 +141,8 @@ public class CompanyMapDetail extends MaxisFragmentBaseActivity {
 			@Override
 			public void onMyLocationChange(Location location) {
 				if(location.getLatitude()!=0 && location.getLongitude()!=0){
-					GPS_Data.setLatitude(location.getLatitude());
-					GPS_Data.setLongitude(location.getLongitude());
+//					GPS_Data.setLatitude(location.getLatitude());
+//					GPS_Data.setLongitude(location.getLongitude());
 					sourceMarker.setPosition(new LatLng(GPS_Data.getLatitude(),GPS_Data.getLongitude()));
 				}
 			}
@@ -201,6 +201,7 @@ public class CompanyMapDetail extends MaxisFragmentBaseActivity {
 			Intent intentHome = new Intent(CompanyMapDetail.this, HomeActivity.class);
 			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			startActivity(intentHome);
+			HomeActivity.fromHomeClick = true;
 			break;
 		case R.id.show_profile_icon:
 			onProfileClick();

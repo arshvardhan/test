@@ -22,7 +22,7 @@ public class C {
 	// Application specific settings
 	public static boolean DEBUG = false;
 	public static String SERVICE_TAG = "not set";
-	public static long CONNECTION_TIMEOUT = 15000;
+	public static long CONNECTION_TIMEOUT = 30000;
 	public static long CACHE_MAX_AGE = (4 * 60 * 60 * 1000);
 	//
 	public static final long GUID = 0x5b318af46efd83bL;

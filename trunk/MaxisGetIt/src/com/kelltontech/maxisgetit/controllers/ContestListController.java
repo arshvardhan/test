@@ -7,6 +7,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.kelltontech.framework.controller.BaseServiceController;
+import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.model.MyError;
 import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.network.HttpClientConnection;
@@ -17,6 +18,7 @@ import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.model.listModel.RequestDistance;
 import com.kelltontech.maxisgetit.model.listModel.ResponseList;
+import com.kelltontech.maxisgetit.requests.MaxisBaseRequest;
 
 
 public class ContestListController extends BaseServiceController{
@@ -60,9 +62,9 @@ public class ContestListController extends BaseServiceController{
 			int pageNumber=requestDistance.getPageNumber();
 			String url;
 			if(mEventType==Events.CATEGORY_LIST_EVENT) {
-				url = AppConstants.BASE_URL_CONTEST + "categoryList?" + AppConstants.URL_ENCODED_PARAMS + "&latitude="+requestDistance.getLatitude()+"&longitude="+requestDistance.getLongitude()+"&per_page_record="+recordPerPage+"&page_number="+pageNumber;
+				url = AppConstants.BASE_URL_CONTEST + "categoryList?" + AppConstants.URL_ENCODED_PARAMS + "&latitude="+requestDistance.getLatitude()+"&longitude="+requestDistance.getLongitude()+"&per_page_record="+recordPerPage+"&page_number="+pageNumber+"&"+MaxisBaseRequest.DEVICE_ID+"="+MyApplication.getDeviceId();
 			} else  {
-				url = AppConstants.BASE_URL_CONTEST + "companyList?" + AppConstants.URL_ENCODED_PARAMS + "&latitude="+requestDistance.getLatitude()+"&longitude="+requestDistance.getLongitude()+"&per_page_record="+recordPerPage+"&page_number="+pageNumber;
+				url = AppConstants.BASE_URL_CONTEST + "companyList?" + AppConstants.URL_ENCODED_PARAMS + "&latitude="+requestDistance.getLatitude()+"&longitude="+requestDistance.getLongitude()+"&per_page_record="+recordPerPage+"&page_number="+pageNumber+"&"+MaxisBaseRequest.DEVICE_ID+"="+MyApplication.getDeviceId();
 				if(requestDistance.getCategoryId() != 0 ) {
 					url += "&category_id="+requestDistance.getCategoryId();
 				}

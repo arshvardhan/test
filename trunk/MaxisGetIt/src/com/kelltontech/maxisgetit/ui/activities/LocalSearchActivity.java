@@ -15,7 +15,6 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,7 +26,6 @@ import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
-import com.kelltontech.maxisgetit.controllers.CategoriesedLeadsController;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.CompanyDetail;
 import com.kelltontech.maxisgetit.db.CityTable;
@@ -134,55 +132,55 @@ public class LocalSearchActivity extends MaxisMainActivity {
 		TextView compTitle = (TextView) compContainer
 				.findViewById(R.id.lscl_title);
 		compTitle.setText(compDetail.getTitle());
-		TextView editLink = (TextView) compContainer
-				.findViewById(R.id.lscl_edit_link);
-		editLink.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				showToast(LocalSearchActivity.this.getResources().getString(
-						R.string.under_implement));
-			}
-		});
-		TextView viewLeads = (TextView) compContainer
-				.findViewById(R.id.lscl_view_lead);
-		viewLeads.setTag(compDetail);
-		viewLeads.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				CompanyDetail companyDetail = (CompanyDetail) v.getTag();
-				CategoriesedLeadsController catLeadsController = new CategoriesedLeadsController(
-						LocalSearchActivity.this, Events.COMPANY_LEADS);
-				startSppiner();
-				catLeadsController.requestService(companyDetail.getId());
-				// showToast(LocalSearchActivity.this.getResources().getString(R.string.under_implement));
-			}
-		});
-		TextView removeLink = (TextView) compContainer
-				.findViewById(R.id.lscl_remove_link);
-		removeLink.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				showToast(LocalSearchActivity.this.getResources().getString(
-						R.string.under_implement));
-			}
-		});
+//		TextView editLink = (TextView) compContainer
+//				.findViewById(R.id.lscl_edit_link);
+//		editLink.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				showToast(LocalSearchActivity.this.getResources().getString(
+//						R.string.under_implement));
+//			}
+//		});
+//		TextView viewLeads = (TextView) compContainer
+//				.findViewById(R.id.lscl_view_lead);
+//		viewLeads.setTag(compDetail);
+//		viewLeads.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				CompanyDetail companyDetail = (CompanyDetail) v.getTag();
+//				CategoriesedLeadsController catLeadsController = new CategoriesedLeadsController(
+//						LocalSearchActivity.this, Events.COMPANY_LEADS);
+//				startSppiner();
+//				catLeadsController.requestService(companyDetail.getId());
+//				// showToast(LocalSearchActivity.this.getResources().getString(R.string.under_implement));
+//			}
+//		});
+//		TextView removeLink = (TextView) compContainer
+//				.findViewById(R.id.lscl_remove_link);
+//		removeLink.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				showToast(LocalSearchActivity.this.getResources().getString(
+//						R.string.under_implement));
+//			}
+//		});
 		TextView listingType = (TextView) compContainer
 				.findViewById(R.id.lscl_listing_type);
-		TextView upgradeToPremium = (TextView) compContainer
-				.findViewById(R.id.lscl_upgrade_btn);
-		if (!compDetail.isPaid()) {
-			listingType.setText(getResources().getString(R.string.free));
-			upgradeToPremium.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					showToast(LocalSearchActivity.this.getResources()
-							.getString(R.string.under_implement));
-				}
-			});
-		} else {
-			listingType.setText(getResources().getString(R.string.paid));
-			upgradeToPremium.setVisibility(View.GONE);
-		}
+//		TextView upgradeToPremium = (TextView) compContainer
+//				.findViewById(R.id.lscl_upgrade_btn);
+//		if (!compDetail.isPaid()) {
+//			listingType.setText(getResources().getString(R.string.free));
+//			upgradeToPremium.setOnClickListener(new OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//					showToast(LocalSearchActivity.this.getResources()
+//							.getString(R.string.under_implement));
+//				}
+//			});
+//		} else {
+//			listingType.setText(getResources().getString(R.string.paid));
+//			upgradeToPremium.setVisibility(View.GONE);
+//		}
 		if (!compDetail.isContactChannelExists()) {
 			LinearLayout contactChannelContainer = (LinearLayout) compContainer
 					.findViewById(R.id.lscl_contact_channel);
@@ -211,11 +209,7 @@ public class LocalSearchActivity extends MaxisMainActivity {
 		switch (v.getId()) {
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
-			Intent intentHome = new Intent(LocalSearchActivity.this,
-					HomeActivity.class);
-			intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intentHome);
+			showHomeScreen();
 			break;
 		case R.id.show_profile_icon:
 			// finish();

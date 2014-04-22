@@ -81,10 +81,10 @@ public class TermsAndConditionActivity extends MaxisMainActivity {
 	private void setPageUrl() {
 		switch (mTnCOf) {
 		case AppConstants.TNC_FROM_COMP:
-			mTnCPageUrl = AppConstants.TNC_PAGE_URL;
+			mTnCPageUrl = AppConstants.TNC_PAGE_URL+"&"+AppConstants.KEY_PAGE_REVIEW+"="+AppConstants.TnC+"";
 			break;
 		case AppConstants.TNC_FROM_CONTEST:
-			mTnCPageUrl = AppConstants.TNC_CONTEST_PAGE_URL;
+			mTnCPageUrl = AppConstants.TNC_CONTEST_PAGE_URL+"&"+AppConstants.KEY_PAGE_REVIEW+"="+AppConstants.TnC+"";;
 			break;
 		default:
 			break;

@@ -27,6 +27,8 @@ public class MaxisStore {
 	private static final String KEY_APP_ACTIVATED="APP_ACTIVATION_STATUS";
 	private static final String KEY_TnC_STATUS = "TnC_STATUS";
 	private static final String KEY_USER_DIALOG_DECISION = "USER_DIALOG_DECISION";
+	
+	private static final String AUTH_USER_NUMBER ="AUTH_USER_NUMBER";
 	// private static final String KEY_USER_FAV_COMPANYS = "USER_FAV_COMPANY_ID_CATEGORY_ID";
 	
 	public static MaxisStore getStore(Context context) {
@@ -223,5 +225,17 @@ public class MaxisStore {
 	}
 	public String getUserEmail() {
 		return sharedPreferences.getString(KEY_USER_EMAIL, null);
+	}
+	
+	public void setAuthMobileNumber(String userNumber)
+	{
+		Editor editor = sharedPreferences.edit();
+		editor.putString(AUTH_USER_NUMBER, userNumber);
+		editor.commit();
+	}
+	
+	public String getAuthMobileNumber()
+	{
+		return sharedPreferences.getString(AUTH_USER_NUMBER, null);
 	}
 }

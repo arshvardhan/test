@@ -57,7 +57,7 @@ public class LoginController extends BaseServiceController {
 			
 			LoginRequest loginRequest = (LoginRequest)requestData;
 			GenralRequest genralRequest = new GenralRequest(mActivity);
-			Hashtable<String, String> urlParams = genralRequest.getLoginRequestHeaders(loginRequest.getMobile(), loginRequest.getPassword());
+			Hashtable<String, String> urlParams = genralRequest.getLoginRequestHeaders(loginRequest.getMobile(), loginRequest.getPassword(),AppConstants.Login_screen);
 			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, urlParams));
 
 			HttpClientConnection.getInstance().addRequest(serviceRq);

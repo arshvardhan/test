@@ -20,8 +20,8 @@ public class RegistrationRequest extends MaxisBaseRequest {
 	}
 
 	@Override
-	public Hashtable<String, String> getRequestHeaders() {
-		Hashtable<String, String> ht = getDefaultHeaders();
+	public Hashtable<String, String> getRequestHeaders(String screenName) {
+		Hashtable<String, String> ht = getDefaultHeaders(screenName);
 		ht.put(KEY_NAME, name);
 		ht.put(KEY_MOBILE, mobile);
 		if (email != null)
