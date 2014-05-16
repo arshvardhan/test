@@ -367,9 +367,12 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			mCompDesc.setText(Html.fromHtml(mCompanyDetail.getDescription()));
 			mMoreDesc = (TextView) findViewById(R.id.cd_desc_more);
 			mCompDesc.setMaxLines(5);
-			if (mCompDesc.getText().length() < 200)
+			if (mCompDesc.getText().length() < 400)
 				mMoreDesc.setVisibility(View.GONE);
 			else
+				mMoreDesc.setVisibility(View.VISIBLE);
+			mMoreDesc.setText(Html.fromHtml("<u>"
+					+ getResources().getString(R.string.more) + "</u>"));
 				mMoreDesc.setOnClickListener(this);
 		} else {
 			findViewById(R.id.layout_comp_desc).setVisibility(View.GONE);

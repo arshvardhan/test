@@ -8,7 +8,7 @@ public interface AppConstants {
 
 	// String BASE_SERVER = "http://192.168.13.3/webservice/trunk/"; // local
 	// Aaditya
-	// String BASE_SERVER = "http://192.168.12.224/webservice/trunk/"; // local
+//	 String BASE_SERVER = "http://192.168.13.22/webservice/trunk/"; // local
 	// Ankesh
 	// String BASE_SERVER = "http://192.168.13.16/webservice/trunk/"; // local
 	// Diwakar
@@ -17,16 +17,18 @@ public interface AppConstants {
 	// String BASE_SERVER = "https://staging.findit.com.my/";// staging new
 	// String BASE_SERVER = "http://203.115.222.57:8070/"; //staging 8070
 
-//	String BASE_SERVER = "http://203.115.222.57/"; // staging
+	String BASE_SERVER = "http://203.115.222.57/"; // staging
 
 	// String BASE_SERVER = "http://203.115.222.69/";// Pre Production
 
-	 String BASE_SERVER = "https://webservice.findit.com.my/";// Production
+//	 String BASE_SERVER = "https://webservice.findit.com.my/";// Production
 	// new
 
 	// String BASE_SERVER = "http://192.168.13.16/webservice/trunk/";//local
 	// diwakar
 
+//	 String BASE_SERVER = "http://192.168.13.22/webserviceNew/dev_build_ver1.1/"; //local ankesh for deal
+			 
 	String BASE_URL = BASE_SERVER + "restapi/";
 	String BASE_URL_CONTEST = BASE_SERVER + "restapicontest/";
 
@@ -54,6 +56,8 @@ public interface AppConstants {
 
 	String COMP_LIST_DATA = "COMP_LIST_DATA";
 	String COMP_DETAIL_DATA = "COMP_DETAIL_DATA";
+	String OUTLET_DATA = "OUTLET_LIST_DATA";
+	String OUTLET_DETAIL_DATA = "OUTLET_DETAIL_DATA";
 	String COMP_ID = "COMP_ID";
 	String DATA_CAT_LIST = "DATA_CAT_LIST";
 	String DATA_SUBCAT_RESPONSE = "SUBCAT_RESPONSE";
@@ -145,10 +149,12 @@ public interface AppConstants {
 	String EXTRA_SELECTED_CATEGORY = "extra_selected_category";
 	String EXTRA_SEARCH_KEYWORD = "extra_search_keyword";
 	String ADD_NEW_POI_KEY = "add_new_poi_key";
+	
 
 	// TnC Extra
 	int TNC_FROM_COMP = 0;
 	int TNC_FROM_CONTEST = 1;
+	int TNC_FROM_DEAL = 2;
 
 	// Login flow in Report an error flow
 	int ACTION_MY_ACCOUNT = 1110;

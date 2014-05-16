@@ -100,7 +100,7 @@ public class CompanyListDealAdapter extends BaseAdapter {
 			 model.dealTitle.setVisibility(View.VISIBLE);
 			 model.dealValidArea.setVisibility(View.VISIBLE);
 			 model.dealValidDate.setVisibility(View.VISIBLE);
-			 model.dealDownload.setVisibility(View.VISIBLE);
+			 model.dealDownload.setVisibility(View.GONE);
 			 model.arrow.setVisibility(View.VISIBLE);
 			ImageLoader.start(compDesc.getIconUrl()	, model.dealImage, dummyDrawable, errorDrawable);
 			if(!StringUtil.isNullOrEmpty(compDesc.getTitle()))

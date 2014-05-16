@@ -6,6 +6,7 @@ import android.content.Context;
 
 import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.utils.NativeHelper;
+import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
 import com.kelltontech.maxisgetit.dao.MaxisStore;
@@ -119,6 +120,33 @@ public abstract class MaxisBaseRequest {
 		hashtable.put(AppConstants.KEY_PAGE_REVIEW,AppConstants.Home_Screen);
 		return hashtable;
 	}
+	
+	
+	public Hashtable<String, String> getHeadersForRefineOutlets(String screenName , String deal_id ,String cityName ,String localityName) {
+		Hashtable<String, String> hashtable = new Hashtable<String, String>();
+		hashtable.put(KEY_APP_KEY, VALUE_APP_KEY);
+		hashtable.put(KEY_PLATFORM, VALUE_PLATFORM);
+		hashtable.put(KEY_SCREEN_TYPE, mScreenType);
+		hashtable.put(KEY_LANGUAGE, mLocaleCode);
+		hashtable.put(DEVICE_ID,deviceId);
+		hashtable.put(AppConstants.KEY_PAGE_REVIEW, screenName);
+		hashtable.put(KEY_DEAL_ID, deal_id);
+		
+		if(!StringUtil.isNullOrEmpty(cityName))
+		{
+			hashtable.put("city_name", cityName);
+		}
+		
+		if(!StringUtil.isNullOrEmpty(localityName))
+		{
+			hashtable.put("locality_name", localityName);
+		}
+		
+		return hashtable;
+	}
+	
+	
+	
 	public abstract Hashtable getRequestHeaders(String screenName);
 
 	public String getLocaleCode() {

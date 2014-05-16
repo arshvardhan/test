@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kelltontech.maxisgetit"
-    android:versionCode="6"
-    android:versionName="1.23" >
+    android:versionCode="7"
+    android:versionName="1.24" >
 
     <!--
     above version are updated 
-    Package should be com.findit333
+    Package should be com.findit333
     -->
-    <!-- Current version code/name on play: code:5, name:1.22 -->
+    <!-- Current version code/name on play: code:6, name:1.23 -->
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -31,8 +31,8 @@
 
     <permission
         android:name="com.kelltontech.maxisgetit.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature" 
-        android:hardwareAccelerated="true"/>
+        android:hardwareAccelerated="true"
+        android:protectionLevel="signature" />
 
     <uses-permission android:name="com.kelltontech.maxisgetit.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -52,10 +52,10 @@
         android:name="com.kelltontech.framework.db.MyApplication"
         android:allowBackup="true"
         android:debuggable="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-         android:hardwareAccelerated="true" >
+        android:theme="@style/AppTheme" >
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyD_YqXS8m5-0B6KJNo6ALDZSgDKNXy-VSM" />
@@ -196,7 +196,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
-        </activity>
+        </activity>
         -->
         <activity
             android:name="com.kelltontech.maxisgetit.ui.activities.ClassifiedScrollActivity"
@@ -396,6 +396,24 @@
         <activity
             android:name="com.kelltontech.maxisgetit.ui.activities.VideoPlayActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenLayout|screenSize"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.kelltontech.maxisgetit.ui.activities.ViewDealMapActivity"
+            android:label="@string/title_activity_view_deal_map"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.kelltontech.maxisgetit.ui.activities.ViewAllOutletsActivity"
+            android:label="@string/title_activity_view_all_outlets"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.kelltontech.maxisgetit.ui.activities.RefineOutletActivity"
+            android:label="@string/title_activity_refine_outlet"
+             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
     </application>

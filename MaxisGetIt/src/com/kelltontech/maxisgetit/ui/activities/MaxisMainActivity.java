@@ -40,7 +40,7 @@ import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 public abstract class MaxisMainActivity extends BaseMainActivity {
 	private CompanyListResponse mClResponse;
 	private CombinedListRequest mListRequest;
-	private MaxisStore mStore;
+	private static MaxisStore mStore;
 	private String	mUrlToBeOpenedWithChooser;
 	protected String mSearchKeyword;
 	public static boolean isCitySelected= false;
@@ -379,7 +379,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		return true;
 	}
 	
-	protected boolean isDialogToBeShown() {
+	protected  boolean isDialogToBeShown() {
 		/*long savedUserTime = mStore.getUserDecisionTime();
 		int noOfDays = (int)((System.currentTimeMillis() - savedUserTime) / (1000 * 60 *60 *24)) ;
 		if(!mStore.isUserDecisionRemembered() || noOfDays > 7)

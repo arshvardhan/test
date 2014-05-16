@@ -45,7 +45,8 @@
                 android:text="@string/test_string"
                 android:textColor="@color/rainbow_green"
                 android:textSize="@dimen/sp_16"
-                android:textStyle="bold" />               -->
+                android:textStyle="bold" />
+            -->
             <!-- android:background="@drawable/shape_box" -->
 
             <LinearLayout
@@ -66,12 +67,14 @@
                     android:gravity="center_horizontal"
                     android:paddingBottom="3dp"
                     android:paddingTop="5dp"
-                    android:text="@string/map" />   -->
+                    android:text="@string/map" />
+                -->
                 <!--
                      <TextView
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_weight=".04" /> -->
+                    android:layout_weight=".04" />
+                -->
 
                 <ImageView
                     android:id="@+id/cd_fav_btn"
@@ -117,7 +120,8 @@
                      <TextView
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_weight=".04" />  -->
+                    android:layout_weight=".04" />
+                -->
                 <!--
                      <TextView
                     android:id="@+id/cd_sms_btn"
@@ -131,12 +135,14 @@
                     android:gravity="center_horizontal"
                     android:paddingBottom="3dp"
                     android:paddingTop="5dp"
-                    android:text="@string/sms" />   -->
+                    android:text="@string/sms" />
+                -->
                 <!--
                       <TextView
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_weight=".04" />   -->
+                    android:layout_weight=".04" />
+                -->
                 <!--
                      <TextView
                     android:id="@+id/cd_sms_btn"
@@ -150,7 +156,8 @@
                     android:gravity="center_horizontal"
                     android:paddingBottom="3dp"
                     android:paddingTop="5dp"
-                    android:text="@string/sms" />   -->
+                    android:text="@string/sms" />
+                -->
             </LinearLayout>
 
             <ImageView
@@ -164,7 +171,7 @@
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:paddingTop="4dp"
-	                android:src="@drawable/detail_cross" />
+                android:src="@drawable/detail_cross" />
             <!-- android:background="@drawable/shape_flat_box" -->
 
             <RelativeLayout
@@ -186,7 +193,8 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:clickable="true"
-                    android:src="@drawable/add_contact" />   -->
+                    android:src="@drawable/add_contact" />
+                -->
                 <!--
                      <ImageView
                     android:id="@+id/cd_img_profile_bar"
@@ -198,7 +206,8 @@
                     android:layout_marginRight="7dp"
                     android:layout_marginTop="3dp"
                     android:layout_toLeftOf="@+id/img_add_profile"
-                    android:background="@color/pink" />  -->
+                    android:background="@color/pink" />
+                -->
 
                 <LinearLayout
                     android:id="@+id/cd_layout_comp_detail"
@@ -289,7 +298,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|right"
                         android:layout_weight="0.3"
-                        android:textSize="@dimen/sp_12" />    -->
+                        android:textSize="@dimen/sp_12" />
+                    -->
                 </LinearLayout>
             </RelativeLayout>
 
@@ -411,13 +421,12 @@
                 </RelativeLayout>
             </LinearLayout>
 
-            
-              <ImageView
-                  android:id="@+id/seprator"
+            <ImageView
+                android:id="@+id/seprator"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/bar_light_grey" 
-                android:visibility="gone"/>
+                android:background="@color/bar_light_grey"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/cd_video_container"
@@ -427,8 +436,8 @@
                 android:gravity="center_vertical"
                 android:paddingBottom="7dp"
                 android:paddingTop="7dp"
-                android:weightSum="1" 
-                android:visibility="gone">
+                android:visibility="gone"
+                android:weightSum="1" >
 
                 <ImageView
                     android:layout_width="0dp"
@@ -448,15 +457,14 @@
                     android:layout_weight=".87"
                     android:padding="5dp" >
 
-
                     <ImageView
                         android:id="@+id/img_video_thumbnail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:layout_marginLeft="5dp"
                         android:layout_alignParentTop="true"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
                         android:clickable="true"
                         android:src="@drawable/video_thumb" />
                 </RelativeLayout>
@@ -521,6 +529,20 @@
                 android:orientation="vertical"
                 android:visibility="visible" >
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/shape_bg_green_grey_stroke"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="5dp"
+                    android:singleLine="true"
+                    android:text="About Company"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold" />
+
                 <com.kelltontech.maxisgetit.ui.widgets.EllipsizingTextView
                     android:id="@+id/cd_description"
                     android:layout_width="wrap_content"
@@ -538,7 +560,8 @@
                     android:clickable="true"
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
-                    android:textColor="@color/maxis_green" />
+                    android:textColor="@color/maxis_green"
+                    android:textStyle="italic" />
             </LinearLayout>
             <!--
             <LinearLayout
@@ -566,7 +589,8 @@
                     android:layout_weight=".65"
                     android:padding="5dp"
                     android:textColor="@color/text_light_grey"
-                    android:textSize="@dimen/sp_13" />           </LinearLayout>   -->
+                    android:textSize="@dimen/sp_13" />           </LinearLayout>
+            -->
 
             <ImageView
                 android:layout_width="match_parent"
@@ -687,7 +711,8 @@
                  <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/bar_light_grey" />  -->
+                android:background="@color/bar_light_grey" />
+            -->
 
             <LinearLayout
                 android:id="@+id/social_media_layout"

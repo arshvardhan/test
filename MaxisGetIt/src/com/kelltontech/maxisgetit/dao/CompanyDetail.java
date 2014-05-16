@@ -49,7 +49,26 @@ public class CompanyDetail extends MaxisResponse implements Parcelable,IModel{
 	
 	private String videoUrl = "";
 	
+	private String source;
+	private String dealDetailUrl;
 	
+	
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public String getDealDetailUrl() {
+		return dealDetailUrl;
+	}
+
+	public void setDealDetailUrl(String dealDetailUrl) {
+		this.dealDetailUrl = dealDetailUrl;
+	}
+
 	public String getVideoUrl() {
 		return videoUrl;
 	}
@@ -202,6 +221,9 @@ public class CompanyDetail extends MaxisResponse implements Parcelable,IModel{
 		cid =  in.readString();
 		termsNdCondition= in.readString();
 		videoUrl = in.readString();
+		source = in.readString();
+		dealDetailUrl = in.readString();
+		
 		
 	}
 
@@ -347,6 +369,8 @@ public class CompanyDetail extends MaxisResponse implements Parcelable,IModel{
 		dest.writeString(cid);
 		dest.writeString(termsNdCondition);
 		dest.writeString(videoUrl);
+		dest.writeString(source);
+		dest.writeString(dealDetailUrl);
 		}
 
 	public ArrayList<AttributeGroup> getAttrGroups() {

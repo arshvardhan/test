@@ -24,12 +24,12 @@
     <string name="category_list_not_found">Insufficient information to process your request</string>
     <string name="record_found"><u>Record(s) Found Near You</u></string>
     <string name="deal_found">Deal(s) Found Near You</string>
+    <string name="outlet_found">Outlet(s) Found Near You</string>
     <string name="category_deals">Featured Deals Category</string>
     <string name="cl_hot_deals">Hot Deals</string>
     <string name="cl_view_on_map">View on Map</string>
     <string name="cl_modify_search">Modify Search</string>
     <string name="cl_filter_by">Filter By</string>
-    
     <string name="download_deal">The detail of this Deal has been sent to your phone number via a SMS.</string>
 
     <!-- Edit profile Activity -->
@@ -388,10 +388,12 @@
     <string name="title_activity_deal_form">DealForm</string>
     <string name="entire_malaysia">Entire Malaysia</string>
     <string name="title_activity_video_play">VideoPlayActivity</string>
-    
-    
     <string name="mobile_number_validation">Mobile Number should be 8-11 digits and start with 1.</string>
-	<string name="mobile_number_validation_contestapp">Your Contact Number should be 8-11 digits and start with 1.</string>
-	<string name="mobile_number_validation_contestapp_company">Company Contact Number should be 8-11 digits and start with 1.</string>
-	<string name="blank_mobile_number">Please enter Mobile Number.</string>
+    <string name="mobile_number_validation_contestapp">Your Contact Number should be 8-11 digits and start with 1.</string>
+    <string name="mobile_number_validation_contestapp_company">Company Contact Number should be 8-11 digits and start with 1.</string>
+    <string name="blank_mobile_number">Please enter Mobile Number.</string>
+    <string name="title_activity_view_deal_map">ViewDealMapActivity</string>
+    <string name="title_activity_view_all_outlets">ViewAllOutletsActivity</string>
+    <string name="title_activity_refine_outlet">RefineOutletActivity</string>
+
 </resources>
