@@ -20,6 +20,7 @@ public class TermsAndConditionActivity extends MaxisMainActivity {
 	private boolean isErrorOccured = false;
 	private int mTnCOf;
 	private String mTnCPageUrl;
+	private String urlData;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,55 +28,59 @@ public class TermsAndConditionActivity extends MaxisMainActivity {
 		setContentView(R.layout.activity_tnc);
 		findViewById(R.id.atnc_accept).setVisibility(View.INVISIBLE);
 		findViewById(R.id.atnc_reject).setVisibility(View.INVISIBLE);
-		Button backButton = (Button)findViewById(R.id.atnc_back);
+		Button backButton = (Button) findViewById(R.id.atnc_back);
 		backButton.setVisibility(View.VISIBLE);
 		backButton.setOnClickListener(this);
 		mTnCPageUrl = AppConstants.TNC_PAGE_URL;
-		
-		if(getIntent().getExtras() != null)
-		{
+
+		if (getIntent().getExtras() != null) {
 			mTnCOf = getIntent().getExtras().getInt(AppConstants.TNC_FROM);
+			urlData = getIntent().getExtras().getString("TnC_Data");
 			setPageUrl();
 		}
-		
+
 		findViewById(R.id.atnc_try_again).setOnClickListener(this);
-		mErrorLayout = (RelativeLayout)findViewById(R.id.atnc_error_layout);
-		
-		mWebview = ((WebView)findViewById(R.id.atnc_info));//.loadUrl(AppConstants.TNC_PAGE_URL);
-	       WebSettings settings = mWebview.getSettings();
-	        settings.setJavaScriptEnabled(true);
-	        mWebview.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+		mErrorLayout = (RelativeLayout) findViewById(R.id.atnc_error_layout);
 
-	       startSppiner();
+		mWebview = ((WebView) findViewById(R.id.atnc_info));// .loadUrl(AppConstants.TNC_PAGE_URL);
+		WebSettings settings = mWebview.getSettings();
+		settings.setJavaScriptEnabled(true);
+		mWebview.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 
-	        mWebview.setWebViewClient(new WebViewClient() {
-	            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-	                return overrideWebViewUrlLoading(url);
-	            }
+		startSppiner();
 
-	            public void onPageFinished(WebView view, String url) {
-	                Log.i("maxis", "Finished loading URL: " +url);
-	                stopSppiner();
-	                if(!isErrorOccured)
-	                {
-	                	showWebView();
-	                }
-	                else
-	                {
-	                	hideWebView();
-	                }
-	            }
+		mWebview.setWebViewClient(new WebViewClient() {
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				return overrideWebViewUrlLoading(url);
+			}
 
-	            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-	                Log.i("maxis", "Error: " + description);
-	               showInfoDialog(getResources().getString(R.string.atnc_error_loading_page));
-	               hideWebView();
-	               isErrorOccured = true;
-	            }
-	            
-	        });
-	        mWebview.loadUrl(mTnCPageUrl);
-		//((TextView)findViewById(R.id.terms_text_view)).setText(Html.fromHtml(getResources().getString(R.string.terms_condition_text)));
+			public void onPageFinished(WebView view, String url) {
+				Log.i("maxis", "Finished loading URL: " + url);
+				stopSppiner();
+				if (!isErrorOccured) {
+					showWebView();
+				} else {
+					hideWebView();
+				}
+			}
+
+			public void onReceivedError(WebView view, int errorCode,
+					String description, String failingUrl) {
+				Log.i("maxis", "Error: " + description);
+				showInfoDialog(getResources().getString(
+						R.string.atnc_error_loading_page));
+				hideWebView();
+				isErrorOccured = true;
+			}
+
+		});
+		if (mTnCOf != AppConstants.TNC_FROM_DEAL) {
+			mWebview.loadUrl(mTnCPageUrl);
+		} else {
+			mWebview.loadDataWithBaseURL("", mTnCPageUrl, "text/html", "UTF-8",
+					"");
+			// ((TextView)findViewById(R.id.terms_text_view)).setText(Html.fromHtml(getResources().getString(R.string.terms_condition_text)));
+		}
 	}
 
 	private void setPageUrl() {
@@ -85,6 +90,10 @@ public class TermsAndConditionActivity extends MaxisMainActivity {
 			break;
 		case AppConstants.TNC_FROM_CONTEST:
 			mTnCPageUrl = AppConstants.TNC_CONTEST_PAGE_URL+"&"+AppConstants.KEY_PAGE_REVIEW+"="+AppConstants.TnC+"";;
+			break;
+			
+		case AppConstants.TNC_FROM_DEAL :
+			mTnCPageUrl  = urlData;
 			break;
 		default:
 			break;
@@ -106,11 +115,12 @@ public class TermsAndConditionActivity extends MaxisMainActivity {
 			break;
 		case R.id.atnc_try_again:
 			showSppiner();
-			isErrorOccured  = false;
+			isErrorOccured = false;
 			mWebview.loadUrl(mTnCPageUrl);
-			/*showNavigationButtons();
-        	showWebView();*/
-			
+			/*
+			 * showNavigationButtons(); showWebView();
+			 */
+
 			break;
 		default:
 			break;
@@ -124,11 +134,12 @@ public class TermsAndConditionActivity extends MaxisMainActivity {
 	@Override
 	public void setScreenData(Object screenData, int event, long time) {
 	}
-	
+
 	private void showWebView() {
 		mErrorLayout.setVisibility(View.GONE);
 		mWebview.setVisibility(View.VISIBLE);
 	}
+
 	private void hideWebView() {
 		mErrorLayout.setVisibility(View.VISIBLE);
 		mWebview.setVisibility(View.GONE);

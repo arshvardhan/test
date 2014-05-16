@@ -62,7 +62,11 @@ public class Events {
 	public static final int	POST_DEAL_LOCALITY_LISTING			= 52;
 	public final static int REMOVE_IMAGE_EVENT                  = 53;
 	
-	public static final int	SALE_CITY_LISTING						= 54;
-	public static final int	SALE_LOCALITY_LISTING					= 55;
+	public static final int	SALE_CITY_LISTING					= 54;
+	public static final int	SALE_LOCALITY_LISTING				= 55;
+	public static final int OUTLET_DETAIL_PAGINATION            = 56;
+	
+	public static final int CITY_LISTING_OUTLETS                = 57;
+	public static final int LOCALITY_LISTING_OUTLETS             = 58;
 }
 

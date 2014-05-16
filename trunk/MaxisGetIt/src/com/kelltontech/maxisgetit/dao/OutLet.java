@@ -1,17 +1,24 @@
 package com.kelltontech.maxisgetit.dao;
 
-public class OutLet {
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.os.Parcelable.Creator;
+
+public class OutLet implements Parcelable{
 
 	private String id;
 	private String title;
 	private String phone_no;
 	private String icon_url;
 	private String address;
-	
-
 	private String lat;
 	private String longt;
 	private String catid;
+
+	public OutLet()
+	{
+		
+	}
 	
 	public String getCatid() {
 		return catid;
@@ -77,4 +84,45 @@ public class OutLet {
 		this.longt = longt;
 	}
 
+	public OutLet(Parcel in) {
+		id = in.readString();
+		title = in.readString();
+		phone_no = in.readString();
+		icon_url = in.readString();
+		address = in.readString();
+		lat = in.readString();
+		longt = in.readString();
+		catid = in.readString();
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(id);
+		dest.writeString(title);
+		dest.writeString(phone_no);
+		dest.writeString(icon_url);
+		dest.writeString(address);
+		dest.writeString(lat);
+		dest.writeString(longt);
+		dest.writeString(catid);
+	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	public static final Creator<OutLet> CREATOR = new Creator<OutLet>() {
+
+		@Override
+		public OutLet createFromParcel(Parcel source) {
+			return new OutLet(source);
+		}
+
+		@Override
+		public OutLet[] newArray(int size) {
+			return new OutLet[size];
+		}
+	};
 }

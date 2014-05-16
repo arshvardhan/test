@@ -25,6 +25,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.Html;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -182,6 +183,8 @@ public class HomeActivity extends MaxisMainActivity {
 
 		mainSearchButton = (TextView) findViewById(R.id.mainSearchButton);
 		mainSearchButton.setOnClickListener(this);
+		
+		mSearchEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS); 
 
 		// uncomment for displaying banner also uncomment start flipping in
 		// onResume as well set visibility on in layout

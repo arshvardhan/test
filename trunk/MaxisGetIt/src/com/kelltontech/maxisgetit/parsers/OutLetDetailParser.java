@@ -31,6 +31,10 @@ public class OutLetDetailParser extends AbstractSAXParser {
 	private static final String TAG_LONGITUDE = "Longitude";
 	public static final String TAG_OUTLET_CAT_ID = "OutletCatId";
 
+	private static final String TAG_TOTAL_RECORD_FOUND = "Total_Records_Found";
+	private static final String TAG_PAGE_NUMBER = "Page_Number";
+	private static final String TAG_RECORDS_PER_PAGE="Records_Per_Page";
+
 	@Override
 	public IModel parse(String payload) throws Exception {
 		init();
@@ -76,9 +80,14 @@ public class OutLetDetailParser extends AbstractSAXParser {
 			outLet.setCatid(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_OUTLET)) {
 			outletDetails.add(outLet);
-		} else if (localName.equalsIgnoreCase(TAG_OUTLET_DETAILS)) {
+		} else if (localName.equalsIgnoreCase(TAG_TOTAL_RECORD_FOUND)) {
+			details.setTotal_records(getNodeValue());
+		}else if (localName.equalsIgnoreCase(TAG_RECORDS_PER_PAGE)) {
+			details.setRecords_per_page(Integer.parseInt(getNodeValue()));
+		} else if (localName.equalsIgnoreCase(TAG_PAGE_NUMBER)) {
+			details.setPage_number(Integer.parseInt(getNodeValue()));
+		}else if (localName.equalsIgnoreCase(TAG_OUTLET_DETAILS)) {
 			details.setOutlet(outletDetails);
 		}
 	}
-
 }

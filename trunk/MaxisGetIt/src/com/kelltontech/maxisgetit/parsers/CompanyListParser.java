@@ -50,6 +50,10 @@ public class CompanyListParser extends AbstractSAXParser {
 	
 	private static final String TAG_SEARCH_DISTANCE = "Search_Distance";
 	
+	private static final String TAG_SOURCE = "Source";
+	
+	private static String TAG_DEAL_DETAIL_URL = "DealDetailsUrl";
+	
 	
 	private CompanyListResponse clResponse = new CompanyListResponse();
 	private CategoryRefine category;
@@ -150,6 +154,10 @@ public class CompanyListParser extends AbstractSAXParser {
 			compDesc.setVideo_url(getNodeValue());
 		}else if (localName.equalsIgnoreCase(TAG_SEARCH_DISTANCE)) {
 			clResponse.setSearch_distance(getNodeValue());
+		}else if(localName.equalsIgnoreCase(TAG_SOURCE)){
+			compDesc.setSource(getNodeValue());
+		}else if(localName.equalsIgnoreCase(TAG_DEAL_DETAIL_URL)){
+			compDesc.setDealDetailUrl(getNodeValue());
 		}
 
 	}

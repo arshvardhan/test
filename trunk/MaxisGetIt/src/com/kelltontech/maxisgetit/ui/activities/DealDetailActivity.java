@@ -1,5 +1,7 @@
 package com.kelltontech.maxisgetit.ui.activities;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -8,7 +10,9 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
@@ -21,9 +25,16 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -45,6 +56,7 @@ import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.adapters.DealMapInfoWindowAdapter;
+import com.kelltontech.maxisgetit.adapters.DealOutletsAdapter;
 import com.kelltontech.maxisgetit.adapters.ViewPagerAdapter;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
@@ -65,6 +77,7 @@ import com.kelltontech.maxisgetit.requests.DetailRequest;
 import com.kelltontech.maxisgetit.requests.DownloadDealReq;
 import com.kelltontech.maxisgetit.requests.OutLetDetailRequest;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
+import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
 public class DealDetailActivity extends MaxisMainActivity implements
@@ -125,14 +138,30 @@ public class DealDetailActivity extends MaxisMainActivity implements
 	private int city_id = -1;
 
 	private ArrayList<String> selectedLocalityItems;
-	ArrayList<CityOrLocality> localityList;
-	ArrayList<String> ids = new ArrayList<String>();
-	TextView mainSearchButton;
-	ArrayList<String> selectedLocalityindex;
-	LinearLayout wholeSearchBoxContainer;
-	boolean onTapNearestOutletEnable = false;
+	private ArrayList<CityOrLocality> localityList;
+	private ArrayList<String> ids = new ArrayList<String>();
+	private TextView mainSearchButton;
+	private ArrayList<String> selectedLocalityindex;
+	private LinearLayout wholeSearchBoxContainer;
+	private boolean onTapNearestOutletEnable = false;
 
-	View seprator_outlet;
+	private View seprator_outlet;
+
+	private RelativeLayout nearestOutletLayout;
+	private ListView outLetsList;
+	private TextView nearestOutLetTitle;
+	private TextView nearestOutLetAddress;
+	private int index;
+
+	private TextView outletCount;
+	private ImageView crossBtn;
+	private TextView viewOnMap;
+	private LinearLayout leftInfoLayout;
+	private LinearLayout rightLayout;
+	private OutLetDetailRequest detailRequest;
+	private LinearLayout mapLayout;
+	private TextView view_map;
+	private TextView mapLabel;
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -219,6 +248,49 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
 		seprator_outlet = (View) findViewById(R.id.outlet_seprator);
 		dealDesc = (TextView) findViewById(R.id.deal_desc);
+		nearestOutletLayout = (RelativeLayout) findViewById(R.id.nearestLayout);
+		nearestOutLetTitle = (TextView) nearestOutletLayout
+				.findViewById(R.id.outletName);
+		nearestOutLetTitle.setTag(-1);
+		nearestOutLetTitle.setOnClickListener(this);
+		nearestOutLetAddress = (TextView) nearestOutletLayout
+				.findViewById(R.id.outletAddress);
+		nearestOutLetAddress.setTag(-1);
+		nearestOutLetAddress.setOnClickListener(this);
+		ImageView imageView = (ImageView) nearestOutletLayout
+				.findViewById(R.id.imageIcon);
+		imageView.setVisibility(View.VISIBLE);
+
+		mapLayout = (LinearLayout) findViewById(R.id.mapLayout);
+		mapLayout.setVisibility(View.VISIBLE);
+		mapLayout.setOnClickListener(this);
+
+		mapLabel = (TextView) findViewById(R.id.mapLabel);
+		mapLabel.setVisibility(View.VISIBLE);
+		view_map = (TextView) findViewById(R.id.viewOnMap_view);
+		view_map.setOnClickListener(this);
+
+		ImageView mapIcon = (ImageView) findViewById(R.id.mapIcon);
+		mapIcon.setTag(-1);
+		mapIcon.setOnClickListener(this);
+
+		FrameLayout layout = (FrameLayout) nearestOutletLayout
+				.findViewById(R.id.outletCountLayout);
+		layout.setVisibility(View.GONE);
+
+		outLetsList = (ListView) findViewById(R.id.outlets_list);
+
+		outletCount = (TextView) findViewById(R.id.outlets_count);
+		crossBtn = (ImageView) findViewById(R.id.cross_btn);
+		viewOnMap = (TextView) findViewById(R.id.view_on_map);
+		leftInfoLayout = (LinearLayout) findViewById(R.id.leftOutletLayout);
+		leftInfoLayout.setVisibility(View.GONE);
+
+		rightLayout = (LinearLayout) findViewById(R.id.rightlayout);
+		rightLayout.setVisibility(View.GONE);
+
+		crossBtn.setOnClickListener(this);
+		viewOnMap.setOnClickListener(this);
 
 		if (compDetailResponse == null) {
 			try {
@@ -299,37 +371,70 @@ public class DealDetailActivity extends MaxisMainActivity implements
 					intent.putExtras(bundle);
 					startActivity(intent);
 				}
-
 			}
 		});
 
 		final com.kelltontech.maxisgetit.ui.widgets.CustomScrollView mainScrollView = (com.kelltontech.maxisgetit.ui.widgets.CustomScrollView) findViewById(R.id.scroll_view);
-		View transparentImageView = (View) findViewById(R.id.trans_img);
+		// View transparentImageView = (View) findViewById(R.id.trans_img);
+		//
+		// transparentImageView.setOnTouchListener(new View.OnTouchListener() {
+		//
+		// @Override
+		// public boolean onTouch(View v, MotionEvent event) {
+		// int action = event.getAction();
+		// switch (action) {
+		// case MotionEvent.ACTION_DOWN:
+		// // Disallow ScrollView to intercept touch events.
+		// mainScrollView.requestDisallowInterceptTouchEvent(true);
+		// // Disable touch on transparent view
+		// return false;
+		//
+		// case MotionEvent.ACTION_UP:
+		// // Allow ScrollView to intercept touch events.
+		// mainScrollView.requestDisallowInterceptTouchEvent(false);
+		// return true;
+		//
+		// case MotionEvent.ACTION_MOVE:
+		// mainScrollView.requestDisallowInterceptTouchEvent(true);
+		// return false;
+		//
+		// default:
+		// return true;
+		// }
+		// }
+		// });
 
-		transparentImageView.setOnTouchListener(new View.OnTouchListener() {
+		outLetsList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
+					long arg3) {
+
+				String catId = outLets.get(pos).getCatid();
+				String comp_id = outLets.get(pos).getId();
+
+				Intent intent = new Intent(DealDetailActivity.this,
+						CompanyDetailActivity.class);
+
+				Bundle bundle = new Bundle();
+				bundle.putString(AppConstants.COMP_ID, comp_id);
+				bundle.putString(AppConstants.GLOBAL_SEARCH_KEYWORD,
+						mSearchKeyword);
+				bundle.putBoolean(AppConstants.IS_DEAL_LIST, true);
+				intent.putExtra(AppConstants.CATEGORY_ID_KEY, catId);
+				intent.putExtras(bundle);
+				startActivity(intent);
+
+			}
+		});
+
+		dealGallery.setOnTouchListener(new View.OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				int action = event.getAction();
-				switch (action) {
-				case MotionEvent.ACTION_DOWN:
-					// Disallow ScrollView to intercept touch events.
-					mainScrollView.requestDisallowInterceptTouchEvent(true);
-					// Disable touch on transparent view
-					return false;
-
-				case MotionEvent.ACTION_UP:
-					// Allow ScrollView to intercept touch events.
-					mainScrollView.requestDisallowInterceptTouchEvent(false);
-					return true;
-
-				case MotionEvent.ACTION_MOVE:
-					mainScrollView.requestDisallowInterceptTouchEvent(true);
-					return false;
-
-				default:
-					return true;
-				}
+				dealGallery.getParent()
+						.requestDisallowInterceptTouchEvent(true);
+				return false;
 			}
 		});
 
@@ -345,27 +450,50 @@ public class DealDetailActivity extends MaxisMainActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.about_deal:
-			Log.e("manish", "inside onclick");
 			isNearestOutlet = false;
 			onTapNearestOutletEnable = false;
-			aboutUs.setBackgroundResource(R.drawable.left_btnselected);
-			nearOutLets.setBackgroundResource(R.drawable.center_btn);
-			tNc.setBackgroundResource(R.drawable.right_btn);
+			aboutUs.setBackgroundColor(getResources().getColor(R.color.green));
+			aboutUs.setTextColor(Color.WHITE);
+			nearOutLets.setBackgroundColor(Color.WHITE);
+			nearOutLets.setTextColor(Color.BLACK);
+			viewAllOutlets.setBackgroundColor(Color.WHITE);
+			viewAllOutlets.setTextColor(Color.BLACK);
 			outLetsName.setVisibility(View.GONE);
 			seprator_outlet.setVisibility(View.GONE);
+			nearestOutletLayout.setVisibility(View.GONE);
+			dealDesc.setVisibility(View.VISIBLE);
+			mapLayout.setVisibility(View.VISIBLE);
+
+			leftInfoLayout.setVisibility(View.GONE);
+			rightLayout.setVisibility(View.GONE);
+			mapLabel.setVisibility(View.VISIBLE);
+
 			if (!StringUtil.isNullOrEmpty(compDetailResponse.getDescription()))
-				dealDesc.setText(compDetailResponse.getDescription());
+				dealDesc.setText(Html.fromHtml(compDetailResponse
+						.getDescription()));
 
 			break;
 		case R.id.nearest_outlet:
 			isNearestOutlet = true;
 			outLetsName.setVisibility(View.GONE);
-			aboutUs.setBackgroundResource(R.drawable.left_btn);
-			nearOutLets.setBackgroundResource(R.drawable.center_btnselected);
-			tNc.setBackgroundResource(R.drawable.right_btn);
+			aboutUs.setBackgroundColor(Color.WHITE);
+			aboutUs.setTextColor(Color.BLACK);
+			nearOutLets.setBackgroundColor(getResources().getColor(
+					R.color.green));
+			nearOutLets.setTextColor(Color.WHITE);
+			viewAllOutlets.setBackgroundColor(Color.WHITE);
+			viewAllOutlets.setTextColor(Color.BLACK);
 			seprator_outlet.setVisibility(View.GONE);
+			nearestOutletLayout.setVisibility(View.VISIBLE);
+			nearestOutletLayout.setBackgroundColor(getResources().getColor(
+					R.color.light_green));
+			dealDesc.setVisibility(View.GONE);
+			mapLayout.setVisibility(View.VISIBLE);
 
-			setUpMapIfNeeded();
+			leftInfoLayout.setVisibility(View.GONE);
+			rightLayout.setVisibility(View.GONE);
+			mapLabel.setVisibility(View.VISIBLE);
+			// setUpMapIfNeeded();
 			if (outLets != null && outLets.size() > 0) {
 				if (!StringUtil.isNullOrEmpty(outLetResponse.getOutlet().get(0)
 						.getAddress())) {
@@ -379,16 +507,50 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			}
 			break;
 
-		case R.id.tnc:
+		case R.id.deal_all_outlet:
 			isNearestOutlet = false;
-			outLetsName.setVisibility(View.GONE);
-			aboutUs.setBackgroundResource(R.drawable.left_btn);
-			nearOutLets.setBackgroundResource(R.drawable.center_btn);
-			tNc.setBackgroundResource(R.drawable.right_btnselected);
+			outLetsName.setVisibility(View.VISIBLE);
+			aboutUs.setBackgroundColor(Color.WHITE);
+			aboutUs.setTextColor(Color.BLACK);
+			nearOutLets.setBackgroundColor(Color.WHITE);
+			nearOutLets.setTextColor(Color.BLACK);
+			viewAllOutlets.setBackgroundColor(getResources().getColor(
+					R.color.green));
+			viewAllOutlets.setTextColor(Color.WHITE);
 
-			dealDesc.setText(termsNdcond);
+			if (Integer.parseInt(outLetResponse.getTotal_records()) > 10)
+				leftInfoLayout.setVisibility(View.VISIBLE);
+			else
+				leftInfoLayout.setVisibility(View.GONE);
+
+			rightLayout.setVisibility(View.VISIBLE);
+			// dealDesc.setText(termsNdcond);
+			dealDesc.setVisibility(View.GONE);
+			mapLayout.setVisibility(View.GONE);
+			nearestOutletLayout.setVisibility(View.GONE);
+			mapLabel.setVisibility(View.GONE);
+			// nearestOutletLayout.setBackgroundColor(getResources().getColor(
+			// R.color.light_green));
+
 			onTapNearestOutletEnable = false;
 			seprator_outlet.setVisibility(View.GONE);
+			try {
+				// setUpMapIfNeeded();
+				addOutLets();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			break;
+
+		case R.id.tnc:
+			// TODO
+			Intent tncintent = new Intent(DealDetailActivity.this,
+					TermsAndConditionActivity.class);
+			tncintent.putExtra(AppConstants.TNC_FROM,
+					AppConstants.TNC_FROM_DEAL);
+			tncintent.putExtra("TnC_Data", termsNdcond);
+			startActivity(tncintent);
 
 			break;
 		case R.id.search_toggler:
@@ -435,21 +597,14 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			getDownloadDetails();
 			break;
 
-		case R.id.deal_all_outlet:
-			isNearestOutlet = false;
-			try {
-				setUpMapIfNeeded();
-				addOutLets();
-			} catch (Exception e) {
-				e.printStackTrace();
+		case R.id.outletName:
+		case R.id.outletAddress:
+			index = Integer.parseInt(v.getTag().toString());
+
+			if (index == -1) {
+				index = 0;
 			}
 
-			break;
-		case textId:
-			int index = Integer.parseInt(v.getTag().toString());
-			// ((TextView)v).setText("") ;
-			// outLetsName.addView(v, index);
-			// outLetsName.removeViewAt(index + 1 ) ;
 			String catId = outLets.get(index).getCatid();
 			String comp_id = outLets.get(index).getId();
 
@@ -465,6 +620,15 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			startActivity(intent);
 
 			break;
+		case R.id.mapIcon:
+			index = Integer.parseInt(v.getTag().toString());
+			if (index == -1) {
+				index = 0;
+			}
+			showMap(index);
+
+			break;
+
 		case R.id.upArrow:
 			if (isAdvanceSearchLayoutOpen) {
 				isAdvanceSearchLayoutOpen = false;
@@ -497,6 +661,22 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			} else {
 				setSearchLocality(city_id);
 			}
+			break;
+
+		case R.id.cross_btn:
+			leftInfoLayout.setVisibility(View.GONE);
+			break;
+
+		case R.id.view_on_map:
+			index = -1;
+			showMap(index);
+			break;
+		case R.id.mapLayout:
+		case R.id.viewOnMap_view:
+
+			index = 0;
+			showMap(index);
+
 			break;
 
 		default:
@@ -708,7 +888,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 
 			OutLetDetailtController detailtController = new OutLetDetailtController(
 					DealDetailActivity.this, Events.OUTLET_DETAIL);
-			OutLetDetailRequest detailRequest = new OutLetDetailRequest();
+			detailRequest = new OutLetDetailRequest();
 
 			detailRequest.setComp_id(comp_id);
 			detailRequest.setDeal_id(deal_id);
@@ -795,7 +975,15 @@ public class DealDetailActivity extends MaxisMainActivity implements
 				} else {
 					outLetResponse = (OutLetDetails) msg.obj;
 					outLets = outLetResponse.getOutlet();
-					setUpMapIfNeeded();
+					if (outLets != null && outLets.size() > 0) {
+						nearestOutLetTitle.setText(outLets.get(0).getTitle());
+						nearestOutLetAddress.setText(outLets.get(0)
+								.getAddress());
+						// leftInfoLayout.setVisibility(View.VISIBLE);
+						// TODO
+						outletCount.setText(outLetResponse.getTotal_records());
+					}
+					// setUpMapIfNeeded();
 				}
 				stopSppiner();
 			} catch (Exception e) {
@@ -806,7 +994,15 @@ public class DealDetailActivity extends MaxisMainActivity implements
 				showInfoDialog((String) msg.obj);
 			} else if (msg.arg1 == 0) {
 				MaxisResponse genResp = (MaxisResponse) msg.obj;
-				showInfoDialog(getString(R.string.download_deal));
+				if (compDetailResponse.getSource().equalsIgnoreCase("GROUPON")) {
+					String url = compDetailResponse.getDealDetailUrl();
+
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+							Uri.parse(url));
+					startActivity(browserIntent);
+				} else {
+					showInfoDialog(getString(R.string.download_deal));
+				}
 			}
 			stopSppiner();
 		} else if (msg.arg2 == Events.DEAL_DETAIL) {
@@ -918,6 +1114,9 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		downloadDeal = (TextView) findViewById(R.id.deal_download);
 		viewAllOutlets = (TextView) findViewById(R.id.deal_all_outlet);
 
+		if (compDetailResponse.getSource().equalsIgnoreCase("GROUPON")) {
+			downloadDeal.setText("Buy Now");
+		}
 		downloadDeal.setOnClickListener(this);
 		viewAllOutlets.setOnClickListener(this);
 
@@ -934,7 +1133,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			validDate.setText(compDetailResponse.getValidDate());
 
 		if (!StringUtil.isNullOrEmpty(compDetailResponse.getDescription()))
-			dealDesc.setText(compDetailResponse.getDescription());
+			dealDesc.setText(Html.fromHtml(compDetailResponse.getDescription()));
 
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
@@ -983,7 +1182,8 @@ public class DealDetailActivity extends MaxisMainActivity implements
 
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
-
+				dealGallery.getParent()
+						.requestDisallowInterceptTouchEvent(true);
 			}
 
 			@Override
@@ -1003,30 +1203,77 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			// getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			// View view = inflater.inflate(
 			// R.layout.offerlistheader, null, true);
-			seprator_outlet.setVisibility(View.VISIBLE);
+			seprator_outlet.setVisibility(View.GONE);
 			if (!viewAdded) {
 				viewAdded = true;
-				for (OutLet title : outLets) {
-					TextView name = new TextView(this);
-					LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) name
-							.getLayoutParams();
 
-					name.setPadding(10, 10, 10, 10);
-					// name.setTextSize(, size)
-					// name.setCompoundDrawablesWithIntrinsicBounds(
-					// R.drawable.circle_blue, 0, 0, 0);
-					int count = tagId + 1;
-					name.setText(Html.fromHtml("<b><font color='black'>"
-							+ count + "</font></b>" + "  "
-							+ "<font color='blue'>" + title.getTitle()
-							+ "</font>"));
+				for (OutLet outlets : outLets) {
 
-					name.setTag(tagId);
-					name.setOnClickListener(this);
-					name.setId(textId);
-					outLetsName.addView(name);
-					tagId++;
+					/*
+					 * if (tagId <= 4) {
+					 * 
+					 * LayoutInflater inflater = (LayoutInflater) this
+					 * .getSystemService(Context.LAYOUT_INFLATER_SERVICE); View
+					 * outletRow = inflater.inflate( R.layout.outlet_list_item,
+					 * null);
+					 * 
+					 * // TextView name = new TextView(this); //
+					 * LinearLayout.LayoutParams layoutParams = //
+					 * (LinearLayout.LayoutParams) name // .getLayoutParams();
+					 * // // name.setPadding(10, 10, 10, 10); // //
+					 * name.setTextSize(, size) // //
+					 * name.setCompoundDrawablesWithIntrinsicBounds( // //
+					 * R.drawable.circle_blue, 0, 0, 0); // int count = tagId +
+					 * 1; //
+					 * name.setText(Html.fromHtml("<b><font color='black'>" // +
+					 * count + "</font></b>" + "  " // + "<font color='blue'>" +
+					 * title.getTitle() // + "</font>")); // //
+					 * name.setTag(tagId); // name.setOnClickListener(this); //
+					 * name.setId(textId);
+					 * 
+					 * TextView dealTitle = (TextView) outletRow
+					 * .findViewById(R.id.outletName); TextView dealAddress =
+					 * (TextView) outletRow .findViewById(R.id.outletAddress);
+					 * ImageView mapIcon = (ImageView) outletRow
+					 * .findViewById(R.id.mapIcon); TextView outletCount =
+					 * (TextView) outletRow .findViewById(R.id.outletCount);
+					 * 
+					 * dealTitle.setText(outlets.getTitle());
+					 * dealAddress.setText(outlets.getAddress());
+					 * outletCount.setText(tagId + 1 + "");
+					 * outLetsName.addView(outletRow); dealTitle.setTag(tagId);
+					 * dealAddress.setTag(tagId); mapIcon.setTag(tagId);
+					 * tagId++;
+					 * 
+					 * mapIcon.setOnClickListener(this);
+					 * dealTitle.setOnClickListener(this);
+					 * dealAddress.setOnClickListener(this); } else { break; } }
+					 */
+					Log.e("manish",
+							":"
+									+ Integer.parseInt(outLetResponse
+											.getTotal_records()));
+
+					DealOutletsAdapter adapter = new DealOutletsAdapter(this,
+							true, Integer.parseInt(outLetResponse
+									.getTotal_records()));
+					adapter.setData(outLets);
+					outLetsList.setAdapter(adapter);
+					if (outLets.size() > 1) {
+						android.widget.LinearLayout.LayoutParams lp = (android.widget.LinearLayout.LayoutParams) outLetsName
+								.getLayoutParams();
+						lp.height = (getWindowManager().getDefaultDisplay()
+								.getHeight() / 2);
+						outLetsName.setLayoutParams(lp);
+					} else {
+						android.widget.LinearLayout.LayoutParams lp = (android.widget.LinearLayout.LayoutParams) outLetsName
+								.getLayoutParams();
+						lp.height = (220);
+						outLetsName.setLayoutParams(lp);
+					}
 				}
+
+				outLetsName.setVisibility(View.VISIBLE);
 			} else {
 				outLetsName.setVisibility(View.VISIBLE);
 			}
@@ -1082,5 +1329,62 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			return null;
 		}
 
+	}
+
+	public void showMap(int index) {
+
+		if (isDialogToBeShown()) {
+			showConfirmationDialog(CustomDialog.DATA_USAGE_DIALOG,
+					getResources().getString(R.string.cd_msg_data_usage));
+		} else {
+			if (isLocationAvailable()) {
+				redirectToMap();
+			}
+		}
+	}
+
+	public void viewAllOutlets() {
+		// TODO
+		Intent intent = new Intent(DealDetailActivity.this,
+				ViewAllOutletsActivity.class);
+		intent.putExtra(AppConstants.OUTLET_DETAIL_DATA, outLetResponse);
+		intent.putExtra("totalCount",
+				Integer.parseInt(outLetResponse.getTotal_records()));
+		intent.putExtra("OutletRequest", detailRequest);
+		intent.putExtra("deal_title", compDetailResponse.getTitle());
+		startActivity(intent);
+
+	}
+
+	@Override
+	public void onPositiveDialogButton(int id) {
+		if (id == CustomDialog.DATA_USAGE_DIALOG) {
+
+			if (isLocationAvailable()) {
+				redirectToMap();
+			}
+		}
+	}
+
+	@Override
+	public void onNegativeDialogbutton(int id) {
+		if (id == CustomDialog.LOGIN_CONFIRMATION_DIALOG) {
+			stopSppiner();
+		} else if (id == CustomDialog.DELETE_CONFIRMATION_DIALOG) {
+			stopSppiner();
+		} else {
+			super.onNegativeDialogbutton(id);
+		}
+	}
+
+	public void redirectToMap() {
+		Intent intent = new Intent(DealDetailActivity.this,
+				ViewDealMapActivity.class);
+
+		intent.putParcelableArrayListExtra(AppConstants.OUTLET_DATA, outLets);
+		intent.putExtra("index", index);
+		if (!StringUtil.isNullOrEmpty(compDetailResponse.getTitle()))
+			intent.putExtra("DEAL_TITLE", compDetailResponse.getTitle());
+		startActivity(intent);
 	}
 }

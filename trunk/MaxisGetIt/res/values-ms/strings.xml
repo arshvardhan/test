@@ -24,6 +24,7 @@
     <string name="category_list_not_found">Insufficient information to process your request</string>
     <string name="record_found"><u>Record(s) Found Near You</u></string>
       <string name="deal_found"><u>Deal(s) Found Near You</u></string>
+       <string name="outlet_found">Outlet(s) Found Near You</string>
     <string name="cl_hot_deals">Hot Deals</string>
     <string name="cl_view_on_map">View on Map</string>
     <string name="cl_modify_search">Modify Search</string>

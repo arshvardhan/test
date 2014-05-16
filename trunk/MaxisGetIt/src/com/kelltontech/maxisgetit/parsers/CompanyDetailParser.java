@@ -85,10 +85,14 @@ public class CompanyDetailParser extends AbstractSAXParser {
 	private static final String TAG_TERMS_ND_CON = "TermsCondition";
 
 	private boolean isReviewRating = false;
-	
+
 	private static final String TAG_MAP_ICON = "Map_Icon";
-	
+
 	private static final String TAG_VIDEO = "CVideo";
+
+	private static final String TAG_SOURCE = "Source";
+
+	private static String TAG_DEAL_DETAIL_URL = "DealDetailsUrl";
 
 	@Override
 	public IModel parse(String payload) throws Exception {
@@ -253,14 +257,17 @@ public class CompanyDetailParser extends AbstractSAXParser {
 		} else if (localName.equalsIgnoreCase(TAG_TERMS_ND_CON)) {
 			Log.d("maxis", getNodeValue());
 			compdDetail.setTermsNdCondition(getNodeValue());
-		} else if(localName.equalsIgnoreCase(TAG_MAP_ICON)){
+		} else if (localName.equalsIgnoreCase(TAG_MAP_ICON)) {
 			Log.d("maxis", getNodeValue());
 			compdDetail.setMapIcon(getNodeValue());
-		}else if(localName.equalsIgnoreCase(TAG_VIDEO)){
+		} else if (localName.equalsIgnoreCase(TAG_VIDEO)) {
 			Log.d("maxis", getNodeValue());
 			compdDetail.setVideoUrl(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_SOURCE)) {
+			compdDetail.setSource(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_DEAL_DETAIL_URL)) {
+			compdDetail.setDealDetailUrl(getNodeValue());
 		}
-		
 
 	}
 

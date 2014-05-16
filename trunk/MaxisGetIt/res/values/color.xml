@@ -39,6 +39,7 @@
     <color name="bar_light_grey">#c6c6c6</color>
     <color name="cd_name_header">#32598a</color>
     <color name="green">#7bc978</color>
+    <color name="light_green">#e5ffe4</color>
 
     <!-- Contest App AddNewPOI -->
     <color name="edit_txt_border_grey">#999999</color>
@@ -52,6 +53,7 @@
     <color name="transparent_footer_blue">#c8004282</color>
     <color name="transparent_white">#c8FFFFFF</color>
     <color name="transparent_blue_map_route">#c80081c2</color>
+    <color name ="new_footer_color">#3980f4</color>
     
     <!-- Copied from Photo COntest App -->
     <color name="fully_transparent">#00000000</color>
@@ -81,6 +83,7 @@
     <color name="app_green_color">#009a26</color>
     <color name="app_green_light_color">#4db848</color>
     <color name="black_light">#666666</color>
+    <color name ="light_color_black">#585858</color>
     <color name="footer_bg_color">#f2f2f2</color>
     <color name ="section_side_text_color">#2899DB</color>
     
