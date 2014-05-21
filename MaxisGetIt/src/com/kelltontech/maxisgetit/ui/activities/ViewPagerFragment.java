@@ -2,10 +2,6 @@ package com.kelltontech.maxisgetit.ui.activities;
 
 import java.util.ArrayList;
 
-import com.kelltontech.framework.imageloader.ImageLoader;
-import com.kelltontech.maxisgetit.R;
-import com.kelltontech.maxisgetit.dao.SubCategory;
-
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -13,9 +9,14 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
+
+import com.kelltontech.framework.imageloader.ImageLoader;
+import com.kelltontech.maxisgetit.R;
+import com.kelltontech.maxisgetit.dao.SubCategory;
 
 
 public class ViewPagerFragment extends Fragment {
@@ -32,8 +33,6 @@ public class ViewPagerFragment extends Fragment {
 		
 	}
 
-
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,33 +47,35 @@ public class ViewPagerFragment extends Fragment {
 		dummyDrawable=getActivity().getResources().getDrawable(R.drawable.group_load);
 		errorDrawable=getActivity().getResources().getDrawable(R.drawable.group_cross);
 		ImageView imageView = new ImageView(getActivity());
-//		imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+		imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 		imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
 		Log.i("Image path", "Imag path " + imgPath);
 //		imageView.setTag(imgPath);
 		ImageLoader.start(imgPath, imageView, dummyDrawable, errorDrawable);
-//		imageView.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				try{
-//					if (mFlowFrom.equals("HomeScreen")) {
-//						((HomeScreen) mActivity).viewFlipperTapped();
-//					} else {
-//						((OffersPageActivity) mActivity).offersMainBannerTapped();
-//					}
-//				} catch (Exception ex){
-//					ex.printStackTrace();
-//				}
-//
-//			}
-//		});
+		imageView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				try{
+					if (mFlowFrom.equals("DealDetail")) {
+						((DealDetailActivity) mActivity).viewFlipperTapped();
+					} else {
+						((CompanyDetailActivity) mActivity).viewFlipperTapped();
+					}
+				} catch (Exception ex){
+					ex.printStackTrace();
+				}
+
+			}
+		});
 
 		return imageView;
 	}
 
-	public void setImagePath(String imgPath) {
+	public void setImagePath(String imgPath , String flowFrom , Activity activity) {
 		this.imgPath = imgPath;
+		this.mFlowFrom = flowFrom;
+		this.mActivity = activity;
 	}
 
 }

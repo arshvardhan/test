@@ -73,6 +73,7 @@ public class FlurryEventsConstants {
 	public static final String MY_CLASSIFIEDS_CLICK = "MyClassifieds button is clicked";
 	public static final String MY_DEALS_CLICK = "MyDeals button is clicked";
 	public static final String MY_FAVOURITE_CLICK = "My Favourite(s) button is clicked";
+	
 
 	// EditProfile Screen Events
 	public static final String APPLICATION_EDIT_PROFILE = "EditProfile Screen";

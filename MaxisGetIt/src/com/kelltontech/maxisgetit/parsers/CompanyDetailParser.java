@@ -77,6 +77,10 @@ public class CompanyDetailParser extends AbstractSAXParser {
 	private static final String TAG_TILL_DATE = "Till_Date";
 	private static final String TAG_ICON_URL = "Icon_Url";
 	private static final String TAG_DEAL_ICON_URL = "Deal_Icon_Url";
+	
+	private static final String TAG_DETAIL_IMAGES = "Detail_Imgs";
+	private static final String TAG_DETAIL_IMAGE_URL ="Detail_Img";
+	
 	private static final String TAG_OUTLETS = "Outlets";
 	private static final String TAG_NEAR_OUTLET = "NearOutlet";
 	private static final String TAG_NEAR_OUTLET_LAT = "Outlet_Latitude";
@@ -122,9 +126,9 @@ public class CompanyDetailParser extends AbstractSAXParser {
 			nearOutLets = new ArrayList<NearOutLets>();
 		} else if (localName.equalsIgnoreCase(TAG_NEAR_OUTLET)) {
 			nearLets = new NearOutLets();
-		} else if (localName.equalsIgnoreCase(TAG_ICON_URL)) {
+		} else if (localName.equalsIgnoreCase(TAG_ICON_URL) || localName.equalsIgnoreCase(TAG_DETAIL_IMAGES)) {
 			urls = new ArrayList<IconUrl>();
-		} else if (localName.equalsIgnoreCase(TAG_DEAL_ICON_URL)) {
+		} else if (localName.equalsIgnoreCase(TAG_DEAL_ICON_URL) || localName.equalsIgnoreCase(TAG_DETAIL_IMAGE_URL)) {
 			iconUrl = new IconUrl();
 		}
 	}
@@ -243,12 +247,12 @@ public class CompanyDetailParser extends AbstractSAXParser {
 		} else if (localName.equalsIgnoreCase(TAG_OUTLETS)) {
 			Log.d("maxis", getNodeValue());
 			compdDetail.setNearoutlets(nearOutLets);
-		} else if (localName.equalsIgnoreCase(TAG_DEAL_ICON_URL)) {
+		} else if (localName.equalsIgnoreCase(TAG_DEAL_ICON_URL)|| localName.equalsIgnoreCase(TAG_DETAIL_IMAGE_URL)) {
 			Log.d("maxis", getNodeValue());
 			iconUrl.setDealIconUrl(getNodeValue());
 			urls.add(iconUrl);
 			compdDetail.setNearoutlets(nearOutLets);
-		} else if (localName.equalsIgnoreCase(TAG_ICON_URL)) {
+		} else if (localName.equalsIgnoreCase(TAG_ICON_URL) || localName.equalsIgnoreCase(TAG_DETAIL_IMAGES)) {
 			Log.d("maxis", getNodeValue());
 			compdDetail.setIconUrl(urls);
 		} else if (localName.equalsIgnoreCase(TAG_COMP_ID)) {

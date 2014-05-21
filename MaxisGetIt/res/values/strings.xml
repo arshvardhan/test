@@ -395,5 +395,8 @@
     <string name="title_activity_view_deal_map">ViewDealMapActivity</string>
     <string name="title_activity_view_all_outlets">ViewAllOutletsActivity</string>
     <string name="title_activity_refine_outlet">RefineOutletActivity</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="view_life_cycle"><u>View Life Cycle</u></string>
+    <string name="title_activity_did_life_cycle">DidLifeCycleActivity</string>
 
 </resources>
