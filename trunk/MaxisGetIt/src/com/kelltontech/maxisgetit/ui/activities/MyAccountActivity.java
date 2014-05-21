@@ -18,13 +18,18 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.kelltontech.framework.db.MyApplication;
@@ -37,11 +42,13 @@ import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
 import com.kelltontech.maxisgetit.controllers.ClassifiedListController;
 import com.kelltontech.maxisgetit.controllers.FavouriteController;
 import com.kelltontech.maxisgetit.controllers.LocalSearchController;
+import com.kelltontech.maxisgetit.controllers.MyAccountDashboardController;
 import com.kelltontech.maxisgetit.controllers.MyDealsController;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.MaxisStore;
 import com.kelltontech.maxisgetit.db.CityTable;
-import com.kelltontech.maxisgetit.requests.CombinedListRequest;
+import com.kelltontech.maxisgetit.model.CatDetails;
+import com.kelltontech.maxisgetit.model.MyAccountDashboardResponse;
 import com.kelltontech.maxisgetit.requests.FavCompanyListRequest;
 import com.kelltontech.maxisgetit.response.ClassifiedListResponse;
 import com.kelltontech.maxisgetit.response.CompanyListResponse;
@@ -93,6 +100,14 @@ public class MyAccountActivity extends MaxisMainActivity {
 	TextView mainSearchButton;
 	ArrayList<String> selectedLocalityindex;
 	LinearLayout wholeSearchBoxContainer;
+	private ArrayAdapter<String> mCategoryAdapter;
+	private ArrayAdapter<String> mCompanyAdapter;
+	private ArrayList<String> mCompany;
+	private ArrayList<CatDetails> catDetails;
+	private ArrayList<String> mCategory;
+	private MyAccountDashboardResponse response;
+	private LinearLayout dashboardLayout;
+	private int index;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +145,9 @@ public class MyAccountActivity extends MaxisMainActivity {
 		mEnRadioButton = (RadioButton) findViewById(R.id.amc_lang_en);
 		mMalayRadioButton = (RadioButton) findViewById(R.id.amc_lang_ms);
 		mIsCurrentlyEngSelected = mStore.isEnglishSelected();
+		dashboardLayout = (LinearLayout) findViewById(R.id.dashboardLayout);
+		dashboardLayout.setVisibility(View.GONE);
+
 		if (mIsCurrentlyEngSelected) {
 			mEnRadioButton.setChecked(true);
 		} else
@@ -185,8 +203,8 @@ public class MyAccountActivity extends MaxisMainActivity {
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
 		mSearchBtn.setOnClickListener(this);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
-//		if (!StringUtil.isNullOrEmpty(mSearchKeyword))
-//			mSearchEditText.setText(mSearchKeyword);
+		// if (!StringUtil.isNullOrEmpty(mSearchKeyword))
+		// mSearchEditText.setText(mSearchKeyword);
 
 		advanceSearchLayout = (LinearLayout) findViewById(R.id.advanceSearch);
 		advanceSearchLayout.setVisibility(View.GONE);
@@ -219,6 +237,8 @@ public class MyAccountActivity extends MaxisMainActivity {
 				return false;
 			}
 		});
+
+		getDashboardData();
 	}
 
 	@Override
@@ -250,12 +270,10 @@ public class MyAccountActivity extends MaxisMainActivity {
 			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
 					+ "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
-			if(index==-1)
-			{
-				city_id =-1;
-			}else
-			{
-			city_id = cityList.get(index).getId();
+			if (index == -1) {
+				city_id = -1;
+			} else {
+				city_id = cityList.get(index).getId();
 			}
 		} else if (resultCode == RESULT_OK
 				&& requestCode == AppConstants.LOCALITY_REQUEST) {
@@ -586,6 +604,25 @@ public class MyAccountActivity extends MaxisMainActivity {
 				startActivityForResult(intent, AppConstants.LOCALITY_REQUEST);
 
 			}
+		} else if (msg.arg2 == Events.MY_ACCOUNT_DASHBOARD) {
+			// TODO
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+				dashboardLayout.setVisibility(View.GONE);
+			} else {
+				response = (MyAccountDashboardResponse) msg.obj;
+				mCompany = new ArrayList<String>();
+				if (response != null && response.getData() != null) {
+					if (response.getData().size() > 0) {
+						for (int i = 0; i < response.getData().size(); i++) {
+							mCompany.add(response.getData().get(i).getCname());
+						}
+						setDashboardData();
+					}
+				}
+
+			}
+			stopSppiner();
 		}
 
 	}
@@ -633,6 +670,20 @@ public class MyAccountActivity extends MaxisMainActivity {
 				}
 			}
 			handler.sendMessage(message);
+		} else if (event == Events.MY_ACCOUNT_DASHBOARD) {
+			MyAccountDashboardResponse dashboardResponse = (MyAccountDashboardResponse) screenData;
+			Message message = new Message();
+			message.arg2 = event;
+
+			if (dashboardResponse.getError_code() == "1") {
+				message.arg1 = 1;
+				message.obj = getResources().getString(
+						R.string.communication_failure);
+			} else {
+				message.arg1 = 0;
+				message.obj = dashboardResponse;
+			}
+			handler.sendMessage(message);
 		} else {
 			handler.sendMessage((Message) screenData);
 		}
@@ -678,4 +729,105 @@ public class MyAccountActivity extends MaxisMainActivity {
 		}
 	}
 
+	public void getDashboardData() {
+		MyAccountDashboardController dashboardController = new MyAccountDashboardController(
+				MyAccountActivity.this, Events.MY_ACCOUNT_DASHBOARD);
+		startSppiner();
+		mListRequest = new FavCompanyListRequest();
+		mListRequest.setUserId(mUserDetail.getUserId());
+		dashboardController.requestService(mListRequest);
+	}
+
+	public void setDashboardData() {
+		final TextView totalViews;
+		final TextView totalLeads;
+		final TextView myTotalViews;
+		final TextView myActiveVirtualNo;
+		final TextView myPlan;
+		final TextView leadCost;
+		final Spinner companyChooser;
+		final Spinner categoryChooser;
+		TextView viewLifeCycle;
+
+		dashboardLayout.setVisibility(View.VISIBLE);
+		companyChooser = (Spinner) findViewById(R.id.company_spinner);
+		categoryChooser = (Spinner) findViewById(R.id.category_spinner);
+		totalViews = (TextView) findViewById(R.id.total_views);
+		totalLeads = (TextView) findViewById(R.id.total_leads);
+		myTotalViews = (TextView) findViewById(R.id.my_total_views);
+		myActiveVirtualNo = (TextView) findViewById(R.id.my_active_virtual_no);
+		myPlan = (TextView) findViewById(R.id.my_plan);
+		leadCost = (TextView) findViewById(R.id.lead_cost);
+		viewLifeCycle = (TextView)findViewById(R.id.life_cycle);
+
+		mCompanyAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item,
+				mCompany);
+		companyChooser.setAdapter(mCompanyAdapter);
+
+		companyChooser.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int pos,
+					long arg3) {
+				mCategory = new ArrayList<String>();
+				for (int i = 0; i < response.getData().get(pos).getCatdetails()
+						.size(); i++) {
+					mCategory.add(response.getData().get(pos).getCatdetails()
+							.get(i).getCatname());
+
+				}
+				catDetails = response.getData().get(pos).getCatdetails();
+				mCategoryAdapter = new ArrayAdapter<String>(
+						MyAccountActivity.this, R.layout.spinner_item,
+						mCategory);
+				categoryChooser.setAdapter(mCategoryAdapter);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		categoryChooser.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int pos,
+					long arg3) {
+				// TODO Auto-generated method stub
+
+				totalViews.setText(catDetails.get(pos).getTotalView());
+				totalLeads.setText(catDetails.get(pos).getTotalLeads());
+				myTotalViews.setText(catDetails.get(pos).getMyTotalView());
+				myActiveVirtualNo.setText(catDetails.get(pos)
+						.getMaxisDidNumber());
+				myPlan.setText(catDetails.get(pos).getSubscription());
+				leadCost.setText(catDetails.get(pos).getPrice());
+			
+
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		viewLifeCycle.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				
+				
+				
+					Intent intent = new Intent(MyAccountActivity.this,DidLifeCycleActivity.class);			
+//				catDetails
+				
+			}
+		});
+		
+	}
 }

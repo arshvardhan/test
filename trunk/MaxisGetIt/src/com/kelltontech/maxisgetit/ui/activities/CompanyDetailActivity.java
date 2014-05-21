@@ -16,6 +16,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.provider.ContactsContract;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
@@ -40,6 +42,7 @@ import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.utils.NativeHelper;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
+import com.kelltontech.maxisgetit.adapters.ViewPagerAdapter;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
@@ -52,6 +55,7 @@ import com.kelltontech.maxisgetit.dao.CompanyDetail;
 import com.kelltontech.maxisgetit.dao.CompanyReview;
 import com.kelltontech.maxisgetit.dao.FavouriteCompanies;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
+import com.kelltontech.maxisgetit.dao.IconUrl;
 import com.kelltontech.maxisgetit.dao.MaxisStore;
 import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.db.FavCompanysTable;
@@ -67,7 +71,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 	private LinearLayout mSearchContainer;
 	private ImageView mSearchToggler;
 	private TextView mHeaderTitle;
-	private ImageView mCompImageView;
+//	private ImageView mCompImageView;
 	private EllipsizingTextView mCompDesc;
 	private TextView mWebsiteView;
 	private CompanyDetail mCompanyDetail;
@@ -131,6 +135,10 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 	LinearLayout videoContainer;
 	View seprator;
 	ImageView videoThumbnail;
+	private ViewPager comDetailGallery;
+	private LinearLayout circleIndicator;
+	private int flipperVisibleItemPosition = 0;
+	private ArrayList<IconUrl> imgPathList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -350,16 +358,16 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 				+ String.valueOf(mCompanyDetail.getRatedUserCount()) + " )");
 		// mTxtRatedUserCount.setText(String.format(getResources().getString(R.string.txt_rating_count),29));
 
-		mCompImageView = (ImageView) findViewById(R.id.cd_comp_image);
-		if (!StringUtil.isNullOrEmpty(mCompanyDetail.getImageUrl())) {
-			Log.i("FINDIT", "Image URL : " + mCompanyDetail.getImageUrl());
-			ImageLoader.start(mCompanyDetail.getImageUrl(), mCompImageView,
-					mCompLoading, mCompError);
-		} else {
-			mCompImageView.setVisibility(View.GONE);
-		}
+//		mCompImageView = (ImageView) findViewById(R.id.cd_comp_image);
+//		if (!StringUtil.isNullOrEmpty(mCompanyDetail.getImageUrl())) {
+//			Log.i("FINDIT", "Image URL : " + mCompanyDetail.getImageUrl());
+//			ImageLoader.start(mCompanyDetail.getImageUrl(), mCompImageView,
+//					mCompLoading, mCompError);
+//		} else {
+//			mCompImageView.setVisibility(View.GONE);
+//		}
 
-		mCompImageView.setOnClickListener(this);
+//		mCompImageView.setOnClickListener(this);
 
 		if (!StringUtil.isNullOrEmpty(mCompanyDetail.getDescription())) {
 			findViewById(R.id.layout_comp_desc).setVisibility(View.VISIBLE);
@@ -373,7 +381,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 				mMoreDesc.setVisibility(View.VISIBLE);
 			mMoreDesc.setText(Html.fromHtml("<u>"
 					+ getResources().getString(R.string.more) + "</u>"));
-				mMoreDesc.setOnClickListener(this);
+			mMoreDesc.setOnClickListener(this);
 		} else {
 			findViewById(R.id.layout_comp_desc).setVisibility(View.GONE);
 		}
@@ -453,6 +461,47 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			videoContainer.setVisibility(View.VISIBLE);
 			seprator.setVisibility(View.VISIBLE);
 		}
+
+		imgPathList = mCompanyDetail.getIconUrl();
+
+		comDetailGallery = (ViewPager) findViewById(R.id.comp_image_pager);
+		circleIndicator = (LinearLayout) findViewById(R.id.indicatorlinearlayout);
+		if (imgPathList != null && imgPathList.size() > 0) {
+			comDetailGallery.setVisibility(View.VISIBLE);
+			ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(
+					getSupportFragmentManager(), imgPathList, this,
+					"CompanyDetail");
+			if (imgPathList.size() > 1) {
+				addImage();
+				circleIndicator.setVisibility(View.VISIBLE);
+			} else {
+				circleIndicator.setVisibility(View.GONE);
+			}
+			comDetailGallery.setAdapter(pagerAdapter);
+		} else {
+			comDetailGallery.setVisibility(View.GONE);
+			circleIndicator.setVisibility(View.GONE);
+		}
+
+		comDetailGallery.setOnPageChangeListener(new OnPageChangeListener() {
+
+			@Override
+			public void onPageSelected(int position) {
+				indicatorchange(position);
+				flipperVisibleItemPosition = position;
+			}
+
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				comDetailGallery.getParent()
+						.requestDisallowInterceptTouchEvent(true);
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+
+			}
+		});
 
 	}
 
@@ -961,25 +1010,24 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			break;
 		case R.id.cd_report_error: {
 			// MaxisStore store = MaxisStore.getStore(this);
-//			if (store.isLoogedInUser()) {
-				Intent intent = new Intent(CompanyDetailActivity.this,
-						ReportErrorActivity.class);
-				intent.putExtra(AppConstants.COMP_DETAIL_DATA, mCompanyDetail);
-				intent.putExtra(AppConstants.GLOBAL_SEARCH_KEYWORD,
-						mSearchKeyword);
-				startActivity(intent);
-//			} else {
-//				Intent branchIntent = new Intent(CompanyDetailActivity.this,
-//						GuestBranchingActivity.class);
-//				branchIntent.putExtra(AppConstants.IS_FROM_DETAIL, true);
-//				branchIntent.putExtra(AppConstants.IS_FOR_ERROR_LOG, true);
-//
-//				branchIntent.putExtra(AppConstants.COMP_DETAIL_DATA,
-//						mCompanyDetail);
-//				branchIntent.putExtra(AppConstants.GLOBAL_SEARCH_KEYWORD,
-//						mSearchKeyword);
-//				startActivity(branchIntent);
-//			}
+			// if (store.isLoogedInUser()) {
+			Intent intent = new Intent(CompanyDetailActivity.this,
+					ReportErrorActivity.class);
+			intent.putExtra(AppConstants.COMP_DETAIL_DATA, mCompanyDetail);
+			intent.putExtra(AppConstants.GLOBAL_SEARCH_KEYWORD, mSearchKeyword);
+			startActivity(intent);
+			// } else {
+			// Intent branchIntent = new Intent(CompanyDetailActivity.this,
+			// GuestBranchingActivity.class);
+			// branchIntent.putExtra(AppConstants.IS_FROM_DETAIL, true);
+			// branchIntent.putExtra(AppConstants.IS_FOR_ERROR_LOG, true);
+			//
+			// branchIntent.putExtra(AppConstants.COMP_DETAIL_DATA,
+			// mCompanyDetail);
+			// branchIntent.putExtra(AppConstants.GLOBAL_SEARCH_KEYWORD,
+			// mSearchKeyword);
+			// startActivity(branchIntent);
+			// }
 			break;
 		}
 		case R.id.goto_home_icon:
@@ -1000,13 +1048,13 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			intent.putExtra(AppConstants.COMP_DETAIL_DATA, mCompanyDetail);
 			startActivity(intent);
 			break;
-		case R.id.cd_comp_image:
-			Intent intents = new Intent(CompanyDetailActivity.this,
-					CompanyDetailImageViewActivity.class);
-			intents.putExtra("ImageURL", mCompanyDetail.getImageUrl());
-			startActivity(intents);
-
-			break;
+//		case R.id.cd_comp_image:
+//			Intent intents = new Intent(CompanyDetailActivity.this,
+//					CompanyDetailImageViewActivity.class);
+//			intents.putExtra("ImageURL", mCompanyDetail.getImageUrl());
+//			startActivity(intents);
+//
+//			break;
 		case R.id.upArrow:
 			if (isAdvanceSearchLayoutOpen) {
 				isAdvanceSearchLayoutOpen = false;
@@ -1042,10 +1090,10 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			break;
 
 		case R.id.img_video_thumbnail:
-			
-			Log.e("manish","tab");
-//			AnalyticsHelper
-//					.logEvent(FlurryEventsConstants.VIDEO_THUMBNAIL_CLICK);
+
+			Log.e("manish", "tab");
+			// AnalyticsHelper
+			// .logEvent(FlurryEventsConstants.VIDEO_THUMBNAIL_CLICK);
 			if (isDialogToBeShown()) {
 				showConfirmationDialog(CustomDialog.PLAY_VIDEO_DIALOG,
 						getResources().getString(R.string.cd_msg_data_usage));
@@ -1195,18 +1243,26 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 
 	private void showMapActivity() {
 		if (isLocationAvailable()) {
-//			Intent intent = new Intent(CompanyDetailActivity.this,
-//					FullMapActivity.class);
-//			intent.putExtra(AppConstants.GLOBAL_SEARCH_KEYWORD, mSearchKeyword);
-//			intent.putExtra(AppConstants.COMP_DETAIL_DATA, mCompanyDetail);
-//			intent.putExtra(AppConstants.THUMB_URL, mCompanyDetail.getMapIcon());
-//			intent.putExtra(AppConstants.IS_DEAL_LIST, getIntent().getExtras()
-//					.getBoolean(AppConstants.IS_DEAL_LIST));
-//			startActivity(intent);
-			//TODO for google apps.
-			String url = "http://maps.google.com/maps?saddr="+GPS_Data.getLatitude()+","+GPS_Data.getLongitude()+"&daddr="+mCompanyDetail.getLatitude()+","+mCompanyDetail.getLongitude()+"&mode=driving";
-			Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url));
-			intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+			// Intent intent = new Intent(CompanyDetailActivity.this,
+			// FullMapActivity.class);
+			// intent.putExtra(AppConstants.GLOBAL_SEARCH_KEYWORD,
+			// mSearchKeyword);
+			// intent.putExtra(AppConstants.COMP_DETAIL_DATA, mCompanyDetail);
+			// intent.putExtra(AppConstants.THUMB_URL,
+			// mCompanyDetail.getMapIcon());
+			// intent.putExtra(AppConstants.IS_DEAL_LIST,
+			// getIntent().getExtras()
+			// .getBoolean(AppConstants.IS_DEAL_LIST));
+			// startActivity(intent);
+			// TODO for google apps.
+			String url = "http://maps.google.com/maps?saddr="
+					+ GPS_Data.getLatitude() + "," + GPS_Data.getLongitude()
+					+ "&daddr=" + mCompanyDetail.getLatitude() + ","
+					+ mCompanyDetail.getLongitude() + "&mode=driving";
+			Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+					Uri.parse(url));
+			intent.setClassName("com.google.android.apps.maps",
+					"com.google.android.maps.MapsActivity");
 			startActivity(intent);
 		}
 	}
@@ -1372,13 +1428,51 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			return null;
 		}
 	}
-	
-	private void playVideo()
-	{
+
+	private void playVideo() {
 		Intent videoIntent = new Intent(CompanyDetailActivity.this,
 				VideoPlayActivity.class);
 		videoIntent.putExtra(AppConstants.VIDEO_URL,
 				mCompanyDetail.getVideoUrl());
 		startActivity(videoIntent);
+	}
+
+	private void indicatorchange(int pos) {
+		for (int i = 0; i < imgPathList.size(); i++) {
+			circleIndicator.getChildAt(i).setBackgroundResource(
+					R.drawable.circle_white);
+		}
+		circleIndicator.getChildAt(pos).setBackgroundResource(
+				R.drawable.circle_blue);
+	}
+
+	private void addImage() {
+		Log.e("manish", "inside add");
+
+		// circleIndicator = (LinearLayout)
+		// findViewById(R.id.indicatorlinearlayout);
+
+		for (int i = 0; i < imgPathList.size(); i++) {
+			ImageView image = new ImageView(this);
+			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			layoutParams.setMargins(0, 0, (int) (5 * getResources()
+					.getDisplayMetrics().density), 0);
+			int padding = (int) (3 * getResources().getDisplayMetrics().density);
+			image.setPadding(padding, padding, padding, padding);
+			image.setLayoutParams(layoutParams);
+
+			circleIndicator.addView(image, i);
+
+		}
+		indicatorchange(flipperVisibleItemPosition);
+	}
+	
+	public void viewFlipperTapped() {
+		Intent intents = new Intent(CompanyDetailActivity.this,
+				CompanyDetailImageViewActivity.class);
+		intents.putExtra("ImageURL",
+				imgPathList.get(flipperVisibleItemPosition).getDealIconUrl());
+		startActivity(intents);
 	}
 }

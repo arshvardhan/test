@@ -384,4 +384,6 @@
     <string name="add_type">"Please select an Ad Type."</string>
     
     <string name = "entire_malaysia">Entire Malaysia</string>
+    
+    <string name="dashboard">Dashboard</string>
 </resources>

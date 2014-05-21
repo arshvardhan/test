@@ -1,7 +1,5 @@
 package com.kelltontech.maxisgetit.ui.activities;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -25,8 +23,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
@@ -1159,7 +1155,8 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		if (imgPathList != null && imgPathList.size() > 0) {
 			dealGallery.setVisibility(View.VISIBLE);
 			ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(
-					getSupportFragmentManager(), imgPathList, this);
+					getSupportFragmentManager(), imgPathList, this,
+					"DealDetail");
 			if (imgPathList.size() > 1) {
 				addImage();
 				circleIndicator.setVisibility(View.VISIBLE);
@@ -1386,5 +1383,13 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		if (!StringUtil.isNullOrEmpty(compDetailResponse.getTitle()))
 			intent.putExtra("DEAL_TITLE", compDetailResponse.getTitle());
 		startActivity(intent);
+	}
+
+	public void viewFlipperTapped() {
+		Intent intents = new Intent(DealDetailActivity.this,
+				CompanyDetailImageViewActivity.class);
+		intents.putExtra("ImageURL",
+				imgPathList.get(flipperVisibleItemPosition).getDealIconUrl());
+		startActivity(intents);
 	}
 }

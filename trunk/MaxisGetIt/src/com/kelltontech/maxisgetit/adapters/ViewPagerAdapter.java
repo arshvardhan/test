@@ -20,16 +20,17 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 	private	Context mcontext;
 
 	
-	public ViewPagerAdapter(FragmentManager fm, ArrayList<IconUrl> imgPathList, Context context) {
+	public ViewPagerAdapter(FragmentManager fm, ArrayList<IconUrl> imgPathList, Context context , String flowFrom) {
 		super(fm);
 		this.imgPathList = imgPathList;
 		mcontext = context;
+		mFlowFrom = flowFrom;
 	}
 
 	@Override
 	public Fragment getItem(int position) {
 		ViewPagerFragment pagerFragment = new ViewPagerFragment();
-		pagerFragment.setImagePath(imgPathList.get(position).getDealIconUrl());
+		pagerFragment.setImagePath(imgPathList.get(position).getDealIconUrl(),mFlowFrom ,(Activity) mcontext);
 		return pagerFragment;
 	}
 	

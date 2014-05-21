@@ -56,6 +56,8 @@ public class GenralRequest extends MaxisBaseRequest {
 	
 	public static final String CITY_LISTING_DEALS_METHOD = "getDealCities.json"; // it will also available in xml.
 	public static final String LOCALITY_LISTING_DEALS_METHOD = "getDealLocalityByCity.json"; 
+	public static final String MY_ACCOUNT_DASHBOARD = "myaccount.json";
+	
 	private String deviceId = MyApplication.getDeviceId();
 
 	private static final String KEY_APP_CODE = "app_code";
