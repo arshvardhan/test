@@ -552,13 +552,13 @@ public class CombindListActivity extends MaxisMainActivity {
 				return false;
 			}
 		});
-		// if (mClResponse.getTotalrecordFound() <= 10 &&
-		// mClResponse.getTotalrecordFound()>4) {
-		// // Add one blank record.
-		// CompanyDesc desc = new CompanyDesc();
-		// desc.setCompId("-1");
-		// mClResponse.getCompanyArrayList().add(desc);
-		// }
+		 if (mClResponse.getRecordsPerPage() <= 10 &&
+		 mClResponse.getTotalrecordFound()>5) {
+		 // Add one blank record.
+		 CompanyDesc desc = new CompanyDesc();
+		 desc.setCompId("-1");
+		 mClResponse.getCompanyArrayList().add(desc);
+		 }
 
 		mDistanceChooser = (Spinner) findViewById(R.id.distance_filter_chooser);
 		nearMe = (TextView) findViewById(R.id.nearMe);

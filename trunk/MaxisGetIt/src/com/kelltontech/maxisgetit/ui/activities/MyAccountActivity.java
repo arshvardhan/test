@@ -43,13 +43,16 @@ import com.kelltontech.maxisgetit.controllers.ClassifiedListController;
 import com.kelltontech.maxisgetit.controllers.FavouriteController;
 import com.kelltontech.maxisgetit.controllers.LocalSearchController;
 import com.kelltontech.maxisgetit.controllers.MyAccountDashboardController;
+import com.kelltontech.maxisgetit.controllers.MyDashboardLifeCycleController;
 import com.kelltontech.maxisgetit.controllers.MyDealsController;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.MaxisStore;
 import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.model.CatDetails;
 import com.kelltontech.maxisgetit.model.MyAccountDashboardResponse;
+import com.kelltontech.maxisgetit.model.MyAccountLifecycleResponse;
 import com.kelltontech.maxisgetit.requests.FavCompanyListRequest;
+import com.kelltontech.maxisgetit.requests.PostReviewRequest;
 import com.kelltontech.maxisgetit.response.ClassifiedListResponse;
 import com.kelltontech.maxisgetit.response.CompanyListResponse;
 import com.kelltontech.maxisgetit.response.DealsListResponse;
@@ -100,14 +103,18 @@ public class MyAccountActivity extends MaxisMainActivity {
 	TextView mainSearchButton;
 	ArrayList<String> selectedLocalityindex;
 	LinearLayout wholeSearchBoxContainer;
+	private Spinner categoryChooser;
 	private ArrayAdapter<String> mCategoryAdapter;
 	private ArrayAdapter<String> mCompanyAdapter;
 	private ArrayList<String> mCompany;
 	private ArrayList<CatDetails> catDetails;
 	private ArrayList<String> mCategory;
 	private MyAccountDashboardResponse response;
+	private MyAccountLifecycleResponse lifecycleResponse;
 	private LinearLayout dashboardLayout;
-	private int index;
+	private String catId, compId;
+	private String selectedCompany = "";
+	private int companyPos;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -312,6 +319,16 @@ public class MyAccountActivity extends MaxisMainActivity {
 				}
 			}
 
+		} else if (resultCode == RESULT_OK
+				&& requestCode == -2) {
+					selectedCompany = data.getStringExtra("ChosenCompany");
+					companyPos = data.getIntExtra("Position", 0);
+					
+//					response.getData().get(companyPos).get
+					if (selectedCompany.trim().equals(response.getData().get(companyPos).getCname().trim())) {
+					compId = response.getData().get(companyPos).getCid();
+					}
+//					categoryChooser.setSe
 		}
 
 	}
@@ -620,7 +637,23 @@ public class MyAccountActivity extends MaxisMainActivity {
 						setDashboardData();
 					}
 				}
+			}
+			stopSppiner();
+		} else if (msg.arg2 == Events.MY_ACCOUNT_DASHBOARD_LIFECYCLE) {
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
 
+			} else {
+
+				lifecycleResponse = (MyAccountLifecycleResponse) msg.obj;
+				if (lifecycleResponse != null
+						&& lifecycleResponse.getData() != null) {
+
+					Intent intent = new Intent(MyAccountActivity.this,
+							DidLifeCycleActivity.class);
+					intent.putExtra("lifeCycleResponse", lifecycleResponse);
+				}
+				Log.e("manish", ":" + msg.obj);
 			}
 			stopSppiner();
 		}
@@ -684,7 +717,23 @@ public class MyAccountActivity extends MaxisMainActivity {
 				message.obj = dashboardResponse;
 			}
 			handler.sendMessage(message);
-		} else {
+		} else if (event == Events.MY_ACCOUNT_DASHBOARD_LIFECYCLE) {
+			MyAccountLifecycleResponse accountLifecycleResponse = (MyAccountLifecycleResponse) screenData;
+			Message message = new Message();
+			message.arg2 = event;
+
+			if (accountLifecycleResponse.getError_code() == "1") {
+				message.arg1 = 1;
+				message.obj = getResources().getString(
+						R.string.communication_failure);
+			} else {
+				message.arg1 = 0;
+				message.obj = accountLifecycleResponse;
+			}
+			handler.sendMessage(message);
+		}
+
+		else {
 			handler.sendMessage((Message) screenData);
 		}
 
@@ -746,7 +795,7 @@ public class MyAccountActivity extends MaxisMainActivity {
 		final TextView myPlan;
 		final TextView leadCost;
 		final Spinner companyChooser;
-		final Spinner categoryChooser;
+//		final Spinner  categoryChooser;
 		TextView viewLifeCycle;
 
 		dashboardLayout.setVisibility(View.VISIBLE);
@@ -758,7 +807,7 @@ public class MyAccountActivity extends MaxisMainActivity {
 		myActiveVirtualNo = (TextView) findViewById(R.id.my_active_virtual_no);
 		myPlan = (TextView) findViewById(R.id.my_plan);
 		leadCost = (TextView) findViewById(R.id.lead_cost);
-		viewLifeCycle = (TextView)findViewById(R.id.life_cycle);
+		viewLifeCycle = (TextView) findViewById(R.id.life_cycle);
 
 		mCompanyAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item,
 				mCompany);
@@ -777,10 +826,12 @@ public class MyAccountActivity extends MaxisMainActivity {
 
 				}
 				catDetails = response.getData().get(pos).getCatdetails();
-				mCategoryAdapter = new ArrayAdapter<String>(
-						MyAccountActivity.this, R.layout.spinner_item,
-						mCategory);
+				mCategoryAdapter = new ArrayAdapter<String>(MyAccountActivity.this, R.layout.spinner_item, mCategory);
 				categoryChooser.setAdapter(mCategoryAdapter);
+				
+				Intent intentCompSelector = new Intent(MyAccountActivity.this, CompanyOrCategoryFilterActivity.class);
+				intentCompSelector.putStringArrayListExtra("compOrcat", mCompany);
+				startActivityForResult(intentCompSelector, -2);
 			}
 
 			@Override
@@ -804,8 +855,7 @@ public class MyAccountActivity extends MaxisMainActivity {
 						.getMaxisDidNumber());
 				myPlan.setText(catDetails.get(pos).getSubscription());
 				leadCost.setText(catDetails.get(pos).getPrice());
-			
-
+				catId = catDetails.get(pos).getCatid();
 			}
 
 			@Override
@@ -816,18 +866,23 @@ public class MyAccountActivity extends MaxisMainActivity {
 		});
 
 		viewLifeCycle.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				
-				
-				
-				
-					Intent intent = new Intent(MyAccountActivity.this,DidLifeCycleActivity.class);			
-//				catDetails
-				
+
+				// Reusing PostReviewRequest here..
+				PostReviewRequest request = new PostReviewRequest();
+				request.setCatId(catId);
+				request.setCompId(compId);
+
+				MyDashboardLifeCycleController controller = new MyDashboardLifeCycleController(
+						MyAccountActivity.this,
+						Events.MY_ACCOUNT_DASHBOARD_LIFECYCLE);
+
+				startSppiner();
+				controller.requestService(request);
+
 			}
 		});
-		
 	}
 }

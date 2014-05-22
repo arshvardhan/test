@@ -2,7 +2,10 @@ package com.kelltontech.maxisgetit.model;
 
 import java.util.ArrayList;
 
-public class Data {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Data implements Parcelable{
 
 	private String cid;
 	private String cname;
@@ -132,6 +135,33 @@ public class Data {
 
 	public void setCatdetails(ArrayList<CatDetails> catdetails) {
 		this.catdetails = catdetails;
+	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public Data (Parcel in)
+	{
+		ccDid=in.readString();
+	    ccBillingNo=in.readString();
+	    ccDate=in.readString();
+	    ccPaymentStatus=in.readString();
+	    ccLeadStatus=in.readString();
+	    ccSubscriptionStatus=in.readString();
+	    maxisDidNumber=in.readString();
+	    subscription=in.readString();
+	    message=in.readString();
+	    price=in.readString();
+	    leadsReceivedDetailsCout=in.readString();
 	}
 
 }

@@ -78,6 +78,7 @@ public class FlurryEventsConstants {
 	// EditProfile Screen Events
 	public static final String APPLICATION_EDIT_PROFILE = "EditProfile Screen";
 	public static final String EDIT_PROFILE_SUBMIT_CLICK = "EditProfileSubmit button is clicked";
+	
 
 	// My Deals Screen Events
 	public static final String APPLICATION_MY_DEALS = "My Deals Screen";
@@ -126,6 +127,9 @@ public class FlurryEventsConstants {
 	public static final String FAV_LIST_ITEM_LONG_PRESS = "User removes a compnay from the Favourite(s) list";
 	public static final String DELETE_FAV_CLICK = "User removes one or more company from the Favourite(s) list";
 	public static final String EDIT_FAV_CLICK = "Edit Favourite(s) list button is clicked";
+	
+	
+	public static final String APPLICATION_COMPANY_CATEGORY_SELECT = "Company/Category screen from Dashboard";
 	
 	// Force Update Dialog Events
 	public static final String UPDATE_CLICK = "Force update performed";

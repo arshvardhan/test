@@ -398,5 +398,6 @@
     <string name="dashboard">Dashboard</string>
     <string name="view_life_cycle"><u>View Life Cycle</u></string>
     <string name="title_activity_did_life_cycle">DidLifeCycleActivity</string>
+    <string name="title_activity_company_or_category_filter">CompanyOrCategoryFilterActivity</string>
 
 </resources>

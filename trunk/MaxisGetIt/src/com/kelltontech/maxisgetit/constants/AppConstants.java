@@ -248,6 +248,8 @@ public interface AppConstants {
 	String Add_New_POI = "AddNewPOIScreen";
 	String Add_Images_In_Existing_POI = "AddImagesInExistingPOIScreen";
 	String Search_Screen = "PhotoContestSearchScreen";
+	
+	String DashBoardLifeCycle = "DidLifeCycle";
 
 
 }

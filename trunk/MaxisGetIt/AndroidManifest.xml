@@ -6,7 +6,7 @@
 
     <!--
     above version are updated 
-    Package should be com.findit333
+    Package should be com.findit333
     -->
     <!-- Current version code/name on play: code:6, name:1.23 -->
 
@@ -196,7 +196,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
-        </activity>
+        </activity>
         -->
         <activity
             android:name="com.kelltontech.maxisgetit.ui.activities.ClassifiedScrollActivity"
@@ -419,6 +419,10 @@
         <activity
             android:name="com.kelltontech.maxisgetit.ui.activities.DidLifeCycleActivity"
             android:label="@string/title_activity_did_life_cycle" >
+        </activity>
+        <activity
+            android:name="com.kelltontech.maxisgetit.ui.activities.CompanyOrCategoryFilterActivity"
+            android:label="@string/title_activity_company_or_category_filter" >
         </activity>
     </application>
 

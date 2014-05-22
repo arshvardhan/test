@@ -7,71 +7,45 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.kelltontech.framework.db.MyApplication;
-import com.kelltontech.framework.imageloader.ImageLoader;
 import com.kelltontech.framework.model.Response;
-import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.framework.utils.UiUtils;
 import com.kelltontech.maxisgetit.R;
-import com.kelltontech.maxisgetit.R.id;
-import com.kelltontech.maxisgetit.R.layout;
-import com.kelltontech.maxisgetit.R.string;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
-import com.kelltontech.maxisgetit.controllers.OutLetDetailtController;
-import com.kelltontech.maxisgetit.controllers.OutletRefineController;
+import com.kelltontech.maxisgetit.controllers.CombindListingController;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
-import com.kelltontech.maxisgetit.dao.OutLet;
 import com.kelltontech.maxisgetit.dao.OutLetDetails;
-import com.kelltontech.maxisgetit.dao.SelectorDAO;
 import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.model.CommonResponse;
-import com.kelltontech.maxisgetit.requests.OutLetDetailRequest;
-import com.kelltontech.maxisgetit.requests.OutletRefineRequest;
 import com.kelltontech.maxisgetit.response.CompanyListResponse;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
-import com.kelltontech.maxisgetit.response.RefineCategoryResponse;
-import com.kelltontech.maxisgetit.response.RefineSelectorResponse;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
-public class RefineOutletActivity extends MaxisMainActivity {
-	private Spinner mCitySelSpinner, mLocalitySelSpinner;
-	private LinearLayout mSpinnerHolder, mLocalitySpinnerContainer;
+public class CompanyOrCategoryFilterActivity extends MaxisMainActivity {
+
+	private ImageView mHomeIconView, mProfileIconView;
 	private ImageView mSearchBtn;
 	private EditText mSearchEditText;
-	private ImageView mProfileIconView;
-	private TextView mRefineBtn;
-	private RefineCategoryResponse mCatResponse;
-	private OutLetDetailRequest detailRequest;
-	private CompanyListResponse mClResponse;
-	private SelectorDAO mLocalitySelectorDao;
 	private LinearLayout mSearchContainer;
 	private ImageView mSearchToggler;
-	private TextView mHeaderTitle;
 	private ImageView mHeaderBackButton;
-	private ImageView mHomeIconView;
-
 	private boolean isAdvanceSearchLayoutOpen = false;
 	private LinearLayout advanceSearchLayout;
 	private TextView currentCity, currentLocality;
@@ -81,135 +55,73 @@ public class RefineOutletActivity extends MaxisMainActivity {
 	ArrayList<CityOrLocality> cityList;
 	private String selectedCity = "Entire Malaysia";
 	private int city_id = -1;
-
 	private ArrayList<String> selectedLocalityItems;
 	ArrayList<CityOrLocality> localityList;
 	ArrayList<String> ids = new ArrayList<String>();
 	TextView mainSearchButton;
 	ArrayList<String> selectedLocalityindex;
 	LinearLayout wholeSearchBoxContainer;
-	String categoryId = "";
+	private CompanyListResponse mClResponse;
 
-	private ArrayList<String> citiesList;
-	ArrayList<String> localities;
-	private OutLetDetails outLetResponse;
-	ArrayList<OutLet> outLets = new ArrayList<OutLet>();
+	ListView compOrCatListView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_refine_outlet);
-		UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.ms_root_layout),
-				this);
-		ImageLoader.initialize(RefineOutletActivity.this);
-		mLocalitySpinnerContainer = (LinearLayout) findViewById(R.id.ms_locality_chooser_container);
-		mLocalitySelSpinner = (Spinner) findViewById(R.id.ms_locality_chooser);
+		setContentView(R.layout.activity_company_or_category_filter);
+		AnalyticsHelper
+				.logEvent(
+						FlurryEventsConstants.APPLICATION_COMPANY_CATEGORY_SELECT,
+						true);
+		UiUtils.hideKeyboardOnTappingOutside(
+				findViewById(R.id.epa_root_layout), this);
+		mHomeIconView = (ImageView) findViewById(R.id.goto_home_icon);
+		mHomeIconView.setOnClickListener(this);
 		mProfileIconView = (ImageView) findViewById(R.id.show_profile_icon);
 		mProfileIconView.setOnClickListener(this);
+
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
-		mSearchBtn.setOnClickListener(RefineOutletActivity.this);
+		mSearchBtn.setOnClickListener(CompanyOrCategoryFilterActivity.this);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
-		mRefineBtn = (TextView) findViewById(R.id.ms_refine_btn);
-		mRefineBtn.setOnClickListener(this);
-		mSpinnerHolder = (LinearLayout) findViewById(R.id.ms_spinner_holder);
-		Bundle bundle = getIntent().getExtras();
-		detailRequest = bundle.getParcelable("OutletRequest");
-		citiesList = bundle.getStringArrayList("CITIES_ARRAYLIST");
-		citiesList.add(0, "Select");
-
-		showCitySpinner();
-
-		mCatResponse = (RefineCategoryResponse) bundle
-				.get(AppConstants.REFINE_CAT_RESPONSE);
 		mSearchContainer = (LinearLayout) findViewById(R.id.search_box_container);
 		mSearchToggler = (ImageView) findViewById(R.id.search_toggler);
 		mSearchToggler.setOnClickListener(this);
 		mHeaderBackButton = (ImageView) findViewById(R.id.header_btn_back);
 		mHeaderBackButton.setOnClickListener(this);
-
-		mHomeIconView = (ImageView) findViewById(R.id.goto_home_icon);
-		mHomeIconView.setOnClickListener(this);
-
-		mHeaderTitle = (TextView) findViewById(R.id.header_title);
-
-		if (!StringUtil.isNullOrEmpty(bundle.getString("deal_title"))) {
-			mHeaderTitle.setText(bundle.getString("deal_title"));
-		}
-
-		advanceSearchLayout = (LinearLayout) findViewById(R.id.advanceSearch);
-		advanceSearchLayout.setVisibility(View.GONE);
-
+		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
+		mSearchBtn.setOnClickListener(this);
+		mSearchEditText = (EditText) findViewById(R.id.search_box);
 		upArrow = (ImageView) findViewById(R.id.upArrow);
 		upArrow.setOnClickListener(this);
+		
+		Bundle bundle = getIntent().getExtras();
+		ArrayList<String> compOrcatNames = new ArrayList<String>();
+		compOrcatNames = bundle.getStringArrayList("compOrcat");
 
-		currentCity = (TextView) findViewById(R.id.currentCity);
-		currentLocality = (TextView) findViewById(R.id.currentLocality);
-		currentCity.setText(Html
-				.fromHtml("in " + "<b>" + selectedCity + "</b>"));
+		compOrCatListView = (ListView) findViewById(R.id.cat_comp_ListView);
 
-		currentCity.setOnClickListener(this);
-		currentLocality.setOnClickListener(this);
+//		String[] items = { "Milk", "Butter", "Yogurt", "Toothpaste",
+//				"Ice Cream" };
 
-		mainSearchButton = (TextView) findViewById(R.id.mainSearchButton);
-		mainSearchButton.setOnClickListener(this);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, compOrcatNames);
 
-		wholeSearchBoxContainer = (LinearLayout) findViewById(R.id.whole_search_box_container);
+		compOrCatListView.setAdapter(adapter);
 
-		mSearchEditText.setOnTouchListener(new OnTouchListener() {
+		compOrCatListView.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-
-				if (!isAdvanceSearchLayoutOpen) {
-					isAdvanceSearchLayoutOpen = true;
-					advanceSearchLayout.setVisibility(View.VISIBLE);
-				}
-				return false;
-			}
-		});
-
-	}
-
-	private void showLocalitySpinner() {
-		if (localities != null && localities.size() > 1) {
-			ArrayAdapter<String> localityAdp = new ArrayAdapter<String>(
-					RefineOutletActivity.this, R.layout.spinner_item,
-					localities);
-			mLocalitySelSpinner.setAdapter(localityAdp);
-			mLocalitySpinnerContainer.setVisibility(View.VISIBLE);
-			// if (mLocalitySelectorDao.getSelectedIndex() > 0)
-			// mLocalitySelSpinner.setSelection(mLocalitySelectorDao
-			// .getSelectedIndex());
-		} else {
-			mLocalitySpinnerContainer.setVisibility(View.GONE);
-		}
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void showCitySpinner() {
-		if (citiesList == null || citiesList.size() < 1)
-			return;
-		ArrayAdapter adapter = new ArrayAdapter(this, R.layout.spinner_item,
-				citiesList);
-		mCitySelSpinner = (Spinner) findViewById(R.id.ms_spinner1);
-		mCitySelSpinner.setAdapter(adapter);
-		// mCatSelector.setSelection(mCatResponse.getSelectedCategoryIndex());
-		mCitySelSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int position, long arg3) {
-
-				if (position != 0) {
-					String deal_id = detailRequest.getDeal_id();
-					String cityName = citiesList.get(position);
-					getLocalities(deal_id, cityName);
-				}
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int pos, long arg3) {
+//				compOrCatListView.getItemAtPosition(pos);
+				Intent intent = new Intent();
+				intent.putExtra("ChosenCompany", compOrCatListView.getItemAtPosition(pos).toString());
+				intent.putExtra("Position", pos);
+				setResult(RESULT_OK, intent);
+				finish();
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				showInfoDialog("nothing selected");
 			}
 		});
 	}
@@ -333,41 +245,6 @@ public class RefineOutletActivity extends MaxisMainActivity {
 				// setResult(RESULT_OK, intent);
 				// finish();
 			}
-		} else if (msg.arg2 == Events.OUTLET_DETAIL) {
-			try {
-				if (msg.arg1 == 1) {
-					showInfoDialog((String) msg.obj);
-				} else {
-					outLetResponse = (OutLetDetails) msg.obj;
-					outLets = outLetResponse.getOutlet();
-					if (outLets != null && outLets.size() > 0) {
-						Intent intent = new Intent();
-						intent.putExtra(AppConstants.OUTLET_DETAIL_DATA,
-								outLetResponse);
-						intent.putExtra("totalCount", Integer
-								.parseInt(outLetResponse.getTotal_records()));
-						intent.putExtra("OutletRequest", detailRequest);
-						setResult(RESULT_OK, intent);
-						finish();
-					} else {
-						showInfoDialog("No Results Found.");
-					}
-				}
-				stopSppiner();
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-		}
-
-		else if (msg.arg2 == Events.REFINE_SEARCH_LOCALITY) {
-			stopSppiner();
-			if (msg.arg1 == 1) {
-				showInfoDialog((String) msg.obj);
-			} else {
-				RefineSelectorResponse glistRes = (RefineSelectorResponse) msg.obj;
-				mLocalitySelectorDao = glistRes.getSelectors().get(0);
-				showLocalitySpinner();
-			}
 		} else if (msg.arg2 == Events.CITY_LISTING) {
 			stopSppiner();
 			if (msg.arg1 == 1) {
@@ -379,7 +256,8 @@ public class RefineOutletActivity extends MaxisMainActivity {
 				// cityTable.addCityList(glistRes.getCityOrLocalityList());
 				cityList = glistRes.getCityOrLocalityList();
 				// inflateCityList(cityList);
-				Intent intent = new Intent(RefineOutletActivity.this,
+				Intent intent = new Intent(
+						CompanyOrCategoryFilterActivity.this,
 						AdvanceSelectCity.class);
 				for (CityOrLocality cityOrLocality : cityList) {
 
@@ -401,7 +279,8 @@ public class RefineOutletActivity extends MaxisMainActivity {
 			} else {
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
 				localityList = glistRes.getCityOrLocalityList();
-				Intent intent = new Intent(RefineOutletActivity.this,
+				Intent intent = new Intent(
+						CompanyOrCategoryFilterActivity.this,
 						AdvanceSelectLocalityActivity.class);
 				localityItems = new ArrayList<String>();
 				for (CityOrLocality dealCityOrLoc : localityList) {
@@ -413,18 +292,6 @@ public class RefineOutletActivity extends MaxisMainActivity {
 				startActivityForResult(intent, AppConstants.LOCALITY_REQUEST);
 
 			}
-		} else if (msg.arg2 == Events.LOCALITY_LISTING_OUTLETS) {
-			// TODO
-			if (msg.arg1 == 1) {
-				showInfoDialog((String) msg.obj);
-			} else {
-				CommonResponse response = (CommonResponse) msg.obj;
-				localities = response.getResults().getLocalities()
-						.getLocality();
-				localities.add(0, "Select");
-				showLocalitySpinner();
-			}
-			stopSppiner();
 		}
 	}
 
@@ -464,21 +331,6 @@ public class RefineOutletActivity extends MaxisMainActivity {
 		case R.id.show_profile_icon:
 			onProfileClick();
 			break;
-		case R.id.ms_refine_btn:
-
-			OutLetDetailtController detailtController = new OutLetDetailtController(
-					RefineOutletActivity.this, Events.OUTLET_DETAIL);
-			String city = citiesList.get(mCitySelSpinner
-					.getSelectedItemPosition());
-			String locality = localities.get(mLocalitySelSpinner
-					.getSelectedItemPosition());
-			detailRequest.setCityName(city);
-			detailRequest.setLocalityName(locality);
-			detailRequest.setPage_number(1);
-			startSppiner();
-			detailtController.requestService(detailRequest);
-
-			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
 			showHomeScreen();
@@ -494,7 +346,8 @@ public class RefineOutletActivity extends MaxisMainActivity {
 			if (cityListString != null && cityListString.size() > 0) {
 				localityItems = null;
 				selectedLocalityindex = null;
-				Intent cityIntent = new Intent(RefineOutletActivity.this,
+				Intent cityIntent = new Intent(
+						CompanyOrCategoryFilterActivity.this,
 						AdvanceSelectCity.class);
 				cityIntent.putExtra("CITY_LIST", cityListString);
 				cityIntent.putExtra("SELECTED_CITY", selectedCity);
@@ -506,7 +359,8 @@ public class RefineOutletActivity extends MaxisMainActivity {
 
 		case R.id.currentLocality:
 			if (localityItems != null && localityItems.size() > 0) {
-				Intent localityIntent = new Intent(RefineOutletActivity.this,
+				Intent localityIntent = new Intent(
+						CompanyOrCategoryFilterActivity.this,
 						AdvanceSelectLocalityActivity.class);
 				localityIntent.putExtra("LOCALITY_LIST", localityItems);
 				localityIntent.putStringArrayListExtra("LOCALITY_INDEX",
@@ -628,15 +482,4 @@ public class RefineOutletActivity extends MaxisMainActivity {
 		}
 	}
 
-	public void getLocalities(String deal_id, String cityName) {
-		OutletRefineRequest request = new OutletRefineRequest();
-		request.setDeal_id(deal_id);
-		request.setCityName(cityName);
-
-		OutletRefineController outletRefineController = new OutletRefineController(
-				RefineOutletActivity.this, Events.LOCALITY_LISTING_OUTLETS);
-		startSppiner();
-		outletRefineController.requestService(request);
-
-	}
 }
