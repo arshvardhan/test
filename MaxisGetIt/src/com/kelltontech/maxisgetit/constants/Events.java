@@ -70,4 +70,5 @@ public class Events {
 	public static final int LOCALITY_LISTING_OUTLETS = 58;
 
 	public static final int MY_ACCOUNT_DASHBOARD = 59;
+	public static final int MY_ACCOUNT_DASHBOARD_LIFECYCLE = 60;
 }

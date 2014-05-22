@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".CompanyOrCategoryFilterActivity" >
+
+    <include
+        android:id="@+id/header_base_activity"
+        layout="@layout/header_with_popdown_search" />
+
+    <ListView
+        android:id="@+id/cat_comp_ListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" 
+        android:dividerHeight="1dp"
+        android:divider="@color/grey_light">
+    </ListView>
+
+</LinearLayout>

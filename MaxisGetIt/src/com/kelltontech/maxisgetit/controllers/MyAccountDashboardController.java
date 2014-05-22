@@ -81,7 +81,7 @@ public class MyAccountDashboardController extends BaseServiceController {
 
 					mScreen.setScreenData(dashboardResponse, mEventType, 0);
 				} catch (Exception e) {
-					logResponseException(e, "OutletRefineController");
+					logResponseException(e, "MyDashBoardController");
 					
 				}
 			} 

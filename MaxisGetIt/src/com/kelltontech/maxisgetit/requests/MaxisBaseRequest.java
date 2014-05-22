@@ -134,12 +134,12 @@ public abstract class MaxisBaseRequest {
 		
 		if(!StringUtil.isNullOrEmpty(cityName))
 		{
-			hashtable.put("city_name", cityName);
+			hashtable.put("city", cityName);
 		}
 		
 		if(!StringUtil.isNullOrEmpty(localityName))
 		{
-			hashtable.put("locality_name", localityName);
+			hashtable.put("locality", localityName);
 		}
 		
 		return hashtable;

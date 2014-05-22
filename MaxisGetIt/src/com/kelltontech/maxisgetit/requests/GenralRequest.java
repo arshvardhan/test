@@ -53,11 +53,17 @@ public class GenralRequest extends MaxisBaseRequest {
 
 	public static final String OUTLET_DETAIL_METHOD = "getOutletsyByDealandcid.xml";
 	public static final String DEAL_DOWNLOAD_METHOD = "sendSmsbyuidanddealid.xml";
-	
-	public static final String CITY_LISTING_DEALS_METHOD = "getDealCities.json"; // it will also available in xml.
-	public static final String LOCALITY_LISTING_DEALS_METHOD = "getDealLocalityByCity.json"; 
+
+	public static final String CITY_LISTING_DEALS_METHOD = "getDealCities.json"; // it
+																					// will
+																					// also
+																					// available
+																					// in
+																					// xml.
+	public static final String LOCALITY_LISTING_DEALS_METHOD = "getDealLocalityByCity.json";
 	public static final String MY_ACCOUNT_DASHBOARD = "myaccount.json";
-	
+	public static final String MY_ACCOUNT_DASHBOARD_LIFECYCLE = "mydashboard.json";
+
 	private String deviceId = MyApplication.getDeviceId();
 
 	private static final String KEY_APP_CODE = "app_code";
@@ -226,7 +232,8 @@ public class GenralRequest extends MaxisBaseRequest {
 	}
 
 	public Hashtable<String, String> getHeadersWithCompanyIDndDealID(
-			String cId, String dealId, String l3catId, int pageNumber , String cityName ,String localityName) {
+			String cId, String dealId, String l3catId, int pageNumber,
+			String cityName, String localityName) {
 		Hashtable<String, String> ht = getDefaultHeaders(AppConstants.Deal_Detail);
 		ht.put(KEY_COMP_ID, cId);
 		ht.put(KEY_DEAL_ID, dealId);
@@ -235,12 +242,10 @@ public class GenralRequest extends MaxisBaseRequest {
 		ht.put(MaxisBaseRequest.KEY_LONGITUDE, GPS_Data.getLongitude() + "");
 		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		ht.put("page_number", pageNumber + "");
-		if(!StringUtil.isNullOrEmpty(cityName))
-		{
+		if (!StringUtil.isNullOrEmpty(cityName)) {
 			ht.put("city_name", cityName);
 		}
-		if(!StringUtil.isNullOrEmpty(localityName))
-		{
+		if (!StringUtil.isNullOrEmpty(localityName)) {
 			ht.put("locality_name", localityName);
 		}
 		return ht;
@@ -287,6 +292,15 @@ public class GenralRequest extends MaxisBaseRequest {
 		ht.put(KEY_NAME, name);
 		ht.put(KEY_NUMBER, number);
 		ht.put(KEY_DEAL_ID, dealId);
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		return ht;
+	}
+
+	public Hashtable<String, String> getHeadersWithCompIdcatId(String compId,
+			String catId) {
+		Hashtable<String, String> ht = getDefaultHeaders(AppConstants.DashBoardLifeCycle);
+		ht.put(KEY_COMP_ID, compId);
+		ht.put(KEY_POST_DEAL_CATEGORY_ID, catId);
 		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		return ht;
 	}
