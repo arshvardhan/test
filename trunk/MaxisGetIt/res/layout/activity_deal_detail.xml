@@ -26,7 +26,6 @@
             android:paddingTop="0dp"
             android:weightSum="1" >
 
-            
             <android.support.v4.view.ViewPager
                 android:id="@+id/dealtopbanner"
                 android:layout_width="match_parent"
@@ -252,7 +251,7 @@
                 android:id="@+id/mapLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-               android:background="@color/new_footer_color"
+                android:background="@color/new_footer_color"
                 android:padding="5dp"
                 android:paddingLeft="10dp"
                 android:text="Map"
@@ -296,60 +295,68 @@
         </LinearLayout>
     </com.kelltontech.maxisgetit.ui.widgets.CustomScrollView>
 
-    <LinearLayout
-        android:id="@+id/leftOutletLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <RelativeLayout
+        android:id="@+id/leftOutletRltLayout"
+        android:layout_width="100dp"
+        android:layout_height="65dp"
         android:layout_above="@+id/cl_deals_footer"
         android:layout_alignParentLeft="true"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/rectangleborderblack"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:visibility="visible" >
+        android:layout_marginBottom="20dp" >
 
-        <FrameLayout
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/leftOutletLayout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" >
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/rectangleborderblack"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:visibility="visible" >
 
-            <ImageView
-                android:id="@+id/cross_btn"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_gravity="right|top"
-                android:layout_marginLeft="5dp"
-                android:clickable="true"
-                android:src="@drawable/cross_icon" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical" >
+
+                <TextView
+                    android:id="@+id/outlets_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="25dp"
+                    android:paddingTop="5dp"
+                    android:text="9"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
 
             <TextView
-                android:id="@+id/outlets_count"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:paddingLeft="25dp"
-                android:paddingRight="25dp"
-                android:paddingTop="5dp"
-                android:text="9"
+                android:paddingBottom="5dp"
+                android:paddingLeft="18dp"
+                android:paddingRight="22dp"
+                android:text="Outlets"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold" />
-        </FrameLayout>
+        </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:paddingBottom="5dp"
-            android:paddingLeft="18dp"
-            android:paddingRight="22dp"
-            android:text="Outlets"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/cross_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:clickable="true"
+            android:src="@drawable/outlet_cross_icon" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/rightlayout"

@@ -914,6 +914,8 @@ public class FavCompanyListActivity extends MaxisMainActivity {
 			mEditButton.setVisibility(View.GONE);
 		}
 		super.onResume();
+		
+		AnalyticsHelper.trackSession(FavCompanyListActivity.this, AppConstants.MyFavourite);
 	}
 
 	@Override

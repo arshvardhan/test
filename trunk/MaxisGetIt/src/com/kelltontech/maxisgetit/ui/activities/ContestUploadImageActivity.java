@@ -3,6 +3,7 @@ package com.kelltontech.maxisgetit.ui.activities;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 
 import android.app.Activity;
 import android.content.Context;
@@ -49,7 +50,7 @@ import com.kelltontech.maxisgetit.utils.BitmapCalculation;
  * This screen is shown after taking image from camera to upload it on server.
  */
 public class ContestUploadImageActivity extends ContestBaseActivity {
-	private static final int CAMERA_REQUEST = 1888;
+//	private static final int CAMERA_REQUEST = 1888;
 	// private double mLatitude,mLongitude,mLatitudeN,mLongitudeN;
 	private ExifInterface mExifInterface;
 	private String mImagePath;
@@ -64,6 +65,8 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 	private final int UPLOAD_IMAGE = 5;
 	private Bitmap newBitmap;
 	private MaxisStore store;
+	
+	private int	mRequestedPostImageType;
 
 	// private ImageView mLogo;
 
@@ -106,6 +109,7 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 		mCid = intent.getIntExtra(AppConstants.CID_KEY, 0);
 		mCategoryId = intent.getIntExtra(AppConstants.CATEGORY_ID_KEY, 0);
 		mCompanyName = intent.getStringExtra(AppConstants.COMPANY_NAME_KEY);
+		mRequestedPostImageType = intent.getIntExtra(AppConstants.POST_IMAGE_REQUEST_KEY, 0);
 
 		mNumberEditTxt = ((EditText) findViewById(R.id.phone));
 		String number = AppSharedPreference.getString(
@@ -134,14 +138,28 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 		mTitleEditTxt.setText(mCompanyName);
 
 		if (savedInstanceState == null) {
-			Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			startActivityForResult(cameraIntent, CAMERA_REQUEST);
+			switch (mRequestedPostImageType) {
+			case AppConstants.GALLERY_REQUEST:
+				openGalery();
+				break;
+			case AppConstants.CAMERA_REQUEST:
+				takePhoto();
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
 	@Override
+		protected void onResume() {
+			super.onResume();
+			AnalyticsHelper.trackSession(ContestUploadImageActivity.this, AppConstants.Add_Images_In_Existing_POI);
+		}
+	
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == CAMERA_REQUEST) {
+		if (requestCode == AppConstants.CAMERA_REQUEST) {
 			if (resultCode != RESULT_OK) {
 				finish();
 				return;
@@ -208,6 +226,52 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 			// Toast.LENGTH_LONG).show();
 			// finish();
 			// }
+		} else if (requestCode == AppConstants.GALLERY_REQUEST) {
+			//			if (resultCode == Activity.RESULT_OK) {
+			if (resultCode != RESULT_OK) {
+				finish();
+				return;
+			}
+			try {
+				Uri selectedImage = data.getData();
+				String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+				Cursor cursor = this.getContentResolver().query(
+						selectedImage, filePathColumn, null, null, null);
+				cursor.moveToFirst();
+
+				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+				String filePath = cursor.getString(columnIndex);
+				cursor.close();
+				Log.e("File", "filePath: " + filePath);
+
+				File file = new File(new URI("file://"
+						+ filePath.replaceAll(" ", "%20")));
+				int maxImageSize = BitmapCalculation.getMaxSize(this);
+				mBitmap = BitmapCalculation.getScaledBitmap(file,
+						maxImageSize);
+
+				ByteArrayOutputStream os = new ByteArrayOutputStream();
+				mBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 75,
+						os);
+				String directoryPath = Environment.getExternalStorageDirectory()
+						.getAbsolutePath() + "/" + getString(R.string.app_name);
+				String imageFileName = getString(R.string.app_name) + "_"
+						+ System.currentTimeMillis() + ".jpg";
+				boolean fileCreated = StorageUtils.createFile(directoryPath,
+						imageFileName, os.toByteArray());
+				if (!fileCreated) {
+					Toast.makeText(getApplicationContext(),
+							getString(R.string.toast_unable_to_save_image),
+							Toast.LENGTH_LONG).show();
+					finish();
+					return;
+				}
+				mImagePath = directoryPath + "/" + imageFileName;
+				manupulateExif();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

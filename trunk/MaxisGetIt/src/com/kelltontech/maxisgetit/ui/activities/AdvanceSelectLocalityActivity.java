@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -34,9 +33,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kelltontech.maxisgetit.R;
+import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.dao.AdvanceLocality;
 import com.kelltontech.maxisgetit.ui.adapter.SectionListAdapter;
 import com.kelltontech.maxisgetit.ui.widgets.SectionListView;
+import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
 public class AdvanceSelectLocalityActivity extends Activity {
 
@@ -251,6 +252,12 @@ public class AdvanceSelectLocalityActivity extends Activity {
 
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(AdvanceSelectLocalityActivity.this, AppConstants.Locality_Screen);
+	}
+	
 	private class Indextouch implements OnTouchListener {
 
 		@Override

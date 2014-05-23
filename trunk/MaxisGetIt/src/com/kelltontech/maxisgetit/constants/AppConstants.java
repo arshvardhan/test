@@ -8,27 +8,29 @@ public interface AppConstants {
 
 	// String BASE_SERVER = "http://192.168.13.3/webservice/trunk/"; // local
 	// Aaditya
-//	 String BASE_SERVER = "http://192.168.13.22/webservice/trunk/"; // local
+	//	 String BASE_SERVER = "http://192.168.13.22/webservice/trunk/"; // local
 	// Ankesh
 	// String BASE_SERVER = "http://192.168.13.16/webservice/trunk/"; // local
 	// Diwakar
 	// String BASE_SERVER = "http://test.kelltontech.com/getitfms/"; //live dev
 	// String BASE_SERVER = "http://test.kelltontech.com/getitfms_qa/"; //QA
-	// String BASE_SERVER = "https://staging.findit.com.my/";// staging new
+	//	 String BASE_SERVER = "https://staging.findit.com.my/";// staging new
 	// String BASE_SERVER = "http://203.115.222.57:8070/"; //staging 8070
 
-	String BASE_SERVER = "http://203.115.222.57/"; // staging
+		String BASE_SERVER = "http://203.115.222.57/"; // staging
 
 	// String BASE_SERVER = "http://203.115.222.69/";// Pre Production
 
-//	 String BASE_SERVER = "https://webservice.findit.com.my/";// Production
+	//	 String BASE_SERVER = "https://webservice.findit.com.my/";// Production
 	// new
 
 	// String BASE_SERVER = "http://192.168.13.16/webservice/trunk/";//local
 	// diwakar
 
-//	 String BASE_SERVER = "http://192.168.13.22/webserviceNew/dev_build_ver1.1/"; //local ankesh for deal
-			 
+	//	 String BASE_SERVER = "http://192.168.13.22/webserviceNew/dev_build_ver1.1/"; //local ankesh for deal
+
+//	String BASE_SERVER = "http://192.168.13.63/webservice/trunk/";   // Session Tracking Test
+
 	String BASE_URL = BASE_SERVER + "restapi/";
 	String BASE_URL_CONTEST = BASE_SERVER + "restapicontest/";
 
@@ -66,11 +68,8 @@ public interface AppConstants {
 	String DATA_LIST_REQUEST = "COMBINED_LIST_REQ";
 	String FB_PAGE_URL = "https://www.facebook.com/pages/Findit333/532512713499660"; // https://www.facebook.com/pages/Getit-Transnational-Pvt-Ltd/167314303441395?fref=ts";
 	String TWITTER_PAGE_URL = "http://twitter.com/findit333";// "https://twitter.com/GetitTrans";
-	String TNC_PAGE_URL = AppConstants.BASE_URL
-			+ "termsCondition.xml?language_code=en&plateform=Andi";
-	String TNC_CONTEST_PAGE_URL = AppConstants.BASE_URL_CONTEST
-			+ "viewTermCondition?plateform=Andi&language_code=en";
-
+	String TNC_PAGE_URL = AppConstants.BASE_URL + "termsCondition.xml?language_code=en&plateform=Andi";
+	String TNC_CONTEST_PAGE_URL = AppConstants.BASE_URL_CONTEST + "viewTermCondition?plateform=Andi&language_code=en";
 	String REFINE_CAT_RESPONSE = "REFINE_CATEGORY_RESPONSE";
 	String REFINE_ATTR_RESPONSE = "REFINE_ATTRIBUTE_RESPONSE";
 	String TEMPLET_DATA = "TEMPLET_RESPONSE_DATA";
@@ -141,6 +140,9 @@ public interface AppConstants {
 	int PAGE_SIZE_POI_LIST_BY_DISTANCE = 10;
 	int PAGE_SIZE_POI_LIST_SEACH_RESULTS = 10;
 
+	int CAMERA_REQUEST = 1999;
+	int GALLERY_REQUEST = 2000;
+
 	String LIST_RESPONSE_PARCEL = "list_response_parcel";
 	String LIST_RESPONSE_TYPE = "list_response_type";
 	String CID_KEY = "cid_key";
@@ -149,7 +151,7 @@ public interface AppConstants {
 	String EXTRA_SELECTED_CATEGORY = "extra_selected_category";
 	String EXTRA_SEARCH_KEYWORD = "extra_search_keyword";
 	String ADD_NEW_POI_KEY = "add_new_poi_key";
-	
+	String POST_IMAGE_REQUEST_KEY = "post_image_request_key";
 
 	// TnC Extra
 	int TNC_FROM_COMP = 0;
@@ -164,6 +166,7 @@ public interface AppConstants {
 
 	int CITY_REQUEST = 999;
 	int LOCALITY_REQUEST = 1000;
+	int LIFE_CYCLE_SCREEN = 5998;
 
 	/**
 	 * LogCat Tags
@@ -197,59 +200,63 @@ public interface AppConstants {
 	String GPS_LOCATION_FINDER_ERROR_MSG = "Error occured while getting current location from GPS location finder.";
 	String UNREGISTER_GPS_LOCATION_FINDER_ERROR_MSG = "Error occured while unregistering GPS location finder.";
 	String UNREGISTER_NETWORK_LOCATION_FINDER_ERROR_MSG = "Error occured while unregistering Network location finder.";
-	
-	
-	
+
+
+
 	//Parameter for pageview
 	String KEY_PAGE_REVIEW = "pageView";
 	// keys for page views.
-	
-	
-	String Home_Screen = "HomeScreen";
-	String Category_Screen = "CategoryScreen";
-	String Company_listing = "CompanyListScreen";
-	String Company_detail = "CompanyDetailScreen";
-	String RatenReview = "RateAndReviewScreen";
-	String ReportanError = "ReportAnErrorScreen";
-	String Modify_screen = "ModifyScreen";
-	String Filter_screen = "FilterScreen";
-	String Deal_Listing = "DealListingScreen";
-	String Deal_Detail = "DealDetailScreen";
-	String Login_screen = "LoginScreen";
-	String Registration_Screen = "RegistrationScreen";
-	String Forget_Password = "ForgetPasswordScreen";
-	String MyAccount = "MyAccountScreen";
-	String Deal_Post = "DealPostScreen";
-	String MyFavourite = "MyFavouritesScreen";
-	String ChangePassword = "ChangePasswordScreen";
-	String Add_Post = "AddPostScreen";
-	String ViewOnMap = "ViewOnMapScreen";
-	String MapDirection = "MapDirectionScreen";
-	String CompassDirection = "CompassDirectionScreen";
-	String MyCompany = "MyCompanyScreen";
-	String MyClassifieds = "MyClassifiedScreen";
-	String MyDeals = "MyDealScreen";
-	String TnC = "TermAndConditionsScreen";
-	String GetInfo = "GetInfoScreen";
-	String AppAuthentication = "AppAuthenticationScreen";
-	String AppAuthenticationCode = "AppAuthenticationCodeScreen";
-	String CityScreen = "CityScreen";
-	String Locality_Screen = "LocalityScreen";
-	String Template_Sell_Buy = "TemplateSellBuyScreen";
-	String AfterSave_Template = "AfterSaveTemplateScreen";
-	String Company_Review = "CompanyReviewScreen";
 
-	
-	
-	String PhotoContest_Home = "PhotoContestHomeScreen";
-	String POI_Screen = "PhotoContestPOIScreen";
-	String ListByCategory = "ListByCategoryScreen";
-	String ListByDistance = "ListByDistanceScreen";
-	String Add_New_POI = "AddNewPOIScreen";
-	String Add_Images_In_Existing_POI = "AddImagesInExistingPOIScreen";
-	String Search_Screen = "PhotoContestSearchScreen";
-	
+	String Splash_Screen = "SplashScreen";										//SplashActivity
+	String Home_Screen = "HomeScreen";											//HomeActivity
+	String Category_Screen = "CategoryScreen";									//SubCategoryListActivity
+	String Company_listing = "CompanyListScreen";								//CombinedListActivity
+	String Company_detail = "CompanyDetailScreen";								//CompanyDetailActivity
+	String RatenReview = "RateAndReviewScreen";									//RateCOmpanyActivity
+	String ReportanError = "ReportAnErrorScreen";								//ReportErrorActivity
+	String Modify_screen = "ModifyScreen";										//ModifySearchActivity
+	String Filter_screen = "FilterScreen";        					// No Screen
+	String Deal_Listing = "DealListingScreen";									//DealsActivity
+	String Deal_Detail = "DealDetailScreen";									//DealDetailActivity
+	String Login_screen = "LoginScreen";										//LoginActivity
+	String Registration_Screen = "RegistrationScreen";							//RegistrationActivity
+	String Forget_Password = "ForgetPasswordScreen";							//ForgetPasswordActivity
+	String MyAccount = "MyAccountScreen";										//MyAccountActivity
+	String Deal_Post = "DealPostScreen";										//DealPostActivity
+	String MyFavourite = "MyFavouritesScreen";									//FavCompanyListActivity
+	String ChangePassword = "ChangePasswordScreen";								//EditProfileActivity
+	String Add_Post = "AddPostScreen";											//SaleTemplateActivity
+	String ViewOnMap = "ViewOnMapScreen";										//ViewAllOnMapActivity
+	String MapDirection = "MapDirectionScreen";						// No Screen
+	String CompassDirection = "CompassDirectionScreen";							//CompassDirectionActivity
+	String MyCompany = "MyCompanyScreen";										//LocalSearchActivity
+	String MyClassifieds = "MyClassifiedScreen";								//ClassifiedScrollActivity
+	String MyDeals = "MyDealScreen";											//MyDealsActivity
+	String TnC = "TermAndConditionsScreen";										//TermsAndConditionActivity, TnCActivity
+	String GetInfo = "GetInfoScreen";											//GetitInfoActivity
+	String AppAuthentication = "AppAuthenticationScreen";						//AppAuthenticationActivity
+	String AppAuthenticationCode = "AppAuthenticationCodeScreen";				//AppActivationActivity
+	String CityScreen = "CityScreen";											//AdvanceSelectCityActivity
+	String Locality_Screen = "LocalityScreen";									//AdvanceSelectLocalityActivity
+	String Template_Sell_Buy = "TemplateSellBuyScreen";							//SaleTemplateTypeActivity
+	String AfterSave_Template = "AfterSaveTemplateScreen";						//AdPostNotificationActivity
+	String Company_Review = "CompanyReviewScreen";					// could not find any occurrences
+	String PhotoContest_Home = "PhotoContestHomeScreen";						//PhotoContestHomeActivity 
+	String POI_Screen = "PhotoContestPOIScreen";								//ContestPOISearchActivity
+	String ListByCategory = "ListByCategoryScreen";								//ContestPoiListActivity
+	String ListByDistance = "ListByDistanceScreen";								//ContestPoiListActivity
+	String Add_New_POI = "AddNewPOIScreen";										//ContestAddNewPOIActivity
+	String Add_Images_In_Existing_POI = "AddImagesInExistingPOIScreen";			//ContestUploadImageActivity
+	String Search_Screen = "PhotoContestSearchScreen";							//ContestPoiListActivity
+	String Screen_CompanyDetailMap ="CompanyDetailMapScreen";					//CompanyDetailMapActivity
+	String Screen_videoPlay        ="VideoPlayScreen";							//VideoPlayActivity		
+	String Screen_DealOutletModify ="DealOutletModifyScreen";					//RefineOutletActivity
+	String Screen_DealOutletList   ="DealOutletListScreen";						//ViewAllOutletActivity
+//	String Screen_lifeCycle        ="DidLifeCycle";								//
+	String Screen_AfterUploadeImageContest ="AfterUploadeImageContestScreen"; 	//ContestUploadMoreActivity
+//	String Screen_LocalSearchLead    ="LocalSearchLeadScreen";					//
+//	String Screen_CodeVerification   ="CodeVerificationScreen";					//
+	String Screen_DashBoardLifeCycle ="DashBoardLifeCycleScreen";				//
 	String DashBoardLifeCycle = "DidLifeCycle";
-
 
 }

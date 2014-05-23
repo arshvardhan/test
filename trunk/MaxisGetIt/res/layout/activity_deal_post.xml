@@ -633,8 +633,7 @@
                             android:layout_marginTop="1dp"
                             android:clickable="true"
                             android:contentDescription="@string/close_cover_image"
-                            android:src="@drawable/cross_icon"
-                            android:visibility="gone" />
+                            android:src="@drawable/cross_icon" />
                     </FrameLayout>
 
                     <RadioButton

@@ -45,7 +45,6 @@ public class UiUtils {
 		return bitmap;
 	}
 
-
 	public static Bitmap createReflectedImages(Context context, Bitmap originalImage)
 	{
 
@@ -189,7 +188,7 @@ public class UiUtils {
 		else if ( _ScreenWidth < 400 ) {
 			/*_ScreenWidth = 320;
 			_ScreenHeight = 480;
-			*/
+			 */
 			res=1;
 		}
 		else if ( _ScreenWidth > 400 && _ScreenWidth <= 600 ){
@@ -213,18 +212,18 @@ public class UiUtils {
 		activity.finish();
 
 	}
-public static int getDeviceWidth(Activity activity)
-{
-	DisplayMetrics _Displaymetrics = new DisplayMetrics();
-	activity.getWindowManager().getDefaultDisplay().getMetrics(_Displaymetrics);
-	return _Displaymetrics.widthPixels;
-}
-public static float getDeviceDensity(Activity activity)
-{
-	/*DisplayMetrics _Displaymetrics = new DisplayMetrics();
+	public static int getDeviceWidth(Activity activity)
+	{
+		DisplayMetrics _Displaymetrics = new DisplayMetrics();
+		activity.getWindowManager().getDefaultDisplay().getMetrics(_Displaymetrics);
+		return _Displaymetrics.widthPixels;
+	}
+	public static float getDeviceDensity(Activity activity)
+	{
+		/*DisplayMetrics _Displaymetrics = new DisplayMetrics();
 	activity.getWindowManager().getDefaultDisplay().getMetrics(_Displaymetrics);*/
-	return activity.getResources().getDisplayMetrics().density;
-}
+		return activity.getResources().getDisplayMetrics().density;
+	}
 	public static int convertPixelsToDp(float px,Context context){
 		Resources resources = context.getResources();
 		DisplayMetrics metrics = resources.getDisplayMetrics();
@@ -298,48 +297,48 @@ public static float getDeviceDensity(Activity activity)
 			}
 		}).start();
 	}
-	
-	public static void hideKeyboardOnTappingOutside(View view,final Activity activity) {
-	    //Set up touch listener for non-text box views to hide keyboard.
-	    if(!(view instanceof EditText)) {
-	        view.setOnTouchListener(new OnTouchListener() {
-	            public boolean onTouch(View v, MotionEvent event) {
-	                hideSoftKeyboard(activity);
-	                return false;
-	            }
-	        });
-	    }
 
-	    //If a layout container, iterate over children and seed recursion.
-	    if (view instanceof ViewGroup) {
-	        for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-	            View innerView = ((ViewGroup) view).getChildAt(i);
-	            hideKeyboardOnTappingOutside(innerView,activity);
-	        }
-	    }
+	public static void hideKeyboardOnTappingOutside(View view,final Activity activity) {
+		//Set up touch listener for non-text box views to hide keyboard.
+		if(!(view instanceof EditText)) {
+			view.setOnTouchListener(new OnTouchListener() {
+				public boolean onTouch(View v, MotionEvent event) {
+					hideSoftKeyboard(activity);
+					return false;
+				}
+			});
+		}
+
+		//If a layout container, iterate over children and seed recursion.
+		if (view instanceof ViewGroup) {
+			for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+				View innerView = ((ViewGroup) view).getChildAt(i);
+				hideKeyboardOnTappingOutside(innerView,activity);
+			}
+		}
 	}
 	public static void hideSoftKeyboard(Activity activity) {
-	    InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-	    inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+		InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
 	}
-	
+
 	/**
 	 * THis method will immediately show soft keyboard
 	 * @param activity
 	 */
 	public static void showSoftKeyboard(final Activity activity) {
-    	Timer timer = new Timer();
-    	timer.schedule(new TimerTask() {
-    		@Override
-    		public void run() {
-    			InputMethodManager m = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-    			if(m != null) {
-    				m.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
-    			}
-    		}
-    	}, 100);
-    }
-	
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				InputMethodManager m = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+				if(m != null) {
+					m.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+				}
+			}
+		}, 100);
+	}
+
 	public static String getBase64Image(Bitmap mBitmap)throws OutOfMemoryError{
 		ByteArrayOutputStream full_stream = new ByteArrayOutputStream();
 		mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, full_stream);

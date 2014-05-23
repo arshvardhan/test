@@ -171,6 +171,12 @@ public class RefineOutletActivity extends MaxisMainActivity {
 
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(RefineOutletActivity.this, AppConstants.Screen_DealOutletModify);
+	}
+	
 	private void showLocalitySpinner() {
 		if (localities != null && localities.size() > 1) {
 			ArrayAdapter<String> localityAdp = new ArrayAdapter<String>(

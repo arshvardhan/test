@@ -10,7 +10,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
-import android.os.Parcelable;
 import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
@@ -162,6 +161,12 @@ public class EditProfileActivity extends MaxisMainActivity {
 				return false;
 			}
 		});
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(EditProfileActivity.this, AppConstants.ChangePassword);
 	}
 
 	private void verifyAndSave() {

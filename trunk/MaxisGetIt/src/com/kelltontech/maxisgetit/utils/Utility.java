@@ -1,6 +1,9 @@
 package com.kelltontech.maxisgetit.utils;
 
 import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.framework.utils.StringUtil;
@@ -18,7 +21,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 public class Utility {
-	
+
 	public static void setListViewHeightBasedOnChildren(ListView listView) {
 		ListAdapter listAdapter = listView.getAdapter();
 		if (listAdapter == null) {
@@ -65,7 +68,7 @@ public class Utility {
 		}
 		return version;
 	}
-	
+
 	public static String getPackageName(Context context) {
 		String version = null;
 		PackageInfo pInfo;
@@ -114,10 +117,18 @@ public class Utility {
 		for (int i = 0; i < bytesNum; i++) {
 			String hex = Integer.toHexString(0xFF & hashedBytes[i]);
 			if (hex.length() == 1)
-			    hexStringBuffer.append('0');
+				hexStringBuffer.append('0');
 			hexStringBuffer.append(hex);
 		}
 		String hexString = hexStringBuffer.toString();
 		return hexString;
+	}
+
+	public static int generateNewRandom(int length, int n) {
+		ArrayList<Integer> numbersList = new ArrayList<Integer> ();
+		for(int x=1;x<=length;x++)
+			numbersList.add(x);
+		Collections.shuffle(numbersList);
+		return numbersList.get(n);
 	}
 }

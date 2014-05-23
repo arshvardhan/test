@@ -114,8 +114,6 @@ public class LocalSearchActivity extends MaxisMainActivity {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-
 				if (!isAdvanceSearchLayoutOpen) {
 					isAdvanceSearchLayoutOpen = true;
 					advanceSearchLayout.setVisibility(View.VISIBLE);
@@ -125,6 +123,12 @@ public class LocalSearchActivity extends MaxisMainActivity {
 		});
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(LocalSearchActivity.this, AppConstants.MyCompany);
+	}
+	
 	private void inflateCompanyDetail(CompanyDetail compDetail) {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		LinearLayout compContainer = (LinearLayout) inflater.inflate(
@@ -356,7 +360,6 @@ public class LocalSearchActivity extends MaxisMainActivity {
 	@Override
 	protected void onActivityResult(int reqCode, int resultCode, Intent data) {
 		super.onActivityResult(reqCode, resultCode, data);
-		// TODO Auto-generated method stub
 		if (resultCode == RESULT_OK && reqCode == AppConstants.CITY_REQUEST) {
 			if (!selectedCity
 					.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
@@ -449,7 +452,6 @@ public class LocalSearchActivity extends MaxisMainActivity {
 				return null;
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

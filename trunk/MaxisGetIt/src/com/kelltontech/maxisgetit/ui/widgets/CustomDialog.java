@@ -2,6 +2,7 @@ package com.kelltontech.maxisgetit.ui.widgets;
 
 import java.util.HashMap;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
@@ -32,7 +33,7 @@ import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 import com.kelltontech.maxisgetit.utils.Utility;
 
 public class CustomDialog implements OnKeyListener {
-	
+
 	/**
 	 * Dialogs of findit333 app.
 	 */
@@ -58,12 +59,14 @@ public class CustomDialog implements OnKeyListener {
 	public static final int		LOGIN_CONFIRMATION_DIALOG			= 19;
 	public static final int		DELETE_CONFIRMATION_DIALOG			= 20;
 	public static final int		ADD_NEW_POI_CONFIRMATION_DIALOG		= 21;
-	public static final int		PLAY_VIDEO_DIALOG		= 22;
-	
-	
+	public static final int		PLAY_VIDEO_DIALOG					= 22;
+	public static final int		UPLOAD_CONTEST_IMAGE_DIALOG			= 23;
+
+
 	private BaseMainActivity mActivity;
 	private int mId;
 	private Dialog dialog = null;
+	private AlertDialog.Builder builder = null;
 	protected MaxisStore mStore;
 
 	public CustomDialog(int id, BaseMainActivity activity) {
@@ -71,23 +74,53 @@ public class CustomDialog implements OnKeyListener {
 		this.mActivity = activity;
 	}
 	public Dialog createDisclaimerDialog(String title,String text) {
-			dialog = new Dialog(mActivity, R.style.Theme_Almost_full_transparent);
-			dialog.setContentView(R.layout.dialog_layout);
-			TextView titleTxtView=(TextView) dialog.findViewById(R.id.dialog_title);
-			titleTxtView.setText(title);
-			TextView contectView = (TextView) dialog.findViewById(R.id.dialog_content);
-			contectView.setText(text);
-			Button closeBtn=(Button) dialog.findViewById(R.id.dialog_close);
-			closeBtn.setOnClickListener(new OnClickListener() {
+		dialog = new Dialog(mActivity, R.style.Theme_Almost_full_transparent);
+		dialog.setContentView(R.layout.dialog_layout);
+		TextView titleTxtView=(TextView) dialog.findViewById(R.id.dialog_title);
+		titleTxtView.setText(title);
+		TextView contectView = (TextView) dialog.findViewById(R.id.dialog_content);
+		contectView.setText(text);
+		Button closeBtn=(Button) dialog.findViewById(R.id.dialog_close);
+		closeBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+		dialog.show();
+		dialog.setCancelable(true);
+		return dialog;
+	}
+
+
+	public AlertDialog.Builder createNativeDialog(String info) {
+		switch (mId) {
+		case UPLOAD_CONTEST_IMAGE_DIALOG:
+			final CharSequence[] options = { "Choose from Gallery", "Capture from Camera", "Cancel" };
+			builder = new AlertDialog.Builder(mActivity);
+			builder.setTitle("FINDIT");
+			builder.setItems(options, new DialogInterface.OnClickListener() {
 				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
+				public void onClick(DialogInterface dialog, int item) {
+					if (options[item].equals("Choose from Gallery")) {
+						mActivity.onPositiveDialogButton(mId);
+						dialog.dismiss();
+					} else if (options[item].equals("Capture from Camera")) {
+						mActivity.onNegativeDialogbutton(mId);
+						dialog.dismiss();
+					} else if (options[item].equals("Cancel")) {
+						dialog.dismiss();
+					} else{
+						dialog.dismiss();
+					}
 				}
 			});
-			dialog.show();
-			dialog.setCancelable(true);
-			return dialog;
+			builder.show();
+			break;
+		}
+		return builder;
 	}
+
 	public Dialog createCustomDialog(String info) {
 		switch (mId) {
 		case INFO_DIALOG:
@@ -105,7 +138,7 @@ public class CustomDialog implements OnKeyListener {
 			dialog.show();
 			dialog.setCancelable(true);
 			break;
-		
+
 		case SINGLE_BUTTON_CONFIRMATION_DIALOG:
 			dialog = new Dialog(mActivity, R.style.Theme_Almost_full_transparent);
 			dialog.setContentView(R.layout.dialog_layout);
@@ -122,7 +155,7 @@ public class CustomDialog implements OnKeyListener {
 			dialog.show();
 			dialog.setCancelable(true);
 			break;
-			
+
 		case FINAL_DIALOG:
 			dialog = new Dialog(mActivity, R.style.Theme_Almost_full_transparent);
 			dialog.setContentView(R.layout.dialog_layout);
@@ -190,7 +223,7 @@ public class CustomDialog implements OnKeyListener {
 			dialog.setCancelable(true);
 
 			break;
-			
+
 		case DELETE_CONFIRMATION_DIALOG:
 			dialog = new Dialog(mActivity, R.style.Theme_Almost_full_transparent);
 			dialog.setContentView(R.layout.dialog_confirmation);
@@ -218,7 +251,7 @@ public class CustomDialog implements OnKeyListener {
 			dialog.setCancelable(true);
 
 			break;
-			
+
 		case ADD_NEW_POI_CONFIRMATION_DIALOG:
 			dialog = new Dialog(mActivity, R.style.Theme_Almost_full_transparent);
 			dialog.setContentView(R.layout.dialog_confirmation);
@@ -249,7 +282,7 @@ public class CustomDialog implements OnKeyListener {
 			dialog.setCancelable(true);
 
 			break;
-			
+
 		case CHANGE_PASSWORD_DIALOG:
 			dialog = new Dialog(mActivity, R.style.Theme_Almost_full_transparent);
 			dialog.setContentView(R.layout.dialog_confirmation);
@@ -276,7 +309,7 @@ public class CustomDialog implements OnKeyListener {
 			dialog.setCancelable(true);
 
 			break;
-			
+
 		case DATA_USAGE_DIALOG:
 		case DATA_USAGE_DIALOG_FOR_EMAIL: 
 		case DATA_USAGE_DIALOG_FOR_WEBSITE: 
@@ -389,28 +422,28 @@ public class CustomDialog implements OnKeyListener {
 				@Override
 				public void onClick(View v) {
 					if (!StringUtil.isNullOrEmpty(AppConstants.API_VERSION)) {
-					HashMap<String, String> map = new HashMap<String, String>();
-					map.put(FlurryEventsConstants.Current_API_Version, AppConstants.API_VERSION);
-					AnalyticsHelper.logEvent(FlurryEventsConstants.UPDATE_CLICK, map);
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put(FlurryEventsConstants.Current_API_Version, AppConstants.API_VERSION);
+						AnalyticsHelper.logEvent(FlurryEventsConstants.UPDATE_CLICK, map);
 					} else {
 						AnalyticsHelper.logEvent(FlurryEventsConstants.UPDATE_CLICK);
 					}
 					mActivity.runOnUiThread(new Runnable()
-				    {           
-				        @Override
-				        public void run()
-				        {
-				        	String appUri;
-				        	String appName =  Utility.getPackageName(mActivity) != null ? Utility.getPackageName(mActivity) : "";
-				        	try {
-				        		appUri = "market://details?id=" + appName;
-							    mActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appUri)));
+					{           
+						@Override
+						public void run()
+						{
+							String appUri;
+							String appName =  Utility.getPackageName(mActivity) != null ? Utility.getPackageName(mActivity) : "";
+							try {
+								appUri = "market://details?id=" + appName;
+								mActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appUri)));
 							} catch (android.content.ActivityNotFoundException anfe) {
 								appUri = "http://play.google.com/store/apps/details?id=" + appName;
 								mActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appUri)));
 							} 
-				        }
-				    });
+						}
+					});
 				}
 			});
 			cancelBtn = (TextView) dialog.findViewById(R.id.dialog_cancel);
@@ -425,10 +458,42 @@ public class CustomDialog implements OnKeyListener {
 			dialog.setCancelable(true);
 
 			break;
+
+			/*		case UPLOAD_CONTEST_IMAGE_DIALOG:
+			dialog = new Dialog(mActivity, R.style.Theme_Almost_full_transparent);
+			dialog.setContentView(R.layout.dialog_upload_contest_image);
+			Button galleryBtn = (Button) dialog.findViewById(R.id.galleryBtn);
+			galleryBtn.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mActivity.onPositiveDialogButton(mId);
+					dialog.dismiss();
+				}
+			});
+			Button cameraBtn = (Button) dialog.findViewById(R.id.cameraBtn);
+			cameraBtn.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mActivity.onNegativeDialogbutton(mId);
+					dialog.dismiss();
+				}
+			});
+
+			Button cancelDialogBtn = (Button) dialog.findViewById(R.id.closeBtn);
+			cancelDialogBtn.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});
+			dialog.show();
+			dialog.setCancelable(true);
+			break;*/
+
 		}
 		return dialog;
 	}
-	
+
 	public static Dialog CreateCustomDialog(final MaxisFragmentBaseActivity activity, int id, String info)
 	{
 		Dialog mapDialog = null;
@@ -467,7 +532,7 @@ public class CustomDialog implements OnKeyListener {
 				}
 			});
 			mapDialog = dialog;
-			
+
 			break;
 		}
 		default:
@@ -479,7 +544,7 @@ public class CustomDialog implements OnKeyListener {
 			mapDialog.setCancelable(true);
 		}
 
-		
+
 		return mapDialog;
 	}
 

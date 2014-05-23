@@ -68,8 +68,8 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		}
 		AnalyticsHelper.onActivityCreate();
 		// searchBtn = (ImageView) findViewById(R.id.search_icon_button);
-		
-		
+
+
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		InputFilter filter = new InputFilter() {
 			public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
 				for (int i = start; i < end; i++) {
-//					if (!Character.isLetterOrDigit(source.charAt(i)) && source.charAt(i) != '\'' && source.charAt(i) != '_' && source.charAt(i) != '-' && source.charAt(i) != ' '&& source.charAt(i) != '&') {
+					//					if (!Character.isLetterOrDigit(source.charAt(i)) && source.charAt(i) != '\'' && source.charAt(i) != '_' && source.charAt(i) != '-' && source.charAt(i) != ' '&& source.charAt(i) != '&') {
 					if (!Character.isLetterOrDigit(source.charAt(i)) && source.charAt(i) != '\'' && source.charAt(i) != '_' && source.charAt(i) != '-' && source.charAt(i) != ' ') {
 						return "";
 					}
@@ -92,23 +92,24 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		}
 
 	}
-	//TODO FOR FLURRY
-	@Override
-	protected void onStart() {
-		super.onStart();
-		AnalyticsHelper.onActivityStart(this);
-		AnalyticsHelper.setLogEnabled(true);
-		AnalyticsHelper.getReleaseVersion();
-		if(!StringUtil.isNullOrEmpty(mStore.getUserMobileNumber())){
-		AnalyticsHelper.setUserID(mStore.getUserMobileNumber());
-		}
-	}
-	
-	@Override
-	protected void onStop() {
-		super.onStop();
-		AnalyticsHelper.onActivityStop(this);
-	}
+
+//	//TODO FOR FLURRY
+//	@Override
+//	protected void onStart() {
+//		super.onStart();
+//		AnalyticsHelper.onActivityStart(this);
+//		AnalyticsHelper.setLogEnabled(true);
+//		AnalyticsHelper.getReleaseVersion();
+//		if(!StringUtil.isNullOrEmpty(mStore.getUserMobileNumber())){
+//			AnalyticsHelper.setUserID(mStore.getUserMobileNumber());
+//		}
+//	}
+//
+//	@Override
+//	protected void onStop() {
+//		super.onStop();
+//		AnalyticsHelper.onActivityStop(this);
+//	}
 
 	protected void performSearch(String searchText , String postJsonPayload) {
 		if (searchText == null || searchText.trim().equals("")) {
@@ -119,17 +120,17 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		mListRequest = new CombinedListRequest(MaxisMainActivity.this);
 		mListRequest.setBySearch(true);
 		mListRequest.setCompanyListing(true);
-//		String encodedText=URLEncoder.encode(searchText.trim());
-//		mListRequest.setKeywordOrCategoryId(encodedText);
+		//		String encodedText=URLEncoder.encode(searchText.trim());
+		//		mListRequest.setKeywordOrCategoryId(encodedText);
 		mListRequest.setKeywordOrCategoryId(Uri.encode(searchText.trim()));
-		
+
 		HashMap<String,String>	map = new HashMap<String,String>();
 		map.put(FlurryEventsConstants.HOME_SEARCH_TEXT, searchText);
 		AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SCREEN_SEARCH,map);
-		
+
 		mListRequest.setLatitude(GPS_Data.getLatitude());
 		mListRequest.setLongitude(GPS_Data.getLongitude());
-		
+
 		if(postJsonPayload!=null)
 		{
 			isCitySelected = true;
@@ -142,34 +143,34 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		CombindListingController listingController = new CombindListingController(MaxisMainActivity.this, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 		listingController.requestService(mListRequest);
 	}
-	
-//	protected void performSearch(String searchText) {
-//		if (searchText == null || searchText.trim().equals("")) {
-//			showInfoDialog(getResources().getString(R.string.input_search));
-//			return;
-//		}
-//		startSppiner();
-//		mListRequest = new CombinedListRequest(MaxisMainActivity.this);
-//		mListRequest.setBySearch(true);
-//		mListRequest.setCompanyListing(true);
-////		String encodedText=URLEncoder.encode(searchText.trim());
-////		mListRequest.setKeywordOrCategoryId(encodedText);
-//		mListRequest.setKeywordOrCategoryId(Uri.encode(searchText.trim()));
-//		
-//		HashMap<String,String>	map = new HashMap<String,String>();
-//		map.put(FlurryEventsConstants.HOME_SEARCH_TEXT, searchText);
-//		AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SCREEN_SEARCH,map);
-//		
-//		mListRequest.setLatitude(GPS_Data.getLatitude());
-//		mListRequest.setLongitude(GPS_Data.getLongitude());
-//		
-////		if(postJsonPayload!=null)
-////		mListRequest.setPostJsonPayload(postJsonPayload);
-//		
-//
-//		CombindListingController listingController = new CombindListingController(MaxisMainActivity.this, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
-//		listingController.requestService(mListRequest);
-//	}
+
+	//	protected void performSearch(String searchText) {
+	//		if (searchText == null || searchText.trim().equals("")) {
+	//			showInfoDialog(getResources().getString(R.string.input_search));
+	//			return;
+	//		}
+	//		startSppiner();
+	//		mListRequest = new CombinedListRequest(MaxisMainActivity.this);
+	//		mListRequest.setBySearch(true);
+	//		mListRequest.setCompanyListing(true);
+	////		String encodedText=URLEncoder.encode(searchText.trim());
+	////		mListRequest.setKeywordOrCategoryId(encodedText);
+	//		mListRequest.setKeywordOrCategoryId(Uri.encode(searchText.trim()));
+	//		
+	//		HashMap<String,String>	map = new HashMap<String,String>();
+	//		map.put(FlurryEventsConstants.HOME_SEARCH_TEXT, searchText);
+	//		AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SCREEN_SEARCH,map);
+	//		
+	//		mListRequest.setLatitude(GPS_Data.getLatitude());
+	//		mListRequest.setLongitude(GPS_Data.getLongitude());
+	//		
+	////		if(postJsonPayload!=null)
+	////		mListRequest.setPostJsonPayload(postJsonPayload);
+	//		
+	//
+	//		CombindListingController listingController = new CombindListingController(MaxisMainActivity.this, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
+	//		listingController.requestService(mListRequest);
+	//	}
 
 	protected void showCompanyDealListing(String categoryId, String categoryTitle,String thumbUrl, boolean iscompanyListing, String groupType, String groupActionType) {
 		startSppiner();
@@ -186,8 +187,8 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		CombindListingController listingController = new CombindListingController(MaxisMainActivity.this, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 		listingController.requestService(mListRequest);
 	}
-	
-	
+
+
 
 	@Override
 	public void updateUI(Message msg) {
@@ -220,9 +221,9 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 			UserDetailController controller = new UserDetailController(MaxisMainActivity.this, Events.USER_DETAIL);
 			controller.requestService(mStore.getUserMobileNumber());
 			startSppiner();
-//			Intent intentMyAccount = new Intent(MaxisMainActivity.this, MyAccountActivity.class);
-//			intentMyAccount.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//			startActivity(intentMyAccount);
+			//			Intent intentMyAccount = new Intent(MaxisMainActivity.this, MyAccountActivity.class);
+			//			intentMyAccount.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			//			startActivity(intentMyAccount);
 		} /*else if (mStore.isRegisteredUser() && !mStore.isVerifiedUser()) {
 			Intent intentverify = new Intent(MaxisMainActivity.this, VerifyRegistrationActivity.class);
 			intentverify.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -238,9 +239,9 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 	@Override
 	public void setScreenData(Object screenData, int event, long time) {
 		if(event==Events.USER_DETAIL){
-				handler.sendMessage((Message) screenData);
-				return;
-			}
+			handler.sendMessage((Message) screenData);
+			return;
+		}
 		System.out.println(screenData);
 		Response response = (Response) screenData;
 		Message message = new Message();
@@ -301,12 +302,12 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		CustomDialog customDialog = new CustomDialog(CustomDialog.INFO_DIALOG, MaxisMainActivity.this);
 		mDialog = customDialog.createCustomDialog(info);
 	}
-	
+
 	public void showExitAndBackDialog(String info) {
 		CustomDialog customDialog = new CustomDialog(CustomDialog.TNC_DIALOG, MaxisMainActivity.this);
 		mDialog = customDialog.createCustomDialog(info);
 	}
-		
+
 	public void showFinalDialog(String info) {
 		CustomDialog customDialog = new CustomDialog(CustomDialog.FINAL_DIALOG, MaxisMainActivity.this);
 		mDialog = customDialog.createCustomDialog(info);
@@ -316,16 +317,21 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		CustomDialog customDialog = new CustomDialog(id, MaxisMainActivity.this);
 		mDialog = customDialog.createCustomDialog(info);
 	}
-	
+
 	public void showSingleButtonConfirmationDialog( String info) {
 		CustomDialog customDialog = new CustomDialog(CustomDialog.SINGLE_BUTTON_CONFIRMATION_DIALOG, MaxisMainActivity.this);
 		mDialog = customDialog.createCustomDialog(info);
 	}
-	
+
 	public void showPlayStoreDialog(String info) {
 		stopSppiner();
 		CustomDialog customDialog = new CustomDialog(CustomDialog.PLAY_STORE_DIALOG, MaxisMainActivity.this);
 		mDialog = customDialog.createCustomDialog(info);
+	}
+
+	public void showImageUploadDialog(int id, String info) {
+		CustomDialog customDialog = new CustomDialog(id, MaxisMainActivity.this);
+		nativeDialog = customDialog.createNativeDialog(info);
 	}
 
 	@Override
@@ -346,12 +352,14 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 			break;
 		} 
 	}
-	
+
 	@Override
 	public void onNegativeDialogbutton(int id) {
-		mDialog.dismiss();
+		if (mDialog != null) {
+			mDialog.dismiss();
+		}
 	}
-	
+
 	/**
 	 * To remove all screens from stack up to and excluding Home Screen 
 	 */
@@ -361,7 +369,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		startActivity(intentHome);
 		HomeActivity.fromHomeClick = true;
 	}
-	
+
 	/**
 	 * To check if location is available and show appropriate dialog
 	 */ 
@@ -378,7 +386,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		}
 		return true;
 	}
-	
+
 	protected  boolean isDialogToBeShown() {
 		/*long savedUserTime = mStore.getUserDecisionTime();
 		int noOfDays = (int)((System.currentTimeMillis() - savedUserTime) / (1000 * 60 *60 *24)) ;
@@ -388,7 +396,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 			return false;*/
 		return !mStore.isUserDecisionRemembered();
 	}
-	
+
 	/**
 	 * @param url
 	 */
@@ -400,7 +408,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		} else if( url.indexOf("twitter") != -1 ) {
 			dialogIdTobeShown = CustomDialog.DATA_USAGE_DIALOG_FOR_TWITTER;
 		}
-		
+
 		if( ! isDialogToBeShown() ) {
 			if( dialogIdTobeShown == CustomDialog.DATA_USAGE_DIALOG_FOR_WEBSITE ) {
 				openDeviceBrowser(url, true);
@@ -414,22 +422,22 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 			showConfirmationDialog(dialogIdTobeShown, getString(R.string.cd_msg_data_usage));
 		}
 	}
-	
+
 	/**
 	 * @param url
 	 */
 	protected boolean overrideWebViewUrlLoading(String url) {
 		Log.i("maxis", "Processing webview url click...");
-        if (url != null && url.startsWith("http://")) {
-        	if( url.indexOf( getString(R.string.findit_com)) == -1 ) {
-        		checkPreferenceAndOpenBrowser(url);
-        	} else {
-        		openDeviceBrowser(url, true);
-        	}
-        	return true;
-        } else {
-            return false;
-        }
+		if (url != null && url.startsWith("http://")) {
+			if( url.indexOf( getString(R.string.findit_com)) == -1 ) {
+				checkPreferenceAndOpenBrowser(url);
+			} else {
+				openDeviceBrowser(url, true);
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 	public void setSearchCity() {
 		// TODO
@@ -451,4 +459,34 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 			showAlertDialog("Please select a City.");
 		}
 	}
+
+//	protected void trackSession(String screenName) {
+//		try {
+//			if (!NativeHelper.isDataConnectionAvailable(MaxisMainActivity.this)) {
+//				Response res = new Response();
+//				res.setErrorCode(101);
+//				res.setErrorText(MaxisMainActivity.this.getResources().getString(R.string.network_unavailable));
+//				return;
+//			}
+//			SessionTrackingRequest request = new SessionTrackingRequest(MaxisMainActivity.this, SessionTrackingConstants.SESSION_IDENTIFIER, screenName);
+//			String url = HttpHelper.getURLWithPrams(AppConstants.BASE_URL + request.getMethodName(), request.getRequestHeaders(screenName));
+//			Log.d("maxis", "url " + url);
+//			SimpleXmlRequest<Response> serviceRequest = new SimpleXmlRequest<Response>(Request.Method.GET, url, Response.class, new Listener<Response>() {
+//				@Override
+//				public void onResponse(Response response) {
+//						Log.d("FINDIT MALAYSIA", "SESSION TRACKING MSG: Success");
+//				}
+//					}, 
+//					new ErrorListener() {
+//						@Override
+//						public void onErrorResponse(VolleyError error) {                                
+//						}
+//					}
+//					);  
+//	
+//			MyApplication.getInstance().addToRequestQueue(serviceRequest);
+//		} catch (Exception e) {
+//			AnalyticsHelper.onError(FlurryEventsConstants.REQUEST_SERVICE_ERR, MyApplication.class.getSimpleName() + " : " + AppConstants.REQUEST_SERVICE_ERROR_MSG, e);
+//		}
+//	}
 }

@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
+import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
 public class TermsAndConditionActivity extends MaxisMainActivity {
 	private RelativeLayout mErrorLayout;
@@ -83,6 +84,12 @@ public class TermsAndConditionActivity extends MaxisMainActivity {
 		}
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(TermsAndConditionActivity.this, AppConstants.TnC);
+	}
+	
 	private void setPageUrl() {
 		switch (mTnCOf) {
 		case AppConstants.TNC_FROM_COMP:

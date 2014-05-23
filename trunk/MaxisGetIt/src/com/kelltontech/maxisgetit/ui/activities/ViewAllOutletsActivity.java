@@ -339,6 +339,12 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 
 	}
 
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(ViewAllOutletsActivity.this, AppConstants.Screen_DealOutletList);
+	}
 	@Override
 	public Activity getMyActivityReference() {
 		// TODO Auto-generated method stub

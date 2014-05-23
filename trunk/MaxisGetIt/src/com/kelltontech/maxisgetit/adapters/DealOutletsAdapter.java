@@ -87,7 +87,7 @@ public class DealOutletsAdapter extends BaseAdapter {
 			OutLet outlets = list.get(position);
 			model.dealTitle.setText(outlets.getTitle());
 			model.dealAddress.setText(outlets.getAddress());
-			model.outletCount.setBackground(null);
+//			model.outletCount.setBackground(null);
 			model.outletCount.setText(position + 1 + "");
 			model.viewMore.setVisibility(View.GONE);
 			model.leftLayout.setVisibility(View.VISIBLE);
@@ -106,7 +106,7 @@ public class DealOutletsAdapter extends BaseAdapter {
 			OutLet outlets = list.get(position);
 			model.dealTitle.setText(outlets.getTitle());
 			model.dealAddress.setText(outlets.getAddress());
-			model.outletCount.setBackground(null);
+//			model.outletCount.setBackground(null);
 			model.outletCount.setText(position + 1 + "");
 			model.viewMore.setVisibility(View.GONE);
 			model.leftLayout.setVisibility(View.VISIBLE);

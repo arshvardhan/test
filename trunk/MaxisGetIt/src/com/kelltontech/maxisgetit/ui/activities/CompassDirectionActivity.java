@@ -53,17 +53,17 @@ import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 @SuppressLint("NewApi")
 public class CompassDirectionActivity extends MaxisMainActivity implements SensorEventListener{
 	private ImageView mProfileIconView;
-    private MyCompassView compassView;
-    private LinearLayout mSearchContainer;
+	private MyCompassView compassView;
+	private LinearLayout mSearchContainer;
 	private ImageView mSearchToggler;
 	private TextView mHeaderTitle;
-    // record the compass picture angle turned
-    private float currentDegree = 0f;
-    private LinearLayout compassHolder;
-    // device sensor manager
-    private SensorManager mSensorManager;
-    private CompanyDetail mCompanyDetail;
-    private float mBearingFromLocation;
+	// record the compass picture angle turned
+	private float currentDegree = 0f;
+	private LinearLayout compassHolder;
+	// device sensor manager
+	private SensorManager mSensorManager;
+	private CompanyDetail mCompanyDetail;
+	private float mBearingFromLocation;
 	private ImageView mHeaderBackButton;
 	private ImageView mHomeIconView;
 	private BroadcastReceiver mLocationReceiver;
@@ -74,7 +74,7 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 	private Sensor mOrientationSensor;
 	private Sensor mAccelerometerSensor;
 	private Intent mLocationServiceIntent;
-	
+
 	private boolean isAdvanceSearchLayoutOpen = false;
 	private LinearLayout advanceSearchLayout;
 	private TextView currentCity, currentLocality;
@@ -91,7 +91,7 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 	TextView mainSearchButton;
 	ArrayList<String> selectedLocalityindex;
 	LinearLayout wholeSearchBoxContainer;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -99,18 +99,18 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 		if(getIntent().getExtras().containsKey(AppConstants.COMP_DETAIL_DATA))
 		{
 			mCompanyDetail = getIntent().getParcelableExtra(AppConstants.COMP_DETAIL_DATA);
-			
+
 		}
-		
+
 		if(mCompanyDetail == null)
 		{
 			Toast.makeText(this, "Some error occured.", Toast.LENGTH_LONG).show();
 			return;
 		}
-		
+
 		((TextView)findViewById(R.id.compass_comp_name)).setText(mCompanyDetail.getTitle());
 		((TextView)findViewById(R.id.compass_location)).setText(mCompanyDetail.getLocality() + ", " + mCompanyDetail.getCity() + ", " + mCompanyDetail.getPincode());
-		
+
 		if(mCompanyDetail.getRecordType().equalsIgnoreCase(AppConstants.COMP_TYPE_DEAL))
 		{
 			findViewById(R.id.compass_rated_user_count).setVisibility(View.GONE);
@@ -126,8 +126,8 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 		compassHolder=(LinearLayout) findViewById(R.id.compass_layout);
 		compassView = new MyCompassView(this);
 		compassHolder.addView(compassView);
-	    mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-	    mSearchContainer=(LinearLayout) findViewById(R.id.search_box_container);
+		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+		mSearchContainer=(LinearLayout) findViewById(R.id.search_box_container);
 		mSearchToggler=(ImageView) findViewById(R.id.search_toggler);
 		mSearchToggler.setOnClickListener(this);
 		mHeaderBackButton = (ImageView) findViewById(R.id.header_btn_back);
@@ -138,7 +138,7 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 		mSearchBtn.setOnClickListener(CompassDirectionActivity.this);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
 		findViewById(R.id.txv_icon_show_map).setOnClickListener(this);
-		
+
 		advanceSearchLayout = (LinearLayout) findViewById(R.id.advanceSearch);
 		advanceSearchLayout.setVisibility(View.GONE);
 
@@ -157,12 +157,12 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 		mainSearchButton.setOnClickListener(this);
 
 		wholeSearchBoxContainer = (LinearLayout) findViewById(R.id.whole_search_box_container);
-		
+
 		String searchKeyword =  getIntent().getExtras().getString(AppConstants.GLOBAL_SEARCH_KEYWORD);
-		
+
 		if(!StringUtil.isNullOrEmpty(searchKeyword))
 			mSearchEditText.setText(searchKeyword);
-		
+
 		mProfileIconView = (ImageView) findViewById(R.id.show_profile_icon);
 		mProfileIconView.setOnClickListener(this);
 		mHomeIconView = (ImageView) findViewById(R.id.goto_home_icon);
@@ -175,13 +175,13 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 				locationUpdate();
 			}
 		};
-		
+
 		IntentFilter filterSend = new IntentFilter();
 		filterSend.addAction("location");
 		registerReceiver(mLocationReceiver, filterSend);
-		
+
 		compassView.updateData(mLastAzimuth, mBearingFromLocation, mDistanceFromMyLocation);
-		
+
 		mSearchEditText.setOnTouchListener(new OnTouchListener() {
 
 			@Override
@@ -195,8 +195,8 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 				return false;
 			}
 		});
-		
-		
+
+
 	}
 
 	private void calculateBearing() {
@@ -206,9 +206,9 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 		Location compLocation = new Location("");
 		compLocation.setLatitude(mCompanyDetail.getLatitude());
 		compLocation.setLongitude(mCompanyDetail.getLongitude());
-		
+
 		mBearingFromLocation = userLocation.bearingTo(compLocation);
-		
+
 	}
 
 	protected void locationUpdate() {
@@ -239,7 +239,7 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 		Location compLocation = new Location("");
 		compLocation.setLatitude(mCompanyDetail.getLatitude());
 		compLocation.setLongitude(mCompanyDetail.getLongitude());
-		
+
 		float distance = userLocation.distanceTo(compLocation)/1000;
 		float[] results = new float[3];
 		/*Location.distanceBetween(GPS_Data.getLatitude(), GPS_Data.getLongitude(), mCompanyDetail.getLatitude(), mCompanyDetail.getLongitude(), results);
@@ -247,60 +247,62 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 		DecimalFormat df = new DecimalFormat();
 		df.setMaximumFractionDigits(2);
 		mDistanceFromMyLocation = df.format(distance) + " KM";
-		
+
 	}
 
 	@Override
 	public Activity getMyActivityReference() {
 		return null;
 	}
-	 @SuppressLint("NewApi")
+	@SuppressLint("NewApi")
 	@Override
-	    protected void onResume() {
-	        super.onResume();
-	        
-	        // for the system's orientation sensor registered listeners
-	        mOrientationSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-	        if(mOrientationSensor != null)
-	        {
-	        	mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
-	                SensorManager.SENSOR_DELAY_GAME);
-	        }
-	        else 
-	        {
-	        	showAlertDialog(getResources().getString(R.string.cd_error_sensor_not_found));
-	        	/*mAccelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+	protected void onResume() {
+		super.onResume();
+
+		// for the system's orientation sensor registered listeners
+		mOrientationSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+		if(mOrientationSensor != null)
+		{
+			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+					SensorManager.SENSOR_DELAY_GAME);
+		}
+		else 
+		{
+			showAlertDialog(getResources().getString(R.string.cd_error_sensor_not_found));
+			/*mAccelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 	        	mSensorManager.registerListener(this, mAccelerometerSensor,
 		                SensorManager.SENSOR_DELAY_GAME);
 	        	mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);*/
-	        }
-	    }
+		}
 
-	    @Override
-	    protected void onPause() {
-	        super.onPause();
-	        
-	        // to stop the listener and save battery
-	        mSensorManager.unregisterListener(this);
-	    }
-	    
-	    @Override
-	    public void onSensorChanged(SensorEvent event) {
-	    	
-	    	if(event.sensor == mOrientationSensor)
-	    	{
-	    		mLastAzimuth = event.values[0];
-	    	}
-	    	
-	    	calculateBearing();
-	        compassView.updateData(mLastAzimuth, mBearingFromLocation, mDistanceFromMyLocation);
+		AnalyticsHelper.trackSession(CompassDirectionActivity.this, AppConstants.CompassDirection);	    
+	}
 
-	    }
+	@Override
+	protected void onPause() {
+		super.onPause();
 
-	    @Override
-	    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-	        // not in use
-	    }
+		// to stop the listener and save battery
+		mSensorManager.unregisterListener(this);
+	}
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+
+		if(event.sensor == mOrientationSensor)
+		{
+			mLastAzimuth = event.values[0];
+		}
+
+		calculateBearing();
+		compassView.updateData(mLastAzimuth, mBearingFromLocation, mDistanceFromMyLocation);
+
+	}
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		// not in use
+	}
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -337,7 +339,7 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 			break;
 		case R.id.mainSearchButton:
 			mSearchEditText
-					.setText(mSearchEditText.getText().toString().trim());
+			.setText(mSearchEditText.getText().toString().trim());
 
 			String JSON_EXTRA = jsonForSearch();
 			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
@@ -389,14 +391,14 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 			super.onPositiveDialogButton(id);
 		}
 	}
-	
+
 	private void showFullMapActivity() {
 		if(isLocationAvailable()){
-//			Intent intent = new Intent(CompassDirectionActivity.this, FullMapActivity.class);
-//			intent.putExtra(AppConstants.COMP_DETAIL_DATA, mCompanyDetail);
-//			//intent.putExtra(AppConstants.THUMB_URL, mCategoryThumbUrl);
-//			intent.putExtra(AppConstants.IS_DEAL_LIST, getIntent().getExtras().getBoolean(AppConstants.IS_DEAL_LIST));
-//			startActivity(intent);
+			//			Intent intent = new Intent(CompassDirectionActivity.this, FullMapActivity.class);
+			//			intent.putExtra(AppConstants.COMP_DETAIL_DATA, mCompanyDetail);
+			//			//intent.putExtra(AppConstants.THUMB_URL, mCategoryThumbUrl);
+			//			intent.putExtra(AppConstants.IS_DEAL_LIST, getIntent().getExtras().getBoolean(AppConstants.IS_DEAL_LIST));
+			//			startActivity(intent);
 			//TODO for google Maps
 			String url = "http://maps.google.com/maps?saddr="+GPS_Data.getLatitude()+","+GPS_Data.getLongitude()+"&daddr="+mCompanyDetail.getLatitude()+","+mCompanyDetail.getLongitude()+"&mode=driving";
 			Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url));
@@ -404,7 +406,7 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 			startActivity(intent);
 		}
 	}
-	
+
 	@Override
 	public void updateUI(Message msg) {
 		if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE||msg.arg2==Events.USER_DETAIL) {
@@ -468,7 +470,7 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 			handler.sendMessage(message);
 		}
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		if(mLocationReceiver != null)
@@ -487,10 +489,10 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 				AnalyticsHelper.onError(FlurryEventsConstants.LOCATION_SERVICE_STOP_ERR, "CompassDirectionActivity : " + AppConstants.LOCATION_SERVICE_NOT_STOP_ERROR_MSG, e);
 			}
 		}
-		
+
 		super.onDestroy();
 	}
-	
+
 	@Override
 	protected void onActivityResult(int reqCode, int resultCode, Intent data) {
 		super.onActivityResult(reqCode, resultCode, data);
@@ -512,7 +514,7 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 				city_id =-1;
 			}else
 			{
-			city_id = cityList.get(index).getId();
+				city_id = cityList.get(index).getId();
 			}
 
 		} else if (resultCode == RESULT_OK
@@ -595,7 +597,7 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
 		}
 
 	}
-	
+
 	/*
 	 * Can be used later
 	 * float[] grav = new float[3];
@@ -627,4 +629,4 @@ public class CompassDirectionActivity extends MaxisMainActivity implements Senso
     SensorManager.getOrientation(rotation,apr);
     mLastAzimuth = 360 -(float)Math.toDegrees(apr[0]);
    // if (mLastAzimuth<0) mLastAzimuth+=360;  //Convert from -180->180 to 0->359
-*/}
+	 */}

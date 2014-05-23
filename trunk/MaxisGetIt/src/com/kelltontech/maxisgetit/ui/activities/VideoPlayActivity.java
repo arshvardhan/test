@@ -129,7 +129,7 @@ public class VideoPlayActivity extends MaxisMainActivity {
 		
 		
 	}
-
+	
 	@Override
 	public Activity getMyActivityReference() {
 		// TODO Auto-generated method stub
@@ -176,6 +176,7 @@ public class VideoPlayActivity extends MaxisMainActivity {
 		super.onResume();
 		callHiddenWebViewMethod("onResume");
 		videoView.resumeTimers();
+		AnalyticsHelper.trackSession(VideoPlayActivity.this, AppConstants.Screen_videoPlay);
 	}
 
 	private void callHiddenWebViewMethod(String name) {

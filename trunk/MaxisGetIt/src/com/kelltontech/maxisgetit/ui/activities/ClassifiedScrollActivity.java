@@ -18,7 +18,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -279,6 +278,12 @@ public class ClassifiedScrollActivity extends MaxisMainActivity {
 
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(ClassifiedScrollActivity.this, AppConstants.MyClassifieds);
+	}
+	
 	private ArrayList<Classified_Base> sortListAndStoreLatest() {
 		ArrayList<Classified_Base> list = mClsResponse.getClassifiedList();
 		Collections.sort(list, new Comparator<Classified_Base>() {

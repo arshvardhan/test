@@ -2,6 +2,10 @@ package com.kelltontech.maxisgetit.ui.activities;
 
 import java.util.ArrayList;
 
+import android.content.Intent;
+import android.provider.MediaStore;
+
+import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.service.AppSharedPreference;
 
 /**
@@ -42,6 +46,17 @@ public abstract class ContestBaseActivity extends MaxisMainActivity {
 	    return devices.contains(android.os.Build.BRAND + "/" + android.os.Build.PRODUCT + "/"
 	            + android.os.Build.DEVICE);
 
+	}
+	
+	protected void takePhoto() {
+		Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		startActivityForResult(cameraIntent, AppConstants.CAMERA_REQUEST);
+	}
+	
+	protected void openGalery() {
+		Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+		photoPickerIntent.setType("image/*");
+		startActivityForResult(photoPickerIntent, AppConstants.GALLERY_REQUEST);
 	}
 }
 

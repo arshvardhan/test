@@ -192,6 +192,8 @@ public class ReportErrorActivity extends MaxisMainActivity {
 			mGuestDetailController.setVisibility(View.VISIBLE);
 			mEdUserMobile.setText(mStore.getAuthMobileNumber().substring(2));
 		}
+		
+		AnalyticsHelper.trackSession(ReportErrorActivity.this, AppConstants.ReportanError);
 	}
 
 	@Override

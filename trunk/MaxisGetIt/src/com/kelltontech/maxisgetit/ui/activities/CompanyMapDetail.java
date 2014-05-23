@@ -100,6 +100,7 @@ public class CompanyMapDetail extends MaxisFragmentBaseActivity {
 	protected void onResume() {
 		super.onResume();
 		setUpMapIfNeeded();
+		AnalyticsHelper.trackSession(CompanyMapDetail.this, AppConstants.Screen_CompanyDetailMap);
 	}
 
 	private void setUpMapIfNeeded() {
