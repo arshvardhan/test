@@ -12,24 +12,25 @@ import android.os.Bundle;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.model.Response;
-import com.kelltontech.framework.utils.UiUtils;
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
-import com.kelltontech.maxisgetit.controllers.CombindListingController;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.OutLetDetails;
 import com.kelltontech.maxisgetit.db.CityTable;
@@ -73,8 +74,7 @@ public class CompanyOrCategoryFilterActivity extends MaxisMainActivity {
 				.logEvent(
 						FlurryEventsConstants.APPLICATION_COMPANY_CATEGORY_SELECT,
 						true);
-		UiUtils.hideKeyboardOnTappingOutside(
-				findViewById(R.id.epa_root_layout), this);
+
 		mHomeIconView = (ImageView) findViewById(R.id.goto_home_icon);
 		mHomeIconView.setOnClickListener(this);
 		mProfileIconView = (ImageView) findViewById(R.id.show_profile_icon);
@@ -90,9 +90,25 @@ public class CompanyOrCategoryFilterActivity extends MaxisMainActivity {
 		mHeaderBackButton.setOnClickListener(this);
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
 		mSearchBtn.setOnClickListener(this);
-		mSearchEditText = (EditText) findViewById(R.id.search_box);
+		advanceSearchLayout = (LinearLayout) findViewById(R.id.advanceSearch);
+		advanceSearchLayout.setVisibility(View.GONE);
 		upArrow = (ImageView) findViewById(R.id.upArrow);
 		upArrow.setOnClickListener(this);
+		wholeSearchBoxContainer = (LinearLayout) findViewById(R.id.whole_search_box_container);
+		mSearchEditText.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+
+				if (!isAdvanceSearchLayoutOpen) {
+					isAdvanceSearchLayoutOpen = true;
+					advanceSearchLayout.setVisibility(View.VISIBLE);
+				}
+				return false;
+			}
+		});
+		
 		
 		Bundle bundle = getIntent().getExtras();
 		ArrayList<String> compOrcatNames = new ArrayList<String>();
@@ -100,28 +116,23 @@ public class CompanyOrCategoryFilterActivity extends MaxisMainActivity {
 
 		compOrCatListView = (ListView) findViewById(R.id.cat_comp_ListView);
 
-//		String[] items = { "Milk", "Butter", "Yogurt", "Toothpaste",
-//				"Ice Cream" };
-
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, compOrcatNames);
 
 		compOrCatListView.setAdapter(adapter);
 
-		compOrCatListView.setOnItemSelectedListener(new OnItemSelectedListener() {
+		compOrCatListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1, int pos, long arg3) {
-//				compOrCatListView.getItemAtPosition(pos);
+			public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
+					long arg3) {
+				// TODO Auto-generated method stub
 				Intent intent = new Intent();
-				intent.putExtra("ChosenCompany", compOrCatListView.getItemAtPosition(pos).toString());
+				intent.putExtra("ChosenCompanyOrCategory", compOrCatListView
+						.getItemAtPosition(pos).toString());
 				intent.putExtra("Position", pos);
 				setResult(RESULT_OK, intent);
 				finish();
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
 			}
 		});
 	}

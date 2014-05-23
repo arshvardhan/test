@@ -436,7 +436,7 @@
                     android:background="@color/bar_light_grey" />
 
                 <TableLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center" >
 
@@ -454,12 +454,13 @@
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
-                        <Spinner
+                        <TextView
                             android:id="@+id/company_spinner"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/dashboard_dropdown"
-                            android:padding="10dp" />
+                            android:padding="10dp" 
+                            android:drawableRight="@drawable/arrow"
+                            />
                     </TableRow>
 
                     <TextView
@@ -481,12 +482,13 @@
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
-                        <Spinner
+                        <TextView
                             android:id="@+id/category_spinner"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/dashboard_dropdown"
-                            android:padding="5dp" />
+                            android:padding="10dp"
+                            android:drawableRight="@drawable/arrow"
+                             />
                     </TableRow>
 
                     <TextView

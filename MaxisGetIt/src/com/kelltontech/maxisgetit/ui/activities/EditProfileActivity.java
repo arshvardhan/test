@@ -100,7 +100,6 @@ public class EditProfileActivity extends MaxisMainActivity {
 		mHeaderBackButton.setOnClickListener(this);
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
 		mSearchBtn.setOnClickListener(this);
-		mSearchEditText = (EditText) findViewById(R.id.search_box);
 
 		mEdUserName = (EditText) findViewById(R.id.epa_name);
 		mEdEmail = (EditText) findViewById(R.id.epa_email);

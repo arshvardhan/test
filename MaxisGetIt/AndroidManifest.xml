@@ -418,11 +418,15 @@
         </activity>
         <activity
             android:name="com.kelltontech.maxisgetit.ui.activities.DidLifeCycleActivity"
-            android:label="@string/title_activity_did_life_cycle" >
+            android:label="@string/title_activity_did_life_cycle" 
+             android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar">
         </activity>
         <activity
             android:name="com.kelltontech.maxisgetit.ui.activities.CompanyOrCategoryFilterActivity"
-            android:label="@string/title_activity_company_or_category_filter" >
+            android:label="@string/title_activity_company_or_category_filter"
+             android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
     </application>
 
