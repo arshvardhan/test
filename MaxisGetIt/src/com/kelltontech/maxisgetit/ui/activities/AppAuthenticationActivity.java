@@ -17,6 +17,7 @@ import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.controllers.AppAuthenticationController;
 import com.kelltontech.maxisgetit.dao.MaxisStore;
+import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 import com.kelltontech.maxisgetit.utils.Utility;
 
 public class AppAuthenticationActivity extends MaxisMainActivity {
@@ -41,6 +42,12 @@ public class AppAuthenticationActivity extends MaxisMainActivity {
 		mConfirmBtn.setOnClickListener(this);
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(AppAuthenticationActivity.this, AppConstants.AppAuthentication);
+	}
+	
 	@Override
 	public Activity getMyActivityReference() {
 		return null;

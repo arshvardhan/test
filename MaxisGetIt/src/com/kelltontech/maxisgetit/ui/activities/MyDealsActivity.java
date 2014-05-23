@@ -193,6 +193,12 @@ public class MyDealsActivity extends MaxisMainActivity {
 		});
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(MyDealsActivity.this, AppConstants.MyDeals);
+	}
+	
 	private void displayDealListing() {
 		mDealsGroupContainer.removeAllViews();
 		ArrayList<MyDealsList> dealGroupList = mMyDealsResponse

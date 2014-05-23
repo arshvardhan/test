@@ -323,7 +323,6 @@
     <string name="poi_middle_tga3">Try to click as much as possible and make your chances stronger to win exciting prizes.</string>
     <string name="list_by_category">List by Category</string>
     <string name="list_by_distance">List by Distance</string>
-    <string name="server_not_responding">Server not responding.</string>
     <string name="hint_search_for_pois">Search for the POI(s) near you</string>
 
     <!-- Contest Home Screen -->
@@ -352,6 +351,8 @@
     <!-- Contest Custom dialog text -->
     <string name="dialog_btn_ok">Allow</string>
     <string name="dialog_btn_no">Deny</string>
+    <string name="dialog_from_gallery">Choose Image From Gallery</string>
+    <string name="dialog_from_camera">Capture Image From Camera</string>
 
     <!-- Contest AddNewPOI activity -->
     <string name="anp_header">Add New POI</string>
@@ -386,11 +387,10 @@
     <string name="title_activity_mydeals_activity1">MydealsActivity1</string>
     <string name="title_activity_deal_detail">DealDetailActivity</string>
     <string name="title_activity_deal_form">DealForm</string>
-    <string name="entire_malaysia">Entire Malaysia</string>
     <string name="title_activity_video_play">VideoPlayActivity</string>
     <string name="mobile_number_validation">Mobile Number should be 8-11 digits and start with 1.</string>
     <string name="mobile_number_validation_contestapp">Your Contact Number should be 8-11 digits and start with 1.</string>
-    <string name="mobile_number_validation_contestapp_company">Company Contact Number should be 8-11 digits and start with 1.</string>
+    <string name="mobile_number_validation_contestapp_company">Company Contact Number should be 8-13 digits, start with a non-zero digit and should not include country code.</string>
     <string name="blank_mobile_number">Please enter Mobile Number.</string>
     <string name="title_activity_view_deal_map">ViewDealMapActivity</string>
     <string name="title_activity_view_all_outlets">ViewAllOutletsActivity</string>

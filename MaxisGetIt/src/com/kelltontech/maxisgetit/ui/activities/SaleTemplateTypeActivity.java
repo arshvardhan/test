@@ -146,6 +146,12 @@ public class SaleTemplateTypeActivity extends MaxisMainActivity {
 		});
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(SaleTemplateTypeActivity.this, AppConstants.Template_Sell_Buy);
+	}
+	
 	private void showCategorySpinner() {
 		if (mtypeByCatResponse == null)
 			return;

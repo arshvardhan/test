@@ -40,6 +40,12 @@ public class ContestHomeActivity extends ContestBaseActivity {
 	}
 	
 	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(ContestHomeActivity.this, AppConstants.PhotoContest_Home);
+	}
+	
+	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.goto_home_icon: {

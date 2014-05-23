@@ -31,6 +31,7 @@ import com.kelltontech.maxisgetit.dao.MaxisStore;
 import com.kelltontech.maxisgetit.response.RootCategoryResponse;
 import com.kelltontech.maxisgetit.service.AppSharedPreference;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
+import com.kelltontech.maxisgetit.utils.SessionIdentifierGenerator;
 
 @SuppressLint("NewApi")
 public class SplashActivity extends MaxisMainActivity {
@@ -82,6 +83,11 @@ public class SplashActivity extends MaxisMainActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		/**
+		 * A unique random number is generated and assigned in the AnalyticsHelper.SESSION_IDENTIFIER to pass as a parameter in Session Tracking Service Request
+		 */	
+		AnalyticsHelper.SESSION_IDENTIFIER = String.valueOf(System.currentTimeMillis()) + "_" + SessionIdentifierGenerator.nextSessionId();
+		
 		mStore = MaxisStore.getStore(SplashActivity.this);
 		setContentView(R.layout.activity_splash);
 		AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_LAUNCH, true);
@@ -106,6 +112,13 @@ public class SplashActivity extends MaxisMainActivity {
 	protected void onStart() {
 		AnalyticsHelper.setContinueSession(5);
 		super.onStart();
+	}
+	
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(SplashActivity.this, AppConstants.Splash_Screen);
 	}
 	
 	/**
@@ -200,7 +213,6 @@ public class SplashActivity extends MaxisMainActivity {
 
 	@Override
 	public Activity getMyActivityReference() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -230,7 +242,6 @@ public class SplashActivity extends MaxisMainActivity {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 	}
 
 }

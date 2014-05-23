@@ -634,6 +634,12 @@ public class CombindListActivity extends MaxisMainActivity {
 
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(CombindListActivity.this, AppConstants.Company_listing);
+	}
+	
 	/*
 	 * private void initNavigationButton(int pages) { if (pages < 1) return; if
 	 * (mPaginationButtons != null) { for (int i = 0; i <

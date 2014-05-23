@@ -208,6 +208,12 @@ public class GuestBranchingActivity extends MaxisMainActivity {
 		 * mGuestLink.setOnClickListener(this);
 		 */
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(GuestBranchingActivity.this, AppConstants.Login_screen);
+	}
 
 	@Override
 	public Activity getMyActivityReference() {

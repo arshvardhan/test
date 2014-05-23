@@ -1,18 +1,13 @@
 package com.kelltontech.maxisgetit.ui.activities;
 
-import java.io.File;
 import java.util.HashMap;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -62,6 +57,7 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 	private ResponseList mResponseListPoiByCatOrDist;
 	private ListView mListViewPoiByCatOrDist;
 	private Category mSelectedCategory;
+	private IModel iModel;
 
 	/**
 	 * Variables for POI search result List
@@ -93,7 +89,7 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 		setContentView(R.layout.contest_poi_list_activity);
 
 		((TextView) findViewById(R.id.header_title))
-				.setText(getString(R.string.header_photo_contest));
+		.setText(getString(R.string.header_photo_contest));
 
 		findViewById(R.id.header_btn_back).setOnClickListener(this);
 		findViewById(R.id.goto_home_icon).setOnClickListener(this);
@@ -125,21 +121,23 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 		mListViewPoiByCatOrDist.requestFocus(0);
 
 		mListViewPoiByCatOrDist
-				.setOnItemClickListener(new OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> arg0, View arg1,
-							int position, long arg3) {
-						IModel iModel = mResponseListPoiByCatOrDist.getList()
-								.get(position);
-						if (mInitialEventType == Events.DISTANCE_LIST_EVENT) {
-							startContestImageUploadActivity(iModel);
-						} else {
-							mSelectedCategory = (Category) iModel;
-							mRequestedEventType = Events.DISTANCE_LIST_EVENT;
-							onLoad();
-						}
-					}
-				});
+		.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+				iModel = mResponseListPoiByCatOrDist.getList()
+						.get(position);
+				if (mInitialEventType == Events.DISTANCE_LIST_EVENT) {
+					showImageUploadDialog(CustomDialog.UPLOAD_CONTEST_IMAGE_DIALOG, "");
+					mRequestedEventType = Events.UPLOAD_IMAGE_EVENT;
+					//							startContestImageUploadActivity(iModel);
+				} else {
+					mSelectedCategory = (Category) iModel;
+					mRequestedEventType = Events.DISTANCE_LIST_EVENT;
+					onLoad();
+				}
+			}
+		});
 
 		mListViewPoiByCatOrDist.setOnScrollListener(new OnScrollListener() {
 			@Override
@@ -157,7 +155,7 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 				 */
 				if (mResponseListPoiByCatOrDist == null
 						|| totalItemCount == (mResponseListPoiByCatOrDist)
-								.getTotalRecord()) {
+						.getTotalRecord()) {
 					return;
 				}
 				if (BuildConfig.DEBUG) {
@@ -184,8 +182,10 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-				startContestImageUploadActivity(mResponseListPoiSearch
-						.getList().get(position));
+				iModel = mResponseListPoiSearch.getList().get(position);
+				//				startContestImageUploadActivity(iModel);
+				showImageUploadDialog(CustomDialog.UPLOAD_CONTEST_IMAGE_DIALOG, "");
+				mRequestedEventType = Events.UPLOAD_IMAGE_EVENT;
 			}
 		});
 
@@ -201,7 +201,7 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 					int visibleItemCount, int totalItemCount) {
 				if (mResponseListPoiSearch == null
 						|| totalItemCount == (mResponseListPoiSearch)
-								.getTotalRecord()) {
+						.getTotalRecord()) {
 					return;
 				}
 				if (BuildConfig.DEBUG) {
@@ -223,26 +223,26 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 
 		mSearchKeyEdtTxt = (ThresholdEditTextView) findViewById(R.id.searchEdtTxt);
 		mSearchKeyEdtTxt
-				.setOnEditorActionListener(new OnEditorActionListener() {
-					@Override
-					public boolean onEditorAction(TextView v, int actionId,
-							KeyEvent event) {
-						if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-							String _key = mSearchKeyEdtTxt.getText().toString()
-									.trim();
-							if (_key.length() == 0) {
-								Toast.makeText(ContestPoiListActivity.this,
-										getString(R.string.input_search),
-										Toast.LENGTH_SHORT).show();
-							} else {
-								mRequestedEventType = Events.POI_SEARCH_EVENT;
-								onLoad();
-							}
-							return true;
-						}
-						return false;
+		.setOnEditorActionListener(new OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId,
+					KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+					String _key = mSearchKeyEdtTxt.getText().toString()
+							.trim();
+					if (_key.length() == 0) {
+						Toast.makeText(ContestPoiListActivity.this,
+								getString(R.string.input_search),
+								Toast.LENGTH_SHORT).show();
+					} else {
+						mRequestedEventType = Events.POI_SEARCH_EVENT;
+						onLoad();
 					}
-				});
+					return true;
+				}
+				return false;
+			}
+		});
 
 		mInitialEventType = getIntent().getIntExtra(
 				AppConstants.LIST_RESPONSE_TYPE, 0);
@@ -265,8 +265,8 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 
 			TextView textViewTagText = (TextView) findViewById(R.id.tagTaxt);
 			textViewTagText
-					.setText(mInitialEventType == Events.CATEGORY_LIST_EVENT ? getText(R.string.list_by_category)
-							: getText(R.string.list_by_distance));
+			.setText(mInitialEventType == Events.CATEGORY_LIST_EVENT ? getText(R.string.list_by_category)
+					: getText(R.string.list_by_distance));
 		}
 
 		mListAdapterPoiSearch = new ContestPoiListAdapter(this,
@@ -277,10 +277,28 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 		switchScreenMode();
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		switch (mLastSuccededEventType) {
+		case Events.CATEGORY_LIST_EVENT:
+			AnalyticsHelper.trackSession(ContestPoiListActivity.this, AppConstants.ListByCategory);
+			break;
+		case Events.DISTANCE_LIST_EVENT:
+			AnalyticsHelper.trackSession(ContestPoiListActivity.this, AppConstants.ListByDistance);
+			break;
+		case Events.POI_SEARCH_EVENT:
+			AnalyticsHelper.trackSession(ContestPoiListActivity.this, AppConstants.Search_Screen);
+			break;
+		default:
+			break;
+		}
+	}
+
 	/**
 	 * @param iModel
 	 */
-	private void startContestImageUploadActivity(IModel iModel) {
+	private void startContestImageUploadActivity(IModel iModel, int uploadImageType) {
 		Distance distance = (Distance) iModel;
 		Intent poiListIntent = new Intent(ContestPoiListActivity.this,
 				ContestUploadImageActivity.class);
@@ -289,6 +307,7 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 				distance.getCategoryId());
 		poiListIntent.putExtra(AppConstants.COMPANY_NAME_KEY,
 				distance.getCompanyName());
+		poiListIntent.putExtra(AppConstants.POST_IMAGE_REQUEST_KEY, uploadImageType);
 		startActivity(poiListIntent);
 	}
 
@@ -343,7 +362,7 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 					map);
 			requestPoiSearch.setPageNumber(mPageNumber == 0 ? 1 : mPageNumber);
 			requestPoiSearch
-					.setRecordsPerPage(AppConstants.PAGE_SIZE_POI_LIST_SEACH_RESULTS);
+			.setRecordsPerPage(AppConstants.PAGE_SIZE_POI_LIST_SEACH_RESULTS);
 			contestPoiController.requestService(requestPoiSearch);
 			break;
 		}
@@ -398,11 +417,50 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 	private void addNewPOIClick() {
 		AnalyticsHelper.logEvent(FlurryEventsConstants.ADD_NEW_POI);
 		mRequestedEventType = Events.ADD_NEW_POI_EVENT;
-		Intent addNewPOIIntent = new Intent(ContestPoiListActivity.this,
-				ContestAddNewPoiActivity.class);
-		addNewPOIIntent.putExtra(AppConstants.ADD_NEW_POI_KEY,
-				mRequestedEventType);
-		startActivity(addNewPOIIntent);
+		showImageUploadDialog(CustomDialog.UPLOAD_CONTEST_IMAGE_DIALOG, "");
+		//		Intent addNewPOIIntent = new Intent(ContestPoiListActivity.this,ContestAddNewPoiActivity.class);
+		////		if (UiUtils.selectImage(ContestPoiListActivity.this) != -2) {
+		//			addNewPOIIntent.putExtra(AppConstants.POST_IMAGE_REQUEST_KEY, AppConstants.CAMERA_REQUEST);
+		//			addNewPOIIntent.putExtra(AppConstants.ADD_NEW_POI_KEY,
+		//					mRequestedEventType);
+		//			startActivity(addNewPOIIntent)
+		////		}
+
+	}
+
+
+	@Override
+	public void onPositiveDialogButton(int id) {
+		if (id == CustomDialog.ADD_NEW_POI_CONFIRMATION_DIALOG) {
+			addNewPOIClick();
+		} else if(id == CustomDialog.UPLOAD_CONTEST_IMAGE_DIALOG){
+			if(mRequestedEventType == Events.ADD_NEW_POI_EVENT) {
+				Intent addNewPOIIntent = new Intent(ContestPoiListActivity.this,ContestAddNewPoiActivity.class);
+				addNewPOIIntent.putExtra(AppConstants.POST_IMAGE_REQUEST_KEY, AppConstants.GALLERY_REQUEST);
+				addNewPOIIntent.putExtra(AppConstants.ADD_NEW_POI_KEY, mRequestedEventType);
+				startActivity(addNewPOIIntent);
+			} else if (mRequestedEventType == Events.UPLOAD_IMAGE_EVENT)  {
+				startContestImageUploadActivity(iModel, AppConstants.GALLERY_REQUEST);
+			}
+		} else {
+			super.onPositiveDialogButton(id);
+		}
+	}
+
+	@Override
+	public void onNegativeDialogbutton(int id) {
+		if(id == CustomDialog.UPLOAD_CONTEST_IMAGE_DIALOG){
+			if(mRequestedEventType == Events.ADD_NEW_POI_EVENT) {
+				Intent addNewPOIIntent = new Intent(ContestPoiListActivity.this,ContestAddNewPoiActivity.class);
+				addNewPOIIntent.putExtra(AppConstants.POST_IMAGE_REQUEST_KEY, AppConstants.CAMERA_REQUEST);
+				addNewPOIIntent.putExtra(AppConstants.ADD_NEW_POI_KEY, mRequestedEventType);
+				startActivity(addNewPOIIntent);
+			} else if (mRequestedEventType == Events.UPLOAD_IMAGE_EVENT) {
+				startContestImageUploadActivity(iModel, AppConstants.CAMERA_REQUEST);
+			}
+		} else {
+			super.onNegativeDialogbutton(id);
+		}
 	}
 
 	@Override
@@ -451,8 +509,8 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 								AppConstants.EXTRA_SELECTED_CATEGORY,
 								mSelectedCategory);
 						poiListIntent
-								.putExtra(AppConstants.LIST_RESPONSE_PARCEL,
-										responselist);
+						.putExtra(AppConstants.LIST_RESPONSE_PARCEL,
+								responselist);
 						poiListIntent.putExtra(AppConstants.LIST_RESPONSE_TYPE,
 								responselist.getEventType());
 						startActivity(poiListIntent);
@@ -513,14 +571,6 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 		return this;
 	}
 
-	@Override
-	public void onPositiveDialogButton(int id) {
-		if (id == CustomDialog.ADD_NEW_POI_CONFIRMATION_DIALOG) {
-			addNewPOIClick();
-		} else {
-			super.onPositiveDialogButton(id);
-		}
-	}
 
 	@Override
 	public void onBackPressed() {

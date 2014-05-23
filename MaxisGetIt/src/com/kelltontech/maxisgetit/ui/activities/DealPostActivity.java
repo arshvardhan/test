@@ -718,6 +718,12 @@ public class DealPostActivity extends MaxisMainActivity {
 		// });
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(DealPostActivity.this, AppConstants.Deal_Post);
+	}
+	
 	protected boolean[] getSelectedCityOutletBooleanArray(
 			ArrayList<String> items, ArrayList<Integer> selectedPoition) {
 		if (items != null) {

@@ -151,6 +151,12 @@ public class RateCompanyActivity extends MaxisMainActivity {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(RateCompanyActivity.this, AppConstants.RatenReview);
+	}
+	
+	@Override
 	public Activity getMyActivityReference() {
 		return null;
 	}

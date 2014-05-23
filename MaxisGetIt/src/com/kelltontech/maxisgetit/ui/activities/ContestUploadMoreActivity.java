@@ -40,6 +40,12 @@ public class ContestUploadMoreActivity extends MaxisMainActivity {
 		
 	}
 	
+	@Override
+		protected void onResume() {
+			super.onResume();
+			AnalyticsHelper.trackSession(ContestUploadMoreActivity.this, AppConstants.Screen_AfterUploadeImageContest);
+		}
+	
 //	@Override
 //	protected void onNewIntent(Intent intent) {
 //		super.onNewIntent(intent);

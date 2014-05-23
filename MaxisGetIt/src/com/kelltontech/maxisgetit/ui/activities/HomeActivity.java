@@ -38,7 +38,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.utils.StringUtil;
@@ -386,6 +385,7 @@ public class HomeActivity extends MaxisMainActivity {
 			GPS_Data.resetCordinates();
 		}
 		super.onResume();
+		AnalyticsHelper.trackSession(HomeActivity.this, AppConstants.Home_Screen);
 	}
 
 	@Override

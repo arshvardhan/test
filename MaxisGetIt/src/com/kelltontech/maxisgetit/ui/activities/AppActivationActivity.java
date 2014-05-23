@@ -21,6 +21,7 @@ import com.kelltontech.maxisgetit.dao.CategoryGroup;
 import com.kelltontech.maxisgetit.dao.MaxisStore;
 import com.kelltontech.maxisgetit.requests.ActivationRequest;
 import com.kelltontech.maxisgetit.response.RootCategoryResponse;
+import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
 public class AppActivationActivity extends MaxisMainActivity {
 	private ImageView mHomeIconView, mProfileIconView;
@@ -51,6 +52,12 @@ public class AppActivationActivity extends MaxisMainActivity {
 		findViewById(R.id.aact_resend_button).setOnClickListener(this);
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(AppActivationActivity.this, AppConstants.AppAuthenticationCode);
+	}
+	
 	@Override
 	public Activity getMyActivityReference() {
 		return null;

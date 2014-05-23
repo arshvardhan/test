@@ -20,8 +20,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,12 +27,10 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.model.Response;
-import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
@@ -259,6 +255,12 @@ public class MyAccountActivity extends MaxisMainActivity {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(MyAccountActivity.this, AppConstants.MyAccount);
+	}
+	
+	@Override
 	public void onPositiveDialogButton(int id) {
 		if (id == CustomDialog.CONFIRMATION_DIALOG) {
 			saveSettings();
@@ -339,7 +341,6 @@ public class MyAccountActivity extends MaxisMainActivity {
 			mCategory = new ArrayList<String>();
 			for (int i = 0; i < catDetails.size(); i++) {
 				mCategory.add(catDetails.get(i).getCatname());
-
 			}
 
 			if (selectedCompany.trim().equals(
@@ -533,6 +534,13 @@ public class MyAccountActivity extends MaxisMainActivity {
 			} else {
 				setSearchLocality(city_id);
 			}
+			break;
+		case R.id.life_cycle:
+				Intent lifeCycleIntent = new Intent(MyAccountActivity.this,
+						LifeCycleViewActivity.class);
+				lifeCycleIntent.putExtra("LIFE_CYCLE_URL", lifeCycleURL);
+				startActivityForResult(lifeCycleIntent,
+						AppConstants.LIFE_CYCLE_SCREEN);
 			break;
 		default:
 			break;
@@ -909,7 +917,7 @@ public class MyAccountActivity extends MaxisMainActivity {
 		// }
 		// });
 
-		viewLifeCycle.setOnClickListener(new OnClickListener() {
+/*		viewLifeCycle.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -927,6 +935,6 @@ public class MyAccountActivity extends MaxisMainActivity {
 				controller.requestService(request);
 
 			}
-		});
+		});*/
 	}
 }

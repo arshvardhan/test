@@ -161,6 +161,13 @@ public class RegistrationActivity extends MaxisMainActivity {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(RegistrationActivity.this, AppConstants.Registration_Screen);
+	}
+	
+	
+	@Override
 	public Activity getMyActivityReference() {
 		return null;
 	}

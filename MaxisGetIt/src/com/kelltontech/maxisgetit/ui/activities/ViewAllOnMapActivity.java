@@ -176,6 +176,8 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+//		AnalyticsHelper.trackSession(ViewAllOnMapActivity.this, AppConstants.MapDirection);
+		AnalyticsHelper.trackSession(ViewAllOnMapActivity.this, AppConstants.ViewOnMap);
 		// setUpMapIfNeeded();
 	}
 

@@ -105,6 +105,12 @@ public class AdPostNotificaitonActivity extends MaxisMainActivity {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(AdPostNotificaitonActivity.this, AppConstants.AfterSave_Template);
+	}
+	
+	@Override
 	public Activity getMyActivityReference() {
 		return null;
 	}

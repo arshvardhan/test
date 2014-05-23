@@ -70,7 +70,7 @@ public class ExportDataUtil {
 				this.copyFile(dbFile, file);
 				return true;
 			} catch (IOException e) {
-				Log.e(MyApplication.LOG_TAG, e.getMessage(), e);
+				Log.e(MyApplication.TAG, e.getMessage(), e);
 				return false;
 			}
 		}
@@ -126,7 +126,7 @@ public class ExportDataUtil {
 				String exportFileName = args[1];
 				dm.export(dbName, exportFileName);
 			} catch (IOException e) {
-				Log.e(MyApplication.LOG_TAG, e.getMessage(), e);
+				Log.e(MyApplication.TAG, e.getMessage(), e);
 				return e.getMessage();
 			}
 			return null;

@@ -334,6 +334,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 		}
 
 		super.onResume();
+		AnalyticsHelper.trackSession(CompanyDetailActivity.this, AppConstants.Company_detail);
 	}
 
 	private void setData() {

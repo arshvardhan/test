@@ -34,8 +34,10 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.kelltontech.maxisgetit.R;
+import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.ui.adapter.SectionListAdapter;
 import com.kelltontech.maxisgetit.ui.widgets.SectionListView;
+import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
 public class AdvanceSelectCity extends Activity {
 
@@ -164,6 +166,12 @@ public class AdvanceSelectCity extends Activity {
 						}
 					}
 				});
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(AdvanceSelectCity.this, AppConstants.CityScreen);
 	}
 
 	private class Indextouch implements OnTouchListener {

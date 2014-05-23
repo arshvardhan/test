@@ -41,7 +41,7 @@ public class DataXmlExporter {
 	}
 
 	public void export(String dbName, String exportFileNamePrefix) throws IOException {
-		Log.i(MyApplication.LOG_TAG, "exporting database - " + dbName + " exportFileNamePrefix=" + exportFileNamePrefix);
+		Log.i(MyApplication.TAG, "exporting database - " + dbName + " exportFileNamePrefix=" + exportFileNamePrefix);
 
 		this.xmlBuilder = new XmlBuilder();
 		this.xmlBuilder.start(dbName);
@@ -49,11 +49,11 @@ public class DataXmlExporter {
 		// get the tables
 		String sql = "select * from sqlite_master";
 		Cursor c = this.db.rawQuery(sql, new String[0]);
-		Log.d(MyApplication.LOG_TAG, "select * from sqlite_master, cur size " + c.getCount());
+		Log.d(MyApplication.TAG, "select * from sqlite_master, cur size " + c.getCount());
 		if (c.moveToFirst()) {
 			do {
 				String tableName = c.getString(c.getColumnIndex("name"));
-				Log.d(MyApplication.LOG_TAG, "table name " + tableName);
+				Log.d(MyApplication.TAG, "table name " + tableName);
 
 				// skip metadata, sequence, and uidx (unique indexes)
 				if (!tableName.equals("android_metadata") && !tableName.equals("sqlite_sequence") && !tableName.startsWith("uidx")) {
@@ -63,11 +63,11 @@ public class DataXmlExporter {
 		}
 		String xmlString = this.xmlBuilder.end();
 		this.writeToFile(xmlString, exportFileNamePrefix + ".xml");
-		Log.i(MyApplication.LOG_TAG, "exporting database complete");
+		Log.i(MyApplication.TAG, "exporting database complete");
 	}
 
 	private void exportTable(final String tableName) throws IOException {
-		Log.d(MyApplication.LOG_TAG, "exporting table - " + tableName);
+		Log.d(MyApplication.TAG, "exporting table - " + tableName);
 		this.xmlBuilder.openTable(tableName);
 		String sql = "select * from " + tableName;
 		Cursor c = this.db.rawQuery(sql, new String[0]);

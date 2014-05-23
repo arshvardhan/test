@@ -57,7 +57,7 @@ public class ContestPoiSearchActivity extends ContestBaseActivity {
 		setContentView(R.layout.contest_poi_search_activity);
 
 		((TextView) findViewById(R.id.header_title))
-				.setText(getString(R.string.header_photo_contest));
+		.setText(getString(R.string.header_photo_contest));
 
 		findViewById(R.id.header_btn_back).setOnClickListener(this);
 		findViewById(R.id.goto_home_icon).setOnClickListener(this);
@@ -95,26 +95,32 @@ public class ContestPoiSearchActivity extends ContestBaseActivity {
 
 		mSearchKeyEdtTxt = (ThresholdEditTextView) findViewById(R.id.searchEdtTxt);
 		mSearchKeyEdtTxt
-				.setOnEditorActionListener(new OnEditorActionListener() {
-					@Override
-					public boolean onEditorAction(TextView v, int actionId,
-							KeyEvent event) {
-						if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-							String _key = mSearchKeyEdtTxt.getText().toString()
-									.trim();
-							if (_key.length() == 0) {
-								Toast.makeText(ContestPoiSearchActivity.this,
-										getString(R.string.input_search),
-										Toast.LENGTH_SHORT).show();
-							} else {
-								mCurrentEventType = Events.POI_SEARCH_EVENT;
-								onLoad();
-							}
-							return true;
-						}
-						return false;
+		.setOnEditorActionListener(new OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId,
+					KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+					String _key = mSearchKeyEdtTxt.getText().toString()
+							.trim();
+					if (_key.length() == 0) {
+						Toast.makeText(ContestPoiSearchActivity.this,
+								getString(R.string.input_search),
+								Toast.LENGTH_SHORT).show();
+					} else {
+						mCurrentEventType = Events.POI_SEARCH_EVENT;
+						onLoad();
 					}
-				});
+					return true;
+				}
+				return false;
+			}
+		});
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(ContestPoiSearchActivity.this, AppConstants.POI_Screen);
 	}
 
 	@Override
@@ -144,7 +150,7 @@ public class ContestPoiSearchActivity extends ContestBaseActivity {
 			requestPoiSearch.setSearchText(searchTxt);
 			requestPoiSearch.setPageNumber(1);
 			requestPoiSearch
-					.setRecordsPerPage(AppConstants.PAGE_SIZE_POI_LIST_SEACH_RESULTS);
+			.setRecordsPerPage(AppConstants.PAGE_SIZE_POI_LIST_SEACH_RESULTS);
 			contestPoiController.requestService(requestPoiSearch);
 			break;
 		}
@@ -208,7 +214,7 @@ public class ContestPoiSearchActivity extends ContestBaseActivity {
 			distance1.setLongitude(mLongitude);
 			distance1.setPageNumber(1);
 			distance1
-					.setRecordsPerPage(AppConstants.PAGE_SIZE_POI_LIST_BY_DISTANCE);
+			.setRecordsPerPage(AppConstants.PAGE_SIZE_POI_LIST_BY_DISTANCE);
 			contestListController.requestService(distance1);
 			break;
 		}
@@ -341,15 +347,6 @@ public class ContestPoiSearchActivity extends ContestBaseActivity {
 	};
 
 	@Override
-	public void onPositiveDialogButton(int id) {
-		if (id == CustomDialog.ADD_NEW_POI_CONFIRMATION_DIALOG) {
-			addNewPOIClick();
-		} else {
-			super.onPositiveDialogButton(id);
-		}
-	}
-
-	@Override
 	protected void onStop() {
 		try {
 			unregisterReceiver(locationReceiver);
@@ -364,11 +361,33 @@ public class ContestPoiSearchActivity extends ContestBaseActivity {
 	private void addNewPOIClick() {
 		AnalyticsHelper.logEvent(FlurryEventsConstants.ADD_NEW_POI);
 		mCurrentEventType = Events.ADD_NEW_POI_EVENT;
-		Intent addNewPOIIntent = new Intent(ContestPoiSearchActivity.this,
-				ContestAddNewPoiActivity.class);
-		addNewPOIIntent.putExtra(AppConstants.ADD_NEW_POI_KEY,
-				mCurrentEventType);
-		startActivity(addNewPOIIntent);
+		showImageUploadDialog(CustomDialog.UPLOAD_CONTEST_IMAGE_DIALOG, "");
+	}
+
+	@Override
+	public void onPositiveDialogButton(int id) {
+		if (id == CustomDialog.ADD_NEW_POI_CONFIRMATION_DIALOG) {
+			addNewPOIClick();
+		} else if(id == CustomDialog.UPLOAD_CONTEST_IMAGE_DIALOG){
+			Intent addNewPOIIntent = new Intent(ContestPoiSearchActivity.this, ContestAddNewPoiActivity.class);
+			addNewPOIIntent.putExtra(AppConstants.POST_IMAGE_REQUEST_KEY,AppConstants.GALLERY_REQUEST);
+			addNewPOIIntent.putExtra(AppConstants.ADD_NEW_POI_KEY,mCurrentEventType);
+			startActivity(addNewPOIIntent);
+		} else {
+			super.onPositiveDialogButton(id);
+		}
+	}
+
+	@Override
+	public void onNegativeDialogbutton(int id) {
+		if(id == CustomDialog.UPLOAD_CONTEST_IMAGE_DIALOG){
+			Intent addNewPOIIntent = new Intent(ContestPoiSearchActivity.this,ContestAddNewPoiActivity.class);
+			addNewPOIIntent.putExtra(AppConstants.POST_IMAGE_REQUEST_KEY, AppConstants.CAMERA_REQUEST);
+			addNewPOIIntent.putExtra(AppConstants.ADD_NEW_POI_KEY, mCurrentEventType);
+			startActivity(addNewPOIIntent);
+		} else {
+			super.onNegativeDialogbutton(id);
+		}
 	}
 
 }

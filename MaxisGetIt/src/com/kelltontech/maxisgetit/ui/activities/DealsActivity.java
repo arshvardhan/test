@@ -476,6 +476,12 @@ public class DealsActivity extends MaxisMainActivity {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(DealsActivity.this, AppConstants.Deal_Listing);
+	}
+	
+	@Override
 	public Activity getMyActivityReference() {
 		// TODO Auto-generated method stub
 		return null;

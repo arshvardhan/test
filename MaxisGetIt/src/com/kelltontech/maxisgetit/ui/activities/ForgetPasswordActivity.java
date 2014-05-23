@@ -123,6 +123,12 @@ public class ForgetPasswordActivity extends MaxisMainActivity {
 
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(ForgetPasswordActivity.this, AppConstants.Forget_Password);
+	}
+	
 	private void setData() {
 		MaxisStore store = MaxisStore.getStore(ForgetPasswordActivity.this);
 		if (store.isRegisteredUser()) {

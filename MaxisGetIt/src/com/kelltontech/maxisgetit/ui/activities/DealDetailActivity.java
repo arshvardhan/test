@@ -152,7 +152,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 	private TextView outletCount;
 	private ImageView crossBtn;
 	private TextView viewOnMap;
-	private LinearLayout leftInfoLayout;
+	private RelativeLayout leftInfoLayout;
 	private LinearLayout rightLayout;
 	private OutLetDetailRequest detailRequest;
 	private LinearLayout mapLayout;
@@ -279,7 +279,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		outletCount = (TextView) findViewById(R.id.outlets_count);
 		crossBtn = (ImageView) findViewById(R.id.cross_btn);
 		viewOnMap = (TextView) findViewById(R.id.view_on_map);
-		leftInfoLayout = (LinearLayout) findViewById(R.id.leftOutletLayout);
+		leftInfoLayout = (RelativeLayout) findViewById(R.id.leftOutletRltLayout);
 		leftInfoLayout.setVisibility(View.GONE);
 
 		rightLayout = (LinearLayout) findViewById(R.id.rightlayout);
@@ -437,6 +437,12 @@ public class DealDetailActivity extends MaxisMainActivity implements
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(DealDetailActivity.this, AppConstants.Deal_Detail);
+	}
+	
+	@Override
 	public Activity getMyActivityReference() {
 		// TODO Auto-generated method stub
 		return null;
@@ -514,11 +520,12 @@ public class DealDetailActivity extends MaxisMainActivity implements
 					R.color.green));
 			viewAllOutlets.setTextColor(Color.WHITE);
 
+			if (outLetResponse !=null) {
 			if (Integer.parseInt(outLetResponse.getTotal_records()) > 10)
 				leftInfoLayout.setVisibility(View.VISIBLE);
 			else
 				leftInfoLayout.setVisibility(View.GONE);
-
+			}
 			rightLayout.setVisibility(View.VISIBLE);
 			// dealDesc.setText(termsNdcond);
 			dealDesc.setVisibility(View.GONE);

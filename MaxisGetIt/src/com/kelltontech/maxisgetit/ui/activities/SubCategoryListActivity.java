@@ -213,6 +213,12 @@ public class SubCategoryListActivity extends MaxisMainActivity {
 		followus = (LinearLayout) findViewById(R.id.footer_followus);
 		seprator = (View) findViewById(R.id.seprator);
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(SubCategoryListActivity.this, AppConstants.Category_Screen);
+	}
 
 	protected void gotoScreen(AdapterView<?> adapter, int position) {
 		mSelectdCategory = (SubCategory) adapter.getItemAtPosition(position);

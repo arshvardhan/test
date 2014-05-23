@@ -257,6 +257,7 @@ public class SaleTempletActivity extends MaxisMainActivity {
 			mLayoutGuestDetail.setVisibility(View.VISIBLE);
 		}
 		super.onResume();
+		AnalyticsHelper.trackSession(SaleTempletActivity.this, AppConstants.Add_Post);
 	}
 
 	private void addDefaultSelect(ArrayList<CityOrLocality> cityOrLocalityList) {

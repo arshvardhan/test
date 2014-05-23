@@ -2,6 +2,7 @@ package com.kelltontech.framework.ui;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -29,7 +30,8 @@ import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 public abstract class BaseMainActivity extends FragmentActivity implements IScreen, OnClickListener, IActionController, OnKeyListener {
 	protected ProgressDialog mProgressDialog;
 	protected String mProgressDialogBodyText = "Loading...";
-	protected Dialog mDialog;
+	protected Dialog mDialog = null;
+	protected AlertDialog.Builder nativeDialog = null;
 	protected EditText mSearchTextBox;
 	protected boolean mProductBySearch;
 	protected long mHitTime;

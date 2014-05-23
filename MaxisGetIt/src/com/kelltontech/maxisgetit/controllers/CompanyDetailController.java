@@ -17,7 +17,6 @@ import com.kelltontech.maxisgetit.requests.DetailRequest;
 
 public class CompanyDetailController extends BaseServiceController {
 	private Activity mActivity;
-	// private DetailRequest mDetailRequest;
 	private boolean isDeal;
 	private String screenName;
 
@@ -29,8 +28,6 @@ public class CompanyDetailController extends BaseServiceController {
 
 	@Override
 	public void initService() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

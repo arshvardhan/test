@@ -24,9 +24,10 @@ import com.kelltontech.maxisgetit.dao.CategoryGroup;
 import com.kelltontech.maxisgetit.dao.MaxisStore;
 import com.kelltontech.maxisgetit.response.RootCategoryResponse;
 import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
+import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
 public class TnCActivity extends MaxisMainActivity{
-	
+
 	private WebView mWebview;
 	private MaxisStore mStore;
 	private Button mBtnAccept;
@@ -40,57 +41,62 @@ public class TnCActivity extends MaxisMainActivity{
 		setContentView(R.layout.activity_tnc);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		mStore = MaxisStore.getStore(TnCActivity.this);
-		
+
 		mBtnAccept = (Button)findViewById(R.id.atnc_accept);
 		mBtnAccept.setOnClickListener(this);
-		
+
 		mBtnReject = (Button)findViewById(R.id.atnc_reject);
 		mBtnReject.setOnClickListener(this);
-		
+
 		findViewById(R.id.atnc_try_again).setOnClickListener(this);
-		
+
 		mErrorLayout = (RelativeLayout)findViewById(R.id.atnc_error_layout);
-		
+
 		mWebview = ((WebView)findViewById(R.id.atnc_info));//.loadUrl(AppConstants.TNC_PAGE_URL);
-	       WebSettings settings = mWebview.getSettings();
-	        settings.setJavaScriptEnabled(true);
-	        mWebview.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-	        hideNavigationButtons();
-	       startSppiner();
+		WebSettings settings = mWebview.getSettings();
+		settings.setJavaScriptEnabled(true);
+		mWebview.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+		hideNavigationButtons();
+		startSppiner();
 
-	        mWebview.setWebViewClient(new WebViewClient() {
-	            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-	                return overrideWebViewUrlLoading(url);
-	            }
+		mWebview.setWebViewClient(new WebViewClient() {
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				return overrideWebViewUrlLoading(url);
+			}
 
-	            public void onPageFinished(WebView view, String url) {
-	                Log.i("maxis", "Finished loading URL: " +url);
-	                stopSppiner();
-	                if(!isErrorOccured)
-	                {
-	                	showNavigationButtons();
-	                	showWebView();
-	                }
-	                else
-	                {
-	                	hideWebView();
-	  	               	hideNavigationButtons();
-	                }
-	            }
+			public void onPageFinished(WebView view, String url) {
+				Log.i("maxis", "Finished loading URL: " +url);
+				stopSppiner();
+				if(!isErrorOccured)
+				{
+					showNavigationButtons();
+					showWebView();
+				}
+				else
+				{
+					hideWebView();
+					hideNavigationButtons();
+				}
+			}
 
-	            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-	                Log.i("maxis", "Error: " + description);
-	                showInfoDialog(getResources().getString(R.string.atnc_error_loading_page));
-	                hideWebView();
- 	                hideNavigationButtons();
-               
-	                isErrorOccured = true;
-	               //webview.loadUrl(AppConstants.TNC_PAGE_URL);
-	            }
-	        });
-	        mWebview.loadUrl(AppConstants.TNC_PAGE_URL);
-	    }
-	
+			public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+				Log.i("maxis", "Error: " + description);
+				showInfoDialog(getResources().getString(R.string.atnc_error_loading_page));
+				hideWebView();
+				hideNavigationButtons();
+
+				isErrorOccured = true;
+				//webview.loadUrl(AppConstants.TNC_PAGE_URL);
+			}
+		});
+		mWebview.loadUrl(AppConstants.TNC_PAGE_URL);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(TnCActivity.this, AppConstants.TnC);
+	}
 
 	@Override
 	public Activity getMyActivityReference() {
@@ -116,14 +122,14 @@ public class TnCActivity extends MaxisMainActivity{
 			mWebview.loadUrl(AppConstants.TNC_PAGE_URL);
 			/*showNavigationButtons();
         	showWebView();*/
-			
+
 			break;
 		default:
 			break;
 		}
-		
+
 	}
-	
+
 	@Override
 	public void setScreenData(Object screenData, int event, long time) {
 		Response response = (Response) screenData;
@@ -152,7 +158,7 @@ public class TnCActivity extends MaxisMainActivity{
 		handler.sendMessage(message);
 	}
 
-	
+
 	@Override
 	public void updateUI(Message msg) {
 		if (msg.arg2 == Events.ROOT_CATEGORY_EVENT) {
@@ -170,7 +176,7 @@ public class TnCActivity extends MaxisMainActivity{
 			stopSppiner();
 		}
 	}
-	
+
 	@Override
 	public void onPositiveDialogButton(int id) {
 		if(id == CustomDialog.TNC_DIALOG)
@@ -188,13 +194,13 @@ public class TnCActivity extends MaxisMainActivity{
 		mBtnAccept.setVisibility(View.VISIBLE);
 		mBtnReject.setVisibility(View.VISIBLE);		
 	}
-	
+
 	private void hideNavigationButtons() {
 		mBtnAccept.setVisibility(View.GONE);
 		mBtnReject.setVisibility(View.GONE);
-		
+
 	}
-	
+
 	private void showWebView() {
 		mErrorLayout.setVisibility(View.GONE);
 		mWebview.setVisibility(View.VISIBLE);
