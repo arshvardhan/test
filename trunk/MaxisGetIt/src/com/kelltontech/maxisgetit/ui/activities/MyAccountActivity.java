@@ -103,7 +103,7 @@ public class MyAccountActivity extends MaxisMainActivity {
 	TextView mainSearchButton;
 	ArrayList<String> selectedLocalityindex;
 	LinearLayout wholeSearchBoxContainer;
-	private Spinner categoryChooser;
+	private TextView categoryChooser;
 	private ArrayAdapter<String> mCategoryAdapter;
 	private ArrayAdapter<String> mCompanyAdapter;
 	private ArrayList<String> mCompany;
@@ -114,7 +114,17 @@ public class MyAccountActivity extends MaxisMainActivity {
 	private LinearLayout dashboardLayout;
 	private String catId, compId;
 	private String selectedCompany = "";
+	private String selectedCategory = "";
 	private int companyPos;
+	private int categoryPos;
+	TextView totalViews;
+	TextView totalLeads;
+	TextView myTotalViews;
+	TextView myActiveVirtualNo;
+	TextView myPlan;
+	TextView leadCost;
+	TextView companyChooser;
+	TextView viewLifeCycle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -319,16 +329,45 @@ public class MyAccountActivity extends MaxisMainActivity {
 				}
 			}
 
-		} else if (resultCode == RESULT_OK
-				&& requestCode == -2) {
-					selectedCompany = data.getStringExtra("ChosenCompany");
-					companyPos = data.getIntExtra("Position", 0);
-					
-//					response.getData().get(companyPos).get
-					if (selectedCompany.trim().equals(response.getData().get(companyPos).getCname().trim())) {
-					compId = response.getData().get(companyPos).getCid();
-					}
-//					categoryChooser.setSe
+		} else if (resultCode == RESULT_OK && requestCode == 10) {
+			selectedCompany = data.getStringExtra("ChosenCompanyOrCategory");
+			companyPos = data.getIntExtra("Position", 0);
+
+			companyChooser.setText(mCompany.get(companyPos));
+			catDetails = response.getData().get(companyPos).getCatdetails();
+			categoryChooser.setText(catDetails.get(0).getCatname());
+			mCategory = new ArrayList<String>();
+			for (int i = 0; i < catDetails.size(); i++) {
+				mCategory.add(catDetails.get(i).getCatname());
+
+			}
+
+			if (selectedCompany.trim().equals(
+					response.getData().get(companyPos).getCname().trim())) {
+				compId = response.getData().get(companyPos).getCid();
+			}
+		} else if (resultCode == RESULT_OK && requestCode == 11) {
+			selectedCategory = data.getStringExtra("ChosenCompanyOrCategory");
+			categoryPos = data.getIntExtra("Position", 0);
+
+			// companyChooser.setText(mCompany.get(companyPos));
+			// catDetails = response.getData().get(companyPos).getCatdetails();
+			categoryChooser.setText(catDetails.get(categoryPos).getCatname());
+
+			totalViews.setText(catDetails.get(categoryPos).getTotalView());
+			totalLeads.setText(catDetails.get(categoryPos).getTotalLeads());
+			myTotalViews.setText(catDetails.get(categoryPos).getMyTotalView());
+			myActiveVirtualNo.setText(catDetails.get(categoryPos)
+					.getMaxisDidNumber());
+			myPlan.setText(catDetails.get(categoryPos).getSubscription());
+			leadCost.setText(catDetails.get(categoryPos).getPrice());
+
+			if (selectedCategory.trim().equals(
+					response.getData().get(companyPos).getCatdetails()
+							.get(categoryPos).getCatname().trim())) {
+				catId = response.getData().get(companyPos).getCatdetails()
+						.get(categoryPos).getCatid();
+			}
 		}
 
 	}
@@ -462,9 +501,6 @@ public class MyAccountActivity extends MaxisMainActivity {
 			String JSON_EXTRA = jsonForSearch();
 			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
 			break;
-		case R.id.amc_email_status:
-			checkEmailAndPreferenceBeforeOpenBrowser();
-			break;
 		case R.id.upArrow:
 			if (isAdvanceSearchLayoutOpen) {
 				isAdvanceSearchLayoutOpen = false;
@@ -502,25 +538,6 @@ public class MyAccountActivity extends MaxisMainActivity {
 			break;
 		}
 
-	}
-
-	private void checkEmailAndPreferenceBeforeOpenBrowser() {
-		if (!mUserDetail.isVerifiedEmail()) {
-			if (!StringUtil.isNullOrEmpty(mUserDetail.getEmail())) {
-				String domain = mUserDetail.getEmail().substring(
-						mUserDetail.getEmail().indexOf("@") + 1);
-				;
-				String url = getResources().getString(R.string.domain_prefix)
-						+ domain;
-				if (url.indexOf(getString(R.string.findit_com)) == -1) {
-					checkPreferenceAndOpenBrowser(url);
-				} else {
-					openDeviceBrowser(url, true);
-				}
-				AnalyticsHelper
-						.logEvent(FlurryEventsConstants.VERIFY_EMAIL_CLICK);
-			}
-		}
 	}
 
 	@Override
@@ -788,19 +805,10 @@ public class MyAccountActivity extends MaxisMainActivity {
 	}
 
 	public void setDashboardData() {
-		final TextView totalViews;
-		final TextView totalLeads;
-		final TextView myTotalViews;
-		final TextView myActiveVirtualNo;
-		final TextView myPlan;
-		final TextView leadCost;
-		final Spinner companyChooser;
-//		final Spinner  categoryChooser;
-		TextView viewLifeCycle;
 
 		dashboardLayout.setVisibility(View.VISIBLE);
-		companyChooser = (Spinner) findViewById(R.id.company_spinner);
-		categoryChooser = (Spinner) findViewById(R.id.category_spinner);
+		companyChooser = (TextView) findViewById(R.id.company_spinner);
+		categoryChooser = (TextView) findViewById(R.id.category_spinner);
 		totalViews = (TextView) findViewById(R.id.total_views);
 		totalLeads = (TextView) findViewById(R.id.total_leads);
 		myTotalViews = (TextView) findViewById(R.id.my_total_views);
@@ -809,61 +817,97 @@ public class MyAccountActivity extends MaxisMainActivity {
 		leadCost = (TextView) findViewById(R.id.lead_cost);
 		viewLifeCycle = (TextView) findViewById(R.id.life_cycle);
 
-		mCompanyAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item,
-				mCompany);
-		companyChooser.setAdapter(mCompanyAdapter);
+		// mCompanyAdapter = new ArrayAdapter<String>(this,
+		// R.layout.spinner_item,
+		// mCompany);
+		// companyChooser.setAdapter(mCompanyAdapter);
 
-		companyChooser.setOnItemSelectedListener(new OnItemSelectedListener() {
+		companyChooser.setText(mCompany.get(0));
+		categoryChooser.setText(response.getData().get(0).getCatdetails()
+				.get(0).getCatname());
 
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1, int pos,
-					long arg3) {
-				mCategory = new ArrayList<String>();
-				for (int i = 0; i < response.getData().get(pos).getCatdetails()
-						.size(); i++) {
-					mCategory.add(response.getData().get(pos).getCatdetails()
-							.get(i).getCatname());
-
-				}
-				catDetails = response.getData().get(pos).getCatdetails();
-				mCategoryAdapter = new ArrayAdapter<String>(MyAccountActivity.this, R.layout.spinner_item, mCategory);
-				categoryChooser.setAdapter(mCategoryAdapter);
-				
-				Intent intentCompSelector = new Intent(MyAccountActivity.this, CompanyOrCategoryFilterActivity.class);
-				intentCompSelector.putStringArrayListExtra("compOrcat", mCompany);
-				startActivityForResult(intentCompSelector, -2);
-			}
+		companyChooser.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub
+			public void onClick(View v) {
+
+				Intent intentCompSelector = new Intent(MyAccountActivity.this,
+						CompanyOrCategoryFilterActivity.class);
+				intentCompSelector.putStringArrayListExtra("compOrcat",
+						mCompany);
+				startActivityForResult(intentCompSelector, 10);
 
 			}
 		});
 
-		categoryChooser.setOnItemSelectedListener(new OnItemSelectedListener() {
+		// companyChooser.setOnItemSelectedListener(new OnItemSelectedListener()
+		// {
+		//
+		// @Override
+		// public void onItemSelected(AdapterView<?> arg0, View arg1, int pos,
+		// long arg3) {
+		// mCategory = new ArrayList<String>();
+		// for (int i = 0; i < response.getData().get(pos).getCatdetails()
+		// .size(); i++) {
+		// mCategory.add(response.getData().get(pos).getCatdetails()
+		// .get(i).getCatname());
+		//
+		// }
+		// catDetails = response.getData().get(pos).getCatdetails();
+		// mCategoryAdapter = new ArrayAdapter<String>(MyAccountActivity.this,
+		// R.layout.spinner_item, mCategory);
+		// categoryChooser.setAdapter(mCategoryAdapter);
+		//
+		// Intent intentCompSelector = new Intent(MyAccountActivity.this,
+		// CompanyOrCategoryFilterActivity.class);
+		// intentCompSelector.putStringArrayListExtra("compOrcat", mCompany);
+		// startActivityForResult(intentCompSelector, 10);
+		// }
+		//
+		// @Override
+		// public void onNothingSelected(AdapterView<?> arg0) {
+		// // TODO Auto-generated method stub
+		//
+		// }
+		// });
+
+		categoryChooser.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1, int pos,
-					long arg3) {
-				// TODO Auto-generated method stub
-
-				totalViews.setText(catDetails.get(pos).getTotalView());
-				totalLeads.setText(catDetails.get(pos).getTotalLeads());
-				myTotalViews.setText(catDetails.get(pos).getMyTotalView());
-				myActiveVirtualNo.setText(catDetails.get(pos)
-						.getMaxisDidNumber());
-				myPlan.setText(catDetails.get(pos).getSubscription());
-				leadCost.setText(catDetails.get(pos).getPrice());
-				catId = catDetails.get(pos).getCatid();
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub
+			public void onClick(View v) {
+				Intent intentCompSelector = new Intent(MyAccountActivity.this,
+						CompanyOrCategoryFilterActivity.class);
+				intentCompSelector.putStringArrayListExtra("compOrcat",
+						mCategory);
+				startActivityForResult(intentCompSelector, 11);
 
 			}
 		});
+
+		// categoryChooser.setOnItemSelectedListener(new
+		// OnItemSelectedListener() {
+		//
+		// @Override
+		// public void onItemSelected(AdapterView<?> arg0, View arg1, int pos,
+		// long arg3) {
+		// // TODO Auto-generated method stub
+		//
+		// totalViews.setText(catDetails.get(pos).getTotalView());
+		// totalLeads.setText(catDetails.get(pos).getTotalLeads());
+		// myTotalViews.setText(catDetails.get(pos).getMyTotalView());
+		// myActiveVirtualNo.setText(catDetails.get(pos)
+		// .getMaxisDidNumber());
+		// myPlan.setText(catDetails.get(pos).getSubscription());
+		// leadCost.setText(catDetails.get(pos).getPrice());
+		// catId = catDetails.get(pos).getCatid();
+		// }
+		//
+		// @Override
+		// public void onNothingSelected(AdapterView<?> arg0) {
+		// // TODO Auto-generated method stub
+		//
+		// }
+		// });
 
 		viewLifeCycle.setOnClickListener(new OnClickListener() {
 
