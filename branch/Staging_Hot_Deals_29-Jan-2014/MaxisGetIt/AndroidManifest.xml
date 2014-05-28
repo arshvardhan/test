@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kelltontech.maxisgetit"
     android:versionCode="3"
-    android:versionName="1.2" >
+    android:versionName="1.21" >
 
     <!-- Package should be com.findit333 -->
     <!-- Current version code/name on play: code:2, name:1.1 -->

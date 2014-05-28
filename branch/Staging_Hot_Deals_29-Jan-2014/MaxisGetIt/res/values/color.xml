@@ -19,16 +19,8 @@
     <color name="yellow">#ffda4d</color>
     <color name="grey">#d8cad4</color>
     <color name="pink">#fba497</color>
-    <color name="fully_transparent">#00000000</color>
-    <color name="transparent">#72000000</color>
-    <color name="transparent4">#b2000000</color>
-    <color name="almost_full_transparent">#02000000</color>
-    <color name="transparent2">#e6000000</color>
-    <color name="little_transparent">#10000000</color>
     <!-- Text color -->
-    <color name="text_color_red">#e3222a</color>
     <color name="text_color_green">#58f00f</color>
-    <color name="breadcrumbs_bg">#a6e5ff</color>
     <!-- company detail -->
     <color name="btn_grey_color">#f0eef0</color>
     <color name="hyperlink_blue">#004282</color>

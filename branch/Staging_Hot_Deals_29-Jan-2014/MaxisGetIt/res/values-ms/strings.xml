@@ -122,8 +122,6 @@
     <string name="classifieds">Classifieds</string>
     <string name="colon">:</string>
     <string name="contact_unavailable">Contact Number is not available.</string>
-    <string name="company_add_to_fav">The Company has been successfully added to your Favourite List.</string>
-    <string name="company_remove_from_fav">The Company has been successfully removed from your Favourite List.</string>
     <string name="contact_detail">Contact Details</string>
     <string name="contact">TEL</string>
     <string name="contact_channels">Contact Channels</string>
@@ -178,7 +176,6 @@
     <string name="no">No</string>
     <string name="not_verified"><u>Not Verified</u></string>
     <string name="no_result_found">No Result Found</string>
-    <string name="server_not_responding">Server not responding.</string>
     <string name="network_unavailable">Error occurred while fetching data from network. Please try again later.</string>
     <string name="ok">OK</string>
     <string name="login_btn">Login</string>
