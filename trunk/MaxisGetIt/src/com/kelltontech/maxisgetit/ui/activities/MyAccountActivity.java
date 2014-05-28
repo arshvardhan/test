@@ -29,8 +29,8 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
-import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.model.Response;
+import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
@@ -39,16 +39,13 @@ import com.kelltontech.maxisgetit.controllers.ClassifiedListController;
 import com.kelltontech.maxisgetit.controllers.FavouriteController;
 import com.kelltontech.maxisgetit.controllers.LocalSearchController;
 import com.kelltontech.maxisgetit.controllers.MyAccountDashboardController;
-import com.kelltontech.maxisgetit.controllers.MyDashboardLifeCycleController;
 import com.kelltontech.maxisgetit.controllers.MyDealsController;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.MaxisStore;
-import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.model.CatDetails;
 import com.kelltontech.maxisgetit.model.MyAccountDashboardResponse;
 import com.kelltontech.maxisgetit.model.MyAccountLifecycleResponse;
 import com.kelltontech.maxisgetit.requests.FavCompanyListRequest;
-import com.kelltontech.maxisgetit.requests.PostReviewRequest;
 import com.kelltontech.maxisgetit.response.ClassifiedListResponse;
 import com.kelltontech.maxisgetit.response.CompanyListResponse;
 import com.kelltontech.maxisgetit.response.DealsListResponse;
@@ -73,7 +70,7 @@ public class MyAccountActivity extends MaxisMainActivity {
 	private RadioButton mMalayRadioButton;
 	private ImageView mEditProfile, mLogout;
 	private TextView mLocalSearch, mClassified, mBestPrice, mShortlisted,
-			mManageAlert, mDeals;
+	mManageAlert, mDeals;
 	private LinearLayout mSearchContainer;
 	private ImageView mSearchToggler;
 	private ImageView mHeaderBackButton;
@@ -111,8 +108,8 @@ public class MyAccountActivity extends MaxisMainActivity {
 	private String catId, compId;
 	private String selectedCompany = "";
 	private String selectedCategory = "";
-	private int companyPos;
-	private int categoryPos;
+	private int companyPos = 0;
+	private int categoryPos = 0;
 	TextView totalViews;
 	TextView totalLeads;
 	TextView myTotalViews;
@@ -120,15 +117,15 @@ public class MyAccountActivity extends MaxisMainActivity {
 	TextView myPlan;
 	TextView leadCost;
 	TextView companyChooser;
-	TextView viewLifeCycle;
+	TextView lifeCycle;
+	//	TextView viewLifeCycle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mStore = MaxisStore.getStore(MyAccountActivity.this);
 		setContentView(R.layout.activity_my_account);
-		AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_MY_ACCOUNT,
-				true);
+		AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_MY_ACCOUNT, true);
 		mLocalSearch = (TextView) findViewById(R.id.amc_local_search);
 		mLocalSearch.setOnClickListener(this);
 		mClassified = (TextView) findViewById(R.id.amc_classified);
@@ -166,14 +163,14 @@ public class MyAccountActivity extends MaxisMainActivity {
 		} else
 			mMalayRadioButton.setChecked(true);
 		mLangContainerRG
-				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-					@Override
-					public void onCheckedChanged(RadioGroup group, int checkedId) {
-						showConfirmationDialog(
-								CustomDialog.CONFIRMATION_DIALOG,
-								"The Application will restart to perform the requested cheanges. Do you wish to continue?");
-					}
-				});
+		.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				showConfirmationDialog(
+						CustomDialog.CONFIRMATION_DIALOG,
+						"The Application will restart to perform the requested changes. Do you wish to continue?");
+			}
+		});
 		if (mUserDetail != null) {
 			mEdWelcomeUser.setText(getResources().getString(R.string.welcome)
 					+ " " + mUserDetail.getName());
@@ -241,7 +238,6 @@ public class MyAccountActivity extends MaxisMainActivity {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
 
 				if (!isAdvanceSearchLayoutOpen) {
 					isAdvanceSearchLayoutOpen = true;
@@ -259,7 +255,7 @@ public class MyAccountActivity extends MaxisMainActivity {
 		super.onResume();
 		AnalyticsHelper.trackSession(MyAccountActivity.this, AppConstants.MyAccount);
 	}
-	
+
 	@Override
 	public void onPositiveDialogButton(int id) {
 		if (id == CustomDialog.CONFIRMATION_DIALOG) {
@@ -334,45 +330,99 @@ public class MyAccountActivity extends MaxisMainActivity {
 		} else if (resultCode == RESULT_OK && requestCode == 10) {
 			selectedCompany = data.getStringExtra("ChosenCompanyOrCategory");
 			companyPos = data.getIntExtra("Position", 0);
-
-			companyChooser.setText(mCompany.get(companyPos));
-			catDetails = response.getData().get(companyPos).getCatdetails();
-			categoryChooser.setText(catDetails.get(0).getCatname());
-			mCategory = new ArrayList<String>();
-			for (int i = 0; i < catDetails.size(); i++) {
-				mCategory.add(catDetails.get(i).getCatname());
-			}
-
-			if (selectedCompany.trim().equals(
-					response.getData().get(companyPos).getCname().trim())) {
-				compId = response.getData().get(companyPos).getCid();
-			}
+			setCompanyData();
+//			companyChooser.setText(mCompany.get(companyPos));
+//			catDetails = response.getData().get(companyPos).getCatdetails();
+//			categoryChooser.setText(catDetails.get(0).getCatname());
+//			mCategory = new ArrayList<String>();
+//			for (int i = 0; i < catDetails.size(); i++) {
+//				mCategory.add(catDetails.get(i).getCatname());
+//			}
+//
+//			if (selectedCompany.trim().equals(
+//					response.getData().get(companyPos).getCname().trim())) {
+//				compId = response.getData().get(companyPos).getCid();
+//			}
 		} else if (resultCode == RESULT_OK && requestCode == 11) {
 			selectedCategory = data.getStringExtra("ChosenCompanyOrCategory");
 			categoryPos = data.getIntExtra("Position", 0);
 
+			setCategoryData();
 			// companyChooser.setText(mCompany.get(companyPos));
 			// catDetails = response.getData().get(companyPos).getCatdetails();
-			categoryChooser.setText(catDetails.get(categoryPos).getCatname());
-
-			totalViews.setText(catDetails.get(categoryPos).getTotalView());
-			totalLeads.setText(catDetails.get(categoryPos).getTotalLeads());
-			myTotalViews.setText(catDetails.get(categoryPos).getMyTotalView());
-			myActiveVirtualNo.setText(catDetails.get(categoryPos)
-					.getMaxisDidNumber());
-			myPlan.setText(catDetails.get(categoryPos).getSubscription());
-			leadCost.setText(catDetails.get(categoryPos).getPrice());
-
-			if (selectedCategory.trim().equals(
-					response.getData().get(companyPos).getCatdetails()
-							.get(categoryPos).getCatname().trim())) {
-				catId = response.getData().get(companyPos).getCatdetails()
-						.get(categoryPos).getCatid();
-			}
+//			categoryChooser.setText(catDetails.get(categoryPos).getCatname());
+//
+//			totalViews.setText(catDetails.get(categoryPos).getTotalView());
+//			totalLeads.setText(catDetails.get(categoryPos).getTotalLeads());
+//			myTotalViews.setText(catDetails.get(categoryPos).getMyTotalView());
+//			myActiveVirtualNo.setText(catDetails.get(categoryPos)
+//					.getMaxisDidNumber());
+//			if (catDetails!= null && catDetails.get(categoryPos)!=null && StringUtil.isNullOrEmpty(catDetails.get(categoryPos).getMaxisDidNumber())) { 
+//				lifeCycle.setVisibility(View.GONE);
+//			} else {
+//				lifeCycle.setVisibility(View.VISIBLE);
+//			}
+//			myPlan.setText(catDetails.get(categoryPos).getSubscription());
+//			leadCost.setText(catDetails.get(categoryPos).getPrice());
+//
+//			if (selectedCategory.trim().equals(
+//					response.getData().get(companyPos).getCatdetails()
+//					.get(categoryPos).getCatname().trim())) {
+//				catId = response.getData().get(companyPos).getCatdetails()
+//						.get(categoryPos).getCatid();
+//			}
 		}
 
 	}
 
+	private void setCompanyData () {
+		companyChooser.setText(mCompany.get(companyPos).trim());
+		catDetails = response.getData().get(companyPos).getCatdetails();
+		categoryChooser.setText(catDetails.get(0).getCatname().trim());
+		mCategory = new ArrayList<String>();
+		for (int i = 0; i < catDetails.size(); i++) {
+			mCategory.add(catDetails.get(i).getCatname());
+		}
+
+		if (selectedCompany.trim().equals(
+				response.getData().get(companyPos).getCname().trim())) {
+			compId = response.getData().get(companyPos).getCid();
+		}
+		categoryPos = 0;
+		setCategoryData();
+	}
+	
+	private void setCategoryData() {
+		categoryChooser.setText(catDetails.get(categoryPos).getCatname().trim());
+
+		totalViews.setText(catDetails.get(categoryPos).getTotalView().trim());
+
+		
+		if (catDetails!= null && catDetails.get(categoryPos)!=null && (StringUtil.isNullOrEmpty(catDetails.get(categoryPos).getTotalLeads()) || (catDetails.get(categoryPos).getTotalLeads().equals("N.A.")))) { 
+			totalLeads.setText("0");
+		} else {
+			totalLeads.setText(catDetails.get(categoryPos).getTotalLeads().trim());
+		}
+		
+		myTotalViews.setText(catDetails.get(categoryPos).getMyTotalView().trim());
+		myActiveVirtualNo.setText(catDetails.get(categoryPos)
+				.getMaxisDidNumber().trim());
+		if (catDetails!= null && catDetails.get(categoryPos)!=null && (StringUtil.isNullOrEmpty(catDetails.get(categoryPos).getMaxisDidNumber()) || (catDetails.get(categoryPos).getMaxisDidNumber().equals("N.A.")))) { 
+			lifeCycle.setVisibility(View.GONE);
+		} else {
+			lifeCycle.setVisibility(View.VISIBLE);
+		}
+		myPlan.setText(catDetails.get(categoryPos).getSubscription());
+		leadCost.setText(catDetails.get(categoryPos).getPrice().trim());
+
+		if (selectedCategory.trim().equals(
+				response.getData().get(companyPos).getCatdetails()
+				.get(categoryPos).getCatname().trim())) {
+			catId = response.getData().get(companyPos).getCatdetails()
+					.get(categoryPos).getCatid();
+		}
+	}
+	
 	private void saveSettings() {
 		if (mLangContainerRG.getCheckedRadioButtonId() == R.id.as_lang_en) {
 			mStore.setEnglishSelected(true);
@@ -430,7 +480,7 @@ public class MyAccountActivity extends MaxisMainActivity {
 			break;
 		case R.id.amc_classified:
 			AnalyticsHelper
-					.logEvent(FlurryEventsConstants.MY_CLASSIFIEDS_CLICK);
+			.logEvent(FlurryEventsConstants.MY_CLASSIFIEDS_CLICK);
 			ClassifiedListController clController = new ClassifiedListController(
 					MyAccountActivity.this, Events.CLASSIFIED_LIST);
 			startSppiner();
@@ -473,7 +523,7 @@ public class MyAccountActivity extends MaxisMainActivity {
 			mStore.setUserID("");
 			AnalyticsHelper.logEvent(FlurryEventsConstants.LOGOUT_CLICK);
 			AnalyticsHelper
-					.endTimedEvent(FlurryEventsConstants.APPLICATION_MY_ACCOUNT);
+			.endTimedEvent(FlurryEventsConstants.APPLICATION_MY_ACCOUNT);
 			finish();
 			// showFinalDialog("Logout successful");
 			break;
@@ -492,15 +542,16 @@ public class MyAccountActivity extends MaxisMainActivity {
 			break;
 		case R.id.header_btn_back:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.BACK_CLICK);
-			AnalyticsHelper
-					.endTimedEvent(FlurryEventsConstants.APPLICATION_MY_ACCOUNT);
+			AnalyticsHelper.endTimedEvent(FlurryEventsConstants.APPLICATION_MY_ACCOUNT);
 			this.finish();
 			break;
 		case R.id.mainSearchButton:
-			mSearchEditText
-					.setText(mSearchEditText.getText().toString().trim());
+			mSearchEditText.setText(mSearchEditText.getText().toString().trim());
 			String JSON_EXTRA = jsonForSearch();
 			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
+			break;
+		case R.id.amc_email_status:
+			checkEmailAndPreferenceBeforeOpenBrowser();
 			break;
 		case R.id.upArrow:
 			if (isAdvanceSearchLayoutOpen) {
@@ -512,8 +563,7 @@ public class MyAccountActivity extends MaxisMainActivity {
 			if (cityListString != null && cityListString.size() > 0) {
 				localityItems = null;
 				selectedLocalityindex = null;
-				Intent cityIntent = new Intent(MyAccountActivity.this,
-						AdvanceSelectCity.class);
+				Intent cityIntent = new Intent(MyAccountActivity.this,AdvanceSelectCity.class);
 				cityIntent.putExtra("CITY_LIST", cityListString);
 				cityIntent.putExtra("SELECTED_CITY", selectedCity);
 				startActivityForResult(cityIntent, AppConstants.CITY_REQUEST);
@@ -527,20 +577,21 @@ public class MyAccountActivity extends MaxisMainActivity {
 				Intent localityIntent = new Intent(MyAccountActivity.this,
 						AdvanceSelectLocalityActivity.class);
 				localityIntent.putExtra("LOCALITY_LIST", localityItems);
-				localityIntent.putStringArrayListExtra("LOCALITY_INDEX",
-						selectedLocalityindex);
-				startActivityForResult(localityIntent,
-						AppConstants.LOCALITY_REQUEST);
+				localityIntent.putStringArrayListExtra("LOCALITY_INDEX", selectedLocalityindex);
+				startActivityForResult(localityIntent, AppConstants.LOCALITY_REQUEST);
 			} else {
 				setSearchLocality(city_id);
 			}
 			break;
 		case R.id.life_cycle:
-				Intent lifeCycleIntent = new Intent(MyAccountActivity.this,
-						LifeCycleViewActivity.class);
-				lifeCycleIntent.putExtra("LIFE_CYCLE_URL", lifeCycleURL);
+			Intent lifeCycleIntent = new Intent(MyAccountActivity.this, LifeCycleViewActivity.class);
+			String lifeCycleURL = AppConstants.LIFE_CYCLE_WEBVIEW_SERVER  + compId + "/" + catId;
+//			String lifeCycleURL = "http://192.168.13.117/FMS_WAP/wap/trunk/users/didLifeCycleApp/" + compId + "/" + catId;
+			if (!StringUtil.isNullOrEmpty(lifeCycleURL)) {
+				lifeCycleIntent.putExtra(AppConstants.LIFE_CYCLE_URL, lifeCycleURL);
 				startActivityForResult(lifeCycleIntent,
 						AppConstants.LIFE_CYCLE_SCREEN);
+			}
 			break;
 		default:
 			break;
@@ -548,6 +599,25 @@ public class MyAccountActivity extends MaxisMainActivity {
 
 	}
 
+	private void checkEmailAndPreferenceBeforeOpenBrowser() {
+		if (!mUserDetail.isVerifiedEmail()) {
+			if (!StringUtil.isNullOrEmpty(mUserDetail.getEmail())) {
+				String domain = mUserDetail.getEmail().substring(
+						mUserDetail.getEmail().indexOf("@") + 1);
+				;
+				String url = getResources().getString(R.string.domain_prefix)
+						+ domain;
+				if (url.indexOf(getString(R.string.findit_com)) == -1) {
+					checkPreferenceAndOpenBrowser(url);
+				} else {
+					openDeviceBrowser(url, true);
+				}
+				AnalyticsHelper
+						.logEvent(FlurryEventsConstants.VERIFY_EMAIL_CLICK);
+			}
+		}
+	}
+	
 	@Override
 	public void updateUI(Message msg) {
 		if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE
@@ -606,12 +676,8 @@ public class MyAccountActivity extends MaxisMainActivity {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				CityTable cityTable = new CityTable(
-						(MyApplication) getApplication());
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
-				// cityTable.addCityList(glistRes.getCityOrLocalityList());
 				cityList = glistRes.getCityOrLocalityList();
-				// inflateCityList(cityList);
 				Intent intent = new Intent(MyAccountActivity.this,
 						AdvanceSelectCity.class);
 				for (CityOrLocality cityOrLocality : cityList) {
@@ -647,7 +713,6 @@ public class MyAccountActivity extends MaxisMainActivity {
 
 			}
 		} else if (msg.arg2 == Events.MY_ACCOUNT_DASHBOARD) {
-			// TODO
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 				dashboardLayout.setVisibility(View.GONE);
@@ -797,7 +862,6 @@ public class MyAccountActivity extends MaxisMainActivity {
 				return null;
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -823,7 +887,9 @@ public class MyAccountActivity extends MaxisMainActivity {
 		myActiveVirtualNo = (TextView) findViewById(R.id.my_active_virtual_no);
 		myPlan = (TextView) findViewById(R.id.my_plan);
 		leadCost = (TextView) findViewById(R.id.lead_cost);
-		viewLifeCycle = (TextView) findViewById(R.id.life_cycle);
+		//		viewLifeCycle = (TextView) findViewById(R.id.life_cycle);
+		lifeCycle = (TextView) findViewById(R.id.life_cycle);
+		lifeCycle.setOnClickListener(this);
 
 		// mCompanyAdapter = new ArrayAdapter<String>(this,
 		// R.layout.spinner_item,
@@ -874,8 +940,6 @@ public class MyAccountActivity extends MaxisMainActivity {
 		//
 		// @Override
 		// public void onNothingSelected(AdapterView<?> arg0) {
-		// // TODO Auto-generated method stub
-		//
 		// }
 		// });
 
@@ -892,14 +956,14 @@ public class MyAccountActivity extends MaxisMainActivity {
 			}
 		});
 
+		setCompanyData();
+		setCategoryData();
 		// categoryChooser.setOnItemSelectedListener(new
 		// OnItemSelectedListener() {
 		//
 		// @Override
 		// public void onItemSelected(AdapterView<?> arg0, View arg1, int pos,
 		// long arg3) {
-		// // TODO Auto-generated method stub
-		//
 		// totalViews.setText(catDetails.get(pos).getTotalView());
 		// totalLeads.setText(catDetails.get(pos).getTotalLeads());
 		// myTotalViews.setText(catDetails.get(pos).getMyTotalView());
@@ -912,12 +976,10 @@ public class MyAccountActivity extends MaxisMainActivity {
 		//
 		// @Override
 		// public void onNothingSelected(AdapterView<?> arg0) {
-		// // TODO Auto-generated method stub
-		//
 		// }
 		// });
 
-/*		viewLifeCycle.setOnClickListener(new OnClickListener() {
+		/*		viewLifeCycle.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {

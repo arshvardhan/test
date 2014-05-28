@@ -15,10 +15,10 @@ public interface AppConstants {
 	// String BASE_SERVER = "http://test.kelltontech.com/getitfms/"; //live dev
 	// String BASE_SERVER = "http://test.kelltontech.com/getitfms_qa/"; //QA
 	//	 String BASE_SERVER = "https://staging.findit.com.my/";// staging new
-	// String BASE_SERVER = "http://203.115.222.57:8070/"; //staging 8070
+	//	 String BASE_SERVER = "http://203.115.222.57:8070/"; //staging 8070
 
-		String BASE_SERVER = "http://203.115.222.57/"; // staging
-
+	String BASE_SERVER = "http://203.115.222.57/"; // staging
+	String LIFE_CYCLE_WEBVIEW_SERVER = "http://203.115.222.57:8080/users/didLifeCycleApp/";
 	// String BASE_SERVER = "http://203.115.222.69/";// Pre Production
 
 	//	 String BASE_SERVER = "https://webservice.findit.com.my/";// Production
@@ -29,7 +29,7 @@ public interface AppConstants {
 
 	//	 String BASE_SERVER = "http://192.168.13.22/webserviceNew/dev_build_ver1.1/"; //local ankesh for deal
 
-//	String BASE_SERVER = "http://192.168.13.63/webservice/trunk/";   // Session Tracking Test
+	//	String BASE_SERVER = "http://192.168.13.63/webservice/trunk/";   // Session Tracking Test
 
 	String BASE_URL = BASE_SERVER + "restapi/";
 	String BASE_URL_CONTEST = BASE_SERVER + "restapicontest/";
@@ -108,6 +108,8 @@ public interface AppConstants {
 	String GLOBAL_SEARCH_KEYWORD = "GLOBAL_SEARCH_KEYWORD";
 
 	String CATEGORY_ID = "CATEGORY_ID";
+
+	String LIFE_CYCLE_URL = "LIFE_CYCLE_URL";
 
 	// TnC Extra
 	String TNC_FROM = "TNC_FROM";
@@ -252,11 +254,12 @@ public interface AppConstants {
 	String Screen_videoPlay        ="VideoPlayScreen";							//VideoPlayActivity		
 	String Screen_DealOutletModify ="DealOutletModifyScreen";					//RefineOutletActivity
 	String Screen_DealOutletList   ="DealOutletListScreen";						//ViewAllOutletActivity
-//	String Screen_lifeCycle        ="DidLifeCycle";								//
+	//	String Screen_lifeCycle        ="DidLifeCycle";								//
 	String Screen_AfterUploadeImageContest ="AfterUploadeImageContestScreen"; 	//ContestUploadMoreActivity
-//	String Screen_LocalSearchLead    ="LocalSearchLeadScreen";					//
-//	String Screen_CodeVerification   ="CodeVerificationScreen";					//
+	//	String Screen_LocalSearchLead    ="LocalSearchLeadScreen";					//
+	//	String Screen_CodeVerification   ="CodeVerificationScreen";					//
 	String Screen_DashBoardLifeCycle ="DashBoardLifeCycleScreen";				//
 	String DashBoardLifeCycle = "DidLifeCycle";
+	String Screen_DealTnC = "DealTnCScreen";									//TermsAndConditionActivity
 
 }

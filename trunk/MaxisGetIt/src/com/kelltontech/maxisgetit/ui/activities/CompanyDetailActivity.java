@@ -376,7 +376,12 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			mCompDesc.setText(Html.fromHtml(mCompanyDetail.getDescription()));
 			mMoreDesc = (TextView) findViewById(R.id.cd_desc_more);
 			mCompDesc.setMaxLines(5);
-			if (mCompDesc.getText().length() < 400)
+//			if (mCompDesc.isEllipsized()) {
+//				mMoreDesc.setVisibility(View.VISIBLE);
+//			} else {
+//				mMoreDesc.setVisibility(View.GONE);
+//			}
+			if (mCompanyDetail.getDescription().length() < 250)
 				mMoreDesc.setVisibility(View.GONE);
 			else
 				mMoreDesc.setVisibility(View.VISIBLE);
@@ -1470,10 +1475,19 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 	}
 	
 	public void viewFlipperTapped() {
+		Intent intents = new Intent(CompanyDetailActivity.this,PhotoSlideActivity.class);
+		intents.putParcelableArrayListExtra("list", imgPathList);
+		intents.putExtra("position", flipperVisibleItemPosition);
+		/*intents.putExtra("ImageURL",
+				imgPathList.get(flipperVisibleItemPosition).getDealIconUrl());*/
+		startActivity(intents);
+	}
+	
+/*	public void viewFlipperTapped() {
 		Intent intents = new Intent(CompanyDetailActivity.this,
 				CompanyDetailImageViewActivity.class);
 		intents.putExtra("ImageURL",
 				imgPathList.get(flipperVisibleItemPosition).getDealIconUrl());
 		startActivity(intents);
-	}
+	}*/
 }

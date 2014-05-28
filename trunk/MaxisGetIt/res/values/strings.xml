@@ -390,7 +390,7 @@
     <string name="title_activity_video_play">VideoPlayActivity</string>
     <string name="mobile_number_validation">Mobile Number should be 8-11 digits and start with 1.</string>
     <string name="mobile_number_validation_contestapp">Your Contact Number should be 8-11 digits and start with 1.</string>
-    <string name="mobile_number_validation_contestapp_company">Company Contact Number should be 8-13 digits, start with a non-zero digit and should not include country code.</string>
+    <string name="mobile_number_validation_contestapp_company">Company Contact Number must be 8-13 digits, starting with Non-Zero and excluding Country Code.</string>
     <string name="blank_mobile_number">Please enter Mobile Number.</string>
     <string name="title_activity_view_deal_map">ViewDealMapActivity</string>
     <string name="title_activity_view_all_outlets">ViewAllOutletsActivity</string>
@@ -399,5 +399,8 @@
     <string name="view_life_cycle"><u>View Life Cycle</u></string>
     <string name="title_activity_did_life_cycle">DidLifeCycleActivity</string>
     <string name="title_activity_company_or_category_filter">CompanyOrCategoryFilterActivity</string>
+
+    <!-- ViewDealMap Activity -->
+    <string name="route">Route</string>
 
 </resources>

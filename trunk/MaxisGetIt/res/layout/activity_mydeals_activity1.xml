@@ -70,9 +70,10 @@
             <Spinner
                 android:id="@+id/deal_cat_chooser"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_toRightOf="@+id/col_records_found"
                 android:background="@drawable/dropdown_box"
                 android:paddingRight="25dp"

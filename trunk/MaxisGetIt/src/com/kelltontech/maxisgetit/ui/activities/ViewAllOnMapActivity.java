@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -99,8 +98,7 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 				.getParcelableArrayList(AppConstants.COMP_DETAIL_LIST);
 		mClRequest = bundle.getParcelable(AppConstants.DATA_LIST_REQUEST);
 		String headerTitle = bundle.getString(AppConstants.MAP_ALL_TITLE);
-		boolean isSearchKeyword = bundle
-				.getBoolean(AppConstants.IS_SEARCH_KEYWORD);
+		boolean isSearchKeyword = bundle.getBoolean(AppConstants.IS_SEARCH_KEYWORD);
 		compDetailResponse = null;
 		// setUpMapIfNeeded();
 		ImageLoader.initialize(ViewAllOnMapActivity.this);

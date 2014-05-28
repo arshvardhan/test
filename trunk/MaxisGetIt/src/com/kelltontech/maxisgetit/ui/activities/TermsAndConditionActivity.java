@@ -22,6 +22,7 @@ public class TermsAndConditionActivity extends MaxisMainActivity {
 	private int mTnCOf;
 	private String mTnCPageUrl;
 	private String urlData;
+	private int isFromTnC;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class TermsAndConditionActivity extends MaxisMainActivity {
 		backButton.setVisibility(View.VISIBLE);
 		backButton.setOnClickListener(this);
 		mTnCPageUrl = AppConstants.TNC_PAGE_URL;
+		isFromTnC = getIntent().getIntExtra(AppConstants.TNC_FROM, 0);
 
 		if (getIntent().getExtras() != null) {
 			mTnCOf = getIntent().getExtras().getInt(AppConstants.TNC_FROM);
@@ -87,9 +89,13 @@ public class TermsAndConditionActivity extends MaxisMainActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		AnalyticsHelper.trackSession(TermsAndConditionActivity.this, AppConstants.TnC);
+		if (isFromTnC == AppConstants.TNC_FROM_DEAL) {
+			AnalyticsHelper.trackSession(TermsAndConditionActivity.this, AppConstants.Screen_DealTnC);
+		} else {
+			AnalyticsHelper.trackSession(TermsAndConditionActivity.this, AppConstants.TnC);
+		}
 	}
-	
+
 	private void setPageUrl() {
 		switch (mTnCOf) {
 		case AppConstants.TNC_FROM_COMP:
@@ -98,14 +104,14 @@ public class TermsAndConditionActivity extends MaxisMainActivity {
 		case AppConstants.TNC_FROM_CONTEST:
 			mTnCPageUrl = AppConstants.TNC_CONTEST_PAGE_URL+"&"+AppConstants.KEY_PAGE_REVIEW+"="+AppConstants.TnC+"";;
 			break;
-			
+
 		case AppConstants.TNC_FROM_DEAL :
 			mTnCPageUrl  = urlData;
 			break;
 		default:
 			break;
 		}
-		
+
 	}
 
 	@Override

@@ -6,13 +6,30 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.location.Location;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Message;
+import android.text.Html;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -20,12 +37,9 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kelltontech.framework.db.MyApplication;
-import com.kelltontech.framework.model.MaxisResponse;
 import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
-import com.kelltontech.maxisgetit.R.layout;
-import com.kelltontech.maxisgetit.R.menu;
 import com.kelltontech.maxisgetit.adapters.DealMapInfoWindowAdapter;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
@@ -39,24 +53,6 @@ import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
-
-import android.location.Location;
-import android.os.Bundle;
-import android.os.Message;
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Color;
-import android.text.Html;
-import android.view.Menu;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 public class ViewDealMapActivity extends MaxisMainActivity implements
 		OnGlobalLayoutListener, OnClickListener {
@@ -93,6 +89,7 @@ public class ViewDealMapActivity extends MaxisMainActivity implements
 
 	private int indexOfOutlet;
 	private String title = "";
+	private TextView showRoute;
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -222,6 +219,13 @@ public class ViewDealMapActivity extends MaxisMainActivity implements
 
 		setUpMapIfNeeded(indexOfOutlet);
 
+		showRoute = (TextView) findViewById(R.id.txv_icon_show_route);
+		showRoute.setOnClickListener(this);
+		if(indexOfOutlet == -1) {
+			((LinearLayout) findViewById(R.id.footer_compass_screen)).setVisibility(View.GONE);
+		} else {
+			((LinearLayout) findViewById(R.id.footer_compass_screen)).setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override
@@ -305,11 +309,42 @@ public class ViewDealMapActivity extends MaxisMainActivity implements
 				setSearchLocality(city_id);
 			}
 			break;
-
+		case R.id.txv_icon_show_route:
+			if (isDialogToBeShown()) {
+				showConfirmationDialog(CustomDialog.DATA_USAGE_DIALOG, getResources().getString(R.string.cd_msg_data_usage));
+			} else {
+				if (isLocationAvailable()) {
+					showMapActivity();
+				}
+			}
+			break;
 		default:
 			break;
 		}
 
+	}
+	
+	@Override
+	public void onPositiveDialogButton(int id) {
+		if (id == CustomDialog.DATA_USAGE_DIALOG) {
+			if (isLocationAvailable()) {
+				showMapActivity();
+			}
+		}
+	}
+	
+	private void showMapActivity() {
+		if (isLocationAvailable()) {
+			String url = "http://maps.google.com/maps?saddr="
+					+ GPS_Data.getLatitude() + "," + GPS_Data.getLongitude()
+					+ "&daddr=" + outLets.get(indexOfOutlet).getLat() + ","
+					+ outLets.get(indexOfOutlet).getLongt() + "&mode=driving";
+			Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+					Uri.parse(url));
+			intent.setClassName("com.google.android.apps.maps",
+					"com.google.android.maps.MapsActivity");
+			startActivity(intent);
+		}
 	}
 
 	@Override

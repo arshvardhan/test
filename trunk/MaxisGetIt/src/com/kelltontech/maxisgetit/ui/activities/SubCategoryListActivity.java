@@ -11,10 +11,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Html;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
@@ -28,7 +32,9 @@ import com.kelltontech.framework.imageloader.ImageLoader;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.framework.utils.UiUtils;
 import com.kelltontech.maxisgetit.R;
+import com.kelltontech.maxisgetit.adapters.BannerViewAdapter;
 import com.kelltontech.maxisgetit.adapters.SubCategoryListAdapter;
+import com.kelltontech.maxisgetit.adapters.ViewPagerAdapter;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
@@ -92,6 +98,9 @@ public class SubCategoryListActivity extends MaxisMainActivity {
 	LinearLayout followus;
 	View seprator;
 	boolean footerVisible = false;
+	private ViewPager bannerView;
+	ArrayList<String> bannerList;
+	private LinearLayout bannerViewLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -212,6 +221,46 @@ public class SubCategoryListActivity extends MaxisMainActivity {
 		box.setOnClickListener(this);
 		followus = (LinearLayout) findViewById(R.id.footer_followus);
 		seprator = (View) findViewById(R.id.seprator);
+		
+		bannerViewLayout = (LinearLayout) findViewById(R.id.bannerView_LnrLayout);
+		bannerView = (ViewPager) findViewById(R.id.subcategory_banner);
+		
+		if (mSubcatResponse != null && mSubcatResponse.getBanner() != null && mSubcatResponse.getBanner().size() > 0) {
+			bannerList = new ArrayList<String>();
+			bannerList = mSubcatResponse.getBanner();
+			bannerViewLayout.setVisibility(View.VISIBLE);
+			BannerViewAdapter bannerViewAdapter = new BannerViewAdapter(getSupportFragmentManager(), bannerList, this, "Category List");
+//			if (bannerList.size() > 1) {
+//				addImage();
+//				circleIndicator.setVisibility(View.VISIBLE);
+//			} else {
+//				circleIndicator.setVisibility(View.GONE);
+//			}
+			bannerView.setAdapter(bannerViewAdapter);
+		} else {
+			bannerViewLayout.setVisibility(View.GONE);
+//			circleIndicator.setVisibility(View.GONE);
+		}
+
+//		comDetailGallery.setOnPageChangeListener(new OnPageChangeListener() {
+//
+//			@Override
+//			public void onPageSelected(int position) {
+//				indicatorchange(position);
+//				flipperVisibleItemPosition = position;
+//			}
+//
+//			@Override
+//			public void onPageScrolled(int arg0, float arg1, int arg2) {
+//				comDetailGallery.getParent()
+//						.requestDisallowInterceptTouchEvent(true);
+//			}
+//
+//			@Override
+//			public void onPageScrollStateChanged(int arg0) {
+//
+//			}
+//		});
 	}
 	
 	@Override

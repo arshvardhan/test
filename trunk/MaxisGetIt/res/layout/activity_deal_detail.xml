@@ -99,16 +99,30 @@
                                 android:layout_height="wrap_content"
                                 android:weightSum="1" >
 
-                                <TextView
+                               <com.kelltontech.maxisgetit.ui.widgets.EllipsizingTextView
                                     android:id="@+id/validin"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
-                                    android:layout_weight=".65"
+                                    android:layout_weight=".50"
                                     android:paddingTop="10dp"
                                     android:singleLine="true"
                                     android:text="valid in entire malasia"
                                     android:textColor="@color/white" />
+                                
+                                <TextView
+                                    android:id="@+id/more"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_weight=".15"
+                                    android:paddingTop="10dp"
+                                    android:singleLine="true"
+                                    android:text="@string/more"
+                                    android:clickable="true"
+									android:textStyle="bold|italic"
+                                    android:textColor="@color/more_btn" 
+                                    android:visibility="invisible"/>
 
                                 <ImageView
                                     android:id="@+id/cd_separator_bar"
@@ -124,7 +138,7 @@
                                     android:id="@+id/validdate"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center_vertical"
+                                    android:layout_gravity="center_vertical|right"
                                     android:layout_weight=".35"
                                     android:gravity="right"
                                     android:paddingTop="10dp"
@@ -297,16 +311,16 @@
 
     <RelativeLayout
         android:id="@+id/leftOutletRltLayout"
-        android:layout_width="100dp"
-        android:layout_height="65dp"
+        android:layout_width="95dp"
+        android:layout_height="45dp"
         android:layout_above="@+id/cl_deals_footer"
         android:layout_alignParentLeft="true"
-        android:layout_marginBottom="20dp" >
+        android:layout_marginBottom="30dp" >
 
         <LinearLayout
             android:id="@+id/leftOutletLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
             android:layout_alignParentBottom="true"
             android:background="@drawable/rectangleborderblack"
             android:gravity="center_vertical"
@@ -324,16 +338,15 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:paddingLeft="25dp"
-                    android:paddingRight="25dp"
-                    android:paddingTop="5dp"
-                    android:text="9"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:text=" Outlets"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
-            <TextView
+ <!--            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -344,7 +357,7 @@
                 android:text="Outlets"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textStyle="bold" /> -->
         </LinearLayout>
 
         <ImageView
@@ -361,10 +374,10 @@
     <LinearLayout
         android:id="@+id/rightlayout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_above="@+id/cl_deals_footer"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/rectanglebordergreen"
         android:gravity="center_vertical"
         android:orientation="vertical" >
@@ -374,23 +387,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:paddingBottom="14dp"
             android:paddingLeft="3dp"
             android:paddingRight="3dp"
-            android:paddingTop="15dp"
             android:text="View On Map"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold" />
     </LinearLayout>
 
-    <LinearLayout
+   <!--  <LinearLayout
         android:id="@+id/cl_deals_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
-        android:visibility="visible" >
+        android:visibility="visible" > -->
 
         <LinearLayout
             android:id="@+id/cl_deals_footer"
@@ -427,11 +438,11 @@
                 android:background="@color/new_footer_color"
                 android:clickable="true"
                 android:gravity="center"
-                android:text="Terms and Condition"
+                android:text="@string/txt_tnc"
                 android:textColor="@color/transparent_white"
                 android:textSize="@dimen/sp_14"
                 android:textStyle="bold" />
         </LinearLayout>
-    </LinearLayout>
+    <!-- </LinearLayout> -->
 
 </RelativeLayout>
