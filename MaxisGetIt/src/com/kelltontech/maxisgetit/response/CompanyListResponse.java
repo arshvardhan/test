@@ -82,6 +82,7 @@ public class CompanyListResponse extends MaxisResponse implements IModel,
 	public CompanyListResponse(Parcel in) {
 		errorMessage = in.readString();
 		errorCode = in.readInt();
+		in.readStringList(banner);
 		totalrecordFound = in.readInt();
 		pageNumber = in.readInt();
 		recordsPerPage = in.readInt();
@@ -144,6 +145,7 @@ public class CompanyListResponse extends MaxisResponse implements IModel,
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(errorMessage);
 		dest.writeInt(errorCode);
+		dest.writeStringList(banner);
 		dest.writeInt(totalrecordFound);
 		dest.writeInt(pageNumber);
 		dest.writeInt(recordsPerPage);

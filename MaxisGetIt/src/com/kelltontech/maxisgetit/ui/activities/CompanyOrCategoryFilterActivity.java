@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -63,6 +62,9 @@ public class CompanyOrCategoryFilterActivity extends MaxisMainActivity {
 	ArrayList<String> selectedLocalityindex;
 	LinearLayout wholeSearchBoxContainer;
 	private CompanyListResponse mClResponse;
+	
+	
+	
 
 	ListView compOrCatListView;
 
@@ -70,16 +72,11 @@ public class CompanyOrCategoryFilterActivity extends MaxisMainActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_company_or_category_filter);
-		AnalyticsHelper
-				.logEvent(
-						FlurryEventsConstants.APPLICATION_COMPANY_CATEGORY_SELECT,
-						true);
-
+		AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_COMPANY_CATEGORY_SELECT, true);
 		mHomeIconView = (ImageView) findViewById(R.id.goto_home_icon);
 		mHomeIconView.setOnClickListener(this);
 		mProfileIconView = (ImageView) findViewById(R.id.show_profile_icon);
 		mProfileIconView.setOnClickListener(this);
-
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
 		mSearchBtn.setOnClickListener(CompanyOrCategoryFilterActivity.this);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
@@ -94,6 +91,19 @@ public class CompanyOrCategoryFilterActivity extends MaxisMainActivity {
 		advanceSearchLayout.setVisibility(View.GONE);
 		upArrow = (ImageView) findViewById(R.id.upArrow);
 		upArrow.setOnClickListener(this);
+		
+		currentCity = (TextView) findViewById(R.id.currentCity);
+		currentLocality = (TextView) findViewById(R.id.currentLocality);
+		currentCity.setText(Html
+				.fromHtml("in " + "<b>" + selectedCity + "</b>"));
+
+		currentCity.setOnClickListener(this);
+		currentLocality.setOnClickListener(this);
+
+		mainSearchButton = (TextView) findViewById(R.id.mainSearchButton);
+		mainSearchButton.setOnClickListener(this);
+
+		
 		wholeSearchBoxContainer = (LinearLayout) findViewById(R.id.whole_search_box_container);
 		mSearchEditText.setOnTouchListener(new OnTouchListener() {
 
@@ -382,6 +392,7 @@ public class CompanyOrCategoryFilterActivity extends MaxisMainActivity {
 				setSearchLocality(city_id);
 			}
 			break;
+			
 		default:
 			break;
 

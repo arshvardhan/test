@@ -5,21 +5,25 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical" >
+
     <include
         android:id="@+id/header_base_activity"
         layout="@layout/header_with_popdown_search" />
+
     <LinearLayout
         android:id="@+id/cl_header_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/header_base_activity"
         android:orientation="vertical" >
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_bg_green_grey_stroke"
             android:paddingBottom="5dp"
             android:paddingTop="5dp" >
+
             <TextView
                 android:id="@+id/col_records_found"
                 android:layout_width="wrap_content"
@@ -32,6 +36,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_12"
                 android:textStyle="bold" />
+
             <Spinner
                 android:id="@+id/distance_filter_chooser"
                 android:layout_width="wrap_content"
@@ -42,28 +47,72 @@
                 android:background="@drawable/dropdown_box"
                 android:paddingRight="25dp"
                 android:textColor="@color/black"
-                android:textSize="@dimen/sp_13" 
-                android:visibility="gone"
-                
-                />
+                android:textSize="@dimen/sp_13"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/nearMe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-				android:layout_alignParentRight="true"
-                android:background="@drawable/around_me_btn"
+                android:layout_alignParentRight="true"
                 android:layout_marginRight="8dp"
-                android:visibility="visible"/>
-            
+                android:background="@drawable/around_me_btn"
+                android:visibility="visible" />
         </RelativeLayout>
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bannerView_LnrLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cl_header_view"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/vertical_line_seprator" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/subcategory_banner"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/detail_cross" />
+
+        <!--
+                 <LinearLayout
+                android:id="@+id/indicatorlinearlayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/rounded_layout"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp" >
+            </LinearLayout>
+        -->
+        
+             <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/vertical_line_seprator" />
+    </LinearLayout>
+    
+
+
     <LinearLayout
         android:id="@+id/pagination"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/cl_header_view"
+        android:layout_below="@id/bannerView_LnrLayout"
         android:orientation="vertical" >
+
         <ListView
             android:id="@+id/col_company_list"
             android:layout_width="match_parent"
@@ -73,12 +122,14 @@
             android:gravity="center_vertical"
             android:numColumns="2" >
         </ListView>
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@drawable/single_line_seprator" />
     </LinearLayout>
     <!-- android:listSelector="@drawable/selector_home_list_item_bg" -->
+
     <LinearLayout
         android:id="@+id/cl_company_list_footer"
         android:layout_width="match_parent"
@@ -87,6 +138,7 @@
         android:orientation="horizontal"
         android:visibility="gone"
         android:weightSum="99" >
+
         <TextView
             android:id="@+id/col_deal_btn"
             android:layout_width="0dp"
@@ -99,10 +151,12 @@
             android:textColor="@color/transparent_white"
             android:textSize="@dimen/sp_14"
             android:textStyle="bold" />
+
         <ImageView
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:background="@color/bar_light_grey" />
+
         <TextView
             android:id="@+id/col_refine_search"
             android:layout_width="0dp"
@@ -115,10 +169,12 @@
             android:textColor="@color/transparent_white"
             android:textSize="@dimen/sp_14"
             android:textStyle="bold" />
+
         <ImageView
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:background="@color/bar_light_grey" />
+
         <TextView
             android:id="@+id/col_view_on_map"
             android:layout_width="0dp"
@@ -131,7 +187,8 @@
             android:textColor="@color/transparent_white"
             android:textSize="@dimen/sp_14"
             android:textStyle="bold" />
-        <!-- <ImageView
+        <!--
+        <ImageView
             android:id="@+id/col_deal_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -154,8 +211,10 @@
             android:layout_weight="33.33"
             android:clickable="true"
             android:scaleType="fitXY"
-            android:src="@drawable/group_view_on_map" /> -->
+            android:src="@drawable/group_view_on_map" />
+        -->
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/cl_deals_footer"
         android:layout_width="match_parent"
@@ -164,38 +223,43 @@
         android:orientation="horizontal"
         android:visibility="visible"
         android:weightSum="99" >
+
         <TextView
             android:id="@+id/col_deal_btn1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="33"
-            android:background="@color/transparent_footer_blue"
+            android:background="@color/new_footer_color"
             android:clickable="true"
             android:gravity="center"
             android:text="@string/cl_hot_deals"
             android:textColor="@color/transparent_white"
             android:textSize="@dimen/sp_15"
             android:textStyle="bold" />
+
         <ImageView
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:background="@color/bar_light_grey" />
+
         <TextView
             android:id="@+id/col_refine_search1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="33"
-            android:background="@color/transparent_footer_blue"
+            android:background="@color/new_footer_color"
             android:clickable="true"
             android:gravity="center"
             android:text="Modify Search"
             android:textColor="@color/transparent_white"
             android:textSize="@dimen/sp_14"
             android:textStyle="bold" />
+
         <ImageView
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:background="@color/bar_light_grey" />
+
         <TextView
             android:id="@+id/col_view_on_map1"
             android:layout_width="0dp"
@@ -209,4 +273,5 @@
             android:textSize="@dimen/sp_14"
             android:textStyle="bold" />
     </LinearLayout>
+
 </RelativeLayout>

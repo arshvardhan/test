@@ -12,11 +12,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -37,6 +37,7 @@ import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.framework.utils.UiUtils;
 import com.kelltontech.maxisgetit.R;
+import com.kelltontech.maxisgetit.adapters.BannerViewAdapter;
 import com.kelltontech.maxisgetit.adapters.CompanyListAdapter;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
@@ -137,6 +138,9 @@ public class CombindListActivity extends MaxisMainActivity {
 	boolean isSuccessfull = false;
 	boolean isFromNearMe = false;
 	boolean isFromSearch = false;
+	private ViewPager bannerView;
+	private ArrayList<String> bannerList;
+	private LinearLayout bannerViewLayout;
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -631,6 +635,45 @@ public class CombindListActivity extends MaxisMainActivity {
 
 					}
 				});
+	bannerViewLayout = (LinearLayout) findViewById(R.id.bannerView_LnrLayout);
+	bannerView = (ViewPager) findViewById(R.id.subcategory_banner);
+		
+		if (mClResponse != null && mClResponse.getBanner() != null && mClResponse.getBanner().size() > 0) {
+			bannerList = new ArrayList<String>();
+			bannerList = mClResponse.getBanner();
+			bannerViewLayout.setVisibility(View.VISIBLE);
+			BannerViewAdapter bannerViewAdapter = new BannerViewAdapter(getSupportFragmentManager(), bannerList, this, "Category List");
+//			if (bannerList.size() > 1) {
+//				addImage();
+//				circleIndicator.setVisibility(View.VISIBLE);
+//			} else {
+//				circleIndicator.setVisibility(View.GONE);
+//			}
+			bannerView.setAdapter(bannerViewAdapter);
+		} else {
+			bannerViewLayout.setVisibility(View.GONE);
+//			circleIndicator.setVisibility(View.GONE);
+		}
+
+//		comDetailGallery.setOnPageChangeListener(new OnPageChangeListener() {
+//
+//			@Override
+//			public void onPageSelected(int position) {
+//				indicatorchange(position);
+//				flipperVisibleItemPosition = position;
+//			}
+//
+//			@Override
+//			public void onPageScrolled(int arg0, float arg1, int arg2) {
+//				comDetailGallery.getParent()
+//						.requestDisallowInterceptTouchEvent(true);
+//			}
+//
+//			@Override
+//			public void onPageScrollStateChanged(int arg0) {
+//
+//			}
+//		});
 
 	}
 

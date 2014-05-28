@@ -24,7 +24,7 @@
     <string name="category_list_not_found">Insufficient information to process your request</string>
     <string name="record_found"><u>Record(s) Found Near You</u></string>
     <string name="deal_found"><u>Deal(s) Found Near You</u></string>
-       <string name="outlet_found">Outlet(s) Found Near You</string>
+    <string name="outlet_found">Outlet(s) Found Near You</string>
     <string name="cl_hot_deals">Hot Deals</string>
     <string name="cl_view_on_map">View on Map</string>
     <string name="cl_modify_search">Modify Search</string>
@@ -379,7 +379,26 @@
 
     <!-- SaleTemplateType Activity -->
     <string name="add_type">"Please select an Ad Type."</string>
-
-    
+    <string name="title_activity_get_it_info">GetItInfoActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_mydeals_activity1">MydealsActivity1</string>
+    <string name="title_activity_deal_detail">DealDetailActivity</string>
+    <string name="title_activity_deal_form">DealForm</string>
+    <string name="title_activity_video_play">VideoPlayActivity</string>
+    <string name="mobile_number_validation">Mobile Number should be 8-11 digits and start with 1.</string>
+    <string name="mobile_number_validation_contestapp">Your Contact Number should be 8-11 digits and start with 1.</string>
+    <string name="mobile_number_validation_contestapp_company">Company Contact Number must be 8-13 digits, starting with Non-Zero and excluding Country Code.</string>
+    <string name="blank_mobile_number">Please enter Mobile Number.</string>
+    <string name="title_activity_view_deal_map">ViewDealMapActivity</string>
+    <string name="title_activity_view_all_outlets">ViewAllOutletsActivity</string>
+    <string name="title_activity_refine_outlet">RefineOutletActivity</string>
     <string name="dashboard">Dashboard</string>
+    <string name="view_life_cycle"><u>View Life Cycle</u></string>
+    <string name="title_activity_did_life_cycle">DidLifeCycleActivity</string>
+    <string name="title_activity_company_or_category_filter">CompanyOrCategoryFilterActivity</string>
+
+    <!-- ViewDealMap Activity -->
+    <string name="route">Route</string>
+
 </resources>

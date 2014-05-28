@@ -74,10 +74,11 @@ import com.kelltontech.maxisgetit.requests.DownloadDealReq;
 import com.kelltontech.maxisgetit.requests.OutLetDetailRequest;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
+import com.kelltontech.maxisgetit.ui.widgets.EllipsizingTextView;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
 public class DealDetailActivity extends MaxisMainActivity implements
-		OnGlobalLayoutListener, OnClickListener {
+OnGlobalLayoutListener, OnClickListener {
 
 	private ViewPager dealGallery;
 	private CompanyDetail compDetailResponse;
@@ -87,7 +88,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 
 	private TextView mHeaderText;
 	private TextView mDealTitle;
-	private TextView validIn;
+	private EllipsizingTextView validIn;
 	private TextView validDate;
 	private TextView aboutUs;
 	private TextView nearOutLets;
@@ -158,6 +159,8 @@ public class DealDetailActivity extends MaxisMainActivity implements
 	private LinearLayout mapLayout;
 	private TextView view_map;
 	private TextView mapLabel;
+	private TextView mMoreDesc;
+	//	private boolean mIsCollapsedView = true;
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -297,8 +300,8 @@ public class DealDetailActivity extends MaxisMainActivity implements
 						DealDetailActivity.this, Events.DEAL_DETAIL);
 				DetailRequest detailRequest = new DetailRequest(
 						DealDetailActivity.this, comp_id, getIntent()
-								.getExtras().getBoolean(
-										AppConstants.IS_DEAL_LIST), "");
+						.getExtras().getBoolean(
+								AppConstants.IS_DEAL_LIST), "");
 
 				startSppiner();
 				controller.requestService(detailRequest);
@@ -429,7 +432,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				dealGallery.getParent()
-						.requestDisallowInterceptTouchEvent(true);
+				.requestDisallowInterceptTouchEvent(true);
 				return false;
 			}
 		});
@@ -441,7 +444,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		super.onResume();
 		AnalyticsHelper.trackSession(DealDetailActivity.this, AppConstants.Deal_Detail);
 	}
-	
+
 	@Override
 	public Activity getMyActivityReference() {
 		// TODO Auto-generated method stub
@@ -510,39 +513,40 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			break;
 
 		case R.id.deal_all_outlet:
-			isNearestOutlet = false;
-			outLetsName.setVisibility(View.VISIBLE);
-			aboutUs.setBackgroundColor(Color.WHITE);
-			aboutUs.setTextColor(Color.BLACK);
-			nearOutLets.setBackgroundColor(Color.WHITE);
-			nearOutLets.setTextColor(Color.BLACK);
-			viewAllOutlets.setBackgroundColor(getResources().getColor(
-					R.color.green));
-			viewAllOutlets.setTextColor(Color.WHITE);
-
-			if (outLetResponse !=null) {
-			if (Integer.parseInt(outLetResponse.getTotal_records()) > 10)
-				leftInfoLayout.setVisibility(View.VISIBLE);
-			else
-				leftInfoLayout.setVisibility(View.GONE);
-			}
-			rightLayout.setVisibility(View.VISIBLE);
-			// dealDesc.setText(termsNdcond);
-			dealDesc.setVisibility(View.GONE);
-			mapLayout.setVisibility(View.GONE);
-			nearestOutletLayout.setVisibility(View.GONE);
-			mapLabel.setVisibility(View.GONE);
-			// nearestOutletLayout.setBackgroundColor(getResources().getColor(
-			// R.color.light_green));
-
-			onTapNearestOutletEnable = false;
-			seprator_outlet.setVisibility(View.GONE);
-			try {
-				// setUpMapIfNeeded();
-				addOutLets();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			onViewAllOutletClick();
+			//			isNearestOutlet = false;
+			//			outLetsName.setVisibility(View.VISIBLE);
+			//			aboutUs.setBackgroundColor(Color.WHITE);
+			//			aboutUs.setTextColor(Color.BLACK);
+			//			nearOutLets.setBackgroundColor(Color.WHITE);
+			//			nearOutLets.setTextColor(Color.BLACK);
+			//			viewAllOutlets.setBackgroundColor(getResources().getColor(
+			//					R.color.green));
+			//			viewAllOutlets.setTextColor(Color.WHITE);
+			//
+			//			if (outLetResponse !=null) {
+			//				if (Integer.parseInt(outLetResponse.getTotal_records()) > 10)
+			//					leftInfoLayout.setVisibility(View.VISIBLE);
+			//				else
+			//					leftInfoLayout.setVisibility(View.GONE);
+			//			}
+			//			rightLayout.setVisibility(View.VISIBLE);
+			//			// dealDesc.setText(termsNdcond);
+			//			dealDesc.setVisibility(View.GONE);
+			//			mapLayout.setVisibility(View.GONE);
+			//			nearestOutletLayout.setVisibility(View.GONE);
+			//			mapLabel.setVisibility(View.GONE);
+			//			// nearestOutletLayout.setBackgroundColor(getResources().getColor(
+			//			// R.color.light_green));
+			//
+			//			onTapNearestOutletEnable = false;
+			//			seprator_outlet.setVisibility(View.GONE);
+			//			try {
+			//				// setUpMapIfNeeded();
+			//				addOutLets();
+			//			} catch (Exception e) {
+			//				e.printStackTrace();
+			//			}
 
 			break;
 
@@ -572,7 +576,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		case R.id.header_btn_back:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.BACK_CLICK);
 			AnalyticsHelper
-					.endTimedEvent(FlurryEventsConstants.APPLICATION_COMBINED_LIST);
+			.endTimedEvent(FlurryEventsConstants.APPLICATION_COMBINED_LIST);
 			this.finish();
 			break;
 		case R.id.col_refine_search:
@@ -581,7 +585,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			break;
 		case R.id.mainSearchButton:
 			mSearchEditText
-					.setText(mSearchEditText.getText().toString().trim());
+			.setText(mSearchEditText.getText().toString().trim());
 
 			String JSON_EXTRA = jsonForSearch();
 			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
@@ -680,12 +684,51 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			index = 0;
 			showMap(index);
 
-			break;
 
+			break;
+		case R.id.more:
+			onViewAllOutletClick();
+			break;
 		default:
 			break;
 		}
 
+	}
+
+	private void onViewAllOutletClick() {
+		isNearestOutlet = false;
+		outLetsName.setVisibility(View.VISIBLE);
+		aboutUs.setBackgroundColor(Color.WHITE);
+		aboutUs.setTextColor(Color.BLACK);
+		nearOutLets.setBackgroundColor(Color.WHITE);
+		nearOutLets.setTextColor(Color.BLACK);
+		viewAllOutlets.setBackgroundColor(getResources().getColor(
+				R.color.green));
+		viewAllOutlets.setTextColor(Color.WHITE);
+
+		if (outLetResponse !=null) {
+			if (Integer.parseInt(outLetResponse.getTotal_records()) > 10)
+				leftInfoLayout.setVisibility(View.VISIBLE);
+			else
+				leftInfoLayout.setVisibility(View.GONE);
+		}
+		rightLayout.setVisibility(View.VISIBLE);
+		// dealDesc.setText(termsNdcond);
+		dealDesc.setVisibility(View.GONE);
+		mapLayout.setVisibility(View.GONE);
+		nearestOutletLayout.setVisibility(View.GONE);
+		mapLabel.setVisibility(View.GONE);
+		// nearestOutletLayout.setBackgroundColor(getResources().getColor(
+		// R.color.light_green));
+
+		onTapNearestOutletEnable = false;
+		seprator_outlet.setVisibility(View.GONE);
+		try {
+			// setUpMapIfNeeded();
+			addOutLets();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void indicatorchange(int pos) {
@@ -768,10 +811,10 @@ public class DealDetailActivity extends MaxisMainActivity implements
 				} else {
 					toPosition = new LatLng(Double.parseDouble(outLets.get(i)
 							.getLat()), Double.parseDouble(outLets.get(i)
-							.getLongt()));
+									.getLongt()));
 					mMap.addMarker(new MarkerOptions()
-							.icon(BitmapDescriptorFactory
-									.fromResource(R.drawable.map_company_marker))
+					.icon(BitmapDescriptorFactory
+							.fromResource(R.drawable.map_company_marker))
 							.position(toPosition)
 							.title(outLets.get(i).getTitle())
 							.snippet(getSnippet(outLets.get(i))));
@@ -795,13 +838,13 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		mMap.animateCamera(cu);
 
 		final CameraPosition cameraPosition = new CameraPosition.Builder()
-				.target(nearestPosition) // Sets the center of the map to
-											// Mountain
-											// View
-				.zoom(14) // Sets the zoom
-				.bearing(90) // Sets the orientation of the camera to east
-				.tilt(30) // Sets the tilt of the camera to 30 degrees
-				.build();
+		.target(nearestPosition) // Sets the center of the map to
+		// Mountain
+		// View
+		.zoom(14) // Sets the zoom
+		.bearing(90) // Sets the orientation of the camera to east
+		.tilt(30) // Sets the tilt of the camera to 30 degrees
+		.build();
 		// mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 		if (outLets != null && outLets.size() > 0) {
 			if (isNearestOutlet) {
@@ -984,7 +1027,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 								.getAddress());
 						// leftInfoLayout.setVisibility(View.VISIBLE);
 						// TODO
-						outletCount.setText(outLetResponse.getTotal_records());
+						outletCount.setText(outLetResponse.getTotal_records() + " " + "Outlets");
 					}
 					// setUpMapIfNeeded();
 				}
@@ -1107,7 +1150,8 @@ public class DealDetailActivity extends MaxisMainActivity implements
 
 		mHeaderText = (TextView) findViewById(R.id.header_title);
 		mDealTitle = (TextView) findViewById(R.id.txt_deal_name);
-		validIn = (TextView) findViewById(R.id.validin);
+		validIn = (EllipsizingTextView) findViewById(R.id.validin);
+		validIn.setMaxLines(1);
 		validDate = (TextView) findViewById(R.id.validdate);
 		aboutUs = (TextView) findViewById(R.id.about_deal);
 		nearOutLets = (TextView) findViewById(R.id.nearest_outlet);
@@ -1131,7 +1175,19 @@ public class DealDetailActivity extends MaxisMainActivity implements
 
 		if (!StringUtil.isNullOrEmpty(compDetailResponse.getValidIn()))
 			validIn.setText(compDetailResponse.getValidIn());
-
+		mMoreDesc = (TextView) findViewById(R.id.more);
+		mMoreDesc.setText(Html.fromHtml("<u>" + getResources().getString(R.string.more) + "</u>"));
+		mMoreDesc.setOnClickListener(this);
+//		if (validIn.isEllipsized()) {
+//			mMoreDesc.setVisibility(View.VISIBLE);
+//		} else {
+//			mMoreDesc.setVisibility(View.INVISIBLE);
+//		}
+		if (compDetailResponse.getValidIn().length() > 25) {
+			mMoreDesc.setVisibility(View.VISIBLE);
+		} else {
+			mMoreDesc.setVisibility(View.INVISIBLE);
+		}
 		if (!StringUtil.isNullOrEmpty(compDetailResponse.getValidDate()))
 			validDate.setText(compDetailResponse.getValidDate());
 
@@ -1187,7 +1243,7 @@ public class DealDetailActivity extends MaxisMainActivity implements
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
 				dealGallery.getParent()
-						.requestDisallowInterceptTouchEvent(true);
+				.requestDisallowInterceptTouchEvent(true);
 			}
 
 			@Override
@@ -1342,7 +1398,11 @@ public class DealDetailActivity extends MaxisMainActivity implements
 					getResources().getString(R.string.cd_msg_data_usage));
 		} else {
 			if (isLocationAvailable()) {
-				redirectToMap();
+//				if(index == -1) {
+					redirectToMap();
+//				} else {
+//					showMapActivity();
+//				}
 			}
 		}
 	}
@@ -1365,7 +1425,11 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		if (id == CustomDialog.DATA_USAGE_DIALOG) {
 
 			if (isLocationAvailable()) {
-				redirectToMap();
+//				if(index == -1) {
+					redirectToMap();
+//				} else {
+//					showMapActivity();
+//				}
 			}
 		}
 	}
@@ -1392,11 +1456,36 @@ public class DealDetailActivity extends MaxisMainActivity implements
 		startActivity(intent);
 	}
 
+/*	private void showMapActivity() {
+		if (isLocationAvailable()) {
+			String url = "http://maps.google.com/maps?saddr="
+					+ GPS_Data.getLatitude() + "," + GPS_Data.getLongitude()
+					+ "&daddr=" + outLets.get(index).getLat() + ","
+					+ outLets.get(index).getLongt() + "&mode=driving";
+			Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+					Uri.parse(url));
+			intent.setClassName("com.google.android.apps.maps",
+					"com.google.android.maps.MapsActivity");
+			startActivity(intent);
+		}
+	}*/
+	
 	public void viewFlipperTapped() {
 		Intent intents = new Intent(DealDetailActivity.this,
+				PhotoSlideActivity.class);
+		intents.putParcelableArrayListExtra("list", imgPathList);
+		intents.putExtra("position", flipperVisibleItemPosition);
+		/*intents.putExtra("ImageURL",
+				imgPathList.get(flipperVisibleItemPosition).getDealIconUrl());*/
+		startActivity(intents);
+	}
+
+	/*public void viewFlipperTapped() {
+		Intent intents = new Intent(DealDetailActivity.this,
 				CompanyDetailImageViewActivity.class);
+		
 		intents.putExtra("ImageURL",
 				imgPathList.get(flipperVisibleItemPosition).getDealIconUrl());
 		startActivity(intents);
-	}
+	}*/
 }

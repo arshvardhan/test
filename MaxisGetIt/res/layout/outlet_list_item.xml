@@ -121,10 +121,9 @@
         android:layout_below="@+id/seprator"
         android:background="#d2d2d2"
         android:gravity="center_vertical|center_horizontal"
-        android:padding="10dp"
+        android:padding="5dp"
         android:src="@drawable/outlate_more_text"
         android:textColor="@color/light_color_black"
-        android:textStyle="bold"
-        android:visibility="gone" />
+        android:textStyle="bold"/>
 
 </RelativeLayout>

@@ -1,5 +1,7 @@
 package com.kelltontech.maxisgetit.model.poiModel;
 
+import android.net.Uri;
+
 public class RequestPoiSearch {
 	private double longitude;
 	private double latitude;
@@ -34,6 +36,6 @@ public class RequestPoiSearch {
 		return searchText;
 	}
 	public void setSearchText(String searchText) {
-		this.searchText = searchText;
+		this.searchText = Uri.encode(searchText);
 	}
 }

@@ -443,7 +443,8 @@
                     <TableRow
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical" >
+                        android:gravity="center_vertical" 
+                        android:paddingRight="10dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -458,7 +459,8 @@
                             android:id="@+id/company_spinner"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="10dp" 
+                            android:padding="10dp"
+                            android:drawablePadding="10dp" 
                             android:drawableRight="@drawable/arrow"
                             />
                     </TableRow>
@@ -471,7 +473,8 @@
                     <TableRow
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical" >
+                        android:gravity="center_vertical"
+                        android:paddingRight="10dp" >
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -499,7 +502,8 @@
                     <TableRow
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical" >
+                        android:gravity="center_vertical" 
+                        android:paddingRight="10dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -525,7 +529,8 @@
                     <TableRow
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical" >
+                        android:gravity="center_vertical"
+                        android:paddingRight="10dp" >
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -540,7 +545,7 @@
                             android:id="@+id/total_leads"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="5dp" />
+                            android:padding="10dp" />
                     </TableRow>
 
                     <TextView
@@ -551,7 +556,8 @@
                     <TableRow
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical" >
+                        android:gravity="center_vertical" 
+                        android:paddingRight="10dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -577,7 +583,8 @@
                     <TableRow
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical" >
+                        android:gravity="center_vertical"
+                        android:paddingRight="10dp" >
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -604,8 +611,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="15dp"
+                                android:clickable="true"
+                                android:focusableInTouchMode="true"
                                 android:text="@string/view_life_cycle"
-                                android:textColor="@color/green" />
+                                android:textColor="@color/green" 
+                                android:visibility="gone"/>
                         </LinearLayout>
                     </TableRow>
 
@@ -617,7 +627,8 @@
                     <TableRow
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical" >
+                        android:gravity="center_vertical"
+                        android:paddingRight="10dp" >
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -632,6 +643,7 @@
                             android:id="@+id/my_plan"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="ABCD"
                             android:padding="10dp" />
                     </TableRow>
 
@@ -643,7 +655,8 @@
                     <TableRow
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical" >
+                        android:gravity="center_vertical"
+                        android:paddingRight="10dp" >
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -658,6 +671,7 @@
                             android:id="@+id/lead_cost"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="ABCD"
                             android:padding="10dp" />
                     </TableRow>
 

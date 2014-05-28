@@ -767,12 +767,8 @@ public class DealsActivity extends MaxisMainActivity {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				CityTable cityTable = new CityTable(
-						(MyApplication) getApplication());
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
-				// cityTable.addCityList(glistRes.getCityOrLocalityList());
 				cityList = glistRes.getCityOrLocalityList();
-				// inflateCityList(cityList);
 				Intent intent = new Intent(DealsActivity.this,
 						AdvanceSelectCity.class);
 				for (CityOrLocality cityOrLocality : cityList) {

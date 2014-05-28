@@ -53,6 +53,7 @@ public class SubCategoryResponse extends MaxisResponse implements IModel, Parcel
 	public SubCategoryResponse(Parcel in) {
 		errorMessage = in.readString();
 		errorCode = in.readInt();
+		in.readStringList(banner);
 		parentCat = in.readParcelable(SubCategory.class.getClassLoader());
 		in.readTypedList(categories, SubCategory.CREATOR);
 	}
@@ -65,6 +66,7 @@ public class SubCategoryResponse extends MaxisResponse implements IModel, Parcel
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(errorMessage);
 		dest.writeInt(errorCode);
+		dest.writeStringList(banner);
 		dest.writeParcelable(parentCat, PARCELABLE_WRITE_RETURN_VALUE);
 		dest.writeTypedList(categories);
 	}

@@ -1,6 +1,8 @@
 package com.kelltontech.maxisgetit.parsers;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import android.util.Log;
@@ -15,6 +17,8 @@ import com.kelltontech.maxisgetit.response.CompanyListResponse;
 public class CompanyListParser extends AbstractSAXParser {
 	public static final String TAG_ERROR_CODE = "Error_Code";
 	public static final String TAG_ERROR_MESSAGE = "Error_Message";
+	public static final String TAG_BANNER = "Banner";
+	public static final String TAG_BANNER_URL = "Url";
 	public static final String TOT_RECORDS = "Total_Records_Found";
 	public static final String RECORD_PER_PAGE = "Records_Per_Page";
 	public static final String PAGE_NUMBER = "Page_Number";
@@ -59,6 +63,8 @@ public class CompanyListParser extends AbstractSAXParser {
 	private CategoryRefine category;
 	private CompanyDesc compDesc;
 	private AttributeGroup attrGroup;
+	private ArrayList<String> bannerList;
+	private int count = 0;
 
 	@Override
 	public IModel parse(String payload) throws Exception {
@@ -76,6 +82,8 @@ public class CompanyListParser extends AbstractSAXParser {
 			category = new CategoryRefine();
 		} else if(localName.equalsIgnoreCase(TAG_GROUP_VAL)){
 			attrGroup=new AttributeGroup();
+		} else if (localName.equalsIgnoreCase(TAG_BANNER)) {
+			bannerList = new ArrayList<String>();
 		}
 	}
 
@@ -87,6 +95,13 @@ public class CompanyListParser extends AbstractSAXParser {
 		} else if (localName.equalsIgnoreCase(TAG_ERROR_MESSAGE)) {
 			Log.d("maxis", getNodeValue());
 			clResponse.setServerMessage(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_BANNER_URL)) {
+			String url = getNodeValue();
+			if (count == 0 && url.trim().length() > 0)
+				bannerList.add(getNodeValue());
+			count++;
+		} else if (localName.equalsIgnoreCase(TAG_BANNER)) {
+			clResponse.setBanner(bannerList);
 		}
 		if (localName.equalsIgnoreCase(COMPANY_ROOT) || localName.equalsIgnoreCase(DEAL_ROOT) || localName.equalsIgnoreCase(DEAL_ROOT2)) {
 			compDesc.setCompId_catId();

@@ -65,6 +65,7 @@
     <!-- Text color -->
     <color name="text_color_red">#e3222a</color>
     <color name="breadcrumbs_bg">#a6e5ff</color>
+    <color name="more_btn">#F58909</color>
 
     <!-- Home screen -->
     <color name="sky_blue_bg">#0075a5</color>

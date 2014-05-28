@@ -1,8 +1,11 @@
 package com.kelltontech.framework.model;
 
+import java.util.ArrayList;
+
 public class MaxisResponse implements IModel{
 	protected String errorMessage;
 	protected int errorCode;
+	protected ArrayList<String> banner = new ArrayList<String>();
 
 	public boolean isErrorFromServer() {
 		return errorCode == 0 ? false:true;
@@ -22,6 +25,14 @@ public class MaxisResponse implements IModel{
 
 	public String getServerMessage() {
 		return errorMessage;
+	}
+
+	public ArrayList<String> getBanner() {
+		return banner;
+	}
+
+	public void setBanner(ArrayList<String> banner) {
+		this.banner = banner;
 	}
 
 }
