@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:id="@+id/leftLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_alignParentLeft="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="visible" >
+
+        <ImageView
+            android:id="@+id/imageIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:src="@drawable/nearest_outlet"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/outletCountLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" >
+
+            <ImageView
+                android:id="@+id/imageIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:src="@drawable/trans" />
+
+            <TextView
+                android:id="@+id/outletCount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal|center_vertical"
+                android:textColor="#5e5e5e"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="70dp"
+            android:background="#c6c6c6" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/addressContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_toLeftOf="@+id/rightLayout"
+        android:layout_toRightOf="@+id/leftLayout"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:visibility="visible" >
+
+        <TextView
+            android:id="@+id/outletName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="#484848"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/outletAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:paddingTop="5dp"
+            android:textColor="#484848"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rightLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_alignParentRight="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="visible" >
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="70dp"
+            android:background="#c6c6c6" />
+
+        <ImageView
+            android:id="@+id/mapIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:padding="10dp"
+            android:src="@drawable/map_deal" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/seprator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignBottom="@id/addressContainer"
+        android:background="#c6c6c6"
+        android:paddingTop="1dp"
+        android:visibility="visible" />
+
+    <ImageButton
+        android:id="@+id/viewMore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/seprator"
+        android:background="#d2d2d2"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="5dp"
+        android:src="@drawable/outlate_more_text"
+        android:textColor="@color/light_color_black"
+        android:textStyle="bold" 
+        android:visibility="gone"/>
+
+    <View
+        android:id="@+id/bottomView"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/seprator"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone" />
+
+</RelativeLayout>

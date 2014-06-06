@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical" ><!-- android:background="@color/app_bg_base_col" -->
+
+    <LinearLayout
+        android:id="@+id/root_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_home_list_item_bg"
+        android:paddingLeft="16dp"
+        android:weightSum="1" 
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        >
+
+        <ImageView
+            android:id="@+id/home_icon_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/group_load" />
+
+        <TextView
+            android:id="@+id/home_title_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:singleLine="true"
+            android:textSize="@dimen/sp_16"
+            android:textColor="@color/head_title_col"
+            />
+    </LinearLayout>
+    <Button
+        android:id="@+id/home_btn_photo_contest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"
+        android:background="@drawable/btn_selector"
+        android:paddingBottom="20dp"
+        android:paddingLeft="28dp"
+        android:paddingRight="28dp"
+        android:paddingTop="20dp"
+        android:text="@string/header_photo_contest"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="normal"
+        android:visibility="gone">
+    </Button>
+<!--             android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp" -->
+
+
+<View 
+    android:id="@+id/seprator"
+    android:layout_height="1dp"
+    android:layout_width="match_parent"
+    android:background="@drawable/single_line_seprator"
+    android:visibility="visible"
+    />
+</LinearLayout>

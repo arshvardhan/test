@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+   >
+
+    <TextView
+        android:id="@+id/top_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/topheader" 
+        android:layout_alignParentTop="true"
+        android:textColor="@color/rainbow_green"
+        android:textSize="@dimen/sp_16"
+        android:text="Terms and Condition"
+        android:gravity="center"
+        android:textStyle="bold"
+        />
+
+    <ImageView
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/topheader"
+        android:layout_alignParentBottom="true" />
+    <ScrollView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_bar"
+        android:layout_above="@id/bottom_bar"
+        android:layout_centerInParent="true"
+        >
+        
+    <TextView
+        android:id="@+id/terms_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/terms_condition_text"
+        android:textColor="@color/black" 
+        android:textSize="@dimen/sp_15"
+        android:textStyle="bold"
+        android:gravity="center"
+        />
+
+    </ScrollView>
+
+</RelativeLayout>

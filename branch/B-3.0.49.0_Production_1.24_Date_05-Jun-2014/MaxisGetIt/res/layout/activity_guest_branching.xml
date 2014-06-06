@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bg_base_col"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/header_base_activity"
+        layout="@layout/header_without_search" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header_base_activity" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:weightSum="1" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/dear_guest"
+                android:textColor="@color/maxis_green"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/we_suggest_to_login"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold"
+                 />
+
+            <com.kelltontech.maxisgetit.ui.widgets.FlowLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" 
+                android:layout_marginTop="10dp"
+                >
+
+                <TextView
+                    android:id="@+id/agb_login_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/click_here_link"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/sp_14"
+                    android:clickable="true"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:text="@string/to_login"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_14"
+                    />
+            </com.kelltontech.maxisgetit.ui.widgets.FlowLayout>
+
+            <com.kelltontech.maxisgetit.ui.widgets.FlowLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" 
+                 android:layout_marginTop="10dp"
+                 >
+
+                <TextView
+                    android:id="@+id/agb_guest_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/click_here_link"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/sp_14"
+                    android:clickable="true"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/to_skip_as_guest"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_14"
+                    android:paddingLeft="5dp"
+                     />
+            </com.kelltontech.maxisgetit.ui.widgets.FlowLayout>
+
+            <com.kelltontech.maxisgetit.ui.widgets.FlowLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                 android:layout_marginTop="10dp"
+                  >
+
+                <TextView
+                    android:id="@+id/agb_register_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/register_link"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/sp_14"
+                    android:clickable="true"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/to_sign_in"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_14"
+                    android:paddingLeft="5dp"
+                     />
+            </com.kelltontech.maxisgetit.ui.widgets.FlowLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>
