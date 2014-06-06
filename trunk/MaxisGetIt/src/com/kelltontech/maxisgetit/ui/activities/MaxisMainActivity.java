@@ -93,23 +93,24 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 
 	}
 
-//	//TODO FOR FLURRY
-//	@Override
-//	protected void onStart() {
-//		super.onStart();
-//		AnalyticsHelper.onActivityStart(this);
-//		AnalyticsHelper.setLogEnabled(true);
-//		AnalyticsHelper.getReleaseVersion();
-//		if(!StringUtil.isNullOrEmpty(mStore.getUserMobileNumber())){
-//			AnalyticsHelper.setUserID(mStore.getUserMobileNumber());
-//		}
-//	}
-//
-//	@Override
-//	protected void onStop() {
-//		super.onStop();
-//		AnalyticsHelper.onActivityStop(this);
-//	}
+	//TODO FOR FLURRY
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		AnalyticsHelper.onActivityStart(this);
+		AnalyticsHelper.setLogEnabled(true);
+		AnalyticsHelper.getReleaseVersion();
+		if(!StringUtil.isNullOrEmpty(mStore.getUserMobileNumber())){
+			AnalyticsHelper.setUserID(mStore.getUserMobileNumber());
+		}
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		AnalyticsHelper.onActivityStop(this);
+	}
 
 	protected void performSearch(String searchText , String postJsonPayload) {
 		if (searchText == null || searchText.trim().equals("")) {
