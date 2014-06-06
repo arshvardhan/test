@@ -10,7 +10,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -37,6 +40,7 @@ import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.requests.PostReviewRequest;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
+import com.kelltontech.maxisgetit.utils.Utility;
 
 public class RateCompanyActivity extends MaxisMainActivity {
 	private ImageView mHomeIconView, mProfileIconView;
@@ -47,9 +51,10 @@ public class RateCompanyActivity extends MaxisMainActivity {
 	private ImageView mHeaderBackButton;
 	private RatingBar mCompanyRating;
 	private EditText mEdtReviewText;
+	private EditText mEdtUserName;
 	private TextView mBtnSubmit;
 	private CompanyDetail mCompanyDetail;
-	
+
 	private boolean isAdvanceSearchLayoutOpen = false;
 	private LinearLayout advanceSearchLayout;
 	private TextView currentCity, currentLocality;
@@ -66,7 +71,9 @@ public class RateCompanyActivity extends MaxisMainActivity {
 	TextView mainSearchButton;
 	ArrayList<String> selectedLocalityindex;
 	LinearLayout wholeSearchBoxContainer;
-	
+
+	MaxisStore store;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -87,35 +94,38 @@ public class RateCompanyActivity extends MaxisMainActivity {
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
 		mSearchBtn.setOnClickListener(this);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
-		
+
 		mCompanyRating = (RatingBar) findViewById(R.id.rc_rating_comp);
 		mEdtReviewText = (EditText) findViewById(R.id.rc_review_text);
+		mEdtUserName = (EditText) findViewById(R.id.rc_user_name);
+		mEdtReviewText.addTextChangedListener(txtWatcher);
+
 		mBtnSubmit = (TextView) findViewById(R.id.rc_submit_button);
 		mBtnSubmit.setOnClickListener(this);
 		mEdtReviewText.clearFocus();
+		mEdtUserName.clearFocus();
 		mEdtReviewText.setOnTouchListener(new OnTouchListener() {
-	           public boolean onTouch(View view, MotionEvent event) {
-	                // TODO Auto-generated method stub
-	                if (view.getId() ==R.id.rc_review_text) {
-	                    view.getParent().requestDisallowInterceptTouchEvent(true);
-	                    switch (event.getAction()&MotionEvent.ACTION_MASK){
-	                    case MotionEvent.ACTION_UP:
-	                        view.getParent().requestDisallowInterceptTouchEvent(false);
-	                        break;
-	                    }
-	                }
-	                return false;
-	            }
-	        });
+			public boolean onTouch(View view, MotionEvent event) {
+				if (view.getId() ==R.id.rc_review_text) {
+					view.getParent().requestDisallowInterceptTouchEvent(true);
+					switch (event.getAction()&MotionEvent.ACTION_MASK){
+					case MotionEvent.ACTION_UP:
+						view.getParent().requestDisallowInterceptTouchEvent(false);
+						break;
+					}
+				}
+				return false;
+			}
+		});
 		Bundle bundle = getIntent().getExtras();
 		mCompanyDetail = bundle.getParcelable(AppConstants.COMP_DETAIL_DATA);
 		mSearchKeyword =  bundle.getString(AppConstants.GLOBAL_SEARCH_KEYWORD);
-		
+
 		if(!StringUtil.isNullOrEmpty(mSearchKeyword))
 			mSearchEditText.setText(mSearchKeyword);
-		
+
 		((TextView)findViewById(R.id.header_title)).setText(mCompanyDetail.getTitle());
-		
+
 		advanceSearchLayout = (LinearLayout) findViewById(R.id.advanceSearch);
 		advanceSearchLayout.setVisibility(View.GONE);
 
@@ -132,15 +142,13 @@ public class RateCompanyActivity extends MaxisMainActivity {
 
 		mainSearchButton = (TextView) findViewById(R.id.mainSearchButton);
 		mainSearchButton.setOnClickListener(this);
-		
+
 		wholeSearchBoxContainer = (LinearLayout)findViewById(R.id.whole_search_box_container);
 
 		mSearchEditText.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-
 				if (!isAdvanceSearchLayoutOpen) {
 					isAdvanceSearchLayoutOpen = true;
 					advanceSearchLayout.setVisibility(View.VISIBLE);
@@ -148,14 +156,34 @@ public class RateCompanyActivity extends MaxisMainActivity {
 				return false;
 			}
 		});
+		store = MaxisStore.getStore(RateCompanyActivity.this);
 	}
+
+		final TextWatcher  txtWatcher = new TextWatcher() {
+
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+			public void afterTextChanged(Editable s) {
+				if(s.length()==0) {
+					((TextView) findViewById(R.id.rc_astrisk_txv)).setVisibility(View.INVISIBLE);
+				} else {
+					((TextView) findViewById(R.id.rc_astrisk_txv)).setVisibility(View.VISIBLE);
+				}
+			}
+		};
+
 
 	@Override
 	protected void onResume() {
+		if (store.isLoogedInUser()) {
+			((LinearLayout)findViewById(R.id.rc_guest_detail_controller)).setVisibility(View.GONE);
+		} else {
+			((LinearLayout)findViewById(R.id.rc_guest_detail_controller)).setVisibility(View.VISIBLE);
+		}
 		super.onResume();
 		AnalyticsHelper.trackSession(RateCompanyActivity.this, AppConstants.RatenReview);
 	}
-	
+
 	@Override
 	public Activity getMyActivityReference() {
 		return null;
@@ -166,7 +194,7 @@ public class RateCompanyActivity extends MaxisMainActivity {
 		switch (v.getId()) {
 		case R.id.mainSearchButton:
 			mSearchEditText
-					.setText(mSearchEditText.getText().toString().trim());
+			.setText(mSearchEditText.getText().toString().trim());
 
 			String JSON_EXTRA = jsonForSearch();
 			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
@@ -234,7 +262,9 @@ public class RateCompanyActivity extends MaxisMainActivity {
 				setSearchLocality(city_id);
 			}
 			break;
-			
+			/*	case R.id.rc_user_name:
+			if (localityItems != nul
+			 */
 		default:
 			break;
 		}
@@ -243,18 +273,27 @@ public class RateCompanyActivity extends MaxisMainActivity {
 
 	private void saveReview() {
 		startSppiner();
-		MaxisStore store = MaxisStore.getStore(this);
+		//		MaxisStore store = MaxisStore.getStore(this);
 		PostReviewController controller = new PostReviewController(this, Events.POST_REVIEW);
-		
+
 		float rating = mCompanyRating.getRating();
 		String review = (!StringUtil.isNullOrEmpty(mEdtReviewText.getText().toString())) ? mEdtReviewText.getText().toString() : "";
 		String userId = (!StringUtil.isNullOrEmpty(store.getUserID())) ? store.getUserID() : "";
+		String mobileNumber = (!StringUtil.isNullOrEmpty(store.getAuthMobileNumber())) ? store.getAuthMobileNumber() : "";
+		String userName = (!StringUtil.isNullOrEmpty(mEdtUserName.getText().toString().trim())) ? mEdtUserName.getText().toString().trim() : "";
 		PostReviewRequest postReviewRequest = new PostReviewRequest();
 		postReviewRequest.setCatId(mCompanyDetail.getCatId());
 		postReviewRequest.setCompId(mCompanyDetail.getId());
 		postReviewRequest.setRating(rating+"");
 		postReviewRequest.setReview(review);
 		postReviewRequest.setUserId(userId);
+		if (!store.isLoogedInUser()) {
+			postReviewRequest.setUserName(userName);
+			postReviewRequest.setMobileNumber(mobileNumber);
+		} else {
+			postReviewRequest.setUserName(store.getUserName());
+			postReviewRequest.setMobileNumber(store.getUserMobileNumber());
+		}
 		controller.requestService(postReviewRequest);
 	}
 
@@ -336,9 +375,9 @@ public class RateCompanyActivity extends MaxisMainActivity {
 					if (maxisResponse.isErrorFromServer()) {
 						message.obj = getResources().getString(R.string.communication_failure);
 					} else {
-						
-							message.arg1 = 0;
-							message.obj = maxisResponse;
+
+						message.arg1 = 0;
+						message.obj = maxisResponse;
 					}
 				} else {
 					message.obj = getResources().getString(R.string.communication_failure);
@@ -351,15 +390,18 @@ public class RateCompanyActivity extends MaxisMainActivity {
 			handler.sendMessage(message);
 		} 
 	}
-	
+
 	private boolean validateFields() {
 		if(mCompanyRating.getRating() < 1){
 			showInfoDialog(getResources().getString(R.string.rc_select_stars));
 			return false;
-		}else {
-			return true;
-		}
-			
+		} if(!StringUtil.isNullOrEmpty(mEdtReviewText.getText().toString().trim())) {
+			if(StringUtil.isNullOrEmpty(mEdtUserName.getText().toString().trim()) && !(store.isLoogedInUser())) {
+				showInfoDialog(getResources().getString(R.string.rc_enter_name));
+				return false;
+			} 
+		} 
+		return true;
 	}
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -387,7 +429,7 @@ public class RateCompanyActivity extends MaxisMainActivity {
 				city_id =-1;
 			}else
 			{
-			city_id = cityList.get(index).getId();
+				city_id = cityList.get(index).getId();
 			}
 
 		} else if (resultCode == RESULT_OK

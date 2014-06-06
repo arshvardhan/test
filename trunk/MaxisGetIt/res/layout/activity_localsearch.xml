@@ -9,21 +9,35 @@
         android:id="@+id/header_base_activity"
         layout="@layout/header_with_popdown_search" />
 
+    <TextView
+        android:id="@+id/title_txv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_bg_green_grey_stroke"
+        android:gravity="left"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingRight="5dp"
+        android:paddingLeft="10dp"
+        android:layout_below="@id/header_base_activity"
+        android:text="@string/my_comanies"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_17"
+        android:textStyle="bold" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/header_base_activity" >
+        android:layout_below="@id/title_txv" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
             android:weightSum="1" >
-			<TextView 
+
+            <!--
+     			<TextView 
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:textSize="@dimen/sp_17"
@@ -31,15 +45,14 @@
 			    android:textStyle="bold"
 			    android:textColor="@color/maxis_green"
 			    android:layout_marginTop="10dp"
-			    />
-           <LinearLayout
-               android:id="@+id/als_companies_container" 
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:orientation="vertical"
-               >
-               
-           </LinearLayout>
+			    />     -->
+
+            <LinearLayout
+                android:id="@+id/als_companies_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

@@ -3,8 +3,8 @@
     android:id="@+id/rootLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:gravity="center_horizontal"
     android:background="@drawable/contest_bg"
+    android:gravity="center_horizontal"
     android:orientation="vertical" >
 
     <include
@@ -14,15 +14,14 @@
     <!--
          <include
         android:id="@+id/footer_base_screen"
-        layout="@layout/footer_home_screen" />-->
-
+        layout="@layout/footer_home_screen" />   -->
 
     <!--
         <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/footer_base_screen"
-        android:layout_below="@+id/header_base_activity" >-->
+        android:layout_below="@+id/header_base_activity" >   -->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -90,12 +89,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
+                    android:background="@drawable/bg_rounded_corner_edit_txt_grey"
                     android:hint="@string/txtv_anp_hint"
                     android:imeOptions="actionNext"
-                    android:background="@drawable/bg_rounded_corner_edit_txt_grey"
-                    android:padding="10dp"
                     android:inputType="none"
                     android:maxLength="100"
+                    android:padding="10dp"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_15" />
@@ -116,17 +115,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
+                    android:background="@drawable/bg_rounded_corner_edit_txt_grey"
+                    android:gravity="top|left"
                     android:hint="@string/txtv_anp_hint"
                     android:imeOptions="actionNext"
                     android:inputType="textMultiLine"
-                    android:background="@drawable/bg_rounded_corner_edit_txt_grey"
-                    android:padding="10dp"
                     android:maxLength="200"
                     android:minLines="4"
+                    android:padding="10dp"
                     android:singleLine="false"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/sp_15"
-                    android:gravity="top|left" />
+                    android:textSize="@dimen/sp_15" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -143,12 +142,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
+                    android:background="@drawable/bg_rounded_corner_edit_txt_grey"
                     android:hint="@string/txtv_anp_hint"
                     android:imeOptions="actionNext"
-                    android:background="@drawable/bg_rounded_corner_edit_txt_grey"
-                    android:padding="10dp"
                     android:inputType="text"
                     android:maxLength="100"
+                    android:padding="10dp"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_15" />
@@ -166,19 +165,19 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginBottom="4dp" >
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginLeft="4dp" >
 
                     <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:inputType="none"
+                        android:background="@drawable/bg_rounded_corner_edit_txt_grey"
                         android:clickable="false"
                         android:cursorVisible="false"
                         android:focusable="false"
-                        android:background="@drawable/bg_rounded_corner_edit_txt_grey"
-                    	android:padding="10dp"
                         android:focusableInTouchMode="false"
+                        android:inputType="none"
+                        android:padding="10dp"
                         android:text="@string/country_code"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sp_15" />
@@ -187,13 +186,14 @@
                         android:id="@+id/company_contact"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/txtv_anp_hint"
-                        android:imeOptions="actionDone"
                         android:layout_marginLeft="10dp"
                         android:background="@drawable/bg_rounded_corner_edit_txt_grey"
-                    	android:padding="10dp"
+                        android:digits="0123456789"
+                        android:hint="@string/txtv_anp_hint"
+                        android:imeOptions="actionDone"
                         android:inputType="phone"
-                        android:maxLength="13"
+                        android:maxLength="11"
+                        android:padding="10dp"
                         android:singleLine="true"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sp_15" />
@@ -239,12 +239,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
+                    android:background="@drawable/bg_rounded_corner_edit_txt_grey"
                     android:hint="@string/txtv_anp_hint"
                     android:imeOptions="actionNext"
-                    android:background="@drawable/bg_rounded_corner_edit_txt_grey"
-                    android:padding="10dp"
                     android:inputType="none"
                     android:maxLength="30"
+                    android:padding="10dp"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_15" />
@@ -268,13 +268,13 @@
                     <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:inputType="none"
+                        android:background="@drawable/bg_rounded_corner_edit_txt_grey"
                         android:clickable="false"
                         android:cursorVisible="false"
                         android:focusable="false"
-                        android:background="@drawable/bg_rounded_corner_edit_txt_grey"
-                    	android:padding="10dp"
                         android:focusableInTouchMode="false"
+                        android:inputType="none"
+                        android:padding="10dp"
                         android:text="@string/country_code"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sp_15" />
@@ -283,13 +283,14 @@
                         android:id="@+id/user_contact"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/txtv_anp_hint"
-                        android:imeOptions="actionDone"
                         android:layout_marginLeft="10dp"
                         android:background="@drawable/bg_rounded_corner_edit_txt_grey"
-                    	android:padding="10dp"
+                        android:digits="0123456789"
+                        android:hint="@string/txtv_anp_hint"
+                        android:imeOptions="actionDone"
                         android:inputType="phone"
                         android:maxLength="11"
+                        android:padding="10dp"
                         android:singleLine="true"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sp_15" />
@@ -300,10 +301,9 @@
                 android:id="@+id/submit_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
                 android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/btn_selector"
                 android:padding="20dp"
                 android:text="@string/submit_poi_btn_txt"

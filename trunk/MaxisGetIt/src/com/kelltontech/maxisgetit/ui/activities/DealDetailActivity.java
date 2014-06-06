@@ -161,6 +161,7 @@ OnGlobalLayoutListener, OnClickListener {
 	private TextView mapLabel;
 	private TextView mMoreDesc;
 	//	private boolean mIsCollapsedView = true;
+	private int mapIndex;
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -424,16 +425,6 @@ OnGlobalLayoutListener, OnClickListener {
 				intent.putExtras(bundle);
 				startActivity(intent);
 
-			}
-		});
-
-		dealGallery.setOnTouchListener(new View.OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				dealGallery.getParent()
-				.requestDisallowInterceptTouchEvent(true);
-				return false;
 			}
 		});
 
@@ -870,8 +861,8 @@ OnGlobalLayoutListener, OnClickListener {
 					mCurrentCompId = marker.getSnippet().split(
 							AppConstants.SPLIT_STRING)[0];
 
-					mCurrentCompId = marker.getSnippet().split(
-							AppConstants.SPLIT_STRING)[0];
+//					mCurrentCompId = marker.getSnippet().split(
+//							AppConstants.SPLIT_STRING)[0];
 					OutLet outLet = mMapInfoWindowAdapter
 							.getValue(mCurrentCompId);
 					Intent intent = new Intent(DealDetailActivity.this,
@@ -1026,14 +1017,12 @@ OnGlobalLayoutListener, OnClickListener {
 						nearestOutLetAddress.setText(outLets.get(0)
 								.getAddress());
 						// leftInfoLayout.setVisibility(View.VISIBLE);
-						// TODO
 						outletCount.setText(outLetResponse.getTotal_records() + " " + "Outlets");
 					}
 					// setUpMapIfNeeded();
 				}
 				stopSppiner();
 			} catch (Exception e) {
-				// TODO: handle exception
 			}
 		} else if (msg.arg2 == Events.DOWNLOAD_DEAL) {
 			if (msg.arg1 == 1) {
@@ -1215,6 +1204,16 @@ OnGlobalLayoutListener, OnClickListener {
 		imgPathList = compDetailResponse.getIconUrl();
 
 		dealGallery = (ViewPager) findViewById(R.id.dealtopbanner);
+		
+		dealGallery.setOnTouchListener(new View.OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				dealGallery.getParent().requestDisallowInterceptTouchEvent(true);
+				return false;
+			}
+		});
+		
 		if (imgPathList != null && imgPathList.size() > 0) {
 			dealGallery.setVisibility(View.VISIBLE);
 			ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(
@@ -1392,7 +1391,7 @@ OnGlobalLayoutListener, OnClickListener {
 	}
 
 	public void showMap(int index) {
-
+		mapIndex = index;
 		if (isDialogToBeShown()) {
 			showConfirmationDialog(CustomDialog.DATA_USAGE_DIALOG,
 					getResources().getString(R.string.cd_msg_data_usage));
@@ -1445,17 +1444,32 @@ OnGlobalLayoutListener, OnClickListener {
 		}
 	}
 
-	public void redirectToMap() {
+/*	public void redirectToMap() {
 		Intent intent = new Intent(DealDetailActivity.this,
 				ViewDealMapActivity.class);
 
 		intent.putParcelableArrayListExtra(AppConstants.OUTLET_DATA, outLets);
-		intent.putExtra("index", index);
+		intent.putExtra("index", mapIndex)
 		if (!StringUtil.isNullOrEmpty(compDetailResponse.getTitle()))
 			intent.putExtra("DEAL_TITLE", compDetailResponse.getTitle());
 		startActivity(intent);
-	}
+	}*/
 
+	public void redirectToMap() {
+		Intent intent = new Intent(DealDetailActivity.this,
+				ViewDealMapActivity.class);
+		intent.putParcelableArrayListExtra(AppConstants.OUTLET_DATA, outLets);
+		intent.putExtra("index", mapIndex);
+		if (mapIndex != -1) {
+			if (!StringUtil.isNullOrEmpty(outLets.get(mapIndex).getTitle()))
+				intent.putExtra("DEAL_TITLE", outLets.get(mapIndex).getTitle());
+		} else {
+			if (!StringUtil.isNullOrEmpty(compDetailResponse.getTitle()))
+				intent.putExtra("DEAL_TITLE", compDetailResponse.getTitle());
+		}
+		startActivity(intent);
+	}
+	
 /*	private void showMapActivity() {
 		if (isLocationAvailable()) {
 			String url = "http://maps.google.com/maps?saddr="

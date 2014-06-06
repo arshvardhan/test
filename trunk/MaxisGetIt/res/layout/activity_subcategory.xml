@@ -57,7 +57,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/cl_header_view"
-            android:orientation="vertical" >
+            android:orientation="vertical" 
+            android:visibility="gone">
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/subcategory_banner"

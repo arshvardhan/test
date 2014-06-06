@@ -299,26 +299,28 @@
                         android:background="@color/bar_light_grey" />
 
                     <TextView
-                        android:id="@+id/amc_classified"
+                        android:id="@+id/amc_shortlisted"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight=".333"
                         android:clickable="true"
-                        android:drawableLeft="@drawable/classified"
+                        android:drawableLeft="@drawable/short_list"
                         android:drawablePadding="20dp"
                         android:gravity="left|center_vertical"
                         android:paddingBottom="10dp"
                         android:paddingLeft="10dp"
                         android:paddingRight="3dp"
                         android:paddingTop="10dp"
-                        android:text="@string/acc_my_classified"
+                        android:text="@string/acc_my_fav"
                         android:textColor="@color/text_light_grey"
-                        android:textSize="@dimen/sp_14" />
+                        android:textSize="@dimen/sp_14"
+                        android:visibility="visible" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/bar_light_grey" />
+                        android:background="@color/bar_light_grey"
+                        android:visibility="visible" />
 
                     <TextView
                         android:id="@+id/amc_deals"
@@ -333,6 +335,28 @@
                         android:paddingRight="3dp"
                         android:paddingTop="10dp"
                         android:text="@string/acc_my_deals"
+                        android:textColor="@color/text_light_grey"
+                        android:textSize="@dimen/sp_14" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/bar_light_grey" />
+
+                    <TextView
+                        android:id="@+id/amc_classified"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".333"
+                        android:clickable="true"
+                        android:drawableLeft="@drawable/classified"
+                        android:drawablePadding="20dp"
+                        android:gravity="left|center_vertical"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="3dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/acc_my_classified"
                         android:textColor="@color/text_light_grey"
                         android:textSize="@dimen/sp_14" />
 
@@ -364,30 +388,6 @@
                         android:layout_height="1dp"
                         android:background="@color/bar_light_grey"
                         android:visibility="gone" />
-
-                    <TextView
-                        android:id="@+id/amc_shortlisted"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".333"
-                        android:clickable="true"
-                        android:drawableLeft="@drawable/short_list"
-                        android:drawablePadding="20dp"
-                        android:gravity="left|center_vertical"
-                        android:paddingBottom="10dp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="3dp"
-                        android:paddingTop="10dp"
-                        android:text="@string/acc_my_fav"
-                        android:textColor="@color/text_light_grey"
-                        android:textSize="@dimen/sp_14"
-                        android:visibility="visible" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/bar_light_grey"
-                        android:visibility="visible" />
 
                     <TextView
                         android:id="@+id/amc_best_price"
@@ -443,8 +443,8 @@
                     <TableRow
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical" 
-                        android:paddingRight="10dp">
+                        android:gravity="center_vertical"
+                        android:paddingRight="10dp" >
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -459,10 +459,9 @@
                             android:id="@+id/company_spinner"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:drawablePadding="10dp" 
+                            android:drawablePadding="10dp"
                             android:drawableRight="@drawable/arrow"
-                            />
+                            android:padding="10dp" />
                     </TableRow>
 
                     <TextView
@@ -489,9 +488,8 @@
                             android:id="@+id/category_spinner"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="10dp"
                             android:drawableRight="@drawable/arrow"
-                             />
+                            android:padding="10dp" />
                     </TableRow>
 
                     <TextView
@@ -502,8 +500,8 @@
                     <TableRow
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical" 
-                        android:paddingRight="10dp">
+                        android:gravity="center_vertical"
+                        android:paddingRight="10dp" >
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -556,8 +554,8 @@
                     <TableRow
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical" 
-                        android:paddingRight="10dp">
+                        android:gravity="center_vertical"
+                        android:paddingRight="10dp" >
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -610,12 +608,12 @@
                                 android:id="@+id/life_cycle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:padding="15dp"
                                 android:clickable="true"
                                 android:focusableInTouchMode="true"
+                                android:padding="15dp"
                                 android:text="@string/view_life_cycle"
-                                android:textColor="@color/green" 
-                                android:visibility="gone"/>
+                                android:textColor="@color/green"
+                                android:visibility="gone" />
                         </LinearLayout>
                     </TableRow>
 
@@ -643,8 +641,8 @@
                             android:id="@+id/my_plan"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="ABCD"
-                            android:padding="10dp" />
+                            android:padding="10dp"
+                            android:text="ABCD" />
                     </TableRow>
 
                     <TextView
@@ -671,8 +669,8 @@
                             android:id="@+id/lead_cost"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="ABCD"
-                            android:padding="10dp" />
+                            android:padding="10dp"
+                            android:text="ABCD" />
                     </TableRow>
 
                     <TextView

@@ -24,7 +24,7 @@
     <string name="category_list_not_found">Insufficient information to process your request</string>
     <string name="record_found"><u>Record(s) Found Near You</u></string>
     <string name="deal_found">Deal(s) Found Near You</string>
-    <string name="outlet_found">Outlet(s) Found Near You</string>
+    <string name="outlet_found">outlet(s) found</string>
     <string name="category_deals">Featured Deals Category</string>
     <string name="cl_hot_deals">Hot Deals</string>
     <string name="cl_view_on_map">View on Map</string>
@@ -53,7 +53,7 @@
     <string name="cd_error_enable_gps">Please enable your GPS Settings.</string>
     <string name="cd_error_location_not_found">Unable to find your location. Please try again.</string>
     <string name="cd_error_sensor_not_found">Your device does not support this feature.</string>
-    <string name="txt_tnc"><u>Terms &amp; Conditions</u></string>
+    <string name="txt_tnc">Terms &amp; Conditions</string>
     <string name="cd_view_more">View more</string>
     <string name="cd_write_review"><u>Write a Review</u></string>
     <string name="cd_no_review">No review(s)</string>
@@ -129,8 +129,8 @@
     <string name="contact_detail">Contact Details</string>
     <string name="contact">TEL</string>
     <string name="contact_channels">Contact Channels</string>
-    <string name="company_details">Company Details -</string>
-    <string name="current_list_type">Current Listing Type -</string>
+    <string name="company_details">Company Details :</string>
+    <string name="current_list_type">Current Listing Type :</string>
     <string name="date_format">"YYYY-MM-DD"</string>
     <string name="dear_guest">Dear Guest</string>
     <string name="dear">Dear</string>
@@ -164,6 +164,7 @@
     <string name="leads_unavailable">Leads Unavailable</string>
     <string name="login">Sign In</string>
     <string name="local_search">Local Search</string>
+    <string name="my_comanies">My Company(ies)</string>
     <string name="language">Language</string>
     <string name="more"><u>More</u></string>
     <string name="menu_settings">Settings</string>
@@ -307,6 +308,7 @@
     <string name="rc_provide_review">Please provide your review about %s in maximum 250 words.</string>
     <string name="rc_review_moderation">Your review will be submitted for moderation before publishing.</string>
     <string name="rc_select_stars">Please select rating stars first!</string>
+    <string name="rc_enter_name">Please enter your Name.</string>
     <string name="rc_char_count">( 250 characters )</string>
 
     <!-- ViewAllReview Activity -->
@@ -390,7 +392,7 @@
     <string name="title_activity_video_play">VideoPlayActivity</string>
     <string name="mobile_number_validation">Mobile Number should be 8-11 digits and start with 1.</string>
     <string name="mobile_number_validation_contestapp">Your Contact Number should be 8-11 digits and start with 1.</string>
-    <string name="mobile_number_validation_contestapp_company">Company Contact Number must be 8-13 digits, starting with Non-Zero and excluding Country Code.</string>
+    <string name="mobile_number_validation_contestapp_company">Company Contact Number must be 8-11 digits, starting with Non-Zero and excluding Country Code.</string>
     <string name="blank_mobile_number">Please enter Mobile Number.</string>
     <string name="title_activity_view_deal_map">ViewDealMapActivity</string>
     <string name="title_activity_view_all_outlets">ViewAllOutletsActivity</string>

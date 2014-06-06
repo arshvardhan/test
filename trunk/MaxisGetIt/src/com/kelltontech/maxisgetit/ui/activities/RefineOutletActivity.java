@@ -94,11 +94,18 @@ public class RefineOutletActivity extends MaxisMainActivity {
 	ArrayList<String> localities;
 	private OutLetDetails outLetResponse;
 	ArrayList<OutLet> outLets = new ArrayList<OutLet>();
+	private String city = "";
+	private String locality = "";
+
+	private String previousCity;
+	private String previousLocality;
+	private int isSearchedModified;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_refine_outlet);
+		AnalyticsHelper.logEvent(FlurryEventsConstants.User_Visits_the_Deals_outlet_Modify_Page);
 		UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.ms_root_layout),
 				this);
 		ImageLoader.initialize(RefineOutletActivity.this);
@@ -114,10 +121,26 @@ public class RefineOutletActivity extends MaxisMainActivity {
 		mSpinnerHolder = (LinearLayout) findViewById(R.id.ms_spinner_holder);
 		Bundle bundle = getIntent().getExtras();
 		detailRequest = bundle.getParcelable("OutletRequest");
-		citiesList = bundle.getStringArrayList("CITIES_ARRAYLIST");
-		citiesList.add(0, "Select");
+		isSearchedModified = bundle.getInt("isSearchedModified");
 
+		if(isSearchedModified == 1) {
+			previousCity = bundle.getString("selectedCity");
+			previousLocality = bundle.getString("selectedLocality");
+			citiesList = bundle.getStringArrayList("cityList");
+			localities = bundle.getStringArrayList("localityList");
+		} else {
+			citiesList = bundle.getStringArrayList("CITIES_ARRAYLIST");
+			citiesList.add(0, "Select");
+		}
 		showCitySpinner();
+		if(isSearchedModified == 1) {
+			for (int i = 0; i < citiesList.size(); i++) {
+				if ((citiesList.get(i)).equals(previousCity))
+					mCitySelSpinner.setSelection(i);
+			}
+			localities.add(0, "Select");
+			showLocalitySpinner();
+		}
 
 		mCatResponse = (RefineCategoryResponse) bundle
 				.get(AppConstants.REFINE_CAT_RESPONSE);
@@ -176,7 +199,7 @@ public class RefineOutletActivity extends MaxisMainActivity {
 		super.onResume();
 		AnalyticsHelper.trackSession(RefineOutletActivity.this, AppConstants.Screen_DealOutletModify);
 	}
-	
+
 	private void showLocalitySpinner() {
 		if (localities != null && localities.size() > 1) {
 			ArrayAdapter<String> localityAdp = new ArrayAdapter<String>(
@@ -187,6 +210,12 @@ public class RefineOutletActivity extends MaxisMainActivity {
 			// if (mLocalitySelectorDao.getSelectedIndex() > 0)
 			// mLocalitySelSpinner.setSelection(mLocalitySelectorDao
 			// .getSelectedIndex());
+			if(isSearchedModified == 1) {
+				for (int i = 0; i < localities.size(); i++) {
+					if ((localities.get(i)).equals(previousLocality))
+						mLocalitySelSpinner.setSelection(i);
+				}
+			}
 		} else {
 			mLocalitySpinnerContainer.setVisibility(View.GONE);
 		}
@@ -210,6 +239,9 @@ public class RefineOutletActivity extends MaxisMainActivity {
 					String deal_id = detailRequest.getDeal_id();
 					String cityName = citiesList.get(position);
 					getLocalities(deal_id, cityName);
+				} else {
+					mLocalitySpinnerContainer.setVisibility(View.GONE);
+					
 				}
 			}
 
@@ -348,11 +380,14 @@ public class RefineOutletActivity extends MaxisMainActivity {
 					outLets = outLetResponse.getOutlet();
 					if (outLets != null && outLets.size() > 0) {
 						Intent intent = new Intent();
-						intent.putExtra(AppConstants.OUTLET_DETAIL_DATA,
-								outLetResponse);
-						intent.putExtra("totalCount", Integer
-								.parseInt(outLetResponse.getTotal_records()));
+						intent.putExtra(AppConstants.OUTLET_DETAIL_DATA, outLetResponse);
+						intent.putExtra("totalCount", Integer.parseInt(outLetResponse.getTotal_records()));
 						intent.putExtra("OutletRequest", detailRequest);
+						intent.putExtra("isSearchModified", 1);
+						intent.putExtra("selectedCity", (StringUtil.isNullOrEmpty(city)) ? "" : city.trim());
+						intent.putExtra("selectedLocality", (StringUtil.isNullOrEmpty(locality)) ? "" : locality.trim());
+						intent.putStringArrayListExtra("cityList", (citiesList != null && citiesList.size() > 0) ? citiesList : null);
+						intent.putStringArrayListExtra("localityList", (localities != null && localities.size() > 0) ? localities : null);
 						setResult(RESULT_OK, intent);
 						finish();
 					} else {
@@ -462,7 +497,7 @@ public class RefineOutletActivity extends MaxisMainActivity {
 			break;
 		case R.id.mainSearchButton:
 			mSearchEditText
-					.setText(mSearchEditText.getText().toString().trim());
+			.setText(mSearchEditText.getText().toString().trim());
 
 			String JSON_EXTRA = jsonForSearch();
 			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
@@ -474,12 +509,17 @@ public class RefineOutletActivity extends MaxisMainActivity {
 
 			OutLetDetailtController detailtController = new OutLetDetailtController(
 					RefineOutletActivity.this, Events.OUTLET_DETAIL);
-			String city = citiesList.get(mCitySelSpinner
+			city = citiesList.get(mCitySelSpinner
 					.getSelectedItemPosition());
-			String locality = localities.get(mLocalitySelSpinner
+			locality = localities.get(mLocalitySelSpinner
 					.getSelectedItemPosition());
-			detailRequest.setCityName(city);
-			detailRequest.setLocalityName(locality);
+			detailRequest.setCityName(("Select".equals(city)) ? "" : city);
+			if ("".equals(detailRequest.getCityName())) {
+				detailRequest.setLocalityName("");
+			}
+			else {
+			detailRequest.setLocalityName(("Select".equals(locality)) ? "" : locality);
+			}
 			detailRequest.setPage_number(1);
 			startSppiner();
 			detailtController.requestService(detailRequest);

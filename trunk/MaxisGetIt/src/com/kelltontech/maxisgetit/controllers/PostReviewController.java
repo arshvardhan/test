@@ -63,6 +63,8 @@ public class PostReviewController extends BaseServiceController {
 			jsonObject.put(GenralRequest.KEY_RATING, postRevRequest.getRating());
 			jsonObject.put(GenralRequest.KEY_REVIEW, postRevRequest.getReview());
 			jsonObject.put(GenralRequest.KEY_UID, postRevRequest.getUserId());
+			jsonObject.put(GenralRequest.KEY_MOBILE, postRevRequest.getMobileNumber());
+			jsonObject.put(GenralRequest.KEY_NAME, postRevRequest.getUserName());
 			Log.d("json", jsonObject.toString());
 			
 			serviceRq.setPostData(new ByteArrayEntity(jsonObject.toString().getBytes()));

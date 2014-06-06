@@ -28,6 +28,7 @@ public class SessionTokenController extends BaseServiceController {
 	 */
 	protected static final String API_HEADER_NAME_SESSION_ID 	= "session_id";
 	protected static final String API_HEADER_NAME_TOKEN 		= "token";
+	protected static final String API_HEADER_NAME_FORCE_UPDATE 	= "ForceAppUpdate";
 	
 	public SessionTokenController(Activity activity, IActionController screen, int eventType) {
 		super(screen, eventType);
@@ -80,6 +81,7 @@ public class SessionTokenController extends BaseServiceController {
 	public void responseService(Object responseObject) {
 		String sessionId = null;
 		String authToken = null;
+		String forceUpdate = null;
 		
 		if( responseObject instanceof Header[]) {
 			Header[] httpHeadersArr = (Header[]) responseObject;
@@ -90,6 +92,9 @@ public class SessionTokenController extends BaseServiceController {
 				if( API_HEADER_NAME_TOKEN.equals(header.getName()) ) {
 					authToken = header.getValue();
 				}
+				if (API_HEADER_NAME_FORCE_UPDATE.equals(header.getName())) {
+					forceUpdate = header.getValue();
+				}
 			}
 		}
 		if( StringUtil.isNullOrEmpty(sessionId) || StringUtil.isNullOrEmpty(authToken) ) {
@@ -98,6 +103,7 @@ public class SessionTokenController extends BaseServiceController {
 			AppSharedPreference.putString(AppSharedPreference.API_SESSION_ID, sessionId, mActivity);
 			AppSharedPreference.putString(AppSharedPreference.API_TOKEN, authToken, mActivity);
 			mScreen.setScreenData(true, mEventType, 0);
+			Log.d("Session Token", "sessionId : " + sessionId + "authToken : " + authToken + "forceUpdate : " + forceUpdate);
 		}
 	}
 }

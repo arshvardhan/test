@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kelltontech.framework.db.MyApplication;
+import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
@@ -128,7 +129,7 @@ public class LocalSearchActivity extends MaxisMainActivity {
 		super.onResume();
 		AnalyticsHelper.trackSession(LocalSearchActivity.this, AppConstants.MyCompany);
 	}
-	
+
 	private void inflateCompanyDetail(CompanyDetail compDetail) {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		LinearLayout compContainer = (LinearLayout) inflater.inflate(
@@ -136,55 +137,55 @@ public class LocalSearchActivity extends MaxisMainActivity {
 		TextView compTitle = (TextView) compContainer
 				.findViewById(R.id.lscl_title);
 		compTitle.setText(compDetail.getTitle());
-//		TextView editLink = (TextView) compContainer
-//				.findViewById(R.id.lscl_edit_link);
-//		editLink.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				showToast(LocalSearchActivity.this.getResources().getString(
-//						R.string.under_implement));
-//			}
-//		});
-//		TextView viewLeads = (TextView) compContainer
-//				.findViewById(R.id.lscl_view_lead);
-//		viewLeads.setTag(compDetail);
-//		viewLeads.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				CompanyDetail companyDetail = (CompanyDetail) v.getTag();
-//				CategoriesedLeadsController catLeadsController = new CategoriesedLeadsController(
-//						LocalSearchActivity.this, Events.COMPANY_LEADS);
-//				startSppiner();
-//				catLeadsController.requestService(companyDetail.getId());
-//				// showToast(LocalSearchActivity.this.getResources().getString(R.string.under_implement));
-//			}
-//		});
-//		TextView removeLink = (TextView) compContainer
-//				.findViewById(R.id.lscl_remove_link);
-//		removeLink.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				showToast(LocalSearchActivity.this.getResources().getString(
-//						R.string.under_implement));
-//			}
-//		});
+		//		TextView editLink = (TextView) compContainer
+		//				.findViewById(R.id.lscl_edit_link);
+		//		editLink.setOnClickListener(new OnClickListener() {
+		//			@Override
+		//			public void onClick(View v) {
+		//				showToast(LocalSearchActivity.this.getResources().getString(
+		//						R.string.under_implement));
+		//			}
+		//		});
+		//		TextView viewLeads = (TextView) compContainer
+		//				.findViewById(R.id.lscl_view_lead);
+		//		viewLeads.setTag(compDetail);
+		//		viewLeads.setOnClickListener(new OnClickListener() {
+		//			@Override
+		//			public void onClick(View v) {
+		//				CompanyDetail companyDetail = (CompanyDetail) v.getTag();
+		//				CategoriesedLeadsController catLeadsController = new CategoriesedLeadsController(
+		//						LocalSearchActivity.this, Events.COMPANY_LEADS);
+		//				startSppiner();
+		//				catLeadsController.requestService(companyDetail.getId());
+		//				// showToast(LocalSearchActivity.this.getResources().getString(R.string.under_implement));
+		//			}
+		//		});
+		//		TextView removeLink = (TextView) compContainer
+		//				.findViewById(R.id.lscl_remove_link);
+		//		removeLink.setOnClickListener(new OnClickListener() {
+		//			@Override
+		//			public void onClick(View v) {
+		//				showToast(LocalSearchActivity.this.getResources().getString(
+		//						R.string.under_implement));
+		//			}
+		//		});
 		TextView listingType = (TextView) compContainer
 				.findViewById(R.id.lscl_listing_type);
-//		TextView upgradeToPremium = (TextView) compContainer
-//				.findViewById(R.id.lscl_upgrade_btn);
-//		if (!compDetail.isPaid()) {
-//			listingType.setText(getResources().getString(R.string.free));
-//			upgradeToPremium.setOnClickListener(new OnClickListener() {
-//				@Override
-//				public void onClick(View v) {
-//					showToast(LocalSearchActivity.this.getResources()
-//							.getString(R.string.under_implement));
-//				}
-//			});
-//		} else {
-//			listingType.setText(getResources().getString(R.string.paid));
-//			upgradeToPremium.setVisibility(View.GONE);
-//		}
+		//		TextView upgradeToPremium = (TextView) compContainer
+		//				.findViewById(R.id.lscl_upgrade_btn);
+				if (!compDetail.isPaid()) {
+					listingType.setText(getResources().getString(R.string.free));
+		//			upgradeToPremium.setOnClickListener(new OnClickListener() {
+		//				@Override
+		//				public void onClick(View v) {
+		//					showToast(LocalSearchActivity.this.getResources()
+		//							.getString(R.string.under_implement));
+		//				}
+		//			});
+				} else {
+					listingType.setText(getResources().getString(R.string.paid));
+		//			upgradeToPremium.setVisibility(View.GONE);
+				}
 		if (!compDetail.isContactChannelExists()) {
 			LinearLayout contactChannelContainer = (LinearLayout) compContainer
 					.findViewById(R.id.lscl_contact_channel);
@@ -198,7 +199,12 @@ public class LocalSearchActivity extends MaxisMainActivity {
 					.findViewById(R.id.lscl_email);
 			billingNumber.setText(compDetail.getBillingNumber());
 			FwdCommNumber.setText(compDetail.getCallNumber());
-			emailId.setText(compDetail.getMailId());
+			if (!StringUtil.isNullOrEmpty(compDetail.getMailId())) {
+				((LinearLayout) compContainer.findViewById(R.id.email_lnr_layout)).setVisibility(View.VISIBLE);
+				emailId.setText(compDetail.getMailId());
+			} else {
+				((LinearLayout) compContainer.findViewById(R.id.email_lnr_layout)).setVisibility(View.GONE);
+			}
 		}
 		mCompaniesContainer.addView(compContainer);
 	}
@@ -221,7 +227,7 @@ public class LocalSearchActivity extends MaxisMainActivity {
 			break;
 		case R.id.mainSearchButton:
 			mSearchEditText
-					.setText(mSearchEditText.getText().toString().trim());
+			.setText(mSearchEditText.getText().toString().trim());
 			String JSON_EXTRA = jsonForSearch();
 			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
 			break;
@@ -377,7 +383,7 @@ public class LocalSearchActivity extends MaxisMainActivity {
 				city_id =-1;
 			}else
 			{
-			city_id = cityList.get(index).getId();
+				city_id = cityList.get(index).getId();
 			}
 
 		} else if (resultCode == RESULT_OK

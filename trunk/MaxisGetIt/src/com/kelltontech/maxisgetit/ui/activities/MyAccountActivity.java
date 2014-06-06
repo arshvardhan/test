@@ -247,7 +247,7 @@ public class MyAccountActivity extends MaxisMainActivity {
 			}
 		});
 
-		getDashboardData();
+//		getDashboardData();
 	}
 
 	@Override
@@ -331,18 +331,18 @@ public class MyAccountActivity extends MaxisMainActivity {
 			selectedCompany = data.getStringExtra("ChosenCompanyOrCategory");
 			companyPos = data.getIntExtra("Position", 0);
 			setCompanyData();
-//			companyChooser.setText(mCompany.get(companyPos));
-//			catDetails = response.getData().get(companyPos).getCatdetails();
-//			categoryChooser.setText(catDetails.get(0).getCatname());
-//			mCategory = new ArrayList<String>();
-//			for (int i = 0; i < catDetails.size(); i++) {
-//				mCategory.add(catDetails.get(i).getCatname());
-//			}
-//
-//			if (selectedCompany.trim().equals(
-//					response.getData().get(companyPos).getCname().trim())) {
-//				compId = response.getData().get(companyPos).getCid();
-//			}
+			//			companyChooser.setText(mCompany.get(companyPos));
+			//			catDetails = response.getData().get(companyPos).getCatdetails();
+			//			categoryChooser.setText(catDetails.get(0).getCatname());
+			//			mCategory = new ArrayList<String>();
+			//			for (int i = 0; i < catDetails.size(); i++) {
+			//				mCategory.add(catDetails.get(i).getCatname());
+			//			}
+			//
+			//			if (selectedCompany.trim().equals(
+			//					response.getData().get(companyPos).getCname().trim())) {
+			//				compId = response.getData().get(companyPos).getCid();
+			//			}
 		} else if (resultCode == RESULT_OK && requestCode == 11) {
 			selectedCategory = data.getStringExtra("ChosenCompanyOrCategory");
 			categoryPos = data.getIntExtra("Position", 0);
@@ -350,79 +350,127 @@ public class MyAccountActivity extends MaxisMainActivity {
 			setCategoryData();
 			// companyChooser.setText(mCompany.get(companyPos));
 			// catDetails = response.getData().get(companyPos).getCatdetails();
-//			categoryChooser.setText(catDetails.get(categoryPos).getCatname());
-//
-//			totalViews.setText(catDetails.get(categoryPos).getTotalView());
-//			totalLeads.setText(catDetails.get(categoryPos).getTotalLeads());
-//			myTotalViews.setText(catDetails.get(categoryPos).getMyTotalView());
-//			myActiveVirtualNo.setText(catDetails.get(categoryPos)
-//					.getMaxisDidNumber());
-//			if (catDetails!= null && catDetails.get(categoryPos)!=null && StringUtil.isNullOrEmpty(catDetails.get(categoryPos).getMaxisDidNumber())) { 
-//				lifeCycle.setVisibility(View.GONE);
-//			} else {
-//				lifeCycle.setVisibility(View.VISIBLE);
-//			}
-//			myPlan.setText(catDetails.get(categoryPos).getSubscription());
-//			leadCost.setText(catDetails.get(categoryPos).getPrice());
-//
-//			if (selectedCategory.trim().equals(
-//					response.getData().get(companyPos).getCatdetails()
-//					.get(categoryPos).getCatname().trim())) {
-//				catId = response.getData().get(companyPos).getCatdetails()
-//						.get(categoryPos).getCatid();
-//			}
+			//			categoryChooser.setText(catDetails.get(categoryPos).getCatname());
+			//
+			//			totalViews.setText(catDetails.get(categoryPos).getTotalView());
+			//			totalLeads.setText(catDetails.get(categoryPos).getTotalLeads());
+			//			myTotalViews.setText(catDetails.get(categoryPos).getMyTotalView());
+			//			myActiveVirtualNo.setText(catDetails.get(categoryPos)
+			//					.getMaxisDidNumber());
+			//			if (catDetails!= null && catDetails.get(categoryPos)!=null && StringUtil.isNullOrEmpty(catDetails.get(categoryPos).getMaxisDidNumber())) { 
+			//				lifeCycle.setVisibility(View.GONE);
+			//			} else {
+			//				lifeCycle.setVisibility(View.VISIBLE);
+			//			}
+			//			myPlan.setText(catDetails.get(categoryPos).getSubscription());
+			//			leadCost.setText(catDetails.get(categoryPos).getPrice());
+			//
+			//			if (selectedCategory.trim().equals(
+			//					response.getData().get(companyPos).getCatdetails()
+			//					.get(categoryPos).getCatname().trim())) {
+			//				catId = response.getData().get(companyPos).getCatdetails()
+			//						.get(categoryPos).getCatid();
+			//			}
 		}
 
 	}
 
 	private void setCompanyData () {
-		companyChooser.setText(mCompany.get(companyPos).trim());
-		catDetails = response.getData().get(companyPos).getCatdetails();
-		categoryChooser.setText(catDetails.get(0).getCatname().trim());
-		mCategory = new ArrayList<String>();
-		for (int i = 0; i < catDetails.size(); i++) {
-			mCategory.add(catDetails.get(i).getCatname());
-		}
 
-		if (selectedCompany.trim().equals(
-				response.getData().get(companyPos).getCname().trim())) {
-			compId = response.getData().get(companyPos).getCid();
+		if (!StringUtil.isNullOrEmpty(mCompany.get(companyPos).trim())) {
+			companyChooser.setText(mCompany.get(companyPos).trim());
+		} else {
+			companyChooser.setText("Select");
+			showInfoDialog("You have no company.");
+			return;
+		}
+		if (response != null && response.getData().get(companyPos).getCatdetails() != null && response.getData().get(companyPos).getCatdetails().size() > 0) {
+			catDetails = response.getData().get(companyPos).getCatdetails();
+			categoryChooser.setText(catDetails.get(0).getCatname().trim());
+			mCategory = new ArrayList<String>();
+			for (int i = 0; i < catDetails.size(); i++) {
+				mCategory.add(catDetails.get(i).getCatname());
+			}
+
+			if (selectedCompany.trim().equals(
+					response.getData().get(companyPos).getCname().trim())) {
+				compId = response.getData().get(companyPos).getCid();
+			}
+		} else {
+			catDetails = null;
 		}
 		categoryPos = 0;
 		setCategoryData();
 	}
-	
+
 	private void setCategoryData() {
-		categoryChooser.setText(catDetails.get(categoryPos).getCatname().trim());
+		if (catDetails != null) {
+			if (!StringUtil.isNullOrEmpty(catDetails.get(categoryPos).getCatname().trim())) {
+				categoryChooser.setText(catDetails.get(categoryPos).getCatname().trim());
+			} else {
+				categoryChooser.setText("Select");
+				showInfoDialog("Selected Company has no category.");
+			}
 
-		totalViews.setText(catDetails.get(categoryPos).getTotalView().trim());
+			if (!StringUtil.isNullOrEmpty(catDetails.get(categoryPos).getTotalView().trim())) {
+				totalViews.setText(catDetails.get(categoryPos).getTotalView().trim());
+			} else {
+				totalViews.setText("0");
+			}
 
-		
-		if (catDetails!= null && catDetails.get(categoryPos)!=null && (StringUtil.isNullOrEmpty(catDetails.get(categoryPos).getTotalLeads()) || (catDetails.get(categoryPos).getTotalLeads().equals("N.A.")))) { 
+			if (catDetails!= null && catDetails.get(categoryPos)!=null && (StringUtil.isNullOrEmpty(catDetails.get(categoryPos).getTotalLeads()) || (catDetails.get(categoryPos).getTotalLeads().equals("N.A.")))) { 
+				totalLeads.setText("0");
+			} else {
+				totalLeads.setText(catDetails.get(categoryPos).getTotalLeads().trim());
+			}
+
+			if (!StringUtil.isNullOrEmpty(catDetails.get(categoryPos).getMyTotalView().trim())) {
+				myTotalViews.setText(catDetails.get(categoryPos).getMyTotalView());
+			} else {
+				myTotalViews.setText("0");
+			}
+
+			if (!StringUtil.isNullOrEmpty(catDetails.get(categoryPos).getMaxisDidNumber().trim())) {
+				myActiveVirtualNo.setText(catDetails.get(categoryPos).getMaxisDidNumber().trim());
+			} else {
+				myActiveVirtualNo.setText("N.A.");
+			}
+
+			if (catDetails!= null && catDetails.get(categoryPos)!=null && (StringUtil.isNullOrEmpty(catDetails.get(categoryPos).getMaxisDidNumber()) || (catDetails.get(categoryPos).getMaxisDidNumber().equals("N.A.")))) { 
+				lifeCycle.setVisibility(View.GONE);
+			} else {
+				lifeCycle.setVisibility(View.VISIBLE);
+			}
+
+			if (!StringUtil.isNullOrEmpty(catDetails.get(categoryPos).getSubscription().trim())) {
+				myPlan.setText(catDetails.get(categoryPos).getSubscription().trim());
+			} else {
+				myPlan.setText("N.A.");
+			}
+
+			if (!StringUtil.isNullOrEmpty(catDetails.get(categoryPos).getPrice().trim())) {
+				leadCost.setText(catDetails.get(categoryPos).getPrice().trim());
+			} else {
+				leadCost.setText("N.A.");
+			}
+
+//			if (selectedCategory.trim().equals(response.getData().get(companyPos).getCatdetails().get(categoryPos).getCatname().trim())) {
+				catId = response.getData().get(companyPos).getCatdetails().get(categoryPos).getCatid();
+//			}
+		} else {
+			catId = "-1";
+			categoryChooser.setText("Select");
+//			showInfoDialog("Selected Company has no category.");
+			totalViews.setText("0");
 			totalLeads.setText("0");
-		} else {
-			totalLeads.setText(catDetails.get(categoryPos).getTotalLeads().trim());
-		}
-		
-		myTotalViews.setText(catDetails.get(categoryPos).getMyTotalView().trim());
-		myActiveVirtualNo.setText(catDetails.get(categoryPos)
-				.getMaxisDidNumber().trim());
-		if (catDetails!= null && catDetails.get(categoryPos)!=null && (StringUtil.isNullOrEmpty(catDetails.get(categoryPos).getMaxisDidNumber()) || (catDetails.get(categoryPos).getMaxisDidNumber().equals("N.A.")))) { 
+			myTotalViews.setText("0");
+			myActiveVirtualNo.setText("N.A.");
 			lifeCycle.setVisibility(View.GONE);
-		} else {
-			lifeCycle.setVisibility(View.VISIBLE);
-		}
-		myPlan.setText(catDetails.get(categoryPos).getSubscription());
-		leadCost.setText(catDetails.get(categoryPos).getPrice().trim());
-
-		if (selectedCategory.trim().equals(
-				response.getData().get(companyPos).getCatdetails()
-				.get(categoryPos).getCatname().trim())) {
-			catId = response.getData().get(companyPos).getCatdetails()
-					.get(categoryPos).getCatid();
+			myPlan.setText("N.A.");
+			leadCost.setText("N.A.");
 		}
 	}
-	
+
 	private void saveSettings() {
 		if (mLangContainerRG.getCheckedRadioButtonId() == R.id.as_lang_en) {
 			mStore.setEnglishSelected(true);
@@ -586,7 +634,7 @@ public class MyAccountActivity extends MaxisMainActivity {
 		case R.id.life_cycle:
 			Intent lifeCycleIntent = new Intent(MyAccountActivity.this, LifeCycleViewActivity.class);
 			String lifeCycleURL = AppConstants.LIFE_CYCLE_WEBVIEW_SERVER  + compId + "/" + catId;
-//			String lifeCycleURL = "http://192.168.13.117/FMS_WAP/wap/trunk/users/didLifeCycleApp/" + compId + "/" + catId;
+			//			String lifeCycleURL = "http://192.168.13.117/FMS_WAP/wap/trunk/users/didLifeCycleApp/" + compId + "/" + catId;
 			if (!StringUtil.isNullOrEmpty(lifeCycleURL)) {
 				lifeCycleIntent.putExtra(AppConstants.LIFE_CYCLE_URL, lifeCycleURL);
 				startActivityForResult(lifeCycleIntent,
@@ -613,11 +661,11 @@ public class MyAccountActivity extends MaxisMainActivity {
 					openDeviceBrowser(url, true);
 				}
 				AnalyticsHelper
-						.logEvent(FlurryEventsConstants.VERIFY_EMAIL_CLICK);
+				.logEvent(FlurryEventsConstants.VERIFY_EMAIL_CLICK);
 			}
 		}
 	}
-	
+
 	@Override
 	public void updateUI(Message msg) {
 		if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE
@@ -947,12 +995,15 @@ public class MyAccountActivity extends MaxisMainActivity {
 
 			@Override
 			public void onClick(View v) {
+				if (!("-1".equals(catId))) {
 				Intent intentCompSelector = new Intent(MyAccountActivity.this,
 						CompanyOrCategoryFilterActivity.class);
 				intentCompSelector.putStringArrayListExtra("compOrcat",
 						mCategory);
 				startActivityForResult(intentCompSelector, 11);
-
+				} else {
+					showInfoDialog("Selected Company has no category.");
+				}
 			}
 		});
 

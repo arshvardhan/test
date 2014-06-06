@@ -99,7 +99,8 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 		mClRequest = bundle.getParcelable(AppConstants.DATA_LIST_REQUEST);
 		String headerTitle = bundle.getString(AppConstants.MAP_ALL_TITLE);
 		boolean isSearchKeyword = bundle.getBoolean(AppConstants.IS_SEARCH_KEYWORD);
-		compDetailResponse = null;
+//		compDetailResponse = null;
+		compDetailResponse = bundle.getParcelable(AppConstants.COMP_DETAIL_DATA);
 		// setUpMapIfNeeded();
 		ImageLoader.initialize(ViewAllOnMapActivity.this);
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
@@ -213,13 +214,15 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 						.fromResource(R.drawable.map_user_marker)));
 		// builder.include(sourceMarker.getPosition());
 		LatLng toPosition = null;
+		LatLng nearestPosition = null;
 		for (int i = 0; i < mCompanyDetailList.size(); i++) {
 			String lat = String
 					.valueOf(mCompanyDetailList.get(i).getLatitude());
 			String longt = String.valueOf(mCompanyDetailList.get(i)
 					.getLongitude());
 			if (!StringUtil.isNullOrEmpty(lat)
-					&& !StringUtil.isNullOrEmpty(longt)) {
+					&& !StringUtil.isNullOrEmpty(longt) && !("0.0".equals(lat)) && !("0.0".equals(longt))) {
+				Log.e("Lat-Long: true",  "" +i);
 				toPosition = new LatLng(
 						mCompanyDetailList.get(i).getLatitude(),
 						mCompanyDetailList.get(i).getLongitude());
@@ -230,18 +233,32 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 						.title(mCompanyDetailList.get(i).getTitle())
 						.snippet(getSnippet(mCompanyDetailList.get(i))));
 				builder.include(toPosition);
+			} else {
+				Log.e("Lat-Long: 0.0",  "" +i);
 			}
+			
 		}
 		
-		LatLngBounds bounds = builder.build();
-		int padding = 100; // offset from edges of the map in pixels
-		CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+		if (mCompanyDetailList != null && mCompanyDetailList.size() > 0) {
+		String nearestLat = String.valueOf(mCompanyDetailList.get(0).getLatitude());
+		String nearestLongt = String.valueOf(mCompanyDetailList.get(0).getLongitude());
+		if (!StringUtil.isNullOrEmpty(nearestLat) && !StringUtil.isNullOrEmpty(nearestLongt) && !("0.0".equals(nearestLat)) && !("0.0".equals(nearestLongt))) {
+		nearestPosition = new LatLng(mCompanyDetailList.get(0).getLatitude(), mCompanyDetailList.get(0).getLongitude());
+		} else {
+			nearestPosition = fromPosition;	
+		}
+		}
+		
+//		LatLngBounds bounds = builder.build();
+//		int padding = 100; // offset from edges of the map in pixels
+//		CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 //		CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(fromPosition, padding);
+		CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(nearestPosition, 10.0f);
 		mMap.animateCamera(cu);
 		final CameraPosition cameraPosition = new CameraPosition.Builder()
 				.target(fromPosition) // Sets the center of the map to Mountain
 										// View
-				.zoom(18) // Sets the zoom
+				.zoom(14) // Sets the zoom
 				.bearing(90) // Sets the orientation of the camera to east
 				.tilt(30) // Sets the tilt of the camera to 30 degrees
 				.build();
@@ -258,8 +275,8 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 					mCurrentCompId = marker.getSnippet().split(
 							AppConstants.SPLIT_STRING)[0];
 
-					mCurrentCompId = marker.getSnippet().split(
-							AppConstants.SPLIT_STRING)[0];
+//					mCurrentCompId = marker.getSnippet().split(
+//							AppConstants.SPLIT_STRING)[0];
 					CompanyDesc compDesc = mMapInfoWindowAdapter
 							.getValue(mCurrentCompId);
 					Intent intent;

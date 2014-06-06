@@ -55,7 +55,7 @@ import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
 public class ViewDealMapActivity extends MaxisMainActivity implements
-		OnGlobalLayoutListener, OnClickListener {
+OnGlobalLayoutListener, OnClickListener {
 
 	private GoogleMap mMap;
 	ArrayList<OutLet> outLets = new ArrayList<OutLet>();
@@ -229,6 +229,12 @@ public class ViewDealMapActivity extends MaxisMainActivity implements
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(ViewDealMapActivity.this, AppConstants.ViewOnMap);
+	}
+
+	@Override
 	public Activity getMyActivityReference() {
 		// TODO Auto-generated method stub
 		return null;
@@ -254,7 +260,7 @@ public class ViewDealMapActivity extends MaxisMainActivity implements
 		case R.id.header_btn_back:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.BACK_CLICK);
 			AnalyticsHelper
-					.endTimedEvent(FlurryEventsConstants.APPLICATION_COMBINED_LIST);
+			.endTimedEvent(FlurryEventsConstants.APPLICATION_COMBINED_LIST);
 			this.finish();
 			break;
 		case R.id.col_refine_search:
@@ -263,7 +269,7 @@ public class ViewDealMapActivity extends MaxisMainActivity implements
 			break;
 		case R.id.mainSearchButton:
 			mSearchEditText
-					.setText(mSearchEditText.getText().toString().trim());
+			.setText(mSearchEditText.getText().toString().trim());
 
 			String JSON_EXTRA = jsonForSearch();
 			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
@@ -310,12 +316,8 @@ public class ViewDealMapActivity extends MaxisMainActivity implements
 			}
 			break;
 		case R.id.txv_icon_show_route:
-			if (isDialogToBeShown()) {
-				showConfirmationDialog(CustomDialog.DATA_USAGE_DIALOG, getResources().getString(R.string.cd_msg_data_usage));
-			} else {
-				if (isLocationAvailable()) {
-					showMapActivity();
-				}
+			if (isLocationAvailable()) {
+				showMapActivity();
 			}
 			break;
 		default:
@@ -323,7 +325,7 @@ public class ViewDealMapActivity extends MaxisMainActivity implements
 		}
 
 	}
-	
+
 	@Override
 	public void onPositiveDialogButton(int id) {
 		if (id == CustomDialog.DATA_USAGE_DIALOG) {
@@ -332,7 +334,7 @@ public class ViewDealMapActivity extends MaxisMainActivity implements
 			}
 		}
 	}
-	
+
 	private void showMapActivity() {
 		if (isLocationAvailable()) {
 			String url = "http://maps.google.com/maps?saddr="
@@ -397,15 +399,17 @@ public class ViewDealMapActivity extends MaxisMainActivity implements
 									.getLat())) {
 						toPosition = new LatLng(Double.parseDouble(outLets.get(
 								i).getLat()), Double.parseDouble(outLets.get(i)
-								.getLongt()));
+										.getLongt()));
 						mMap.addMarker(new MarkerOptions()
-								.icon(BitmapDescriptorFactory
-										.fromResource(R.drawable.map_company_marker))
+						.icon(BitmapDescriptorFactory
+								.fromResource(R.drawable.map_company_marker))
 								.position(toPosition)
 								.title(outLets.get(i).getTitle())
 								.snippet(getSnippet(outLets.get(i))));
 						builder.include(toPosition);
 					}
+					nearestPosition = new LatLng(Double.parseDouble(outLets.get(0)
+							.getLat()), Double.parseDouble(outLets.get(0).getLongt()));
 				}
 			} else {
 
@@ -414,40 +418,38 @@ public class ViewDealMapActivity extends MaxisMainActivity implements
 								.getLat())) {
 					toPosition = new LatLng(Double.parseDouble(outLets.get(
 							index).getLat()), Double.parseDouble(outLets.get(
-							index).getLongt()));
+									index).getLongt()));
 					mMap.addMarker(new MarkerOptions()
-							.icon(BitmapDescriptorFactory
-									.fromResource(R.drawable.map_company_marker))
+					.icon(BitmapDescriptorFactory
+							.fromResource(R.drawable.map_company_marker))
 							.position(toPosition)
 							.title(outLets.get(index).getTitle())
 							.snippet(getSnippet(outLets.get(index))));
 					builder.include(toPosition);
-
 				}
+				nearestPosition = new LatLng(Double.parseDouble(outLets.get(index)
+						.getLat()), Double.parseDouble(outLets.get(index).getLongt()));
 			}
-			nearestPosition = new LatLng(Double.parseDouble(outLets.get(0)
-					.getLat()), Double.parseDouble(outLets.get(0).getLongt()));
+			
 		}
 		if (nearestPosition == null) {
 			nearestPosition = fromPosition;
 		}
-		LatLngBounds bounds = builder.build();
-		int padding = 50; // offset from edges of the map in pixels
+//		LatLngBounds bounds = builder.build();
+//		int padding = 50; // offset from edges of the map in pixels
 		// CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds,
 		// padding);
-		CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(nearestPosition,
-				14.0f);
-
+		CameraUpdate cu = (index == -1) ? CameraUpdateFactory.newLatLngZoom(nearestPosition,10.0f) : CameraUpdateFactory.newLatLngZoom(nearestPosition,14.0f) ;
 		mMap.animateCamera(cu);
 
 		final CameraPosition cameraPosition = new CameraPosition.Builder()
-				.target(nearestPosition) // Sets the center of the map to
-											// Mountain
-											// View
-				.zoom(14) // Sets the zoom
-				.bearing(90) // Sets the orientation of the camera to east
-				.tilt(30) // Sets the tilt of the camera to 30 degrees
-				.build();
+		.target(fromPosition) // Sets the center of the map to
+		// Mountain
+		// View
+		.zoom(14) // Sets the zoom
+		.bearing(90) // Sets the orientation of the camera to east
+		.tilt(30) // Sets the tilt of the camera to 30 degrees
+		.build();
 		// mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 		if (outLets != null && outLets.size() > 0) {
 			if (index != -1) {
@@ -473,8 +475,8 @@ public class ViewDealMapActivity extends MaxisMainActivity implements
 					mCurrentCompId = marker.getSnippet().split(
 							AppConstants.SPLIT_STRING)[0];
 
-					mCurrentCompId = marker.getSnippet().split(
-							AppConstants.SPLIT_STRING)[0];
+					//					mCurrentCompId = marker.getSnippet().split(
+					//							AppConstants.SPLIT_STRING)[0];
 					OutLet outLet = mMapInfoWindowAdapter
 							.getValue(mCurrentCompId);
 					Intent intent = new Intent(ViewDealMapActivity.this,

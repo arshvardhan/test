@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -93,8 +95,14 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 	private DealOutletsAdapter mOutletListAdapter;
 	private int mapIndex;
 	private int totalOutlets;
+	private String previousCity;
+	private String previousLocality;
+	private int isSearchedModified;
+	private ArrayList<String> previousCityList;
+	private ArrayList<String> previousLocalityList;
 	private OutLetDetailRequest detailRequest;
 	private String title;
+	private int pageNumber = 1;
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -109,6 +117,11 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 						+ getResources().getString(R.string.outlet_found));
 				outLets = mOutletResponse.getOutlet();
 				detailRequest = bundle.getParcelable("OutletRequest");
+				isSearchedModified = bundle.getInt("isSearchModified");
+				previousCity = bundle.getString("selectedCity");
+				previousLocality = bundle.getString("selectedLocality");
+				previousCityList = bundle.getStringArrayList("cityList");
+				previousLocalityList = bundle.getStringArrayList("localityList");
 				mOutletListAdapter.setData(outLets);
 				mOutletList.setAdapter(mOutletListAdapter);
 			}
@@ -174,7 +187,7 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_all_outlets);
-
+		AnalyticsHelper.logEvent(FlurryEventsConstants.User_Visits_the_Deals_outlet_Page);
 		mProfileIconView = (ImageView) findViewById(R.id.show_profile_icon);
 		mProfileIconView.setOnClickListener(this);
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
@@ -240,8 +253,7 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 							&& number > 0
 							&& number == totalItemCount
 							&& totalItemCount < Integer
-									.parseInt(mOutletResponse
-											.getTotal_records()))// mNewsList.size()>totalItemCount
+							.parseInt(mOutletResponse.getTotal_records()))// mNewsList.size()>totalItemCount
 					{
 						Log.d("maxis", "list detail before next page"
 								+ mOutletResponse.getPage_number() + "  "
@@ -251,21 +263,20 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 							return;
 						loadingNextPageData = true;
 						if (mOutletResponse.getPage_number() < AppConstants.MAX_RECORD_COUNT / 10) {
-							loadPageData(mOutletResponse.getPage_number() + 1);
+							if (mOutletResponse.getPage_number() == 0) {
+								loadPageData(++pageNumber);
+							} else {
+								loadPageData(mOutletResponse.getPage_number() + 1);
+							}
+						} else if (number >= AppConstants.MAX_RECORD_COUNT && !isModifySearchDialogOpen && Integer.parseInt(mOutletResponse.getTotal_records()) > 100) {
+							loadingNextPageData = false;
+							if (mScrollUp) {
+							showConfirmationDialog(CustomDialog.CONFIRMATION_DIALOG,getResources().getString(R.string.modify_to_filter));
+							isModifySearchDialogOpen = true;
+							AnalyticsHelper.logEvent(FlurryEventsConstants.COMBINED_LIST_VISITED_ITEMS_EXCEEDED_70);
+							}
 						}
-					} else if (number == AppConstants.MAX_RECORD_COUNT + 1
-							&& !isModifySearchDialogOpen
-							&& mScrollUp
-							&& Integer.parseInt(mOutletResponse
-									.getTotal_records()) > 100) {
-						showConfirmationDialog(
-								CustomDialog.CONFIRMATION_DIALOG,
-								getResources().getString(
-										R.string.modify_to_filter));
-						isModifySearchDialogOpen = true;
-						AnalyticsHelper
-								.logEvent(FlurryEventsConstants.COMBINED_LIST_VISITED_ITEMS_EXCEEDED_70);
-					}
+					} 
 				}
 			}
 		});
@@ -327,8 +338,6 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-
 				if (!isAdvanceSearchLayoutOpen) {
 					isAdvanceSearchLayoutOpen = true;
 					advanceSearchLayout.setVisibility(View.VISIBLE);
@@ -337,9 +346,25 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 			}
 		});
 
+		mOutletList.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
+
+				String catId = outLets.get(pos).getCatid();
+				String comp_id = outLets.get(pos).getId();
+				Intent intent = new Intent(ViewAllOutletsActivity.this, CompanyDetailActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString(AppConstants.COMP_ID, comp_id);
+				bundle.putString(AppConstants.GLOBAL_SEARCH_KEYWORD, mSearchKeyword);
+				bundle.putBoolean(AppConstants.IS_DEAL_LIST, true);
+				intent.putExtra(AppConstants.CATEGORY_ID_KEY, catId);
+				intent.putExtras(bundle);
+				startActivity(intent);
+			}
+		});
 	}
 
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -347,7 +372,6 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 	}
 	@Override
 	public Activity getMyActivityReference() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -373,7 +397,7 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 			break;
 		case R.id.mainSearchButton:
 			mSearchEditText
-					.setText(mSearchEditText.getText().toString().trim());
+			.setText(mSearchEditText.getText().toString().trim());
 
 			String JSON_EXTRA = jsonForSearch();
 			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
@@ -396,11 +420,19 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 
 		case R.id.col_refine_search:
 		case R.id.col_refine_search1:
-
-			// TODO
+			if (isSearchedModified == 1) {
+				Intent nextRefineIntent = new Intent(ViewAllOutletsActivity.this, RefineOutletActivity.class);
+				nextRefineIntent.putExtra("OutletRequest", detailRequest);
+				nextRefineIntent.putExtra("deal_title", title);
+				nextRefineIntent.putExtra("isSearchedModified", isSearchedModified);
+				nextRefineIntent.putExtra("selectedCity", previousCity);
+				nextRefineIntent.putExtra("selectedLocality", previousLocality);
+				nextRefineIntent.putStringArrayListExtra("cityList", previousCityList);
+				nextRefineIntent.putStringArrayListExtra("localityList", previousLocalityList);
+				startActivityForResult(nextRefineIntent, 1);
+			} else {
 			refineOutlets(detailRequest.getDeal_id());
-
-			AnalyticsHelper.logEvent(FlurryEventsConstants.MODIFY_SEARCH_CLICK);
+			}
 			break;
 		case R.id.upArrow:
 			if (isAdvanceSearchLayoutOpen) {
@@ -502,7 +534,6 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 								R.string.communication_failure));
 					}
 				} catch (Exception e) {
-					// TODO: handle exception
 				}
 			} else if (event == Events.DEAL_DETAIL) {
 				if (response.getPayload() instanceof CompanyDetail) {
@@ -604,7 +635,6 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 				mOutletResponse = (OutLetDetails) msg.obj;
 				oldResponse.appendOutletListAtEnd(mOutletResponse.getOutlet());
 				mOutletResponse.setOutletList(oldResponse.getOutlet());
-				// TODO append result set in existing
 				// changeNavigationButtonState(mClResponse.getPagesCount(),
 				// mClResponse.getPageNumber());
 
@@ -614,7 +644,6 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 			stopSppiner();
 
 		} else if (msg.arg2 == Events.CITY_LISTING_OUTLETS) {
-			// TODO
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
@@ -646,7 +675,6 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 			startSppiner();
 			detailtController.requestService(detailRequest);
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 	}
 
@@ -681,7 +709,6 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 				return null;
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -707,6 +734,10 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 			if (isLocationAvailable()) {
 				redirectToMap();
 			}
+		} else if (id == CustomDialog.CONFIRMATION_DIALOG) {
+			loadingNextPageData = false;
+			isModifySearchDialogOpen = false;
+			refineOutlets(detailRequest.getDeal_id());
 		}
 	}
 
@@ -716,6 +747,9 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 			stopSppiner();
 		} else if (id == CustomDialog.DELETE_CONFIRMATION_DIALOG) {
 			stopSppiner();
+		}  else if (id == CustomDialog.CONFIRMATION_DIALOG) {
+			loadingNextPageData = false;
+			isModifySearchDialogOpen = false;
 		} else {
 			super.onNegativeDialogbutton(id);
 		}
@@ -738,6 +772,7 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 	}
 
 	public void refineOutlets(String deal_id) {
+		AnalyticsHelper.logEvent(FlurryEventsConstants.MODIFY_SEARCH_CLICK);
 		OutletRefineRequest request = new OutletRefineRequest();
 		request.setDeal_id(deal_id);
 

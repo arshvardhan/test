@@ -25,8 +25,6 @@ public class ContestListController extends BaseServiceController{
 	private Context       mActivity;
 	private long         _hitTime;
 
-
-
 	public ContestListController(IActionController screen, int eventType) {
 		super(screen, eventType);
 		mActivity = (Context) mScreen;
@@ -46,17 +44,13 @@ public class ContestListController extends BaseServiceController{
 				responseService(new MyError(MyError.NETWORK_NOT_AVAILABLE));
 				return;
 			}
-
-			
 			ServiceRequest serviceRq = new ServiceRequest();
 			serviceRq.setRequestData(requestData);
 			serviceRq.setServiceController(this);
 			serviceRq.setDataType(mEventType);
 			serviceRq.setPriority(HttpClientConnection.PRIORITY.LOW);
 			serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
-			
 			serviceRq.setHttpHeaders( API_HEADER_NAMES_ARRAY_2, getApiHeaderValuesArray2());
-			
 			RequestDistance  requestDistance=(RequestDistance) requestData;
 			int recordPerPage=requestDistance.getRecordsPerPage();
 			int pageNumber=requestDistance.getPageNumber();

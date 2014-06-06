@@ -31,6 +31,7 @@
             android:layout_height="wrap_content"
             android:weightSum="1"
             android:layout_alignParentBottom="true"
+            android:visibility="gone"
             >
             <ImageView 
                 android:id="@+id/map_driving"

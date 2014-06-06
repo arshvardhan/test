@@ -56,7 +56,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignRight="@id/amd_latest_deal_lbl"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/deal_post" />
+                    android:src="@drawable/deal_post"
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <LinearLayout

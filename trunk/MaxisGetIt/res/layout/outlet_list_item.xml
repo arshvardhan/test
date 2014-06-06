@@ -124,6 +124,18 @@
         android:padding="5dp"
         android:src="@drawable/outlate_more_text"
         android:textColor="@color/light_color_black"
-        android:textStyle="bold"/>
+        android:textStyle="bold" 
+        android:visibility="gone"/>
+
+    <View
+        android:id="@+id/bottomView"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/seprator"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone" />
 
 </RelativeLayout>

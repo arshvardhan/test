@@ -441,8 +441,7 @@ public class RefineSearchActivity extends MaxisMainActivity {
 				intent.putExtra(AppConstants.DATA_LIST_REQUEST, mClRequest);
 				intent.putExtra(AppConstants.REFINE_ATTR_RESPONSE, mSelctorResp);
 				intent.putExtra(AppConstants.REFINE_CAT_RESPONSE, mCatResponse);
-				intent.putExtra(AppConstants.LOCALITY_DAO_DATA,
-						mLocalitySelectorDao);
+				intent.putExtra(AppConstants.LOCALITY_DAO_DATA, mLocalitySelectorDao);
 				setResult(RESULT_OK, intent);
 				finish();
 			}

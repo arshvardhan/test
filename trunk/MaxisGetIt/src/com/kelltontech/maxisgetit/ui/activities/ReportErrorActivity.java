@@ -325,10 +325,10 @@ public class ReportErrorActivity extends MaxisMainActivity {
 			String uName = mEdUserName.getText().toString().trim();
 			String mobile = mEdUserMobile.getText().toString();
 			mEdUserName.setText(uName);
-//			if (uName.equals("")) {
-//				showInfoDialog(getString(R.string.name_empty));
-//				return false;
-//			}
+			if (uName.equals("")) {
+				showInfoDialog(getString(R.string.name_empty));
+				return false;
+			}
 			// if (mobile.length() < 10 || mobile.indexOf('+',1)!=-1 ||
 			// (mobile.indexOf('+')!=-1 && mobile.length()<=10)) {
 			if (mobile.equals("")) {

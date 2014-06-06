@@ -51,13 +51,16 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/are_info_title"
                 android:layout_marginTop="5dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:weightSum="1" >
 
                 <TextView
                     android:id="@+id/are_label_feel"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_weight=".35"
+                    android:drawableRight="@drawable/required_icon"
                     android:paddingLeft="10dp"
                     android:text="@string/are_feel"
                     android:textColor="@color/title_dark_grey"
@@ -65,11 +68,12 @@
 
                 <Spinner
                     android:id="@+id/are_error_chooser"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
+                    android:layout_weight=".65"
                     android:background="@drawable/dropdown_box"
                     android:textColor="@color/title_dark_grey"
                     android:textSize="@dimen/sp_13" />
@@ -127,22 +131,21 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/are_label_char_count"
                 android:orientation="vertical" >
-                
+
                 <TextView
-                    android:background="@drawable/shape_bg_green_grey_stroke"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/shape_bg_green_grey_stroke"
+                    android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
                     android:singleLine="true"
                     android:text="@string/contact_detail"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_12"
-                    android:textStyle="bold"
-                    android:layout_marginTop="10dp" 
-                    android:layout_marginBottom="10dp"/>
-
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -156,6 +159,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight=".35"
+                        android:drawableRight="@drawable/required_icon"
                         android:padding="5dp"
                         android:text="@string/name"
                         android:textColor="@color/black"
@@ -205,8 +209,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="5dp"
                             android:text="@string/country_code"
-                            android:textColor="@color/grey_country_code" />
-                        -->
+                            android:textColor="@color/grey_country_code" />  -->
 
                         <EditText
                             android:layout_width="0dp"

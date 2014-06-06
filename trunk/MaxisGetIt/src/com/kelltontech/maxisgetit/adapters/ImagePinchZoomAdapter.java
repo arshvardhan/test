@@ -21,15 +21,12 @@ public class ImagePinchZoomAdapter extends PagerAdapter {
 	private Drawable mCompLoading;
 	private Drawable mCompError;
 	private PhotoView photoView;
-	
-
 
 	public ImagePinchZoomAdapter(Context pContext,ArrayList<IconUrl> photoList){
 		mContext=pContext;
 		mPhotoList=photoList;
 		mCompLoading = pContext.getResources().getDrawable(R.drawable.detail_loading);
 		mCompError = pContext.getResources().getDrawable(R.drawable.detail_cross);
-		
 	}
 
 	@Override
@@ -44,20 +41,15 @@ public class ImagePinchZoomAdapter extends PagerAdapter {
 
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
-
-			photoView=new PhotoView(mContext);
-			
-			ImageLoader.start(mPhotoList.get(position).getDealIconUrl(), photoView, mCompLoading, mCompError);
-			((ViewPager) container).addView(photoView, ((ViewPager)container).getChildCount() > position ? position : ((ViewPager)container).getChildCount());
-			return photoView;
-		
+		photoView=new PhotoView(mContext);
+		ImageLoader.start(mPhotoList.get(position).getDealIconUrl(), photoView, mCompLoading, mCompError);
+		((ViewPager) container).addView(photoView, ((ViewPager)container).getChildCount() > position ? position : ((ViewPager)container).getChildCount());
+		return photoView;
 	}
-	
 
 	@Override
 	public void destroyItem(ViewGroup container, int position, Object object) {
 		((ViewPager) container).removeView((PhotoView) object);
-		super.destroyItem(container, position, object);
 	}
-	
+
 }

@@ -144,10 +144,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_company_detail);
-		AnalyticsHelper
-				.logEvent(FlurryEventsConstants.APPLICATION_COMPANY_DETAIL);
-		// UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.cd_root_layout),
-		// this);
+		AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_COMPANY_DETAIL);
 		mReferFB = (ImageView) findViewById(R.id.cd_facebook_icon);
 		mReferFB.setOnClickListener(this);
 		mReferTwitter = (ImageView) findViewById(R.id.cd_twitterIcon);
@@ -381,7 +378,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 //			} else {
 //				mMoreDesc.setVisibility(View.GONE);
 //			}
-			if (mCompanyDetail.getDescription().length() < 250)
+			if (mCompanyDetail.getDescription().length() < 280)
 				mMoreDesc.setVisibility(View.GONE);
 			else
 				mMoreDesc.setVisibility(View.VISIBLE);

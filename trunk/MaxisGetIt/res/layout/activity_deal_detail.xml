@@ -13,7 +13,6 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/cl_deals_footer"
         android:layout_below="@id/header_base_activity" >
 
         <LinearLayout
@@ -85,7 +84,7 @@
                             android:paddingTop="10dp"
                             android:singleLine="false"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/sp_15"
+                            android:textSize="@dimen/sp_14"
                             android:textStyle="bold" />
 
                         <RelativeLayout
@@ -99,30 +98,33 @@
                                 android:layout_height="wrap_content"
                                 android:weightSum="1" >
 
-                               <com.kelltontech.maxisgetit.ui.widgets.EllipsizingTextView
+                                <com.kelltontech.maxisgetit.ui.widgets.EllipsizingTextView
                                     android:id="@+id/validin"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
-                                    android:layout_weight=".50"
+                                    android:layout_weight=".55"
+                                    android:ellipsize="end"
                                     android:paddingTop="10dp"
                                     android:singleLine="true"
-                                    android:text="valid in entire malasia"
-                                    android:textColor="@color/white" />
-                                
+                                    android:text="Valid In Entire Malasia"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/sp_12" />
+
                                 <TextView
                                     android:id="@+id/more"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:layout_weight=".15"
+                                    android:clickable="true"
                                     android:paddingTop="10dp"
                                     android:singleLine="true"
                                     android:text="@string/more"
-                                    android:clickable="true"
-									android:textStyle="bold|italic"
-                                    android:textColor="@color/more_btn" 
-                                    android:visibility="invisible"/>
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/sp_12"
+                                    android:textStyle="bold|italic"
+                                    android:visibility="invisible" />
 
                                 <ImageView
                                     android:id="@+id/cd_separator_bar"
@@ -139,12 +141,13 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical|right"
-                                    android:layout_weight=".35"
+                                    android:layout_weight=".30"
                                     android:gravity="right"
                                     android:paddingTop="10dp"
                                     android:singleLine="true"
                                     android:text="Till 10 May 2014"
                                     android:textColor="@color/white"
+                                    android:textSize="@dimen/sp_12"
                                     android:visibility="visible" />
                             </LinearLayout>
                         </RelativeLayout>
@@ -306,12 +309,19 @@
                         android:layout_height="match_parent" />
                 </FrameLayout>
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="horizontal" />
         </LinearLayout>
     </com.kelltontech.maxisgetit.ui.widgets.CustomScrollView>
 
     <RelativeLayout
         android:id="@+id/leftOutletRltLayout"
-        android:layout_width="95dp"
+        android:layout_width="115dp"
         android:layout_height="45dp"
         android:layout_above="@+id/cl_deals_footer"
         android:layout_alignParentLeft="true"
@@ -319,7 +329,7 @@
 
         <LinearLayout
             android:id="@+id/leftOutletLayout"
-            android:layout_width="80dp"
+            android:layout_width="100dp"
             android:layout_height="30dp"
             android:layout_alignParentBottom="true"
             android:background="@drawable/rectangleborderblack"
@@ -337,16 +347,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:gravity="center"
-                    android:paddingLeft="3dp"
-                    android:paddingRight="3dp"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
                     android:text=" Outlets"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
- <!--            <TextView
+            <!--
+                 <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -357,17 +372,18 @@
                 android:text="Outlets"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                android:textStyle="bold" /> -->
+                android:textStyle="bold" />
+            -->
         </LinearLayout>
 
         <ImageView
             android:id="@+id/cross_btn"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:padding="5dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:clickable="true"
+            android:padding="5dp"
             android:src="@drawable/outlet_cross_icon" />
     </RelativeLayout>
 
@@ -387,62 +403,64 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:text="View On Map"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold" />
     </LinearLayout>
 
-   <!--  <LinearLayout
+    <!--
+         <LinearLayout
         android:id="@+id/cl_deals_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
-        android:visibility="visible" > -->
+        android:visibility="visible" >
+    -->
 
-        <LinearLayout
-            android:id="@+id/cl_deals_footer"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal"
-            android:visibility="visible"
-            android:weightSum="1" >
+    <LinearLayout
+        android:id="@+id/cl_deals_footer"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:weightSum="1" >
 
-            <TextView
-                android:id="@+id/deal_download"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:background="@color/new_footer_color"
-                android:clickable="true"
-                android:gravity="center"
-                android:text="Get Info"
-                android:textColor="@color/transparent_white"
-                android:textSize="@dimen/sp_14"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/deal_download"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@color/transparent_footer_blue"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="Get Info"
+            android:textColor="@color/transparent_white"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold" />
 
-            <ImageView
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/bar_light_grey" />
+        <ImageView
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/bar_light_grey" />
 
-            <TextView
-                android:id="@+id/tnc"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:background="@color/new_footer_color"
-                android:clickable="true"
-                android:gravity="center"
-                android:text="@string/txt_tnc"
-                android:textColor="@color/transparent_white"
-                android:textSize="@dimen/sp_14"
-                android:textStyle="bold" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/tnc"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@color/transparent_footer_blue"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/txt_tnc"
+            android:textColor="@color/transparent_white"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold" />
+    </LinearLayout>
     <!-- </LinearLayout> -->
 
 </RelativeLayout>

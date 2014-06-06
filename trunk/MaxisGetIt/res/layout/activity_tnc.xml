@@ -3,7 +3,7 @@
     android:id="@+id/reg_root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_bg_base_col"
+    android:background="@color/white"
     android:orientation="vertical" >
     <include
         android:id="@+id/header_base_activity"
@@ -65,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="visible" >
+        android:visibility="invisible" >
         <TextView
             android:id="@+id/atnc_label_network"
             android:layout_width="wrap_content"
@@ -90,7 +90,8 @@
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
-        android:text="@string/accept" />
+        android:text="@string/accept"
+        android:visibility="gone" />
     <Button
         android:id="@+id/atnc_back"
         style="@style/common_green_button"
@@ -112,5 +113,6 @@
         android:layout_marginTop="10dp"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
-        android:text="@string/decline" />
+        android:text="@string/decline"
+        android:visibility="gone" />
 </RelativeLayout>

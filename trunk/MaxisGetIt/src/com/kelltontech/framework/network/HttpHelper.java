@@ -19,6 +19,8 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpProtocolParams;
 
+import android.util.Log;
+
 import com.kelltontech.framework.C;
 
 public class HttpHelper {
