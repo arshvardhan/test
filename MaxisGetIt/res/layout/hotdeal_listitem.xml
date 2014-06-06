@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical"
-    android:paddingBottom="10dp" >
+    android:paddingBottom="5dp" >
 
     <TextView
         android:id="@+id/deal_title"
@@ -14,9 +14,10 @@
         android:layout_alignParentTop="true"
         android:gravity="left"
         android:padding="5dp"
+        android:text="sdfsdfdsfs"
         android:singleLine="true"
         android:textColor="@color/black"
-        android:textSize="@dimen/sp_16"
+        android:textSize="@dimen/sp_14"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -28,11 +29,14 @@
         <ImageView
             android:id="@+id/deals_image"
             android:layout_width="120dp"
-            android:layout_height="70dp" />
+            android:layout_height="70dp"
+            android:layout_marginLeft="5dp"
+            android:padding="3dp"
+            android:background="@drawable/upload_photo_icon_bg" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="70dp"
             android:layout_marginLeft="10dp"
             android:orientation="vertical" >
 
@@ -41,25 +45,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="3dp"
-                android:text=""
-                android:textSize="@dimen/sp_13" />
+                android:maxLines="2"
+                android:ellipsize="end"
+        android:text="sdfsdfdsfs"
+                android:textSize="@dimen/sp_14"
+                android:textColor="@color/black_light" />
 
             <TextView
                 android:id="@+id/validity_expires"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="3dp"
-                android:text=""
+                android:layout_marginTop="5dp"
+        android:text="sdfsdfdsfs"
                 android:textColor="@color/black"
-                android:textSize="@dimen/sp_13"
-                android:textStyle="bold" />
+                android:textSize="@dimen/sp_12" />
 
             <Button
                 android:id="@+id/download_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:background="@drawable/getinfo_btn" />
+                android:background="@drawable/getinfo_btn"
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 

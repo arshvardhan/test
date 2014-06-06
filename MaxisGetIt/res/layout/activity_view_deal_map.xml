@@ -5,34 +5,39 @@
     android:layout_height="match_parent"
     android:background="@color/app_bg_base_col"
     android:orientation="vertical" >
+
     <include
         android:id="@+id/header_base_activity"
         layout="@layout/header_with_popdown_search" />
+
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/header_base_activity" 
-        android:layout_above="@+id/footerLayout">
+        android:layout_above="@+id/footer_compass_screen"
+        android:layout_below="@id/header_base_activity" >
+
         <fragment
             android:id="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             class="com.google.android.gms.maps.SupportMapFragment" />
+
         <View
             android:id="@+id/trans_img"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>
-    
+
     <LinearLayout
         android:id="@+id/footer_compass_screen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/header_bg_color"
-        android:gravity="center" 
-        >
+        android:gravity="center"
+        android:visibility="gone" >
+
         <TextView
             android:id="@+id/txv_icon_show_route"
             android:layout_width="wrap_content"
@@ -45,9 +50,8 @@
             android:paddingRight="10dp"
             android:paddingTop="5dp"
             android:text="@string/route"
-            android:textSize="@dimen/sp_17"
-            android:textColor="@color/text_color_green" />
-
+            android:textColor="@color/text_color_green"
+            android:textSize="@dimen/sp_17" />
     </LinearLayout>
-   
+
 </RelativeLayout>

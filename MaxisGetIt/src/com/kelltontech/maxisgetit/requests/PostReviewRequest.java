@@ -10,6 +10,8 @@ public class PostReviewRequest
 	private String userId;
 	private String compId;
 	private String catId;
+	private String mobileNumber;
+	private String userName;
 	/**
 	 * @return the rating
 	 */
@@ -70,4 +72,29 @@ public class PostReviewRequest
 	public void setCatId(String catId) {
 		this.catId = catId;
 	}
+	/**
+	 * @return the mobileNumber
+	 */
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+	/**
+	 * @param mobileNumber the mobileNumber to set
+	 */
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+	/**
+	 * @return the userName
+	 */
+	public String getUserName() {
+		return userName;
+	}
+	/**
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	
 }

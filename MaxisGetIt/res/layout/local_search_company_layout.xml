@@ -2,35 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/black" />
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
 
     <com.kelltontech.maxisgetit.ui.widgets.FlowLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp" >
 
-        <TextView
+        <!-- <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/company_details"
             android:textColor="@color/black"
             android:textSize="@dimen/sp_13"
-            android:textStyle="bold" />
+            android:textStyle="bold" /> -->
 
         <TextView
             android:id="@+id/lscl_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:text="AB Sons"
-            android:textColor="@color/black"
+            android:textColor="@color/comp_list_record_found_bg"
             android:textSize="@dimen/sp_13"
             android:textStyle="bold" />
     </com.kelltontech.maxisgetit.ui.widgets.FlowLayout>
@@ -170,7 +165,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
-                android:text="--"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_13"
                 android:textStyle="bold" />
@@ -194,17 +189,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
-                android:text="--"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_13"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/email_lnr_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:visibility="gone" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -218,11 +215,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
-                android:text="--"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_13"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/black" />
 
 </LinearLayout>

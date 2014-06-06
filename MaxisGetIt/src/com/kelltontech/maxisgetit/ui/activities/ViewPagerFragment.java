@@ -1,7 +1,5 @@
 package com.kelltontech.maxisgetit.ui.activities;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -16,21 +14,20 @@ import android.widget.ImageView;
 
 import com.kelltontech.framework.imageloader.ImageLoader;
 import com.kelltontech.maxisgetit.R;
-import com.kelltontech.maxisgetit.dao.SubCategory;
 
 
 public class ViewPagerFragment extends Fragment {
 
 	private String imgPath;
 	private Activity mActivity;
-	private int bannerHeight;
+	//	private int bannerHeight;
 	private String mFlowFrom;
-	private ArrayList<SubCategory> categories;
+	//	private ArrayList<SubCategory> categories;
 	private static Drawable dummyDrawable;
 	private static Drawable errorDrawable;
 
 	public ViewPagerFragment() {
-		
+
 	}
 
 	@Override
@@ -39,18 +36,30 @@ public class ViewPagerFragment extends Fragment {
 		Log.e("Test", "hello");
 	}
 
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		ImageLoader.initialize(getActivity());
-		dummyDrawable=getActivity().getResources().getDrawable(R.drawable.group_load);
-		errorDrawable=getActivity().getResources().getDrawable(R.drawable.group_cross);
+		if ("Category List".equals(mFlowFrom)) {
+			dummyDrawable=getActivity().getResources().getDrawable(R.drawable.banner_load);
+			errorDrawable=getActivity().getResources().getDrawable(R.drawable.banner_cross);
+		} else if ("CompanyDetail".equals(mFlowFrom) || "DealDetail".equals(mFlowFrom)) {
+			dummyDrawable=getActivity().getResources().getDrawable(R.drawable.detail_loading);
+			errorDrawable=getActivity().getResources().getDrawable(R.drawable.detail_cross);
+		} else {
+			dummyDrawable=getActivity().getResources().getDrawable(R.drawable.group_load);
+			errorDrawable=getActivity().getResources().getDrawable(R.drawable.group_cross);			
+		}
 		ImageView imageView = new ImageView(getActivity());
-		imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+		if ("Category List".equals(mFlowFrom)) {
+			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+		} else {
+			imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+		}
+
 		imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
 		Log.i("Image path", "Imag path " + imgPath);
-//		imageView.setTag(imgPath);
+		//		imageView.setTag(imgPath);
 		ImageLoader.start(imgPath, imageView, dummyDrawable, errorDrawable);
 		imageView.setOnClickListener(new OnClickListener() {
 

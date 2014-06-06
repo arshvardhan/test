@@ -289,7 +289,7 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 		//				Toast.makeText(getApplicationContext(), "Please enter company contact number.", Toast.LENGTH_LONG).show();
 		//				return false;
 		//			}
-		else if (!StringUtil.isNullOrEmpty(companyContact) && ((companyContact.trim().length() <= 7) || (companyContact.trim().length() >= 14)) || (companyContact.trim().startsWith("60")) || (companyContact.trim().startsWith("0"))) {
+		else if (!StringUtil.isNullOrEmpty(companyContact) && ((companyContact.trim().length() <= 7) || (companyContact.trim().length() >= 12)) || (companyContact.trim().startsWith("60")) || (companyContact.trim().startsWith("0"))) {
 			Toast.makeText(getApplicationContext(), getString(R.string.mobile_number_validation_contestapp_company), Toast.LENGTH_LONG).show();
 			return false;
 		} else if (StringUtil.isNullOrEmpty(userName)) {

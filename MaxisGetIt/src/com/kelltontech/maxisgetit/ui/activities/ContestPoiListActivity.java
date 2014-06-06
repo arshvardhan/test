@@ -134,6 +134,7 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 				} else {
 					mSelectedCategory = (Category) iModel;
 					mRequestedEventType = Events.DISTANCE_LIST_EVENT;
+					mPageNumber = 1;
 					onLoad();
 				}
 			}
@@ -236,6 +237,7 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 								Toast.LENGTH_SHORT).show();
 					} else {
 						mRequestedEventType = Events.POI_SEARCH_EVENT;
+						mPageNumber = 1;
 						onLoad();
 					}
 					return true;

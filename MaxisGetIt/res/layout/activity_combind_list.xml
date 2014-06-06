@@ -40,9 +40,10 @@
             <Spinner
                 android:id="@+id/distance_filter_chooser"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_toRightOf="@+id/col_records_found"
                 android:background="@drawable/dropdown_box"
                 android:paddingRight="25dp"
@@ -95,16 +96,13 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="5dp"
                 android:paddingTop="5dp" >
-            </LinearLayout>
-        -->
-        
-             <View
+            </LinearLayout>  -->
+
+        <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/vertical_line_seprator" />
     </LinearLayout>
-    
-
 
     <LinearLayout
         android:id="@+id/pagination"
@@ -211,8 +209,7 @@
             android:layout_weight="33.33"
             android:clickable="true"
             android:scaleType="fitXY"
-            android:src="@drawable/group_view_on_map" />
-        -->
+            android:src="@drawable/group_view_on_map" /> -->
     </LinearLayout>
 
     <LinearLayout

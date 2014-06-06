@@ -54,6 +54,8 @@ public class FlurryEventsConstants {
 	public static final String APPLICATION_DEALS = "Deals Screen";
 	public static final String GET_INFO_CLICK = "GetInfo button is clicked";
 	public static final String DEAL_LIST_ITEM_CLICK = "User tabs a deal in Deal Listing";
+	public static final String User_Visits_the_Deals_outlet_Page = "Deals Outlet Screen";
+	public static final String User_Visits_the_Deals_outlet_Modify_Page = "Deals Outlet Modify Screen";
 
 	// Login Screen Events
 	public static final String APPLICATION_LOGIN = "Login Screen";

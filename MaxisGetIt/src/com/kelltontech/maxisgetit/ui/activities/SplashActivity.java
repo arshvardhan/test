@@ -1,5 +1,7 @@
 package com.kelltontech.maxisgetit.ui.activities;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -14,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.SystemClock;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 
@@ -52,7 +59,7 @@ public class SplashActivity extends MaxisMainActivity {
 
 		@Override
 		protected void onPostExecute(Void result) {
-			
+
 			if(!mStore.isAppActivated())
 			{
 				Intent intent=new Intent(SplashActivity.this, AppAuthenticationActivity.class);
@@ -87,17 +94,17 @@ public class SplashActivity extends MaxisMainActivity {
 		 * A unique random number is generated and assigned in the AnalyticsHelper.SESSION_IDENTIFIER to pass as a parameter in Session Tracking Service Request
 		 */	
 		AnalyticsHelper.SESSION_IDENTIFIER = String.valueOf(System.currentTimeMillis()) + "_" + SessionIdentifierGenerator.nextSessionId();
-		
+
 		mStore = MaxisStore.getStore(SplashActivity.this);
 		setContentView(R.layout.activity_splash);
 		AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_LAUNCH, true);
-		
+
 		if (isLocationAware())
 			setCurrrentLocation();
 		else {
 			GPS_Data.resetCordinates();
 		}
-		
+
 		String sessionId = AppSharedPreference.getString(AppSharedPreference.API_SESSION_ID, null, this);
 		String authToken = AppSharedPreference.getString(AppSharedPreference.API_TOKEN, null, this);
 		if( StringUtil.isNullOrEmpty(sessionId) || StringUtil.isNullOrEmpty(authToken) ) {
@@ -106,6 +113,8 @@ public class SplashActivity extends MaxisMainActivity {
 		} else {
 			continueWithSessionAndToken();
 		}
+
+		printHashKey();
 	}
 
 	@Override
@@ -113,14 +122,14 @@ public class SplashActivity extends MaxisMainActivity {
 		AnalyticsHelper.setContinueSession(5);
 		super.onStart();
 	}
-	
-	
+
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		AnalyticsHelper.trackSession(SplashActivity.this, AppConstants.Splash_Screen);
 	}
-	
+
 	/**
 	 * to be called when we have sessionId and authToken for API access
 	 */
@@ -174,7 +183,7 @@ public class SplashActivity extends MaxisMainActivity {
 		Message message = new Message();
 		message.arg2 = event;
 		message.arg1 = 1;
-		
+
 		if( event == Events.SESSION_TOKEN_EVENT ) {
 			boolean sessionTokenSuccess = false;
 			if( screenData instanceof Boolean ) {
@@ -187,7 +196,7 @@ public class SplashActivity extends MaxisMainActivity {
 			}
 		} else if (event == Events.ROOT_CATEGORY_EVENT ) {
 			Response response = (Response) screenData;
-			
+
 			if (response.isError()) {
 				message.obj = getResources().getString(R.string.network_unavailable);
 			} else {
@@ -232,7 +241,7 @@ public class SplashActivity extends MaxisMainActivity {
 				ArrayList<CategoryGroup> categories = categoriesResp.getCategories();
 				Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
 				intent.putParcelableArrayListExtra(AppConstants.DATA_CAT_LIST, categories);
-//				startService(new Intent(SplashActivity.this,LocationFinderService.class));
+				//				startService(new Intent(SplashActivity.this,LocationFinderService.class));
 				startActivity(intent);
 				AnalyticsHelper.endTimedEvent(FlurryEventsConstants.APPLICATION_LAUNCH);
 				finish();
@@ -242,6 +251,20 @@ public class SplashActivity extends MaxisMainActivity {
 
 	@Override
 	public void onClick(View v) {
+	}
+
+	public void printHashKey() {
+		try { 
+			PackageInfo info =
+					getPackageManager().getPackageInfo("com.kelltontech.maxisgetit", PackageManager.GET_SIGNATURES); 
+			for (Signature signature : info.signatures) { 
+				MessageDigest md = MessageDigest.getInstance("SHA");
+				md.update(signature.toByteArray());
+				Log.d("TEMPTAGHASH KEY:",Base64.encodeToString(md.digest(), Base64.DEFAULT)); 
+			} 
+		} catch (NameNotFoundException e) { } 
+		catch (NoSuchAlgorithmException e) {
+		} 
 	}
 
 }

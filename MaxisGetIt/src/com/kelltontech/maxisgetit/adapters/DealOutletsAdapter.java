@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -77,6 +76,7 @@ public class DealOutletsAdapter extends BaseAdapter {
 			model.RightLayout = (LinearLayout) convertView
 					.findViewById(R.id.rightLayout);
 			model.seprator = (View) convertView.findViewById(R.id.seprator);
+			model.bottomView = (View) convertView.findViewById(R.id.bottomView);
 			model.viewMore = (ImageButton) convertView.findViewById(R.id.viewMore);
 
 			convertView.setTag(model);
@@ -87,38 +87,41 @@ public class DealOutletsAdapter extends BaseAdapter {
 			OutLet outlets = list.get(position);
 			model.dealTitle.setText(outlets.getTitle());
 			model.dealAddress.setText(outlets.getAddress());
-//			model.outletCount.setBackground(null);
+			//			model.outletCount.setBackground(null);
 			model.outletCount.setText(position + 1 + "");
 			model.viewMore.setVisibility(View.GONE);
 			model.leftLayout.setVisibility(View.VISIBLE);
 			model.addressContainer.setVisibility(View.VISIBLE);
 			model.RightLayout.setVisibility(View.VISIBLE);
 			model.seprator.setVisibility(View.VISIBLE);
-			
+
 			if (totalOutletCount > 10 && position == 9) {
 				model.viewMore.setVisibility(View.VISIBLE);
-
 			} else {
 				model.viewMore.setVisibility(View.GONE);
-
 			}
 		} else {
 			OutLet outlets = list.get(position);
 			model.dealTitle.setText(outlets.getTitle());
 			model.dealAddress.setText(outlets.getAddress());
-//			model.outletCount.setBackground(null);
+			//			model.outletCount.setBackground(null);
 			model.outletCount.setText(position + 1 + "");
 			model.viewMore.setVisibility(View.GONE);
 			model.leftLayout.setVisibility(View.VISIBLE);
 			model.addressContainer.setVisibility(View.VISIBLE);
 			model.RightLayout.setVisibility(View.VISIBLE);
 			model.seprator.setVisibility(View.VISIBLE);
+
+			if(list.size() > 7 && position == list.size()-1) {
+				model.bottomView.setVisibility(View.VISIBLE);
+			} else {
+				model.bottomView.setVisibility(View.GONE);
+			}
 		}
 		model.mapIcon.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				if (isFromDealDetail)
 					((DealDetailActivity) mContext).showMap(position);
 				else {
@@ -148,6 +151,7 @@ public class DealOutletsAdapter extends BaseAdapter {
 		LinearLayout addressContainer;
 		LinearLayout RightLayout;
 		View seprator;
+		View bottomView;
 		ImageButton viewMore;
 	}
 

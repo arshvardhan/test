@@ -54,9 +54,11 @@
                     android:id="@+id/ms_spin_txt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
+                    android:layout_gravity="left|center_vertical"
                     android:layout_weight=".32"
+                    android:padding="5dp"
                     android:text="Cities"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/sp_13"
                     android:textStyle="bold" />
 
@@ -95,6 +97,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
                     android:layout_weight=".32"
                     android:padding="5dp"
                     android:text="Locality"

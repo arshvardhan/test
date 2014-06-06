@@ -36,7 +36,6 @@ public class BannerViewAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
 		return imgPathList.size();
 	}
 	

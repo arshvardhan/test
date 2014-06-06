@@ -292,7 +292,6 @@ public class HomeActivity extends MaxisMainActivity {
 				// "You are outside the country", Toast.LENGTH_SHORT).show();
 			}
 		}
-
 	}
 
 	protected void gotoScreen(int position) {

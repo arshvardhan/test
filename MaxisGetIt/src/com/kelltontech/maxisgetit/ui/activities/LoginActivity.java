@@ -130,7 +130,11 @@ public class LoginActivity extends MaxisMainActivity {
 		String phNumber = NativeHelper
 				.getMy10DigitPhoneNumber(LoginActivity.this);
 		if (phNumber != null) {
-			mEdPhone.setText(phNumber);
+			if (phNumber.startsWith("0")) {	
+				mEdPhone.setText(phNumber.substring(1, phNumber.length())); 
+			} else {
+				mEdPhone.setText(phNumber);
+			}
 		}
 		mLoginView = (TextView) findViewById(R.id.login_button);
 		mLoginView.setOnClickListener(this);
@@ -197,7 +201,7 @@ public class LoginActivity extends MaxisMainActivity {
 		super.onResume();
 		AnalyticsHelper.trackSession(LoginActivity.this, AppConstants.Login_screen);
 	}
-	
+
 	@Override
 	public Activity getMyActivityReference() {
 		// TODO Auto-generated method stub
@@ -251,9 +255,9 @@ public class LoginActivity extends MaxisMainActivity {
 			break;
 		case R.id.signup_button:
 			AnalyticsHelper
-					.endTimedEvent(FlurryEventsConstants.APPLICATION_LOGIN);
+			.endTimedEvent(FlurryEventsConstants.APPLICATION_LOGIN);
 			AnalyticsHelper
-					.logEvent(FlurryEventsConstants.NEW_USER_REGISTER_NOW_CLICK);
+			.logEvent(FlurryEventsConstants.NEW_USER_REGISTER_NOW_CLICK);
 			finish();
 			Intent intentReg;
 			/*
@@ -280,7 +284,7 @@ public class LoginActivity extends MaxisMainActivity {
 				intentReg.putExtra(AppConstants.GLOBAL_SEARCH_KEYWORD,
 						mSearchKeyword);
 				startActivity(intentReg);
-//				finish();
+				//				finish();
 			} else if (mActionType == AppConstants.ACTION_ADD_FAV) {
 				intentReg.putExtra(AppConstants.ACTION_IDENTIFIER,
 						AppConstants.ACTION_ADD_FAV);
@@ -308,14 +312,14 @@ public class LoginActivity extends MaxisMainActivity {
 		case R.id.header_btn_back:
 		case R.id.login_guest_user_button:
 			AnalyticsHelper
-					.endTimedEvent(FlurryEventsConstants.APPLICATION_LOGIN);
+			.endTimedEvent(FlurryEventsConstants.APPLICATION_LOGIN);
 			AnalyticsHelper
-					.logEvent(FlurryEventsConstants.PROCEED_AS_GUEST_CLICK);
+			.logEvent(FlurryEventsConstants.PROCEED_AS_GUEST_CLICK);
 			this.finish();
 			break;
 		case R.id.mainSearchButton:
 			mSearchEditText
-					.setText(mSearchEditText.getText().toString().trim());
+			.setText(mSearchEditText.getText().toString().trim());
 			String JSON_EXTRA = jsonForSearch();
 			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
 			break;
@@ -406,7 +410,7 @@ public class LoginActivity extends MaxisMainActivity {
 				saveUserInfo((UserDetailResponse) msg.obj);
 				startActivity(intent);
 				AnalyticsHelper
-						.endTimedEvent(FlurryEventsConstants.APPLICATION_LOGIN);
+				.endTimedEvent(FlurryEventsConstants.APPLICATION_LOGIN);
 				finish();
 			}
 			stopSppiner();
@@ -502,7 +506,7 @@ public class LoginActivity extends MaxisMainActivity {
 			intent.putExtra(AppConstants.SELECTED_CAT_DATA, mSelectedCategory);
 			startActivity(intent);
 			AnalyticsHelper
-					.endTimedEvent(FlurryEventsConstants.APPLICATION_LOGIN);
+			.endTimedEvent(FlurryEventsConstants.APPLICATION_LOGIN);
 			finish();
 			break;
 		case AppConstants.ACTION_REPORT_ERROR:
@@ -553,7 +557,7 @@ public class LoginActivity extends MaxisMainActivity {
 			intentProfile.putExtra(AppConstants.ACTION_IDENTIFIER, mActionType);
 			startActivity(intentProfile);
 			AnalyticsHelper
-					.endTimedEvent(FlurryEventsConstants.APPLICATION_LOGIN);
+			.endTimedEvent(FlurryEventsConstants.APPLICATION_LOGIN);
 			finish(); //
 		} else {
 			super.onPositiveDialogButton(pDialogId);

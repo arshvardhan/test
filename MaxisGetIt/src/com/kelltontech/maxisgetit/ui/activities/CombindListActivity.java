@@ -167,6 +167,7 @@ public class CombindListActivity extends MaxisMainActivity {
 								+ getResources().getString(
 										R.string.record_found));
 				// initNavigationButton(mClResponse.getPagesCount());
+				addAnEmptyRow();
 				ArrayList<CompanyDesc> compListData = mClResponse
 						.getCompanyArrayList();
 				mCompListAdapter.setData(compListData);
@@ -359,7 +360,6 @@ public class CombindListActivity extends MaxisMainActivity {
 				}
 
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -547,8 +547,6 @@ public class CombindListActivity extends MaxisMainActivity {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-
 				if (!isAdvanceSearchLayoutOpen) {
 					isAdvanceSearchLayoutOpen = true;
 					advanceSearchLayout.setVisibility(View.VISIBLE);
@@ -556,14 +554,17 @@ public class CombindListActivity extends MaxisMainActivity {
 				return false;
 			}
 		});
-		 if (mClResponse.getRecordsPerPage() <= 10 &&
+/*		 if (mClResponse.getRecordsPerPage() <= 10 &&
 		 mClResponse.getTotalrecordFound()>5) {
 		 // Add one blank record.
 		 CompanyDesc desc = new CompanyDesc();
 		 desc.setCompId("-1");
 		 mClResponse.getCompanyArrayList().add(desc);
-		 }
+		 }*/
 
+		addAnEmptyRow();
+		
+		
 		mDistanceChooser = (Spinner) findViewById(R.id.distance_filter_chooser);
 		nearMe = (TextView) findViewById(R.id.nearMe);
 		nearMe.setOnClickListener(this);
@@ -595,7 +596,6 @@ public class CombindListActivity extends MaxisMainActivity {
 					@Override
 					public void onItemSelected(AdapterView<?> arg0, View arg1,
 							int pos, long arg3) {
-						// TODO Auto-generated method stub
 						if (filter.get(pos).equalsIgnoreCase("All")) {
 							distance = "1000000";
 
@@ -631,8 +631,6 @@ public class CombindListActivity extends MaxisMainActivity {
 
 					@Override
 					public void onNothingSelected(AdapterView<?> arg0) {
-						// TODO Auto-generated method stub
-
 					}
 				});
 	bannerViewLayout = (LinearLayout) findViewById(R.id.bannerView_LnrLayout);
@@ -677,6 +675,15 @@ public class CombindListActivity extends MaxisMainActivity {
 
 	}
 
+	private void addAnEmptyRow() {
+		 if (mClResponse.getTotalrecordFound() <= mClResponse.getRecordsPerPage() && mClResponse.getTotalrecordFound() > 5) {
+		 // Add one blank record.
+		 CompanyDesc desc = new CompanyDesc();
+		 desc.setCompId("-1");
+		 mClResponse.getCompanyArrayList().add(desc);
+		 }
+	}
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -842,7 +849,6 @@ public class CombindListActivity extends MaxisMainActivity {
 				oldResponse.appendCompListAtEnd(
 						mClResponse.getCompanyArrayList(), false);
 				mClResponse.setCompanyList(oldResponse.getCompanyArrayList());
-				// TODO append result set in existing
 				// changeNavigationButtonState(mClResponse.getPagesCount(),
 				// mClResponse.getPageNumber());
 				if (mClResponse.getPageNumber() == 10
@@ -924,8 +930,7 @@ public class CombindListActivity extends MaxisMainActivity {
 				// mRecordsFoundView.setText(mClResponse.getTotalrecordFound()
 				// + " " + getResources().getString(R.string.record_found));
 				// initNavigationButton(mClResponse.getPagesCount());
-				ArrayList<CompanyDesc> compListData = mDealResponse
-						.getCompanyArrayList();
+				ArrayList<CompanyDesc> compListData = mDealResponse.getCompanyArrayList();
 
 				Intent intent = new Intent(CombindListActivity.this,
 						DealsActivity.class);
@@ -993,8 +998,6 @@ public class CombindListActivity extends MaxisMainActivity {
 				showInfoDialog((String) msg.obj);
 			} else {
 				SubCategoryResponse categoriesResp = (SubCategoryResponse) msg.obj;
-
-				// TODO TEMPORARY :: change for hot deals
 				Intent intent = new Intent(CombindListActivity.this,
 						DealsActivity.class);
 				intent.putExtra(AppConstants.DATA_SUBCAT_RESPONSE,
@@ -1012,7 +1015,6 @@ public class CombindListActivity extends MaxisMainActivity {
 
 	@Override
 	public Activity getMyActivityReference() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -1228,7 +1230,6 @@ public class CombindListActivity extends MaxisMainActivity {
 		startSppiner();
 		RefineSearchRequest refineSearchRequest = new RefineSearchRequest();
 		refineSearchRequest.setCategoryId(categoryId);
-		//TODO For MORE REFINE ATTRIBUTES
 		if(mClRequest.isBySearch())
 		{
 			refineSearchRequest.setSearchKeyword(mClRequest.getKeywordOrCategoryId());
@@ -1362,7 +1363,6 @@ public class CombindListActivity extends MaxisMainActivity {
 				return null;
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

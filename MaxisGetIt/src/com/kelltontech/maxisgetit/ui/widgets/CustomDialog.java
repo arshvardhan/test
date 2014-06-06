@@ -96,16 +96,16 @@ public class CustomDialog implements OnKeyListener {
 	public AlertDialog.Builder createNativeDialog(String info) {
 		switch (mId) {
 		case UPLOAD_CONTEST_IMAGE_DIALOG:
-			final CharSequence[] options = { "Choose from Gallery", "Capture from Camera", "Cancel" };
+			final CharSequence[] options = { "Gallery", "Take Photo", "Cancel" };
 			builder = new AlertDialog.Builder(mActivity);
 			builder.setTitle("FINDIT");
 			builder.setItems(options, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int item) {
-					if (options[item].equals("Choose from Gallery")) {
+					if (options[item].equals("Gallery")) {
 						mActivity.onPositiveDialogButton(mId);
 						dialog.dismiss();
-					} else if (options[item].equals("Capture from Camera")) {
+					} else if (options[item].equals("Take Photo")) {
 						mActivity.onNegativeDialogbutton(mId);
 						dialog.dismiss();
 					} else if (options[item].equals("Cancel")) {

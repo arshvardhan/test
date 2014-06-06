@@ -51,14 +51,9 @@ public class ContestPoiSearchActivity extends ContestBaseActivity {
 
 		// showDialog(CustomDialog.PROGRESS_DIALOG);
 		startSppiner();
-		startService(new Intent(ContestPoiSearchActivity.this,
-				ContestLocationFinderService.class));
-
+		startService(new Intent(ContestPoiSearchActivity.this, ContestLocationFinderService.class));
 		setContentView(R.layout.contest_poi_search_activity);
-
-		((TextView) findViewById(R.id.header_title))
-		.setText(getString(R.string.header_photo_contest));
-
+		((TextView) findViewById(R.id.header_title)).setText(getString(R.string.header_photo_contest));
 		findViewById(R.id.header_btn_back).setOnClickListener(this);
 		findViewById(R.id.goto_home_icon).setOnClickListener(this);
 		findViewById(R.id.search_toggler).setVisibility(View.INVISIBLE);
@@ -74,12 +69,9 @@ public class ContestPoiSearchActivity extends ContestBaseActivity {
 		 * mLogo.setOnClickListener(ContestPoiSearchActivity.this);
 		 */
 
-		UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.rootLayout),
-				this);
-		mLongitude = AppSharedPreference.getFloat(
-				AppSharedPreference.LONGITUDE, 0.0f, getApplication());
-		mLattitude = AppSharedPreference.getFloat(AppSharedPreference.LATITUDE,
-				0.0f, getApplication());
+		UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.rootLayout),this);
+		mLongitude = AppSharedPreference.getFloat(AppSharedPreference.LONGITUDE, 0.0f, getApplication());
+		mLattitude = AppSharedPreference.getFloat(AppSharedPreference.LATITUDE, 0.0f, getApplication());
 
 		IntentFilter filterSend = new IntentFilter();
 		filterSend.addAction("location");
@@ -100,12 +92,8 @@ public class ContestPoiSearchActivity extends ContestBaseActivity {
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
 				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-					String _key = mSearchKeyEdtTxt.getText().toString()
-							.trim();
-					if (_key.length() == 0) {
-						Toast.makeText(ContestPoiSearchActivity.this,
-								getString(R.string.input_search),
-								Toast.LENGTH_SHORT).show();
+					String _key = mSearchKeyEdtTxt.getText().toString().trim();
+					if (_key.length() == 0) {Toast.makeText(ContestPoiSearchActivity.this,getString(R.string.input_search),Toast.LENGTH_SHORT).show();
 					} else {
 						mCurrentEventType = Events.POI_SEARCH_EVENT;
 						onLoad();
@@ -129,8 +117,7 @@ public class ContestPoiSearchActivity extends ContestBaseActivity {
 		case Events.POI_COUNT_EVENT: {
 			// showDialog(CustomDialog.PROGRESS_DIALOG);
 			startSppiner();
-			ContestPoiController contestPoiController = new ContestPoiController(
-					this, Events.POI_COUNT_EVENT);
+			ContestPoiController contestPoiController = new ContestPoiController(this, Events.POI_COUNT_EVENT);
 			RequestPoiSearch requestPoiSearch = new RequestPoiSearch();
 			requestPoiSearch.setLatitude(mLattitude);
 			requestPoiSearch.setLongitude(mLongitude);
@@ -206,15 +193,13 @@ public class ContestPoiSearchActivity extends ContestBaseActivity {
 			mCurrentEventType = Events.CATEGORY_LIST_EVENT;
 			// showDialog(CustomDialog.PROGRESS_DIALOG);
 			startSppiner();
-			ContestListController contestListController = new ContestListController(
-					this, Events.CATEGORY_LIST_EVENT);
+			ContestListController contestListController = new ContestListController(this, Events.CATEGORY_LIST_EVENT);
 			RequestDistance distance1 = new RequestDistance();
 			getLocation();
 			distance1.setLatitude(mLattitude);
 			distance1.setLongitude(mLongitude);
 			distance1.setPageNumber(1);
-			distance1
-			.setRecordsPerPage(AppConstants.PAGE_SIZE_POI_LIST_BY_DISTANCE);
+			distance1.setRecordsPerPage(AppConstants.PAGE_SIZE_POI_LIST_BY_DISTANCE);
 			contestListController.requestService(distance1);
 			break;
 		}

@@ -243,10 +243,10 @@ public class GenralRequest extends MaxisBaseRequest {
 		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		ht.put("page_number", pageNumber + "");
 		if (!StringUtil.isNullOrEmpty(cityName)) {
-			ht.put("city_name", cityName);
+			ht.put("city", cityName);
 		}
 		if (!StringUtil.isNullOrEmpty(localityName)) {
-			ht.put("locality_name", localityName);
+			ht.put("locality", localityName);
 		}
 		return ht;
 	}
