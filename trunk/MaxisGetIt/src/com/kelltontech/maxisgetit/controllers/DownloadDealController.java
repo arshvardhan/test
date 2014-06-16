@@ -75,7 +75,7 @@ public class DownloadDealController extends BaseServiceController {
 			Hashtable<String, String> urlParams = genralRequest
 					.getDownloadDealHeaders(downloadDealReq.getName(),
 							downloadDealReq.getPhoneNo(),
-							downloadDealReq.getDeal_id(),screenName);
+							downloadDealReq.getDeal_id(),downloadDealReq.getSource(), screenName);
 			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, urlParams));
 
 			HttpClientConnection.getInstance().addRequest(serviceRq);

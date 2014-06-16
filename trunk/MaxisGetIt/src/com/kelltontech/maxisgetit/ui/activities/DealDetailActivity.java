@@ -23,6 +23,9 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
@@ -93,7 +96,7 @@ OnGlobalLayoutListener, OnClickListener {
 	private TextView aboutUs;
 	private TextView nearOutLets;
 	private TextView tNc;
-	private TextView dealDesc;
+	private WebView dealDesc;
 	private TextView downloadDeal;
 	private TextView viewAllOutlets;
 	private LinearLayout mSearchContainer;
@@ -162,6 +165,8 @@ OnGlobalLayoutListener, OnClickListener {
 	private TextView mMoreDesc;
 	//	private boolean mIsCollapsedView = true;
 	private int mapIndex;
+	private String externalDealURL;
+	private int currentEvent = -1;
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -247,7 +252,18 @@ OnGlobalLayoutListener, OnClickListener {
 		mClRequest = bundle.getParcelable(AppConstants.DATA_LIST_REQUEST);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
 		seprator_outlet = (View) findViewById(R.id.outlet_seprator);
-		dealDesc = (TextView) findViewById(R.id.deal_desc);
+		dealDesc = (WebView) findViewById(R.id.deal_desc);
+		WebSettings settings = dealDesc.getSettings();
+		settings.setJavaScriptEnabled(true);
+		dealDesc.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+		dealDesc.setWebViewClient(new WebViewClient() {
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				return overrideWebViewUrlLoading(url);
+			}
+			public void onPageFinished(WebView view, String url) { }
+			public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) { }
+		});
+		
 		nearestOutletLayout = (RelativeLayout) findViewById(R.id.nearestLayout);
 		nearestOutLetTitle = (TextView) nearestOutletLayout
 				.findViewById(R.id.outletName);
@@ -350,29 +366,29 @@ OnGlobalLayoutListener, OnClickListener {
 			}
 		});
 
-		dealDesc.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				if (onTapNearestOutletEnable) {
-					String catId = outLets.get(0).getCatid();
-					String comp_id = outLets.get(0).getId();
-
-					Intent intent = new Intent(DealDetailActivity.this,
-							CompanyDetailActivity.class);
-
-					Bundle bundle = new Bundle();
-					bundle.putString(AppConstants.COMP_ID, comp_id);
-					bundle.putString(AppConstants.GLOBAL_SEARCH_KEYWORD,
-							mSearchKeyword);
-					bundle.putBoolean(AppConstants.IS_DEAL_LIST, true);
-					intent.putExtra(AppConstants.CATEGORY_ID_KEY, catId);
-					intent.putExtras(bundle);
-					startActivity(intent);
-				}
-			}
-		});
+//		dealDesc.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//
+//				if (onTapNearestOutletEnable) {
+//					String catId = outLets.get(0).getCatid();
+//					String comp_id = outLets.get(0).getId();
+//
+//					Intent intent = new Intent(DealDetailActivity.this,
+//							CompanyDetailActivity.class);
+//
+//					Bundle bundle = new Bundle();
+//					bundle.putString(AppConstants.COMP_ID, comp_id);
+//					bundle.putString(AppConstants.GLOBAL_SEARCH_KEYWORD,
+//							mSearchKeyword);
+//					bundle.putBoolean(AppConstants.IS_DEAL_LIST, true);
+//					intent.putExtra(AppConstants.CATEGORY_ID_KEY, catId);
+//					intent.putExtras(bundle);
+//					startActivity(intent);
+//				}
+//			}
+//		});
 
 		final com.kelltontech.maxisgetit.ui.widgets.CustomScrollView mainScrollView = (com.kelltontech.maxisgetit.ui.widgets.CustomScrollView) findViewById(R.id.scroll_view);
 		// View transparentImageView = (View) findViewById(R.id.trans_img);
@@ -409,7 +425,7 @@ OnGlobalLayoutListener, OnClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
 					long arg3) {
-
+				if (outLets != null && outLets.size() > 0) {
 				String catId = outLets.get(pos).getCatid();
 				String comp_id = outLets.get(pos).getId();
 
@@ -426,6 +442,7 @@ OnGlobalLayoutListener, OnClickListener {
 				startActivity(intent);
 
 			}
+		}
 		});
 
 	}
@@ -446,6 +463,7 @@ OnGlobalLayoutListener, OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.about_deal:
+			if (outLets != null && outLets.size() > 0) {
 			isNearestOutlet = false;
 			onTapNearestOutletEnable = false;
 			aboutUs.setBackgroundColor(getResources().getColor(R.color.green));
@@ -465,11 +483,15 @@ OnGlobalLayoutListener, OnClickListener {
 			mapLabel.setVisibility(View.VISIBLE);
 
 			if (!StringUtil.isNullOrEmpty(compDetailResponse.getDescription()))
-				dealDesc.setText(Html.fromHtml(compDetailResponse
-						.getDescription()));
+				dealDesc.loadDataWithBaseURL("", compDetailResponse.getDescription(), "text/html", "UTF-8","");
+//				setText(Html.fromHtml(compDetailResponse.getDescription()));
+			} else {
+				showInfoDialog(getResources().getString(R.string.no_result_found));
+			}
 
 			break;
 		case R.id.nearest_outlet:
+			if  (outLets != null && outLets.size() > 0) {
 			isNearestOutlet = true;
 			outLetsName.setVisibility(View.GONE);
 			aboutUs.setBackgroundColor(Color.WHITE);
@@ -491,19 +513,24 @@ OnGlobalLayoutListener, OnClickListener {
 			mapLabel.setVisibility(View.VISIBLE);
 			// setUpMapIfNeeded();
 			if (outLets != null && outLets.size() > 0) {
-				if (!StringUtil.isNullOrEmpty(outLetResponse.getOutlet().get(0)
-						.getAddress())) {
-					dealDesc.setText(outLets.get(0).getTitle() + ", "
-							+ outLets.get(0).getAddress());
+				if (!StringUtil.isNullOrEmpty(outLetResponse.getOutlet().get(0).getAddress())) {
+					String text = outLets.get(0).getTitle() + ", "+ outLets.get(0).getAddress();
+//					dealDesc.setText(outLets.get(0).getTitle() + ", "+ outLets.get(0).getAddress());
+					dealDesc.loadDataWithBaseURL("", text, "text/html", "UTF-8","");
 					onTapNearestOutletEnable = true;
 				}
 			} else {
-				dealDesc.setText("Nearest OutLet Address not available .");
+//				dealDesc.setText("Nearest OutLet Address not available .");
+				dealDesc.loadDataWithBaseURL("", "Nearest OutLet Address not available .", "text/html", "UTF-8","");
 				onTapNearestOutletEnable = false;
+			}
+			} else {
+				showInfoDialog(getResources().getString(R.string.no_result_found));
 			}
 			break;
 
 		case R.id.deal_all_outlet:
+			if (outLets != null && outLets.size() > 0) {
 			onViewAllOutletClick();
 			//			isNearestOutlet = false;
 			//			outLetsName.setVisibility(View.VISIBLE);
@@ -538,7 +565,9 @@ OnGlobalLayoutListener, OnClickListener {
 			//			} catch (Exception e) {
 			//				e.printStackTrace();
 			//			}
-
+			} else {
+				showInfoDialog(getResources().getString(R.string.no_result_found));
+			}
 			break;
 
 		case R.id.tnc:
@@ -861,8 +890,8 @@ OnGlobalLayoutListener, OnClickListener {
 					mCurrentCompId = marker.getSnippet().split(
 							AppConstants.SPLIT_STRING)[0];
 
-//					mCurrentCompId = marker.getSnippet().split(
-//							AppConstants.SPLIT_STRING)[0];
+					//					mCurrentCompId = marker.getSnippet().split(
+					//							AppConstants.SPLIT_STRING)[0];
 					OutLet outLet = mMapInfoWindowAdapter
 							.getValue(mCurrentCompId);
 					Intent intent = new Intent(DealDetailActivity.this,
@@ -1030,11 +1059,14 @@ OnGlobalLayoutListener, OnClickListener {
 			} else if (msg.arg1 == 0) {
 				MaxisResponse genResp = (MaxisResponse) msg.obj;
 				if (compDetailResponse.getSource().equalsIgnoreCase("GROUPON")) {
-					String url = compDetailResponse.getDealDetailUrl();
+					currentEvent = msg.arg2;
+					externalDealURL = compDetailResponse.getDealDetailUrl();
+							if (isDialogToBeShown()) {
+								showConfirmationDialog(CustomDialog.DATA_USAGE_DIALOG, getResources().getString(R.string.cd_msg_data_usage));
+							} else {
+								showExternalDealInBrowser(externalDealURL);
+							}
 
-					Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-							Uri.parse(url));
-					startActivity(browserIntent);
 				} else {
 					showInfoDialog(getString(R.string.download_deal));
 				}
@@ -1112,6 +1144,11 @@ OnGlobalLayoutListener, OnClickListener {
 		}
 	}
 
+	private void showExternalDealInBrowser(String url) {
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+		startActivity(browserIntent);
+	}
+
 	public void getDownloadDetails() {
 
 		if (store.isLoogedInUser()) {
@@ -1167,11 +1204,11 @@ OnGlobalLayoutListener, OnClickListener {
 		mMoreDesc = (TextView) findViewById(R.id.more);
 		mMoreDesc.setText(Html.fromHtml("<u>" + getResources().getString(R.string.more) + "</u>"));
 		mMoreDesc.setOnClickListener(this);
-//		if (validIn.isEllipsized()) {
-//			mMoreDesc.setVisibility(View.VISIBLE);
-//		} else {
-//			mMoreDesc.setVisibility(View.INVISIBLE);
-//		}
+		//		if (validIn.isEllipsized()) {
+		//			mMoreDesc.setVisibility(View.VISIBLE);
+		//		} else {
+		//			mMoreDesc.setVisibility(View.INVISIBLE);
+		//		}
 		if (compDetailResponse.getValidIn().length() > 25) {
 			mMoreDesc.setVisibility(View.VISIBLE);
 		} else {
@@ -1181,8 +1218,8 @@ OnGlobalLayoutListener, OnClickListener {
 			validDate.setText(compDetailResponse.getValidDate());
 
 		if (!StringUtil.isNullOrEmpty(compDetailResponse.getDescription()))
-			dealDesc.setText(Html.fromHtml(compDetailResponse.getDescription()));
-
+			dealDesc.loadDataWithBaseURL("", compDetailResponse.getDescription(), "text/html", "UTF-8","");
+//		dealDesc.setText(Html.fromHtml(compDetailResponse.getDescription()));
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
 		mProfileIconView = (ImageView) findViewById(R.id.show_profile_icon);
@@ -1204,7 +1241,7 @@ OnGlobalLayoutListener, OnClickListener {
 		imgPathList = compDetailResponse.getIconUrl();
 
 		dealGallery = (ViewPager) findViewById(R.id.dealtopbanner);
-		
+
 		dealGallery.setOnTouchListener(new View.OnTouchListener() {
 
 			@Override
@@ -1213,7 +1250,7 @@ OnGlobalLayoutListener, OnClickListener {
 				return false;
 			}
 		});
-		
+
 		if (imgPathList != null && imgPathList.size() > 0) {
 			dealGallery.setVisibility(View.VISIBLE);
 			ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(
@@ -1256,7 +1293,7 @@ OnGlobalLayoutListener, OnClickListener {
 
 	public void addOutLets() {
 
-		if (outLets.size() > 0) {
+		if (outLets != null && outLets.size() > 0) {
 			// OutLetsName
 			// LayoutInflater inflater = (LayoutInflater)
 			// getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -1345,9 +1382,12 @@ OnGlobalLayoutListener, OnClickListener {
 		dealReq.setName(userName);
 		dealReq.setPhoneNo(userNo);
 		dealReq.setDeal_id(deal_id);
-
-		DownloadDealController downloadDealController = new DownloadDealController(
-				DealDetailActivity.this, Events.DOWNLOAD_DEAL);
+		if(compDetailResponse != null && !StringUtil.isNullOrEmpty(compDetailResponse.getSource()) && compDetailResponse.getSource().equalsIgnoreCase("GROUPON")) {
+			dealReq.setSource("groupon");
+		} else {
+			dealReq.setSource("findit");	
+		}
+		DownloadDealController downloadDealController = new DownloadDealController(DealDetailActivity.this, Events.DOWNLOAD_DEAL);
 		downloadDealController.fromDeal = false;
 		startSppiner();
 		downloadDealController.requestService(dealReq);
@@ -1391,18 +1431,21 @@ OnGlobalLayoutListener, OnClickListener {
 	}
 
 	public void showMap(int index) {
+		if (outLets != null && outLets.size() > 0) {
 		mapIndex = index;
 		if (isDialogToBeShown()) {
-			showConfirmationDialog(CustomDialog.DATA_USAGE_DIALOG,
-					getResources().getString(R.string.cd_msg_data_usage));
+			showConfirmationDialog(CustomDialog.DATA_USAGE_DIALOG, getResources().getString(R.string.cd_msg_data_usage));
 		} else {
 			if (isLocationAvailable()) {
-//				if(index == -1) {
-					redirectToMap();
-//				} else {
-//					showMapActivity();
-//				}
+				//				if(index == -1) {
+				redirectToMap();
+				//				} else {
+				//					showMapActivity();
+				//				}
 			}
+		}
+		} else {
+			showInfoDialog(getResources().getString(R.string.no_result_found));
 		}
 	}
 
@@ -1422,27 +1465,34 @@ OnGlobalLayoutListener, OnClickListener {
 	@Override
 	public void onPositiveDialogButton(int id) {
 		if (id == CustomDialog.DATA_USAGE_DIALOG) {
-
+			if (currentEvent == Events.DOWNLOAD_DEAL) {
+				showExternalDealInBrowser(externalDealURL);
+				currentEvent = -1;
+			}
+		else {
 			if (isLocationAvailable()) {
-//				if(index == -1) {
-					redirectToMap();
-//				} else {
-//					showMapActivity();
-//				}
+				//				if(index == -1) {
+				redirectToMap();
+				//				} else {
+				//					showMapActivity();
+				//				}
 			}
 		}
+	} else {
+		super.onPositiveDialogButton(id);
 	}
+}
 
-	@Override
-	public void onNegativeDialogbutton(int id) {
-		if (id == CustomDialog.LOGIN_CONFIRMATION_DIALOG) {
-			stopSppiner();
-		} else if (id == CustomDialog.DELETE_CONFIRMATION_DIALOG) {
-			stopSppiner();
-		} else {
-			super.onNegativeDialogbutton(id);
-		}
+@Override
+public void onNegativeDialogbutton(int id) {
+	if (id == CustomDialog.LOGIN_CONFIRMATION_DIALOG) {
+		stopSppiner();
+	} else if (id == CustomDialog.DELETE_CONFIRMATION_DIALOG) {
+		stopSppiner();
+	} else {
+		super.onNegativeDialogbutton(id);
 	}
+}
 
 /*	public void redirectToMap() {
 		Intent intent = new Intent(DealDetailActivity.this,
@@ -1455,21 +1505,24 @@ OnGlobalLayoutListener, OnClickListener {
 		startActivity(intent);
 	}*/
 
-	public void redirectToMap() {
-		Intent intent = new Intent(DealDetailActivity.this,
-				ViewDealMapActivity.class);
-		intent.putParcelableArrayListExtra(AppConstants.OUTLET_DATA, outLets);
-		intent.putExtra("index", mapIndex);
-		if (mapIndex != -1) {
-			if (!StringUtil.isNullOrEmpty(outLets.get(mapIndex).getTitle()))
-				intent.putExtra("DEAL_TITLE", outLets.get(mapIndex).getTitle());
-		} else {
-			if (!StringUtil.isNullOrEmpty(compDetailResponse.getTitle()))
-				intent.putExtra("DEAL_TITLE", compDetailResponse.getTitle());
-		}
-		startActivity(intent);
+public void redirectToMap() {
+	if (outLets != null && outLets.size() > 0) {
+	Intent intent = new Intent(DealDetailActivity.this, ViewDealMapActivity.class);
+	intent.putParcelableArrayListExtra(AppConstants.OUTLET_DATA, outLets);
+	intent.putExtra("index", mapIndex);
+	if (mapIndex != -1) {
+		if (!StringUtil.isNullOrEmpty(outLets.get(mapIndex).getTitle()))
+			intent.putExtra("DEAL_TITLE", outLets.get(mapIndex).getTitle());
+	} else {
+		if (!StringUtil.isNullOrEmpty(compDetailResponse.getTitle()))
+			intent.putExtra("DEAL_TITLE", compDetailResponse.getTitle());
 	}
-	
+	startActivity(intent);
+} else {
+	showInfoDialog(getResources().getString(R.string.no_result_found));
+}
+}
+
 /*	private void showMapActivity() {
 		if (isLocationAvailable()) {
 			String url = "http://maps.google.com/maps?saddr="
@@ -1483,21 +1536,21 @@ OnGlobalLayoutListener, OnClickListener {
 			startActivity(intent);
 		}
 	}*/
-	
-	public void viewFlipperTapped() {
-		Intent intents = new Intent(DealDetailActivity.this,
-				PhotoSlideActivity.class);
-		intents.putParcelableArrayListExtra("list", imgPathList);
-		intents.putExtra("position", flipperVisibleItemPosition);
-		/*intents.putExtra("ImageURL",
-				imgPathList.get(flipperVisibleItemPosition).getDealIconUrl());*/
-		startActivity(intents);
-	}
 
-	/*public void viewFlipperTapped() {
+public void viewFlipperTapped() {
+	Intent intents = new Intent(DealDetailActivity.this,
+			PhotoSlideActivity.class);
+	intents.putParcelableArrayListExtra("list", imgPathList);
+	intents.putExtra("position", flipperVisibleItemPosition);
+	/*intents.putExtra("ImageURL",
+				imgPathList.get(flipperVisibleItemPosition).getDealIconUrl());*/
+	startActivity(intents);
+}
+
+/*public void viewFlipperTapped() {
 		Intent intents = new Intent(DealDetailActivity.this,
 				CompanyDetailImageViewActivity.class);
-		
+
 		intents.putExtra("ImageURL",
 				imgPathList.get(flipperVisibleItemPosition).getDealIconUrl());
 		startActivity(intents);

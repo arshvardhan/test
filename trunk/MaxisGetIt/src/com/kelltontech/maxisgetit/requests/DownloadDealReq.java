@@ -5,6 +5,7 @@ public class DownloadDealReq {
 	private String name;
 	private String phoneNo;
 	private String deal_id;
+	private String source;
 
 	public String getDeal_id() {
 		return deal_id;
@@ -28,6 +29,14 @@ public class DownloadDealReq {
 
 	public void setPhoneNo(String phoneNo) {
 		this.phoneNo = phoneNo;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 
 }

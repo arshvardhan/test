@@ -54,6 +54,7 @@ public class TermsAndConditionActivity extends MaxisMainActivity {
 
 		mWebview.setWebViewClient(new WebViewClient() {
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				
 				return overrideWebViewUrlLoading(url);
 			}
 

@@ -166,6 +166,7 @@ public class CombindListActivity extends MaxisMainActivity {
 								+ " "
 								+ getResources().getString(
 										R.string.record_found));
+				showHideBanner();
 				// initNavigationButton(mClResponse.getPagesCount());
 				addAnEmptyRow();
 				ArrayList<CompanyDesc> compListData = mClResponse
@@ -636,22 +637,7 @@ public class CombindListActivity extends MaxisMainActivity {
 	bannerViewLayout = (LinearLayout) findViewById(R.id.bannerView_LnrLayout);
 	bannerView = (ViewPager) findViewById(R.id.subcategory_banner);
 		
-		if (mClResponse != null && mClResponse.getBanner() != null && mClResponse.getBanner().size() > 0) {
-			bannerList = new ArrayList<String>();
-			bannerList = mClResponse.getBanner();
-			bannerViewLayout.setVisibility(View.VISIBLE);
-			BannerViewAdapter bannerViewAdapter = new BannerViewAdapter(getSupportFragmentManager(), bannerList, this, "Category List");
-//			if (bannerList.size() > 1) {
-//				addImage();
-//				circleIndicator.setVisibility(View.VISIBLE);
-//			} else {
-//				circleIndicator.setVisibility(View.GONE);
-//			}
-			bannerView.setAdapter(bannerViewAdapter);
-		} else {
-			bannerViewLayout.setVisibility(View.GONE);
-//			circleIndicator.setVisibility(View.GONE);
-		}
+	showHideBanner();
 
 //		comDetailGallery.setOnPageChangeListener(new OnPageChangeListener() {
 //
@@ -675,6 +661,25 @@ public class CombindListActivity extends MaxisMainActivity {
 
 	}
 
+	private void showHideBanner() {
+		if (mClResponse != null && mClResponse.getBanner() != null && mClResponse.getBanner().size() > 0) {
+			bannerList = new ArrayList<String>();
+			bannerList = mClResponse.getBanner();
+			bannerViewLayout.setVisibility(View.VISIBLE);
+			BannerViewAdapter bannerViewAdapter = new BannerViewAdapter(getSupportFragmentManager(), bannerList, this, "Category List");
+//			if (bannerList.size() > 1) {
+//				addImage();
+//				circleIndicator.setVisibility(View.VISIBLE);
+//			} else {
+//				circleIndicator.setVisibility(View.GONE);
+//			}
+			bannerView.setAdapter(bannerViewAdapter);
+		} else {
+			bannerViewLayout.setVisibility(View.GONE);
+//			circleIndicator.setVisibility(View.GONE);
+		}
+	}
+	
 	private void addAnEmptyRow() {
 		 if (mClResponse.getTotalrecordFound() <= mClResponse.getRecordsPerPage() && mClResponse.getTotalrecordFound() > 5) {
 		 // Add one blank record.
@@ -880,7 +885,9 @@ public class CombindListActivity extends MaxisMainActivity {
 				int index = setDistanceFilter(search_distance);
 				mDistanceChooser.setSelection(index);
 				mClRequest.setSearch_distance(search_distance);
-
+				
+				showHideBanner();
+				
 				if (MaxisMainActivity.isCitySelected) {
 					mDistanceChooser.setVisibility(View.GONE);
 					nearMe.setVisibility(View.VISIBLE);
@@ -1008,6 +1015,7 @@ public class CombindListActivity extends MaxisMainActivity {
 		}else if(msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE && isFromSearch)
 		{
 			isFromSearch = false;
+			showHideBanner();
 			super.updateUI(msg);
 		}
 

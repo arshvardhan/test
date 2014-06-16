@@ -30,6 +30,7 @@
     <!-- Text color -->
     <color name="text_color_red">#e3222a</color>
     <color name="text_color_green">#58f00f</color>
+    <color name="text_color_map_route_green">#4DB848</color>    
     <color name="breadcrumbs_bg">#a6e5ff</color>
     <!-- company detail -->
     <color name="btn_grey_color">#f0eef0</color>

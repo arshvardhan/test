@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kelltontech.maxisgetit"
-    android:versionCode="7"
-    android:versionName="1.24" >
+    android:versionCode="8"
+    android:versionName="1.25" >
 
     <!--
     above version are updated 
     Package should be com.findit333    -->
-    <!-- Current version code/name on play: code:6, name:1.23 -->
+    <!-- Current version code/name on play store as on 05-June-2014: code:7, name:1.24 -->
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -50,7 +50,7 @@
     <application
         android:name="com.kelltontech.framework.db.MyApplication"
         android:allowBackup="true"
-        android:debuggable="false"
+        android:debuggable="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"

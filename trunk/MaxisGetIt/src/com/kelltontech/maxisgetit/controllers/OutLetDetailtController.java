@@ -94,8 +94,7 @@ public class OutLetDetailtController extends BaseServiceController {
 		if (!response.isError()) {
 			try {
 
-				response.setPayload(new OutLetDetailParser().parse(response
-						.getResponseText()));
+				response.setPayload(new OutLetDetailParser().parse(response.getResponseText()));
 
 			} catch (Exception e) {
 				handleException(e);

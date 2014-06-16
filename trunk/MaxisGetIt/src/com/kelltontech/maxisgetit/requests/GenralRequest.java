@@ -287,11 +287,12 @@ public class GenralRequest extends MaxisBaseRequest {
 	}
 
 	public Hashtable<String, String> getDownloadDealHeaders(String name,
-			String number, String dealId, String screenName) {
+			String number, String dealId, String source, String screenName) {
 		Hashtable<String, String> ht = getDefaultHeaders(screenName);
 		ht.put(KEY_NAME, name);
 		ht.put(KEY_NUMBER, number);
 		ht.put(KEY_DEAL_ID, dealId);
+		ht.put(KEY_DEAL_SOURCE, source);
 		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		return ht;
 	}
