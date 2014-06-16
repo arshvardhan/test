@@ -29,7 +29,6 @@ import com.kelltontech.framework.model.Request;
 import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.network.MyHttpClient;
 import com.kelltontech.framework.network.utis.MySSLSocketFactory;
-import com.kelltontech.maxisgetit.R;
 
 public class AndroidEventManager extends EventManager {
 
@@ -159,22 +158,16 @@ public class AndroidEventManager extends EventManager {
 			sf = new MySSLSocketFactory(trustStore);
 			sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 		} catch (KeyStoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CertificateException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (KeyManagementException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnrecoverableKeyException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

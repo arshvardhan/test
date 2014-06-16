@@ -50,7 +50,7 @@
             android:paddingRight="10dp"
             android:paddingTop="5dp"
             android:text="@string/route"
-            android:textColor="@color/text_color_green"
+            android:textColor="@color/text_color_map_route_green"
             android:textSize="@dimen/sp_17" />
     </LinearLayout>
 

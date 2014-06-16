@@ -94,22 +94,26 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 	}
 
 	//TODO FOR FLURRY
-	
+
 	@Override
 	protected void onStart() {
 		super.onStart();
-		AnalyticsHelper.onActivityStart(this);
-		AnalyticsHelper.setLogEnabled(true);
-		AnalyticsHelper.getReleaseVersion();
-		if(!StringUtil.isNullOrEmpty(mStore.getUserMobileNumber())){
-			AnalyticsHelper.setUserID(mStore.getUserMobileNumber());
+		if (AppConstants.PRODUCTION) {
+			AnalyticsHelper.onActivityStart(this);
+			AnalyticsHelper.setLogEnabled(true);
+			AnalyticsHelper.getReleaseVersion();
+			if(!StringUtil.isNullOrEmpty(mStore.getUserMobileNumber())){
+				AnalyticsHelper.setUserID(mStore.getUserMobileNumber());
+			}
 		}
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
+		if (AppConstants.PRODUCTION) {
 		AnalyticsHelper.onActivityStop(this);
+		}
 	}
 
 	protected void performSearch(String searchText , String postJsonPayload) {
@@ -429,13 +433,17 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 	 */
 	protected boolean overrideWebViewUrlLoading(String url) {
 		Log.i("maxis", "Processing webview url click...");
-		if (url != null && url.startsWith("http://")) {
+		if (url != null && (url.startsWith("http://") || url.startsWith("https://"))) {
 			if( url.indexOf( getString(R.string.findit_com)) == -1 ) {
 				checkPreferenceAndOpenBrowser(url);
 			} else {
 				openDeviceBrowser(url, true);
 			}
 			return true;
+		} else if (url.startsWith("tel:")) { 
+			Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url)); 
+			startActivity(intent); 
+			return  true;
 		} else {
 			return false;
 		}
@@ -461,33 +469,33 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		}
 	}
 
-//	protected void trackSession(String screenName) {
-//		try {
-//			if (!NativeHelper.isDataConnectionAvailable(MaxisMainActivity.this)) {
-//				Response res = new Response();
-//				res.setErrorCode(101);
-//				res.setErrorText(MaxisMainActivity.this.getResources().getString(R.string.network_unavailable));
-//				return;
-//			}
-//			SessionTrackingRequest request = new SessionTrackingRequest(MaxisMainActivity.this, SessionTrackingConstants.SESSION_IDENTIFIER, screenName);
-//			String url = HttpHelper.getURLWithPrams(AppConstants.BASE_URL + request.getMethodName(), request.getRequestHeaders(screenName));
-//			Log.d("maxis", "url " + url);
-//			SimpleXmlRequest<Response> serviceRequest = new SimpleXmlRequest<Response>(Request.Method.GET, url, Response.class, new Listener<Response>() {
-//				@Override
-//				public void onResponse(Response response) {
-//						Log.d("FINDIT MALAYSIA", "SESSION TRACKING MSG: Success");
-//				}
-//					}, 
-//					new ErrorListener() {
-//						@Override
-//						public void onErrorResponse(VolleyError error) {                                
-//						}
-//					}
-//					);  
-//	
-//			MyApplication.getInstance().addToRequestQueue(serviceRequest);
-//		} catch (Exception e) {
-//			AnalyticsHelper.onError(FlurryEventsConstants.REQUEST_SERVICE_ERR, MyApplication.class.getSimpleName() + " : " + AppConstants.REQUEST_SERVICE_ERROR_MSG, e);
-//		}
-//	}
+	//	protected void trackSession(String screenName) {
+	//		try {
+	//			if (!NativeHelper.isDataConnectionAvailable(MaxisMainActivity.this)) {
+	//				Response res = new Response();
+	//				res.setErrorCode(101);
+	//				res.setErrorText(MaxisMainActivity.this.getResources().getString(R.string.network_unavailable));
+	//				return;
+	//			}
+	//			SessionTrackingRequest request = new SessionTrackingRequest(MaxisMainActivity.this, SessionTrackingConstants.SESSION_IDENTIFIER, screenName);
+	//			String url = HttpHelper.getURLWithPrams(AppConstants.BASE_URL + request.getMethodName(), request.getRequestHeaders(screenName));
+	//			Log.d("maxis", "url " + url);
+	//			SimpleXmlRequest<Response> serviceRequest = new SimpleXmlRequest<Response>(Request.Method.GET, url, Response.class, new Listener<Response>() {
+	//				@Override
+	//				public void onResponse(Response response) {
+	//						Log.d("FINDIT MALAYSIA", "SESSION TRACKING MSG: Success");
+	//				}
+	//					}, 
+	//					new ErrorListener() {
+	//						@Override
+	//						public void onErrorResponse(VolleyError error) {                                
+	//						}
+	//					}
+	//					);  
+	//	
+	//			MyApplication.getInstance().addToRequestQueue(serviceRequest);
+	//		} catch (Exception e) {
+	//			AnalyticsHelper.onError(FlurryEventsConstants.REQUEST_SERVICE_ERR, MyApplication.class.getSimpleName() + " : " + AppConstants.REQUEST_SERVICE_ERROR_MSG, e);
+	//		}
+	//	}
 }

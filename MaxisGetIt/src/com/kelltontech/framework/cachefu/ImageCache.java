@@ -50,18 +50,15 @@ public class ImageCache extends AbstractCache<String, byte[]> {
 
 	@Override
 	protected byte[] readValueFromDisk(File file) throws IOException {
-		BufferedInputStream istream = new BufferedInputStream(new FileInputStream(file));
 		long fileSize = file.length();
 		if (fileSize > Integer.MAX_VALUE) {
 			throw new IOException("Cannot read files larger than " + Integer.MAX_VALUE + " bytes");
 		}
-
 		int imageDataLength = (int) fileSize;
-
 		byte[] imageData = new byte[imageDataLength];
+		BufferedInputStream istream = new BufferedInputStream(new FileInputStream(file));
 		istream.read(imageData, 0, imageDataLength);
 		istream.close();
-
 		return imageData;
 	}
 

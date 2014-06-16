@@ -1,10 +1,10 @@
 package com.kelltontech.framework.ui;
 
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
@@ -201,6 +201,11 @@ public abstract class BaseMainActivity extends FragmentActivity implements IScre
 	 */
 	protected void openDeviceBrowser(String url, boolean withChooser) {
 		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+		if (url.contains("maps")) {
+			browserIntent.setComponent(new ComponentName( "com.google.android.apps.maps", "com.google.android.maps.MapsActivity"));
+			startActivity(browserIntent);
+			return;
+		}
 		if( withChooser ) {
 			startActivity(Intent.createChooser(browserIntent, getString(R.string.open_browser)));
 		} else {

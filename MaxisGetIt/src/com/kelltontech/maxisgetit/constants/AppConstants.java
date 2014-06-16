@@ -2,28 +2,29 @@ package com.kelltontech.maxisgetit.constants;
 
 public interface AppConstants {
 
-	String API_VERSION = "1.5";
+	String API_VERSION = "1.6"; // Given for App Version 1.25
+	// API_VERSION = "1.5" is given for App version 1.24
 
-	boolean PRODUCTION = true;
+	boolean PRODUCTION = false;
 
 	// String BASE_SERVER = "http://192.168.13.3/webservice/trunk/"; // local
 	// Aaditya
 	//	 String BASE_SERVER = "http://192.168.13.22/webservice/trunk/"; // local
 	// Ankesh
 	// String BASE_SERVER = "http://192.168.13.16/webservice/trunk/"; // local Ankesh
-	
-	//	 String BASE_SERVER = "http://192.168.13.22/webservice/dev1.2/"; // local for Force Update
+
+	//		 String BASE_SERVER = "http://192.168.13.22/webservice/dev1.2/"; // local for Force Update
 	// Diwakar
 	// String BASE_SERVER = "http://test.kelltontech.com/getitfms/"; //live dev
 	// String BASE_SERVER = "http://test.kelltontech.com/getitfms_qa/"; //QA
 	//	 String BASE_SERVER = "https://staging.findit.com.my/";// staging new
 	//	 String BASE_SERVER = "http://203.115.222.57:8070/"; //staging 8070
 
-//		String BASE_SERVER = "http://203.115.222.57/"; // staging
+	String BASE_SERVER = "http://203.115.222.57/"; // staging
 	String LIFE_CYCLE_WEBVIEW_SERVER = "http://203.115.222.57:8080/users/didLifeCycleApp/";
 	// String BASE_SERVER = "http://203.115.222.69/";// Pre Production
 
-	String BASE_SERVER = "https://webservice.findit.com.my/";// Production
+	//	String BASE_SERVER = "https://webservice.findit.com.my/";// Production
 	// new
 
 	// String BASE_SERVER = "http://192.168.13.16/webservice/trunk/";//local

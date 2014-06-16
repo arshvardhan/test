@@ -49,6 +49,7 @@ public abstract class MaxisBaseRequest {
 	
 	public static final String KEY_DEAL_ID = "deal_id";
 	public static final String KEY_NUMBER = "phone_no";
+	public static final String KEY_DEAL_SOURCE = "source";
 	public static final String KEY_L3CAT_ID = "category_id";
 			
 	private Context mContext;

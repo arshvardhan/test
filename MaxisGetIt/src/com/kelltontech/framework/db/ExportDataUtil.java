@@ -87,6 +87,7 @@ public class ExportDataUtil {
 			}
 		}
 
+		@SuppressWarnings("resource")
 		void copyFile(File src, File dst) throws IOException {
 			FileChannel inChannel = new FileInputStream(src).getChannel();
 			FileChannel outChannel = new FileOutputStream(dst).getChannel();
