@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/reg_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+    <include
+        android:id="@+id/header_base_activity"
+        layout="@layout/header_without_search" />
+    <RelativeLayout
+        android:id="@+id/atnc_info_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_base_activity"
+        android:background="@drawable/shape_bg_green_grey_stroke"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" >
+        <TextView
+            android:id="@+id/col_records_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:text="@string/atnc_title"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold" />
+    </RelativeLayout>
+    <ScrollView
+        android:id="@+id/atnc_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/atnc_accept"
+        android:layout_below="@id/atnc_info_title" >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp" >
+            <WebView
+                android:id="@+id/atnc_info"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:background="@color/white" />
+            <!--
+                 <TextView
+                android:id="@+id/atnc_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:singleLine="false"
+                android:text="@string/terms_condition_text"
+                android:textColor="@color/title_dark_grey"
+                android:textSize="@dimen/sp_12" />
+            -->
+        </RelativeLayout>
+    </ScrollView>
+    <RelativeLayout
+        android:id="@+id/atnc_error_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="invisible" >
+        <TextView
+            android:id="@+id/atnc_label_network"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/atnc_network_error"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/text_light_grey"/>
+        <Button
+            android:id="@+id/atnc_try_again"
+            style="@style/common_green_button"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/try_again"
+            android:layout_below="@id/atnc_label_network" 
+            android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
+    <Button
+        android:id="@+id/atnc_accept"
+        style="@style/common_green_button"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/accept"
+        android:visibility="gone" />
+    <Button
+        android:id="@+id/atnc_back"
+        style="@style/common_green_button"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/back"
+        android:visibility="gone" />
+    <Button
+        android:id="@+id/atnc_reject"
+        style="@style/common_red_button"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/atnc_scroll_view"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:text="@string/decline"
+        android:visibility="gone" />
+</RelativeLayout>
