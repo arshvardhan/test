@@ -485,9 +485,7 @@ OnGlobalLayoutListener, OnClickListener {
 			if (!StringUtil.isNullOrEmpty(compDetailResponse.getDescription()))
 				dealDesc.loadDataWithBaseURL("", compDetailResponse.getDescription(), "text/html", "UTF-8","");
 //				setText(Html.fromHtml(compDetailResponse.getDescription()));
-			} else {
-				showInfoDialog(getResources().getString(R.string.no_result_found));
-			}
+			} 
 
 			break;
 		case R.id.nearest_outlet:

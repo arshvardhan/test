@@ -280,7 +280,7 @@
                 android:id="@+id/mapLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/view_on_map_image"
+                android:background="@drawable/view_on_map_image_background"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:visibility="visible" >
