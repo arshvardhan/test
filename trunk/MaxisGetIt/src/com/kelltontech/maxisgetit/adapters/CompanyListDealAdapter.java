@@ -2,11 +2,9 @@ package com.kelltontech.maxisgetit.adapters;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +13,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kelltontech.framework.imageloader.ImageLoader;
 import com.kelltontech.framework.utils.StringUtil;
@@ -78,7 +75,7 @@ public class CompanyListDealAdapter extends BaseAdapter {
 			model.dealValidDate=(TextView) convertView.findViewById(R.id.validity_expires);
 			model.dealDownload = (Button) convertView.findViewById(R.id.download_btn);
 			model.arrow = (ImageView) convertView.findViewById(R.id.arrow);
-			model.baseLayout = (RelativeLayout)convertView.findViewById(R.id.hotdeal);
+			model.baseLayout = (LinearLayout)convertView.findViewById(R.id.deal_row_base_layout);
 			convertView.setTag(model);
 		}else{
 			model=(Model) convertView.getTag();
@@ -87,6 +84,7 @@ public class CompanyListDealAdapter extends BaseAdapter {
 		if(compDesc.getCompId().equalsIgnoreCase("-1"))
 		{
 			 int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30,mContext.getResources().getDisplayMetrics());
+			 model.baseLayout.setLayoutParams(new android.widget.RelativeLayout.LayoutParams(size, size));
 			 model.dealImage.setVisibility(View.GONE);
 			 model.dealTitle.setVisibility(View.INVISIBLE);
 			 model.dealValidArea.setVisibility(View.INVISIBLE);
@@ -96,6 +94,7 @@ public class CompanyListDealAdapter extends BaseAdapter {
 		}
 		else
 		{
+			 model.baseLayout.setLayoutParams(new android.widget.RelativeLayout.LayoutParams(android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT));
 			 model.dealImage.setVisibility(View.VISIBLE);
 			 model.dealTitle.setVisibility(View.VISIBLE);
 			 model.dealValidArea.setVisibility(View.VISIBLE);
@@ -168,7 +167,7 @@ public class CompanyListDealAdapter extends BaseAdapter {
 		TextView dealValidArea;
 		TextView dealValidDate;
 		Button dealDownload;
-		RelativeLayout baseLayout;
+		LinearLayout baseLayout;
 		ImageView arrow;
 	}
 
