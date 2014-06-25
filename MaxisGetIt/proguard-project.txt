@@ -18,3 +18,9 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+# Uncomment the following two lines of code when using proguard. 
+# The following flags are used to preserve generics signatures and to preserve type information used for reflection. 
+# Both flags are necessary for the Facebook SDK to function correctly in an Android app. 
+# 
+#-keep class com.facebook.** { *; }
+#-keepattributes Signature

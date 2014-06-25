@@ -127,6 +127,7 @@ public class SplashActivity extends MaxisMainActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		// For session tracking on server side as well as for App installation and App launch tracking using Facebook SDK
 		AnalyticsHelper.trackSession(SplashActivity.this, AppConstants.Splash_Screen);
 	}
 
