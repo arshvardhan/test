@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/header_base_activity"
+        layout="@layout/header_with_popdown_search" />
+
+    <!--
+      <include
+        android:id="@+id/footer_base_screen"
+        layout="@layout/footer_home_screen" /> -->
+
+    <LinearLayout
+        android:id="@+id/searchLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header_base_activity"
+        android:background="@drawable/green_bg_top_shadow"
+        android:padding="5dp" >
+
+        <com.kelltontech.maxisgetit.ui.widgets.ThresholdEditTextView
+            android:id="@+id/searchEdtTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/rounded_ovel_box"
+            android:cursorVisible="true"
+            android:hint="@string/hint_search_for_pois"
+            android:imeOptions="actionSearch"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:textColorHint="@color/grey"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_root_poi_by_category_or_distance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/add_new_poi"
+        android:layout_below="@+id/searchLayout"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tagTaxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#dadada"
+            android:padding="10dp"
+            android:textColor="@color/app_green_color"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:cacheColorHint="@color/transparent"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:fadingEdge="none"
+            android:scrollbars="none" >
+        </ListView>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/searchListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchLayout"
+        android:layout_above="@+id/add_new_poi"
+        android:background="@color/white"
+        android:cacheColorHint="@color/transparent"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:fadingEdge="none"
+        android:scrollbars="none"
+        android:visibility="gone" >
+    </ListView>
+
+    <TextView
+        android:id="@+id/add_new_poi"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/button_dark_bule"
+        android:clickable="true"
+        android:paddingTop="6dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout="@+id/add_new_poi_curve"
+        android:text="@string/add_new_poi"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_15"
+        android:textStyle="bold" />
+    
+    <TextView
+        android:id="@+id/add_new_poi_curve"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/add_new_poi"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-10dp"
+        android:background="@drawable/bottom_btn"
+        android:clickable="true"
+        android:gravity="center_horizontal" />
+    
+    
+<!--     <TextView
+        android:id="@+id/add_new_poi_curve"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_round"
+        android:clickable="true"
+        android:gravity="center_horizontal"
+        android:paddingTop="40dp" />
+
+    <TextView
+        android:id="@+id/add_new_poi"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/button_dark_bule"
+        android:clickable="true"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout="@+id/add_new_poi_curve"
+        android:text="@string/add_new_poi"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/add_new_poi"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/add_new_poi"
+        android:gravity="center"
+        android:src="@drawable/add_new_poi_btn" /> -->
+</RelativeLayout>
