@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kelltontech.maxisgetit"
-    android:versionCode="8"
-    android:versionName="1.25" >
+    android:versionCode="9"
+    android:versionName="1.26" >
 
     <!--
     above version are updated 
-    Package should be com.findit333    -->
-    <!-- Current version code/name on play store as on 05-June-2014: code:7, name:1.24 -->
+    Package should be com.findit333
+    -->
+    <!-- Current version code/name on play store as on 23-June-2014: code:8, name:1.25 -->
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -195,7 +196,8 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
-        </activity>   -->
+        </activity>
+        -->
         <activity
             android:name="com.kelltontech.maxisgetit.ui.activities.ClassifiedScrollActivity"
             android:configChanges="orientation|keyboardHidden"

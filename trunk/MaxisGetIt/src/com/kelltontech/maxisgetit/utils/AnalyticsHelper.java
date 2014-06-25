@@ -30,14 +30,14 @@ import com.kelltontech.maxisgetit.requests.SimpleXmlRequest;
  */
 
 public class AnalyticsHelper {
-	
+
 	public static String SESSION_IDENTIFIER = "";
-	
+
 
 	public static void onActivityCreate() {
 		FlurryAgent.onPageView();
 	}
-	
+
 	/**
 	 * @param activity
 	 */
@@ -52,27 +52,27 @@ public class AnalyticsHelper {
 	public static void onActivityStop(Activity activity) {
 		FlurryAgent.onEndSession(activity);
 	}
-	
+
 	public static void setContinueSession(long seconds) {
 		FlurryAgent.setContinueSessionMillis(seconds * 1000);
 	}
-	
+
 	public static void setLogEnabled(boolean state) {
 		FlurryAgent.setLogEnabled(state);
 	}
-	
+
 	public static void logEvent(String event) {
 		FlurryAgent.logEvent(event);
 	}
-	
+
 	public static void logEvent(String event, boolean trackSession) {
 		FlurryAgent.logEvent(event, trackSession);
 	}
-	
+
 	public static void logEvent(String event, HashMap<String, String> map) {
 		FlurryAgent.logEvent(event,map);
 	}
-	
+
 	public static void logEvent(String event, HashMap<String, String> map, boolean trackSession) {
 		FlurryAgent.logEvent(event,map,trackSession);
 	}
@@ -80,11 +80,11 @@ public class AnalyticsHelper {
 	public static void endTimedEvent(String event) {
 		FlurryAgent.endTimedEvent(event);
 	}
-	
+
 	public static void endTimedEvent(String event, HashMap<String, String> map) {
 		FlurryAgent.endTimedEvent(event,map);
 	}
-	
+
 	public static void onError(String errorId, String message, Throwable exception) {
 		FlurryAgent.onError(errorId, message, exception);
 		exception.printStackTrace();
@@ -95,17 +95,43 @@ public class AnalyticsHelper {
 	public static void onError(String errorId, String message, String errorClass) {
 		FlurryAgent.onError(errorId, message, errorClass);
 	}
-	
+
 	public static void setUserID(String userId) {
 		FlurryAgent.setUserId(userId);
 	}
-	
+
 	public static void getReleaseVersion() {
 		int v = FlurryAgent.getAgentVersion();
 		Log.i("FlurryAgent version", String.valueOf(v));
 	}
-	
+
+	/*	public static boolean isFacebookAvailable(Activity activity) {
+
+	Intent intent = new Intent(Intent.ACTION_SEND);
+	intent.putExtra(Intent.EXTRA_TEXT, "Test; please ignore");
+	intent.setType("text/plain");
+
+	    final PackageManager pm = activity.getApplicationContext().getPackageManager();
+	    for(ResolveInfo resolveInfo: pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)){
+	        ActivityInfo activityInfo = resolveInfo.activityInfo;
+	        // Log.i("actividad ->", activity.name);
+	        if (activityInfo.name.contains("com.facebook.katana")) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}*/
+
+	// For session tracking on server side as well as for App installation and App launch tracking using Facebook SDK
 	public static void trackSession(Activity activity, String screenName) {
+
+		// To measure total installs (through Adds on Facebook) and total times your app is launched.
+
+		//		if(isFacebookAvailable(activity)) {
+		com.facebook.AppEventsLogger.activateApp(activity, AppConstants.FACEBOOK_APP_ID);
+		//		}
+
+		// To track session on server side.
 		try {
 			if (!NativeHelper.isDataConnectionAvailable(activity)) {
 				Response res = new Response();
@@ -119,16 +145,16 @@ public class AnalyticsHelper {
 			SimpleXmlRequest<Response> serviceRequest = new SimpleXmlRequest<Response>(Request.Method.GET, url, Response.class, new Listener<Response>() {
 				@Override
 				public void onResponse(Response response) {
-						Log.d("FINDIT MALAYSIA", "SESSION TRACKING MSG: Success");
+					Log.d("FINDIT MALAYSIA", "SESSION TRACKING MSG: Success");
 				}
-					}, 
-					new ErrorListener() {
-						@Override
-						public void onErrorResponse(VolleyError error) {                                
-						}
-					}
+			}, 
+			new ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {                                
+				}
+			}
 					);  
-	
+
 			MyApplication.getInstance().addToRequestQueue(serviceRequest);
 		} catch (Exception e) {
 			AnalyticsHelper.onError(FlurryEventsConstants.REQUEST_SERVICE_ERR, MyApplication.class.getSimpleName() + " : " + AppConstants.REQUEST_SERVICE_ERROR_MSG, e);

@@ -2,8 +2,8 @@ package com.kelltontech.maxisgetit.constants;
 
 public interface AppConstants {
 
-	String API_VERSION = "1.6"; // Given for App Version 1.25
-	// API_VERSION = "1.5" is given for App version 1.24
+	String API_VERSION = "1.7"; // Given for App Version 1.26
+	// API_VERSION = "1.6" is given for App version 1.25 and provided force update on DealListing Screen
 
 	boolean PRODUCTION = true;
 
@@ -20,7 +20,7 @@ public interface AppConstants {
 	//	 String BASE_SERVER = "https://staging.findit.com.my/";// staging new
 	//	 String BASE_SERVER = "http://203.115.222.57:8070/"; //staging 8070
 
-	//		String BASE_SERVER = "http://203.115.222.57/"; // staging
+	//	String BASE_SERVER = "http://203.115.222.57/"; // staging
 	String LIFE_CYCLE_WEBVIEW_SERVER = "http://203.115.222.57:8080/users/didLifeCycleApp/";
 	// String BASE_SERVER = "http://203.115.222.69/";// Pre Production
 
@@ -58,7 +58,7 @@ public interface AppConstants {
 	// String FLURRY_KEY = "";
 
 	int MAX_RECORD_COUNT = 100;
-
+	String FACEBOOK_APP_ID = "254393288080868"; // App Id: "254393288080868" (To track App installations through Adds on Facebook)
 	String COMP_LIST_DATA = "COMP_LIST_DATA";
 	String COMP_DETAIL_DATA = "COMP_DETAIL_DATA";
 	String OUTLET_DATA = "OUTLET_LIST_DATA";
