@@ -23,12 +23,10 @@ public class CompanyDetailController extends BaseServiceController {
 	public CompanyDetailController(IActionController screen, int eventType) {
 		super(screen, eventType);
 		mActivity = (Activity) screen;
-
 	}
 
 	@Override
-	public void initService() {
-	}
+	public void initService() { }
 
 	@Override
 	public void requestService(Object requestData) {
@@ -37,8 +35,7 @@ public class CompanyDetailController extends BaseServiceController {
 			if (!NativeHelper.isDataConnectionAvailable(mActivity)) {
 				Response res = new Response();
 				res.setErrorCode(101);
-				res.setErrorText(mActivity.getResources().getString(
-						R.string.network_unavailable));
+				res.setErrorText(mActivity.getResources().getString(R.string.network_unavailable));
 				responseService(res);
 				return;
 			}
@@ -48,30 +45,26 @@ public class CompanyDetailController extends BaseServiceController {
 			serviceRq.setServiceController(this);
 			serviceRq.setDataType(mEventType);
 			serviceRq.setPriority(HttpClientConnection.PRIORITY.LOW);
-			serviceRq.setHttpHeaders(API_HEADER_NAMES_ARRAY_2,
-					getApiHeaderValuesArray2());
+			serviceRq.setHttpHeaders(API_HEADER_NAMES_ARRAY_2, getApiHeaderValuesArray2());
 			serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
-
 			DetailRequest detailRequest = (DetailRequest) requestData;
 			isDeal = detailRequest.isDeal;
 			String url = AppConstants.BASE_URL + detailRequest.getMethodName();
-
 			Log.d("maxis", "url " + url);
-			if(isDeal)
-			{
-			screenName = AppConstants.Deal_Detail;
+			if(isDeal) {
+				screenName = AppConstants.Deal_Detail;
 			}
-			else{
+			else {
 				screenName = AppConstants.Company_detail;
 			}
-			serviceRq.setUrl(HttpHelper.getURLWithPrams(url,
-					detailRequest.getRequestHeaders(screenName)));
+			serviceRq.setUrl(HttpHelper.getURLWithPrams(url,detailRequest.getRequestHeaders(screenName)));
 			HttpClientConnection.getInstance().addRequest(serviceRq);
 		} catch (Exception e) {
-			logRequestException(e, "CompanyDetailsController");
-			Response res = getErrorResponse(
-					mActivity.getResources().getString(R.string.internal_error),
-					111);
+			if(isDeal) 
+				logRequestException(e, "DealDetailController");
+			else 
+				logRequestException(e, "CompanyDetailController");
+			Response res = getErrorResponse(mActivity.getResources().getString(R.string.internal_error),111);
 			responseService(res);
 		}
 
@@ -84,16 +77,16 @@ public class CompanyDetailController extends BaseServiceController {
 		if (!response.isError()) {
 			try {
 				if (isDeal) {
-					
 					response.setPayload(new CompanyDetailParser().parse(response.getResponseText()));
-
 				} else {
-					response.setPayload(new CompanyDetailParser()
-							.parse(response.getResponseText()));
+					response.setPayload(new CompanyDetailParser().parse(response.getResponseText()));
 				}
 			} catch (Exception e) {
 				handleException(e);
-				logResponseException(e, "CompanyDetailsController");
+				if(isDeal) 
+					logResponseException(e, "DealDetailController");
+				else 
+					logResponseException(e, "CompanyDetailController");
 				return;
 			}
 		}

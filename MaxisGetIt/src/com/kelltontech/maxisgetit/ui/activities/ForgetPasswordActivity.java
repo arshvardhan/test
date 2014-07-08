@@ -150,7 +150,7 @@ public class ForgetPasswordActivity extends MaxisMainActivity {
 					.setText(mSearchEditText.getText().toString().trim());
 
 			String JSON_EXTRA = jsonForSearch();
-			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
+			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);

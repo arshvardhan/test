@@ -331,7 +331,7 @@ public class HomeActivity extends MaxisMainActivity {
 							AppConstants.GROUP_ACTION_TYPE_CATEGORY_LIST_FOR_GROUP)) {
 				showCompanyDealListing(cat.getCategoryId(),
 						cat.getCategoryTitle(), cat.getThumbUrl(), true,
-						cat.getMgroupType(), cat.getmGroupActionType());
+						cat.getMgroupType(), cat.getmGroupActionType(), Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			}
 			/*
 			 * else
@@ -347,7 +347,7 @@ public class HomeActivity extends MaxisMainActivity {
 					.equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_LIST)) {
 				showCompanyDealListing(cat.getCategoryId(),
 						cat.getCategoryTitle(), cat.getThumbUrl(), true,
-						cat.getMgroupType(), cat.getmGroupActionType());
+						cat.getMgroupType(), cat.getmGroupActionType(), Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			} else if (cat.getmGroupActionType().trim()
 					.equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_ATTRIBUTE)) {
 				showTypeByCategoryScreen(cat.getCategoryId());
@@ -662,17 +662,14 @@ public class HomeActivity extends MaxisMainActivity {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.mainSearchButton:
-			mSearchEditText
-					.setText(mSearchEditText.getText().toString().trim());
-
+			mSearchEditText.setText(mSearchEditText.getText().toString().trim());
 			String JSON_EXTRA = jsonForSearch();
-			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
+			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
 			Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			startActivity(intent);
 			break;
 		case R.id.show_profile_icon:

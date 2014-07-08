@@ -7,14 +7,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -33,9 +30,6 @@ import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.framework.utils.UiUtils;
 import com.kelltontech.maxisgetit.R;
-import com.kelltontech.maxisgetit.R.id;
-import com.kelltontech.maxisgetit.R.layout;
-import com.kelltontech.maxisgetit.R.string;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
@@ -500,7 +494,7 @@ public class RefineOutletActivity extends MaxisMainActivity {
 			.setText(mSearchEditText.getText().toString().trim());
 
 			String JSON_EXTRA = jsonForSearch();
-			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
+			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			break;
 		case R.id.show_profile_icon:
 			onProfileClick();

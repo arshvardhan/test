@@ -36,7 +36,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
@@ -49,7 +48,6 @@ import com.kelltontech.maxisgetit.dao.CompanyDetail;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
 import com.kelltontech.maxisgetit.dao.OutLet;
 import com.kelltontech.maxisgetit.dao.OutLetDetails;
-import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
@@ -207,8 +205,6 @@ OnGlobalLayoutListener, OnClickListener {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-
 				if (!isAdvanceSearchLayoutOpen) {
 					isAdvanceSearchLayoutOpen = true;
 					advanceSearchLayout.setVisibility(View.VISIBLE);
@@ -236,7 +232,6 @@ OnGlobalLayoutListener, OnClickListener {
 
 	@Override
 	public Activity getMyActivityReference() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -268,11 +263,9 @@ OnGlobalLayoutListener, OnClickListener {
 			AnalyticsHelper.logEvent(FlurryEventsConstants.MODIFY_SEARCH_CLICK);
 			break;
 		case R.id.mainSearchButton:
-			mSearchEditText
-			.setText(mSearchEditText.getText().toString().trim());
-
+			mSearchEditText.setText(mSearchEditText.getText().toString().trim());
 			String JSON_EXTRA = jsonForSearch();
-			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
+			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
@@ -350,10 +343,7 @@ OnGlobalLayoutListener, OnClickListener {
 	}
 
 	@Override
-	public void onGlobalLayout() {
-		// TODO Auto-generated method stub
-
-	}
+	public void onGlobalLayout() { }
 
 	private void setUpMapIfNeeded(int index) {
 		// Do a null check to confirm that we have not already instantiated the
@@ -564,11 +554,9 @@ OnGlobalLayoutListener, OnClickListener {
 				return null;
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
-
 	}
 
 	@Override
@@ -618,9 +606,7 @@ OnGlobalLayoutListener, OnClickListener {
 						message.obj = new String(getResources().getString(
 								R.string.communication_failure));
 					}
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
+				} catch (Exception e) { }
 			} else if (event == Events.DEAL_DETAIL) {
 				if (response.getPayload() instanceof CompanyDetail) {
 					CompanyDetail compDetail = (CompanyDetail) response
@@ -648,16 +634,10 @@ OnGlobalLayoutListener, OnClickListener {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				CityTable cityTable = new CityTable(
-						(MyApplication) getApplication());
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
-				// cityTable.addCityList(glistRes.getCityOrLocalityList());
 				cityList = glistRes.getCityOrLocalityList();
-				// inflateCityList(cityList);
-				Intent intent = new Intent(ViewDealMapActivity.this,
-						AdvanceSelectCity.class);
+				Intent intent = new Intent(ViewDealMapActivity.this, AdvanceSelectCity.class);
 				for (CityOrLocality cityOrLocality : cityList) {
-
 					cityListString.add(cityOrLocality.getName());
 				}
 				localityItems = null;
@@ -676,20 +656,16 @@ OnGlobalLayoutListener, OnClickListener {
 			} else {
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
 				localityList = glistRes.getCityOrLocalityList();
-				Intent intent = new Intent(ViewDealMapActivity.this,
-						AdvanceSelectLocalityActivity.class);
+				Intent intent = new Intent(ViewDealMapActivity.this, AdvanceSelectLocalityActivity.class);
 				localityItems = new ArrayList<String>();
 				for (CityOrLocality dealCityOrLoc : localityList) {
 					localityItems.add(dealCityOrLoc.getName());
 				}
 				intent.putExtra("LOCALITY_LIST", localityItems);
-				intent.putStringArrayListExtra("LOCALITY_INDEX",
-						selectedLocalityindex);
+				intent.putStringArrayListExtra("LOCALITY_INDEX", selectedLocalityindex);
 				startActivityForResult(intent, AppConstants.LOCALITY_REQUEST);
-
 			}
-		} else if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE
-				|| msg.arg2 == Events.USER_DETAIL) {
+		} else if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE || msg.arg2 == Events.USER_DETAIL) {
 			super.updateUI(msg);
 		}
 	}

@@ -22,9 +22,6 @@ public class Data implements Parcelable{
     private String price;
     private String leadsReceivedDetailsCout;
 	
-	
-	
-
 	public String getCcDid() {
 		return ccDid;
 	}

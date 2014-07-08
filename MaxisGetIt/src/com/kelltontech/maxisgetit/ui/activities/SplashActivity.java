@@ -123,7 +123,6 @@ public class SplashActivity extends MaxisMainActivity {
 		super.onStart();
 	}
 
-
 	@Override
 	protected void onResume() {
 		super.onResume();

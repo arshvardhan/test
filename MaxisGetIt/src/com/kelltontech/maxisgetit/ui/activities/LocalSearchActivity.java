@@ -229,7 +229,7 @@ public class LocalSearchActivity extends MaxisMainActivity {
 			mSearchEditText
 			.setText(mSearchEditText.getText().toString().trim());
 			String JSON_EXTRA = jsonForSearch();
-			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
+			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			break;
 		case R.id.search_toggler:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SEARCH_CLICK);
@@ -307,8 +307,7 @@ public class LocalSearchActivity extends MaxisMainActivity {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				CityTable cityTable = new CityTable(
-						(MyApplication) getApplication());
+				CityTable cityTable = new CityTable((MyApplication) getApplication());
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
 				// cityTable.addCityList(glistRes.getCityOrLocalityList());
 				cityList = glistRes.getCityOrLocalityList();

@@ -1,7 +1,6 @@
 package com.kelltontech.maxisgetit.ui.activities;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.Html;
@@ -12,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kelltontech.maxisgetit.R;
-import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
@@ -58,7 +56,7 @@ public class ReusableTempletActivity extends MaxisMainActivity {
 		switch (v.getId()) {
 		case R.id.search_icon_button:
 			mSearchEditText.setText(mSearchEditText.getText().toString().trim());
-			performSearch(mSearchEditText.getText().toString(),"");
+			performSearch(mSearchEditText.getText().toString(),"", Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);

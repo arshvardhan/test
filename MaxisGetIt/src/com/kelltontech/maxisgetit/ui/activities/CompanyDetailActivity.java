@@ -285,19 +285,14 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			if (mCompanyDetail == null) {
 				compCatIdToCompare = id + "-" + mCategoryid;
 			} else {
-				if (!StringUtil.isNullOrEmpty(mCompanyDetail.getId())
-						&& !StringUtil.isNullOrEmpty(mCompanyDetail.getCatId())) {
-					Log.e("manish", "compId:" + mCompanyDetail.getId()
-							+ "catid:" + mCompanyDetail.getCatId());
-					compCatIdToCompare = mCompanyDetail.getId() + "-"
-							+ mCompanyDetail.getCatId();
+				if (!StringUtil.isNullOrEmpty(mCompanyDetail.getId()) && !StringUtil.isNullOrEmpty(mCompanyDetail.getCatId())) {
+					Log.e("manish", "compId:" + mCompanyDetail.getId() + "catid:" + mCompanyDetail.getCatId());
+					compCatIdToCompare = mCompanyDetail.getId() + "-" + mCompanyDetail.getCatId();
 				}
 			}
 
-			FavCompanysTable FavCompTable = new FavCompanysTable(
-					(MyApplication) getApplication());
-			ArrayList<FavouriteCompanies> favCompaniesList = FavCompTable
-					.getAllFavCompaniesList();
+			FavCompanysTable FavCompTable = new FavCompanysTable((MyApplication) getApplication());
+			ArrayList<FavouriteCompanies> favCompaniesList = FavCompTable.getAllFavCompaniesList();
 			/*
 			 * if (favCompaniesList.contains(compCatIdToCompare)) {
 			 * mIsAddedToFav = true;
@@ -321,8 +316,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			}
 
 			if (isadded) {
-				mFavBtnView
-						.setImageResource(R.drawable.selector_cd_fav_remove_btn);
+				mFavBtnView.setImageResource(R.drawable.selector_cd_fav_remove_btn);
 			} else {
 				mFavBtnView.setImageResource(R.drawable.selector_cd_fav_btn);
 				mIsAddedToFav = false;
@@ -332,6 +326,12 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 
 		super.onResume();
 		AnalyticsHelper.trackSession(CompanyDetailActivity.this, AppConstants.Company_detail);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		ImageLoader.clearCache();
+		super.onDestroy();
 	}
 
 	private void setData() {
@@ -352,8 +352,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 		mHeaderTitle = (TextView) findViewById(R.id.header_title);
 		mHeaderTitle.setText(Html.fromHtml(mCompanyDetail.getTitle()));
 		mTxtTitle.setText(Html.fromHtml(mCompanyDetail.getTitle()));
-		mTxtRatedUserCount.setText("( "
-				+ String.valueOf(mCompanyDetail.getRatedUserCount()) + " )");
+		mTxtRatedUserCount.setText("( " + String.valueOf(mCompanyDetail.getRatedUserCount()) + " )");
 		// mTxtRatedUserCount.setText(String.format(getResources().getString(R.string.txt_rating_count),29));
 
 //		mCompImageView = (ImageView) findViewById(R.id.cd_comp_image);
@@ -423,8 +422,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 		// mDistanceContainer=(LinearLayout)
 		// findViewById(R.id.cd_distance_container);
 		// mDistanceView=(TextView) findViewById(R.id.cd_distance);
-		if (StringUtil.isNullOrEmpty(mCompanyDetail.getDistance())
-				|| mCompanyDetail.getDistance().equals("0")) {
+		if (StringUtil.isNullOrEmpty(mCompanyDetail.getDistance()) || mCompanyDetail.getDistance().equals("0")) {
 			// mDistanceContainer.setVisibility(View.GONE);
 			mTxtDistanceTitle.setVisibility(View.GONE);
 		} else {
@@ -471,9 +469,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 		circleIndicator = (LinearLayout) findViewById(R.id.indicatorlinearlayout);
 		if (imgPathList != null && imgPathList.size() > 0) {
 			comDetailGallery.setVisibility(View.VISIBLE);
-			ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(
-					getSupportFragmentManager(), imgPathList, this,
-					"CompanyDetail");
+			ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), imgPathList, this, AppConstants.FLOW_FROM_COMPANY_DETAIL);
 			if (imgPathList.size() > 1) {
 				addImage();
 				circleIndicator.setVisibility(View.VISIBLE);
@@ -496,8 +492,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				comDetailGallery.getParent()
-						.requestDisallowInterceptTouchEvent(true);
+				comDetailGallery.getParent().requestDisallowInterceptTouchEvent(true);
 			}
 
 			@Override
@@ -947,7 +942,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 					.setText(mSearchEditText.getText().toString().trim());
 
 			String JSON_EXTRA = jsonForSearch();
-			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
+			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			break;
 		case R.id.show_profile_icon:
 			onProfileClick();
@@ -1413,8 +1408,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 					for (int i = 0; i < selectedLocalityItems.size(); i++) {
 						JSONObject localityArray = new JSONObject();
 						localityArray.put("locality_id", ids.get(i));
-						localityArray.put("locality_name",
-								selectedLocalityItems.get(i));
+						localityArray.put("locality_name", selectedLocalityItems.get(i));
 						jsonArray.put(localityArray);
 
 					}
@@ -1433,10 +1427,8 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 	}
 
 	private void playVideo() {
-		Intent videoIntent = new Intent(CompanyDetailActivity.this,
-				VideoPlayActivity.class);
-		videoIntent.putExtra(AppConstants.VIDEO_URL,
-				mCompanyDetail.getVideoUrl());
+		Intent videoIntent = new Intent(CompanyDetailActivity.this, VideoPlayActivity.class);
+		videoIntent.putExtra(AppConstants.VIDEO_URL, mCompanyDetail.getVideoUrl());
 		startActivity(videoIntent);
 	}
 

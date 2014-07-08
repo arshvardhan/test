@@ -71,4 +71,10 @@ public class Events {
 
 	public static final int MY_ACCOUNT_DASHBOARD = 59;
 	public static final int MY_ACCOUNT_DASHBOARD_LIFECYCLE = 60;
+	
+	public static final int BANNER_NAVIGATION_EVENT = 61;
+	public static final int BANNER_LANDING_COMPANY_LISTING_EVENT = 62;
+	public static final int BANNER_LANDING_COMPANY_DETAIL_EVENT = 63;
+	public static final int BANNER_LANDING_DEAL_DETAIL_EVENT = 64;
+	public static final int BANNER_LANDING_SEARCH_EVENT = 65;
 }

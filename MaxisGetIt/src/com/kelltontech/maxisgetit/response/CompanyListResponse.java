@@ -8,19 +8,18 @@ import android.os.Parcelable;
 
 import com.kelltontech.framework.model.IModel;
 import com.kelltontech.framework.model.MaxisResponse;
+import com.kelltontech.maxisgetit.dao.Banner;
 import com.kelltontech.maxisgetit.dao.CategoryRefine;
 import com.kelltontech.maxisgetit.dao.CompanyDesc;
 
-public class CompanyListResponse extends MaxisResponse implements IModel,
-		Parcelable {
+public class CompanyListResponse extends MaxisResponse implements IModel, Parcelable {
 	private int totalrecordFound;
 	private int recordsPerPage;
 	private int pageNumber;
 	private ArrayList<CompanyDesc> companyArrayList = new ArrayList<CompanyDesc>();
 	private ArrayList<CategoryRefine> categoryList = new ArrayList<CategoryRefine>();
+	private ArrayList<Banner> bannerList = new ArrayList<Banner>();
 	private String search_distance;
-	
-	
 	
 	public String getSearch_distance() {
 		return search_distance;
@@ -63,6 +62,14 @@ public class CompanyListResponse extends MaxisResponse implements IModel,
 	public void addCategory(CategoryRefine category) {
 		this.categoryList.add(category);
 	}
+	
+	public ArrayList<Banner> getBannerList() {
+		return bannerList;
+	}
+
+	public void addBanner(Banner banner) {
+		this.bannerList.add(banner);
+	}
 
 	public int getPagesCount() {
 		int pages = 0;
@@ -75,19 +82,17 @@ public class CompanyListResponse extends MaxisResponse implements IModel,
 		return pages;
 	}
 
-	public CompanyListResponse() {
-		// TODO Auto-generated constructor stub
-	}
+	public CompanyListResponse() { }
 
 	public CompanyListResponse(Parcel in) {
 		errorMessage = in.readString();
 		errorCode = in.readInt();
-		in.readStringList(banner);
 		totalrecordFound = in.readInt();
 		pageNumber = in.readInt();
 		recordsPerPage = in.readInt();
 		in.readTypedList(companyArrayList, CompanyDesc.CREATOR);
 		in.readTypedList(categoryList, CategoryRefine.CREATOR);
+		in.readTypedList(bannerList, Banner.CREATOR);
 		search_distance= in.readString();
 	}
 
@@ -145,12 +150,13 @@ public class CompanyListResponse extends MaxisResponse implements IModel,
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(errorMessage);
 		dest.writeInt(errorCode);
-		dest.writeStringList(banner);
+//		dest.writeStringList(banner);
 		dest.writeInt(totalrecordFound);
 		dest.writeInt(pageNumber);
 		dest.writeInt(recordsPerPage);
 		dest.writeTypedList(companyArrayList);
 		dest.writeTypedList(categoryList);
+		dest.writeTypedList(bannerList);
 		dest.writeString(search_distance);
 	}
 

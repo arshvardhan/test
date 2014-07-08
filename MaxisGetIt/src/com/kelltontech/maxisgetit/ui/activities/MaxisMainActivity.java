@@ -2,6 +2,7 @@ package com.kelltontech.maxisgetit.ui.activities;
 
 import java.util.HashMap;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
@@ -18,17 +19,23 @@ import android.widget.EditText;
 
 import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.ui.BaseMainActivity;
+import com.kelltontech.framework.ui.IActionController;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
+import com.kelltontech.maxisgetit.controllers.BannerNavigationController;
 import com.kelltontech.maxisgetit.controllers.CityAreaListController;
 import com.kelltontech.maxisgetit.controllers.CombindListingController;
+import com.kelltontech.maxisgetit.controllers.CompanyDetailController;
 import com.kelltontech.maxisgetit.controllers.UserDetailController;
+import com.kelltontech.maxisgetit.dao.CompanyDetail;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
 import com.kelltontech.maxisgetit.dao.MaxisStore;
+import com.kelltontech.maxisgetit.model.bannerModel.LogBannerReportResponse;
 import com.kelltontech.maxisgetit.requests.CombinedListRequest;
+import com.kelltontech.maxisgetit.requests.DetailRequest;
 import com.kelltontech.maxisgetit.response.CompanyListResponse;
 import com.kelltontech.maxisgetit.response.UserDetailResponse;
 import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
@@ -44,6 +51,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 	private String	mUrlToBeOpenedWithChooser;
 	protected String mSearchKeyword;
 	public static boolean isCitySelected= false;
+	private Activity tapEventTriggeringActivity;
 
 	protected boolean isLocationAware() {
 		return mStore.isLocalized();
@@ -67,9 +75,6 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 			mSearchKeyword =  getIntent().getExtras().getString(AppConstants.GLOBAL_SEARCH_KEYWORD);
 		}
 		AnalyticsHelper.onActivityCreate();
-		// searchBtn = (ImageView) findViewById(R.id.search_icon_button);
-
-
 	}
 
 	@Override
@@ -93,8 +98,11 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 
 	}
 
-	//TODO FOR FLURRY
 
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.FragmentActivity#onStart()
+	 * //The onStart() and onStop() methods are overridden for integrating and tracking events via analytics tools such as FLURRY
+	 */
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -112,11 +120,11 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 	protected void onStop() {
 		super.onStop();
 		if (AppConstants.PRODUCTION) {
-		AnalyticsHelper.onActivityStop(this);
+			AnalyticsHelper.onActivityStop(this);
 		}
 	}
 
-	protected void performSearch(String searchText , String postJsonPayload) {
+	protected void performSearch(String searchText , String postJsonPayload, int event) {
 		if (searchText == null || searchText.trim().equals("")) {
 			showInfoDialog(getResources().getString(R.string.input_search));
 			return;
@@ -128,7 +136,6 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		//		String encodedText=URLEncoder.encode(searchText.trim());
 		//		mListRequest.setKeywordOrCategoryId(encodedText);
 		mListRequest.setKeywordOrCategoryId(Uri.encode(searchText.trim()));
-
 		HashMap<String,String>	map = new HashMap<String,String>();
 		map.put(FlurryEventsConstants.HOME_SEARCH_TEXT, searchText);
 		AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SCREEN_SEARCH,map);
@@ -136,48 +143,19 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		mListRequest.setLatitude(GPS_Data.getLatitude());
 		mListRequest.setLongitude(GPS_Data.getLongitude());
 
-		if(postJsonPayload!=null)
-		{
+		if(postJsonPayload!=null) {
 			isCitySelected = true;
 			mListRequest.setPostJsonPayload(postJsonPayload);
 		}
-		else{
+		else {
 			isCitySelected = false;
 		}
 
-		CombindListingController listingController = new CombindListingController(MaxisMainActivity.this, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
+		CombindListingController listingController = new CombindListingController(MaxisMainActivity.this, event);
 		listingController.requestService(mListRequest);
 	}
 
-	//	protected void performSearch(String searchText) {
-	//		if (searchText == null || searchText.trim().equals("")) {
-	//			showInfoDialog(getResources().getString(R.string.input_search));
-	//			return;
-	//		}
-	//		startSppiner();
-	//		mListRequest = new CombinedListRequest(MaxisMainActivity.this);
-	//		mListRequest.setBySearch(true);
-	//		mListRequest.setCompanyListing(true);
-	////		String encodedText=URLEncoder.encode(searchText.trim());
-	////		mListRequest.setKeywordOrCategoryId(encodedText);
-	//		mListRequest.setKeywordOrCategoryId(Uri.encode(searchText.trim()));
-	//		
-	//		HashMap<String,String>	map = new HashMap<String,String>();
-	//		map.put(FlurryEventsConstants.HOME_SEARCH_TEXT, searchText);
-	//		AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SCREEN_SEARCH,map);
-	//		
-	//		mListRequest.setLatitude(GPS_Data.getLatitude());
-	//		mListRequest.setLongitude(GPS_Data.getLongitude());
-	//		
-	////		if(postJsonPayload!=null)
-	////		mListRequest.setPostJsonPayload(postJsonPayload);
-	//		
-	//
-	//		CombindListingController listingController = new CombindListingController(MaxisMainActivity.this, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
-	//		listingController.requestService(mListRequest);
-	//	}
-
-	protected void showCompanyDealListing(String categoryId, String categoryTitle,String thumbUrl, boolean iscompanyListing, String groupType, String groupActionType) {
+	protected void showCompanyDealListing(String categoryId, String categoryTitle,String thumbUrl, boolean iscompanyListing, String groupType, String groupActionType, int event) {
 		startSppiner();
 		mListRequest = new CombinedListRequest(MaxisMainActivity.this);
 		mListRequest.setBySearch(false);
@@ -189,15 +167,15 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		mListRequest.setCategoryTitle(categoryTitle);
 		mListRequest.setGroupType(groupType);
 		mListRequest.setGroupActionType(groupActionType);
-		CombindListingController listingController = new CombindListingController(MaxisMainActivity.this, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
+		CombindListingController listingController = new CombindListingController(MaxisMainActivity.this, event);
 		listingController.requestService(mListRequest);
 	}
 
-
-
 	@Override
 	public void updateUI(Message msg) {
-		if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE) {
+		if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE 
+				|| msg.arg2 == Events.BANNER_LANDING_COMPANY_LISTING_EVENT
+				|| msg.arg2 == Events.BANNER_LANDING_SEARCH_EVENT) {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
@@ -216,6 +194,98 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 				intent.putExtra(AppConstants.GLOBAL_SEARCH_KEYWORD, mSearchKeyword);
 				intent.putExtra(AppConstants.USER_DETAIL_DATA, (UserDetailResponse)msg.obj);
 				startActivity(intent);
+			}
+			stopSppiner();
+		} else if (msg.arg2 == Events.BANNER_LANDING_COMPANY_DETAIL_EVENT) {
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+			} else {
+				CompanyDetail compListResp = (CompanyDetail) msg.obj;
+				if (!StringUtil.isNullOrEmpty(compListResp.getId())) {
+					Intent intent = new Intent(MaxisMainActivity.this, CompanyDetailActivity.class);
+					//					if (mClRequest.isBySearch())
+					//						intent.putExtra(AppConstants.GLOBAL_SEARCH_KEYWORD,mClRequest.getKeywordOrCategoryId());
+					intent.putExtra(AppConstants.COMP_DETAIL_DATA, compListResp);
+					//					if (msg.arg2 == Events.COMPANY_DETAIL) {
+					//						intent.putExtra(AppConstants.THUMB_URL, mCategoryThumbUrl);
+					//						intent.putExtra(AppConstants.IS_DEAL_LIST,!mClRequest.isCompanyListing());
+					//					}
+					startActivity(intent);
+				} else {
+					showInfoDialog(getResources().getString(R.string.no_result_found));
+				}
+			}
+			stopSppiner();
+		} else if (msg.arg2 == Events.BANNER_NAVIGATION_EVENT) {
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+				stopSppiner();
+			} else {
+				LogBannerReportResponse logBannerReportResponse = (LogBannerReportResponse) msg.obj;
+				if (logBannerReportResponse != null
+						&& logBannerReportResponse.getResults() != null
+						&& logBannerReportResponse.getResults().getScreenName() != null) {	
+					if(AppConstants.COMPANY_LISTING_SCREEN.equals(logBannerReportResponse.getResults().getScreenName().trim())) {
+						if(!StringUtil.isNullOrEmpty(logBannerReportResponse.getResults().getCategoryId()) 
+								&& !StringUtil.isNullOrEmpty(logBannerReportResponse.getResults().getActionType())
+								&& !StringUtil.isNullOrEmpty(logBannerReportResponse.getResults().getType())) {
+							showCompanyDealListing(logBannerReportResponse.getResults().getCategoryId().trim(), 
+									null, 
+									null, 
+									true, 
+									logBannerReportResponse.getResults().getType().trim(), 
+									logBannerReportResponse.getResults().getActionType().trim(), 
+									Events.BANNER_LANDING_COMPANY_LISTING_EVENT);
+							//		showCompanyDealListing("12", null, null, true, "C", "L", Events.BANNER_LANDING_COMPANY_LISTING_EVENT);
+						} 
+					} else if(AppConstants.COMPANY_DETAIL_SCREEN.equals(logBannerReportResponse.getResults().getScreenName().trim())) {
+						if(!StringUtil.isNullOrEmpty(logBannerReportResponse.getResults().getCategoryId()) 
+								&& !StringUtil.isNullOrEmpty(logBannerReportResponse.getResults().getItemId())) {
+							DetailRequest mBannerCompanyDetailRequest = new DetailRequest(tapEventTriggeringActivity, 
+									logBannerReportResponse.getResults().getItemId().trim(), 
+									false, 
+									logBannerReportResponse.getResults().getCategoryId().trim());
+							//		DetailRequest mBannerCompanyDetailRequest = new DetailRequest(tapEventTriggeringActivity, "241203", false, "202");
+							CompanyDetailController bannerCompanyDetailController = new CompanyDetailController(MaxisMainActivity.this, Events.BANNER_LANDING_COMPANY_DETAIL_EVENT);
+							startSppiner();
+							bannerCompanyDetailController.requestService(mBannerCompanyDetailRequest);
+						}
+
+					} else if(AppConstants.DEAL_DETAIL_SCREEN.equals(logBannerReportResponse.getResults().getScreenName().trim())) {
+
+						if(!StringUtil.isNullOrEmpty(logBannerReportResponse.getResults().getCategoryId()) 
+								&& !StringUtil.isNullOrEmpty(logBannerReportResponse.getResults().getItemId())) {
+							DetailRequest mBannerDealDetailRequest = new DetailRequest(tapEventTriggeringActivity, logBannerReportResponse.getResults().getItemId().trim(), true, logBannerReportResponse.getResults().getCategoryId().trim());
+							//							DetailRequest mBannerDealDetailRequest = new DetailRequest(tapEventTriggeringActivity, "3", true, logBannerReportResponse.getResults().getCategoryId().trim());
+							CompanyDetailController bannerDealDetailController = new CompanyDetailController(MaxisMainActivity.this, Events.BANNER_LANDING_DEAL_DETAIL_EVENT);
+							startSppiner();
+							bannerDealDetailController.requestService(mBannerDealDetailRequest);
+						}
+
+					} else if(AppConstants.SEARCH_SCREEN.equals(logBannerReportResponse.getResults().getScreenName().trim())) {
+
+						if(!StringUtil.isNullOrEmpty(logBannerReportResponse.getResults().getKeyword())) {
+							performSearch(logBannerReportResponse.getResults().getKeyword().trim(), null, Events.BANNER_LANDING_SEARCH_EVENT);
+						} 
+					}
+				}
+				Log.e("FINDIT MALAYSIA", ":" + msg.obj);
+			}
+			//			stopSppiner();
+		} else if (msg.arg2 == Events.BANNER_LANDING_DEAL_DETAIL_EVENT) {
+			if (msg.arg1 == 1) {
+				showInfoDialog(getResources().getString(R.string.network_unavailable));
+			} else {
+				CompanyDetail fromBannerDealDetailResp = (CompanyDetail) msg.obj;
+				if (!StringUtil.isNullOrEmpty(fromBannerDealDetailResp.getId())) {
+					Intent intent = new Intent(MaxisMainActivity.this, DealDetailActivity.class);
+					//				if (mClRequest.isBySearch())
+					//					intent.putExtra(AppConstants.GLOBAL_SEARCH_KEYWORD, mClRequest.getKeywordOrCategoryId());
+					intent.putExtra(AppConstants.COMP_DETAIL_DATA, fromBannerDealDetailResp);
+					startActivity(intent);
+				} else {
+					showInfoDialog(getResources().getString(R.string.no_result_found));
+				}
 			}
 			stopSppiner();
 		}
@@ -246,6 +316,21 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		if(event==Events.USER_DETAIL){
 			handler.sendMessage((Message) screenData);
 			return;
+		} else if (event == Events.BANNER_NAVIGATION_EVENT) {
+			LogBannerReportResponse bannerReportResponse = (LogBannerReportResponse) screenData;
+			Message message = new Message();
+			message.arg2 = event;
+			if ((bannerReportResponse.getResults() != null) 
+					&& (!StringUtil.isNullOrEmpty(bannerReportResponse.getResults().getError_Code())) 
+					&& (bannerReportResponse.getResults().getError_Code().equals("0"))) {
+				message.arg1 = 0;
+				message.obj = bannerReportResponse;
+			} else {
+				message.arg1 = 1;
+				message.obj = getResources().getString(R.string.communication_failure);
+			}
+			handler.sendMessage(message);
+			return;
 		}
 		System.out.println(screenData);
 		Response response = (Response) screenData;
@@ -255,22 +340,37 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		if (response.isError()) {
 			message.obj = response.getErrorText() + " " + response.getErrorCode();
 		} else {
-			if (response.getPayload() instanceof CompanyListResponse) {
-				mClResponse = (CompanyListResponse) response.getPayload();
-				if (mClResponse.getErrorCode() != 0) {
-					message.obj = getResources().getString(R.string.communication_failure);
-					// clResponse.getServerMessage() + " " +
-					// clResponse.getErrorCode();
-				} else {
-					if (mClResponse.getCompanyArrayList().size() < 1) {
-						message.obj = new String("No Result Found");
+			if (event == Events.BANNER_LANDING_DEAL_DETAIL_EVENT 
+					|| event == Events.BANNER_LANDING_COMPANY_DETAIL_EVENT) {
+				if (response.getPayload() instanceof CompanyDetail) {
+					CompanyDetail fromBannerDetail = (CompanyDetail) response.getPayload();
+					if (fromBannerDetail.getErrorCode() != 0) {
+						message.obj = getResources().getString(R.string.communication_failure);
 					} else {
 						message.arg1 = 0;
-						message.obj = mClResponse;
+						message.obj = fromBannerDetail;
 					}
+				} else {
+					message.obj = new String(getResources().getString(R.string.communication_failure));
 				}
-			} else {
-				message.obj = new String("Internal Error");
+			} else if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE 
+					|| event == Events.BANNER_LANDING_COMPANY_LISTING_EVENT
+					|| event == Events.BANNER_LANDING_SEARCH_EVENT){
+				if (response.getPayload() instanceof CompanyListResponse) {
+					mClResponse = (CompanyListResponse) response.getPayload();
+					if (mClResponse.getErrorCode() != 0) {
+						message.obj = getResources().getString(R.string.communication_failure);
+					} else {
+						if (mClResponse.getCompanyArrayList().size() < 1) {
+							message.obj = new String("No Result Found");
+						} else {
+							message.arg1 = 0;
+							message.obj = mClResponse;
+						}
+					}
+				} else {
+					message.obj = new String("Internal Error");
+				}
 			}
 		}
 		handler.sendMessage(message);
@@ -449,19 +549,14 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		}
 	}
 	public void setSearchCity() {
-		// TODO
-		CityAreaListController clController = new CityAreaListController(
-				MaxisMainActivity.this, Events.CITY_LISTING);
+		CityAreaListController clController = new CityAreaListController(MaxisMainActivity.this, Events.CITY_LISTING);
 		startSppiner();
 		clController.requestService(null);
-
 	}
 
 	public void setSearchLocality(int city_id) {
-		// TODO
 		if (city_id != -1) {
-			CityAreaListController clController = new CityAreaListController(
-					MaxisMainActivity.this, Events.LOCALITY_LISTING);
+			CityAreaListController clController = new CityAreaListController(MaxisMainActivity.this, Events.LOCALITY_LISTING);
 			startSppiner();
 			clController.requestService(city_id + "");
 		} else {
@@ -469,33 +564,11 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		}
 	}
 
-	//	protected void trackSession(String screenName) {
-	//		try {
-	//			if (!NativeHelper.isDataConnectionAvailable(MaxisMainActivity.this)) {
-	//				Response res = new Response();
-	//				res.setErrorCode(101);
-	//				res.setErrorText(MaxisMainActivity.this.getResources().getString(R.string.network_unavailable));
-	//				return;
-	//			}
-	//			SessionTrackingRequest request = new SessionTrackingRequest(MaxisMainActivity.this, SessionTrackingConstants.SESSION_IDENTIFIER, screenName);
-	//			String url = HttpHelper.getURLWithPrams(AppConstants.BASE_URL + request.getMethodName(), request.getRequestHeaders(screenName));
-	//			Log.d("maxis", "url " + url);
-	//			SimpleXmlRequest<Response> serviceRequest = new SimpleXmlRequest<Response>(Request.Method.GET, url, Response.class, new Listener<Response>() {
-	//				@Override
-	//				public void onResponse(Response response) {
-	//						Log.d("FINDIT MALAYSIA", "SESSION TRACKING MSG: Success");
-	//				}
-	//					}, 
-	//					new ErrorListener() {
-	//						@Override
-	//						public void onErrorResponse(VolleyError error) {                                
-	//						}
-	//					}
-	//					);  
-	//	
-	//			MyApplication.getInstance().addToRequestQueue(serviceRequest);
-	//		} catch (Exception e) {
-	//			AnalyticsHelper.onError(FlurryEventsConstants.REQUEST_SERVICE_ERR, MyApplication.class.getSimpleName() + " : " + AppConstants.REQUEST_SERVICE_ERROR_MSG, e);
-	//		}
-	//	}
+	public void bannerTapped(int mPosition, String mBannerId, IActionController screen, int eventType) {
+		tapEventTriggeringActivity = (Activity) screen;
+		BannerNavigationController bannerNavigationController= new BannerNavigationController(MaxisMainActivity.this, eventType);
+		startSppiner();
+		bannerNavigationController.requestService(mBannerId);
+	}
+
 }

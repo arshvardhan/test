@@ -51,12 +51,13 @@ public abstract class MaxisBaseRequest {
 	public static final String KEY_NUMBER = "phone_no";
 	public static final String KEY_DEAL_SOURCE = "source";
 	public static final String KEY_L3CAT_ID = "category_id";
+	public static final String DEVICE_ID = "device_id";	
+	public static final String KEY_BANNER_ID = "bannerId";
 			
 	private Context mContext;
 	protected String mLocaleCode;
 	protected String mScreenType;
 	private String deviceId = "";
-	public static final String DEVICE_ID = "device_id";
 	
 	public MaxisBaseRequest(Context context) {
 		this.mContext = context;
@@ -68,28 +69,27 @@ public abstract class MaxisBaseRequest {
 
 	public Hashtable<String, String> getDefaultHeaders(String screenName) {
 		Hashtable<String, String> hashtable = new Hashtable<String, String>();
-		hashtable.put(KEY_APP_KEY, VALUE_APP_KEY);
-		hashtable.put(KEY_PLATFORM, VALUE_PLATFORM);
-		hashtable.put(KEY_SCREEN_TYPE, mScreenType);
-		hashtable.put(KEY_LANGUAGE, mLocaleCode);
-		hashtable.put(DEVICE_ID,deviceId);
-		hashtable.put(AppConstants.KEY_PAGE_REVIEW, screenName);
-		
+		hashtable.put(KEY_APP_KEY, VALUE_APP_KEY+"");
+		hashtable.put(KEY_PLATFORM, VALUE_PLATFORM+"");
+		hashtable.put(KEY_SCREEN_TYPE, mScreenType+"");
+		hashtable.put(KEY_LANGUAGE, mLocaleCode+"");
+		hashtable.put(DEVICE_ID,deviceId+"");
+		hashtable.put(AppConstants.KEY_PAGE_REVIEW, screenName+"");
 		return hashtable;
 	}
 	
 	public Hashtable<String, String> getHeadersReviewListRequest(int pageNumber, String compId, String catId) {
 		Hashtable<String, String> hashtable = new Hashtable<String, String>();
-		hashtable.put(KEY_APP_KEY, VALUE_APP_KEY);
-		hashtable.put(KEY_PLATFORM, VALUE_PLATFORM);
-		hashtable.put(KEY_SCREEN_TYPE, mScreenType);
-		hashtable.put(KEY_LANGUAGE, mLocaleCode);
-		hashtable.put(KEY_LANGUAGE, mLocaleCode);
-		hashtable.put(KEY_PAGE_NUMBER, String.valueOf(pageNumber));
-		hashtable.put(KEY_COMP_ID, compId);
-		hashtable.put(KEY_CAT_ID, catId);
-		hashtable.put(DEVICE_ID,deviceId);
-		hashtable.put(AppConstants.KEY_PAGE_REVIEW,AppConstants.Company_detail);
+		hashtable.put(KEY_APP_KEY, VALUE_APP_KEY+"");
+		hashtable.put(KEY_PLATFORM, VALUE_PLATFORM+"");
+		hashtable.put(KEY_SCREEN_TYPE, mScreenType+"");
+		hashtable.put(KEY_LANGUAGE, mLocaleCode+"");
+		hashtable.put(KEY_LANGUAGE, mLocaleCode+"");
+		hashtable.put(KEY_PAGE_NUMBER, String.valueOf(pageNumber)+"");
+		hashtable.put(KEY_COMP_ID, compId+"");
+		hashtable.put(KEY_CAT_ID, catId+"");
+		hashtable.put(DEVICE_ID,deviceId+"");
+		hashtable.put(AppConstants.KEY_PAGE_REVIEW,AppConstants.Company_detail+"");
 		return hashtable;
 	}
 	

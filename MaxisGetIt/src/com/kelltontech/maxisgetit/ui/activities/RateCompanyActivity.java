@@ -13,7 +13,6 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -40,7 +39,6 @@ import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.requests.PostReviewRequest;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
-import com.kelltontech.maxisgetit.utils.Utility;
 
 public class RateCompanyActivity extends MaxisMainActivity {
 	private ImageView mHomeIconView, mProfileIconView;
@@ -197,7 +195,7 @@ public class RateCompanyActivity extends MaxisMainActivity {
 			.setText(mSearchEditText.getText().toString().trim());
 
 			String JSON_EXTRA = jsonForSearch();
-			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
+			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);

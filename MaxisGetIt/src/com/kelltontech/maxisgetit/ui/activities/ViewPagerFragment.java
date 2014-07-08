@@ -14,15 +14,17 @@ import android.widget.ImageView;
 
 import com.kelltontech.framework.imageloader.ImageLoader;
 import com.kelltontech.maxisgetit.R;
+import com.kelltontech.maxisgetit.constants.AppConstants;
+import com.kelltontech.maxisgetit.constants.Events;
 
 
 public class ViewPagerFragment extends Fragment {
 
 	private String imgPath;
 	private Activity mActivity;
-	//	private int bannerHeight;
 	private String mFlowFrom;
-	//	private ArrayList<SubCategory> categories;
+	private int mPosition;
+	private String mBannerId;
 	private static Drawable dummyDrawable;
 	private static Drawable errorDrawable;
 
@@ -40,10 +42,10 @@ public class ViewPagerFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		ImageLoader.initialize(getActivity());
-		if ("Category List".equals(mFlowFrom)) {
+		if (AppConstants.FLOW_FROM_COMBIND_LIST.equals(mFlowFrom) || AppConstants.FLOW_FROM_SUB_CATEGORY_LIST.equals(mFlowFrom)) {
 			dummyDrawable=getActivity().getResources().getDrawable(R.drawable.banner_load);
 			errorDrawable=getActivity().getResources().getDrawable(R.drawable.banner_cross);
-		} else if ("CompanyDetail".equals(mFlowFrom) || "DealDetail".equals(mFlowFrom)) {
+		} else if (AppConstants.FLOW_FROM_COMPANY_DETAIL.equals(mFlowFrom) || AppConstants.FLOW_FROM_DEAL_DETAIL.equals(mFlowFrom)) {
 			dummyDrawable=getActivity().getResources().getDrawable(R.drawable.detail_loading);
 			errorDrawable=getActivity().getResources().getDrawable(R.drawable.detail_cross);
 		} else {
@@ -51,7 +53,7 @@ public class ViewPagerFragment extends Fragment {
 			errorDrawable=getActivity().getResources().getDrawable(R.drawable.group_cross);			
 		}
 		ImageView imageView = new ImageView(getActivity());
-		if ("Category List".equals(mFlowFrom)) {
+		if (AppConstants.FLOW_FROM_COMBIND_LIST.equals(mFlowFrom) || AppConstants.FLOW_FROM_SUB_CATEGORY_LIST.equals(mFlowFrom)) {
 			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 		} else {
 			imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -59,17 +61,24 @@ public class ViewPagerFragment extends Fragment {
 
 		imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
 		Log.i("Image path", "Imag path " + imgPath);
-		//		imageView.setTag(imgPath);
+//		imageView.setTag(imgPath);
 		ImageLoader.start(imgPath, imageView, dummyDrawable, errorDrawable);
+		
 		imageView.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				try{
-					if (mFlowFrom.equals("DealDetail")) {
+					if (AppConstants.FLOW_FROM_DEAL_DETAIL.equals(mFlowFrom)) {
 						((DealDetailActivity) mActivity).viewFlipperTapped();
-					} else {
+					} else if (AppConstants.FLOW_FROM_COMPANY_DETAIL.equals(mFlowFrom)) {
 						((CompanyDetailActivity) mActivity).viewFlipperTapped();
+					} else if (AppConstants.FLOW_FROM_COMBIND_LIST.equals(mFlowFrom)) {
+						Log.i("Image Position", "Image Position : " + String.valueOf(mPosition)+ " : Image Path : " + imgPath + " : BannerID : " + mBannerId);
+						((CombindListActivity) mActivity).bannerTapped(mPosition, mBannerId, (CombindListActivity) mActivity, Events.BANNER_NAVIGATION_EVENT);
+					} else if (AppConstants.FLOW_FROM_SUB_CATEGORY_LIST.equals(mFlowFrom)) {
+						Log.i("Image Position", "Image Position : " + String.valueOf(mPosition)+ " : Image Path : " + imgPath + " : BannerID : " + mBannerId);
+						((SubCategoryListActivity) mActivity).bannerTapped(mPosition, mBannerId, (SubCategoryListActivity) mActivity, Events.BANNER_NAVIGATION_EVENT);
 					}
 				} catch (Exception ex){
 					ex.printStackTrace();
@@ -85,6 +94,14 @@ public class ViewPagerFragment extends Fragment {
 		this.imgPath = imgPath;
 		this.mFlowFrom = flowFrom;
 		this.mActivity = activity;
+	}
+	
+	public void setImagePath(String imgPath , String flowFrom , Activity activity, int position, String bannerId) {
+		this.imgPath = imgPath;
+		this.mFlowFrom = flowFrom;
+		this.mActivity = activity;
+		this.mPosition = position;
+		this.mBannerId = bannerId;
 	}
 
 }

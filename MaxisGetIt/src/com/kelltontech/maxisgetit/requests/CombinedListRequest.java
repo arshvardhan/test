@@ -227,8 +227,8 @@ public class CombinedListRequest implements Parcelable {
 		 ht.put(MaxisBaseRequest.KEY_LATITUDE, GPS_Data.getLatitude() + "");
 		 ht.put(MaxisBaseRequest.KEY_LONGITUDE, GPS_Data.getLongitude() + "");
 
-//		ht.put(MaxisBaseRequest.KEY_LATITUDE, "3.157861948"); 
-//		 ht.put(MaxisBaseRequest.KEY_LONGITUDE, "101.688000");
+//		ht.put(MaxisBaseRequest.KEY_LATITUDE, "3.1574399471"); 
+//		 ht.put(MaxisBaseRequest.KEY_LONGITUDE, "101.7149963379");
 
 		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		// ht.put(AppConstants.KEY_PAGE_REVIEW, AppConstants.Company_listing);

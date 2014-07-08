@@ -596,7 +596,7 @@ public class MyAccountActivity extends MaxisMainActivity {
 		case R.id.mainSearchButton:
 			mSearchEditText.setText(mSearchEditText.getText().toString().trim());
 			String JSON_EXTRA = jsonForSearch();
-			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
+			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			break;
 		case R.id.amc_email_status:
 			checkEmailAndPreferenceBeforeOpenBrowser();
