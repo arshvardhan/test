@@ -141,8 +141,7 @@ public class VideoPlayActivity extends MaxisMainActivity {
 		switch (v.getId()) {
 		case R.id.backbtn:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.BACK_CLICK);
-			AnalyticsHelper
-					.endTimedEvent(FlurryEventsConstants.APPLICATION_COMBINED_LIST);
+			AnalyticsHelper.endTimedEvent(FlurryEventsConstants.APPLICATION_COMBINED_LIST);
 			this.finish();
 			break;
 

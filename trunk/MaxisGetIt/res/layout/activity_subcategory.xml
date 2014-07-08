@@ -13,7 +13,7 @@
     <!--
          <include
         android:id="@+id/footer_base_screen"
-        layout="@layout/footer_home_screen" />
+        layout="@layout/footer_home_screen" />
     -->
 
     <include
@@ -52,13 +52,12 @@
             android:layout_height="1dp"
             android:background="@color/vertical_line_seprator" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/bannerView_LnrLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/cl_header_view"
-            android:orientation="vertical" 
-            android:visibility="gone">
+            android:visibility="gone" >
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/subcategory_banner"
@@ -67,28 +66,38 @@
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/detail_cross" />
 
-            <!--
-                 <LinearLayout
+            <ImageView
+                android:id="@+id/play_pasue_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/subcategory_banner"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:background="@drawable/banner_pause"
+                android:clickable="true"
+                android:visibility="gone" />
+
+            <LinearLayout
                 android:id="@+id/indicatorlinearlayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/subcategory_banner"
+                android:layout_centerHorizontal="true"
                 android:layout_gravity="center|bottom"
-                android:layout_marginBottom="10dp"
                 android:background="@drawable/rounded_layout"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="5dp"
-                android:paddingTop="5dp" >
+                android:padding="5dp"
+                android:visibility="gone" >
             </LinearLayout>
-            -->
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_below="@id/subcategory_banner"
                 android:background="@color/vertical_line_seprator" />
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
     <ListView

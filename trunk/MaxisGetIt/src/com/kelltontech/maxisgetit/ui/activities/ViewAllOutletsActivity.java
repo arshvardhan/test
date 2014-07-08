@@ -25,7 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
@@ -40,7 +39,6 @@ import com.kelltontech.maxisgetit.dao.CompanyDetail;
 import com.kelltontech.maxisgetit.dao.OutLet;
 import com.kelltontech.maxisgetit.dao.OutLetDetails;
 import com.kelltontech.maxisgetit.dao.SubCategory;
-import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.model.CommonResponse;
 import com.kelltontech.maxisgetit.requests.OutLetDetailRequest;
 import com.kelltontech.maxisgetit.requests.OutletRefineRequest;
@@ -396,11 +394,9 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 			this.finish();
 			break;
 		case R.id.mainSearchButton:
-			mSearchEditText
-			.setText(mSearchEditText.getText().toString().trim());
-
+			mSearchEditText.setText(mSearchEditText.getText().toString().trim());
 			String JSON_EXTRA = jsonForSearch();
-			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
+			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			break;
 		case R.id.show_profile_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.SHOW_PROFILE_CLICK);
@@ -456,13 +452,10 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 
 		case R.id.currentLocality:
 			if (localityItems != null && localityItems.size() > 0) {
-				Intent localityIntent = new Intent(ViewAllOutletsActivity.this,
-						AdvanceSelectLocalityActivity.class);
+				Intent localityIntent = new Intent(ViewAllOutletsActivity.this, AdvanceSelectLocalityActivity.class);
 				localityIntent.putExtra("LOCALITY_LIST", localityItems);
-				localityIntent.putStringArrayListExtra("LOCALITY_INDEX",
-						selectedLocalityindex);
-				startActivityForResult(localityIntent,
-						AppConstants.LOCALITY_REQUEST);
+				localityIntent.putStringArrayListExtra("LOCALITY_INDEX", selectedLocalityindex);
+				startActivityForResult(localityIntent, AppConstants.LOCALITY_REQUEST);
 			} else {
 				setSearchLocality(city_id);
 			}
@@ -472,8 +465,7 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 
 	@Override
 	public void setScreenData(Object screenData, int event, long time) {
-		if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE
-				|| event == Events.USER_DETAIL) {
+		if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE || event == Events.USER_DETAIL) {
 			super.setScreenData(screenData, event, time);
 			return;
 		} else if (event == Events.REFINE_ATTRIBUTES) {
@@ -483,8 +475,7 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 		} else if (event == Events.DOWNLOAD_DEAL) {
 			Message message = (Message) screenData;
 			handler.sendMessage(message);
-		} else if (event == Events.CITY_LISTING
-				|| event == Events.LOCALITY_LISTING) {
+		} else if (event == Events.CITY_LISTING	|| event == Events.LOCALITY_LISTING) {
 			Message message = (Message) screenData;
 			handler.sendMessage(message);
 		} else if (event == Events.CITY_LISTING_OUTLETS) {
@@ -492,72 +483,57 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 			CommonResponse cResponse = (CommonResponse) screenData;
 			Message message = new Message();
 			message.arg2 = event;
-
 			if (cResponse.getResults().getError_Code().equalsIgnoreCase("1")) {
 				message.arg1 = 1;
-				message.obj = getResources().getString(
-						R.string.communication_failure);
+				message.obj = getResources().getString(R.string.communication_failure);
 			} else {
 				message.arg1 = 0;
 				message.obj = cResponse;
 			}
 			handler.sendMessage(message);
-
 		} else {
 			System.out.println(screenData);
 			Response response = (Response) screenData;
 			Message message = new Message();
 			message.arg2 = event;
-
 			if (response.isError()) {
 				message.obj = response.getErrorText();
 			} else if (event == Events.OUTLET_DETAIL_PAGINATION) {
-
 				try {
 					if (response.getPayload() instanceof OutLetDetails) {
-						OutLetDetails outLetDetails = (OutLetDetails) response
-								.getPayload();
+						OutLetDetails outLetDetails = (OutLetDetails) response.getPayload();
 						if (outLetDetails.getErrorCode() != 0) {
-							message.obj = getResources().getString(
-									R.string.communication_failure);
+							message.obj = getResources().getString(R.string.communication_failure);
 						} else {
 							if (outLetDetails.getOutlet().size() < 1) {
-								message.obj = new String(getResources()
-										.getString(R.string.no_result_found));
+								message.obj = new String(getResources().getString(R.string.no_result_found));
 							} else {
 								message.arg1 = 0;
 								message.obj = outLetDetails;
 							}
 						}
 					} else {
-						message.obj = new String(getResources().getString(
-								R.string.communication_failure));
+						message.obj = new String(getResources().getString(R.string.communication_failure));
 					}
 				} catch (Exception e) {
 				}
 			} else if (event == Events.DEAL_DETAIL) {
 				if (response.getPayload() instanceof CompanyDetail) {
-					CompanyDetail compDetail = (CompanyDetail) response
-							.getPayload();
+					CompanyDetail compDetail = (CompanyDetail) response.getPayload();
 					if (compDetail.getErrorCode() != 0) {
-						message.obj = getResources().getString(
-								R.string.communication_failure);
+						message.obj = getResources().getString(R.string.communication_failure);
 					} else {
 						message.arg1 = 0;
 						message.obj = compDetail;
 					}
 				} else {
-					message.obj = new String(getResources().getString(
-							R.string.communication_failure));
+					message.obj = new String(getResources().getString(R.string.communication_failure));
 				}
 			} else {
 				if (response.getPayload() instanceof CompanyListResponse) {
 					mOutletResponse = (OutLetDetails) response.getPayload();
 					if (mOutletResponse.getErrorCode() != 0) {
-						message.obj = getResources().getString(
-								R.string.communication_failure);
-						// clResponse.getServerMessage() + " " +
-						// clResponse.getErrorCode();
+						message.obj = getResources().getString(R.string.communication_failure);
 					} else {
 						if (mOutletResponse.getOutlet().size() < 1) {
 							message.obj = new String("No Result Found");
@@ -570,7 +546,6 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 					message.obj = new String("Internal Error");
 				}
 			}
-
 			handler.sendMessage(message);
 		}
 	}
@@ -585,16 +560,10 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				CityTable cityTable = new CityTable(
-						(MyApplication) getApplication());
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
-				// cityTable.addCityList(glistRes.getCityOrLocalityList());
 				cityList = glistRes.getCityOrLocalityList();
-				// inflateCityList(cityList);
-				Intent intent = new Intent(ViewAllOutletsActivity.this,
-						AdvanceSelectCity.class);
+				Intent intent = new Intent(ViewAllOutletsActivity.this,	AdvanceSelectCity.class);
 				for (CityOrLocality cityOrLocality : cityList) {
-
 					cityListString.add(cityOrLocality.getName());
 				}
 				localityItems = null;
@@ -613,20 +582,16 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 			} else {
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
 				localityList = glistRes.getCityOrLocalityList();
-				Intent intent = new Intent(ViewAllOutletsActivity.this,
-						AdvanceSelectLocalityActivity.class);
+				Intent intent = new Intent(ViewAllOutletsActivity.this, AdvanceSelectLocalityActivity.class);
 				localityItems = new ArrayList<String>();
 				for (CityOrLocality dealCityOrLoc : localityList) {
 					localityItems.add(dealCityOrLoc.getName());
 				}
 				intent.putExtra("LOCALITY_LIST", localityItems);
-				intent.putStringArrayListExtra("LOCALITY_INDEX",
-						selectedLocalityindex);
+				intent.putStringArrayListExtra("LOCALITY_INDEX", selectedLocalityindex);
 				startActivityForResult(intent, AppConstants.LOCALITY_REQUEST);
-
 			}
 		} else if (msg.arg2 == Events.OUTLET_DETAIL_PAGINATION) {
-
 			loadingNextPageData = false;
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
@@ -635,9 +600,6 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 				mOutletResponse = (OutLetDetails) msg.obj;
 				oldResponse.appendOutletListAtEnd(mOutletResponse.getOutlet());
 				mOutletResponse.setOutletList(oldResponse.getOutlet());
-				// changeNavigationButtonState(mClResponse.getPagesCount(),
-				// mClResponse.getPageNumber());
-
 				mOutletListAdapter.setData(mOutletResponse.getOutlet());
 				mOutletListAdapter.notifyDataSetChanged();
 			}
@@ -647,30 +609,21 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-
 				CommonResponse response = (CommonResponse) msg.obj;
-				ArrayList<String> cities = response.getResults().getCities()
-						.getCity();
-
-				Intent refineOutletIntent = new Intent(
-						ViewAllOutletsActivity.this, RefineOutletActivity.class);
-				refineOutletIntent.putStringArrayListExtra("CITIES_ARRAYLIST",
-						cities);
+				ArrayList<String> cities = response.getResults().getCities().getCity();
+				Intent refineOutletIntent = new Intent(ViewAllOutletsActivity.this, RefineOutletActivity.class);
+				refineOutletIntent.putStringArrayListExtra("CITIES_ARRAYLIST", cities);
 				refineOutletIntent.putExtra("OutletRequest", detailRequest);
 				refineOutletIntent.putExtra("deal_title", title);
 				startActivityForResult(refineOutletIntent, 1);
 			}
 			stopSppiner();
 		}
-
 	}
 
 	private void loadPageData(int pageNumber) {
 		try {
-
-			OutLetDetailtController detailtController = new OutLetDetailtController(
-					ViewAllOutletsActivity.this,
-					Events.OUTLET_DETAIL_PAGINATION);
+			OutLetDetailtController detailtController = new OutLetDetailtController(ViewAllOutletsActivity.this, Events.OUTLET_DETAIL_PAGINATION);
 			detailRequest.setPage_number(pageNumber);
 			startSppiner();
 			detailtController.requestService(detailRequest);
@@ -679,32 +632,24 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 	}
 
 	public String jsonForSearch() {
-
-		// {"city":{"city_id":5,"city_name":"adyui"},"locality":[{"locality_id":5,"locality_name":"adyui"},{"locality_id":5,"locality_name":"adyui"}]}
 		JSONObject jArray = new JSONObject();
 		try {
-
 			if (city_id != -1) {
 				JSONObject array = new JSONObject();
 				array.put("city_id", city_id + "");
 				array.put("city_name", selectedCity);
-
 				jArray.put("city", array);
-
 				if (ids != null && ids.size() > 0) {
 					JSONArray jsonArray = new JSONArray();
 					for (int i = 0; i < selectedLocalityItems.size(); i++) {
 						JSONObject localityArray = new JSONObject();
 						localityArray.put("locality_id", ids.get(i));
-						localityArray.put("locality_name",
-								selectedLocalityItems.get(i));
+						localityArray.put("locality_name", selectedLocalityItems.get(i));
 						jsonArray.put(localityArray);
-
 					}
 					jArray.put("locality", jsonArray);
 				}
 				return jArray.toString();
-
 			} else {
 				return null;
 			}
@@ -715,11 +660,9 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 	}
 
 	public void showMap(int index) {
-
 		mapIndex = index;
 		if (isDialogToBeShown()) {
-			showConfirmationDialog(CustomDialog.DATA_USAGE_DIALOG,
-					getResources().getString(R.string.cd_msg_data_usage));
+			showConfirmationDialog(CustomDialog.DATA_USAGE_DIALOG, getResources().getString(R.string.cd_msg_data_usage));
 		} else {
 			if (isLocationAvailable()) {
 				redirectToMap();
@@ -730,7 +673,6 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 	@Override
 	public void onPositiveDialogButton(int id) {
 		if (id == CustomDialog.DATA_USAGE_DIALOG) {
-
 			if (isLocationAvailable()) {
 				redirectToMap();
 			}
@@ -756,9 +698,7 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 	}
 
 	public void redirectToMap() {
-		Intent intent = new Intent(ViewAllOutletsActivity.this,
-				ViewDealMapActivity.class);
-
+		Intent intent = new Intent(ViewAllOutletsActivity.this, ViewDealMapActivity.class);
 		intent.putParcelableArrayListExtra(AppConstants.OUTLET_DATA, outLets);
 		intent.putExtra("index", mapIndex);
 		if (mapIndex != -1) {
@@ -767,7 +707,6 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 		} else {
 			intent.putExtra("DEAL_TITLE", title);
 		}
-
 		startActivity(intent);
 	}
 
@@ -775,11 +714,8 @@ public class ViewAllOutletsActivity extends MaxisMainActivity {
 		AnalyticsHelper.logEvent(FlurryEventsConstants.MODIFY_SEARCH_CLICK);
 		OutletRefineRequest request = new OutletRefineRequest();
 		request.setDeal_id(deal_id);
-
-		OutletRefineController outletRefineController = new OutletRefineController(
-				ViewAllOutletsActivity.this, Events.CITY_LISTING_OUTLETS);
+		OutletRefineController outletRefineController = new OutletRefineController(ViewAllOutletsActivity.this, Events.CITY_LISTING_OUTLETS);
 		startSppiner();
 		outletRefineController.requestService(request);
-
 	}
 }

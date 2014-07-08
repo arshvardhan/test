@@ -300,7 +300,7 @@ public class SaleTemplateTypeActivity extends MaxisMainActivity {
 			mSearchEditText
 					.setText(mSearchEditText.getText().toString().trim());
 			String JSON_EXTRA = jsonForSearch();
-			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
+			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			break;
 		case R.id.show_profile_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.SHOW_PROFILE_CLICK);

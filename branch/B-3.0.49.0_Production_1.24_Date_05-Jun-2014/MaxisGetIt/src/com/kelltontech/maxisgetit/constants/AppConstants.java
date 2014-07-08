@@ -2,9 +2,9 @@ package com.kelltontech.maxisgetit.constants;
 
 public interface AppConstants {
 
-	String API_VERSION = "1.5";
+	String API_VERSION = "1.7";
 
-	boolean PRODUCTION = true;
+	boolean PRODUCTION = false;
 
 	// String BASE_SERVER = "http://192.168.13.3/webservice/trunk/"; // local
 	// Aaditya

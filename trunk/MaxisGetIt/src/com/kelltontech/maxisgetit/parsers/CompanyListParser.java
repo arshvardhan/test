@@ -1,15 +1,17 @@
 package com.kelltontech.maxisgetit.parsers;
 
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+
 import android.util.Log;
+
 import com.kelltontech.framework.model.IModel;
 import com.kelltontech.framework.parser.AbstractSAXParser;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.dao.AttributeGroup;
+import com.kelltontech.maxisgetit.dao.Banner;
 import com.kelltontech.maxisgetit.dao.CategoryRefine;
 import com.kelltontech.maxisgetit.dao.CompanyDesc;
 import com.kelltontech.maxisgetit.response.CompanyListResponse;
@@ -17,8 +19,14 @@ import com.kelltontech.maxisgetit.response.CompanyListResponse;
 public class CompanyListParser extends AbstractSAXParser {
 	public static final String TAG_ERROR_CODE = "Error_Code";
 	public static final String TAG_ERROR_MESSAGE = "Error_Message";
+	public static final String TAG_BANNERS = "Banners";
 	public static final String TAG_BANNER = "Banner";
-	public static final String TAG_BANNER_URL = "Url";
+	public static final String TAG_BANNER_ID = "id";
+	public static final String TAG_BANNER_IMAGE_URL = "image";
+	public static final String TAG_BANNER_LANDING_URL = "landingUrl";
+	public static final String TAG_BANNER_SCREEN_NAME = "screenName";
+	public static final String TAG_BANNER_CATEGORY_ID = "categoryId";
+	public static final String TAG_BANNER_ITEM_ID = "itemId";
 	public static final String TOT_RECORDS = "Total_Records_Found";
 	public static final String RECORD_PER_PAGE = "Records_Per_Page";
 	public static final String PAGE_NUMBER = "Page_Number";
@@ -45,26 +53,25 @@ public class CompanyListParser extends AbstractSAXParser {
 	private static final String TAG_GROUP_VAL = "Values";
 	private static final String TAG_ATTR_NAME = "Label";
 	private static final String TAG_ATTR_VAL = "Value";
-	
+
 	private static final String TAG_CATEGORY_ID = "L3Catid";
 	private static final String TAG_END_DATE = "End_Date";
 	private static final String TAG_VALID_IN = "ValidIn";
-	
+
 	private static final String TAG_VIDEO = "CVideo";
-	
+
 	private static final String TAG_SEARCH_DISTANCE = "Search_Distance";
-	
+
 	private static final String TAG_SOURCE = "Source";
-	
+
 	private static String TAG_DEAL_DETAIL_URL = "DealDetailsUrl";
-	
-	
+
+
 	private CompanyListResponse clResponse = new CompanyListResponse();
 	private CategoryRefine category;
 	private CompanyDesc compDesc;
 	private AttributeGroup attrGroup;
-	private ArrayList<String> bannerList;
-	private int count = 0;
+	private Banner banner;
 
 	@Override
 	public IModel parse(String payload) throws Exception {
@@ -80,10 +87,10 @@ public class CompanyListParser extends AbstractSAXParser {
 			compDesc = new CompanyDesc();
 		} else if (localName.equalsIgnoreCase(CATEGORY)) {
 			category = new CategoryRefine();
-		} else if(localName.equalsIgnoreCase(TAG_GROUP_VAL)){
+		} else if(localName.equalsIgnoreCase(TAG_GROUP_VAL)) {
 			attrGroup=new AttributeGroup();
-		} else if (localName.equalsIgnoreCase(TAG_BANNER)) {
-			bannerList = new ArrayList<String>();
+		} else if (localName.equalsIgnoreCase(TAG_BANNER) && parent.equalsIgnoreCase("Results,"+TAG_BANNERS)) {
+			banner = new Banner();
 		}
 	}
 
@@ -95,15 +102,22 @@ public class CompanyListParser extends AbstractSAXParser {
 		} else if (localName.equalsIgnoreCase(TAG_ERROR_MESSAGE)) {
 			Log.d("maxis", getNodeValue());
 			clResponse.setServerMessage(getNodeValue());
-		} else if (localName.equalsIgnoreCase(TAG_BANNER_URL)) {
-			String url = getNodeValue();
-			if (count == 0 && url.trim().length() > 0)
-				bannerList.add(getNodeValue());
-			count++;
-		} else if (localName.equalsIgnoreCase(TAG_BANNER)) {
-			clResponse.setBanner(bannerList);
-		}
-		if (localName.equalsIgnoreCase(COMPANY_ROOT) || localName.equalsIgnoreCase(DEAL_ROOT) || localName.equalsIgnoreCase(DEAL_ROOT2)) {
+		} else if (localName.equalsIgnoreCase(TAG_BANNER_ID) && parent.equalsIgnoreCase("Results,"+TAG_BANNERS+","+TAG_BANNER)) {
+			banner.setId(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_BANNER_IMAGE_URL) && parent.equalsIgnoreCase("Results,"+TAG_BANNERS+","+TAG_BANNER)) {
+			banner.setImage(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_BANNER_LANDING_URL) && parent.equalsIgnoreCase("Results,"+TAG_BANNERS+","+TAG_BANNER)) {
+			banner.setLandingUrl(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_BANNER_SCREEN_NAME) && parent.equalsIgnoreCase("Results,"+TAG_BANNERS+","+TAG_BANNER)) {
+			banner.setScreenName(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_BANNER_CATEGORY_ID) && parent.equalsIgnoreCase("Results,"+TAG_BANNERS+","+TAG_BANNER)) {
+			banner.setCategoryId(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_BANNER_ITEM_ID) && parent.equalsIgnoreCase("Results,"+TAG_BANNERS+","+TAG_BANNER)) {
+			banner.setItemId(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_BANNER) && parent.equalsIgnoreCase("Results,"+TAG_BANNERS)) {
+			if (banner != null && !StringUtil.isNullOrEmpty(banner.getId()) && !StringUtil.isNullOrEmpty(banner.getImage()))
+				clResponse.addBanner(banner);
+		} else if (localName.equalsIgnoreCase(COMPANY_ROOT) || localName.equalsIgnoreCase(DEAL_ROOT) || localName.equalsIgnoreCase(DEAL_ROOT2)) {
 			compDesc.setCompId_catId();
 			clResponse.addCompanyDescription(compDesc);
 		} else if (localName.equalsIgnoreCase(RECORD_PER_PAGE)) {

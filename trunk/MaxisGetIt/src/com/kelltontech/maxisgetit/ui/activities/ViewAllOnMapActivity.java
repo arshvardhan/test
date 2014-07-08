@@ -36,7 +36,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.imageloader.ImageLoader;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
@@ -48,13 +47,12 @@ import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.CompanyDesc;
 import com.kelltontech.maxisgetit.dao.CompanyDetail;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
-import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.requests.CombinedListRequest;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
 public class ViewAllOnMapActivity extends MaxisMainActivity implements
-		OnGlobalLayoutListener {
+OnGlobalLayoutListener {
 	private GoogleMap mMap;
 	private ArrayList<CompanyDesc> mCompanyDetailList;
 	private ImageView mProfileIconView;
@@ -99,7 +97,7 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 		mClRequest = bundle.getParcelable(AppConstants.DATA_LIST_REQUEST);
 		String headerTitle = bundle.getString(AppConstants.MAP_ALL_TITLE);
 		boolean isSearchKeyword = bundle.getBoolean(AppConstants.IS_SEARCH_KEYWORD);
-//		compDetailResponse = null;
+		//		compDetailResponse = null;
 		compDetailResponse = bundle.getParcelable(AppConstants.COMP_DETAIL_DATA);
 		// setUpMapIfNeeded();
 		ImageLoader.initialize(ViewAllOnMapActivity.this);
@@ -136,7 +134,7 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 		findViewById(R.id.fm_switch_view).setVisibility(View.INVISIBLE);
 		findViewById(R.id.footerLayout).setVisibility(View.GONE);
 		((RelativeLayout) findViewById(R.id.map_base_layout))
-				.getViewTreeObserver().addOnGlobalLayoutListener(this);
+		.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
 		advanceSearchLayout = (LinearLayout) findViewById(R.id.advanceSearch);
 		advanceSearchLayout.setVisibility(View.GONE);
@@ -175,7 +173,7 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-//		AnalyticsHelper.trackSession(ViewAllOnMapActivity.this, AppConstants.MapDirection);
+		//		AnalyticsHelper.trackSession(ViewAllOnMapActivity.this, AppConstants.MapDirection);
 		AnalyticsHelper.trackSession(ViewAllOnMapActivity.this, AppConstants.ViewOnMap);
 		// setUpMapIfNeeded();
 	}
@@ -208,10 +206,10 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 		builder.include(fromPosition);
 		sourceMarker = mMap.addMarker(new MarkerOptions()
-				.position(fromPosition)
-				.title("You are here")
-				.icon(BitmapDescriptorFactory
-						.fromResource(R.drawable.map_user_marker)));
+		.position(fromPosition)
+		.title("You are here")
+		.icon(BitmapDescriptorFactory
+				.fromResource(R.drawable.map_user_marker)));
 		// builder.include(sourceMarker.getPosition());
 		LatLng toPosition = null;
 		LatLng nearestPosition = null;
@@ -227,8 +225,8 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 						mCompanyDetailList.get(i).getLatitude(),
 						mCompanyDetailList.get(i).getLongitude());
 				mMap.addMarker(new MarkerOptions()
-						.icon(BitmapDescriptorFactory
-								.fromResource(R.drawable.map_company_marker))
+				.icon(BitmapDescriptorFactory
+						.fromResource(R.drawable.map_company_marker))
 						.position(toPosition)
 						.title(mCompanyDetailList.get(i).getTitle())
 						.snippet(getSnippet(mCompanyDetailList.get(i))));
@@ -236,32 +234,32 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 			} else {
 				Log.e("Lat-Long: 0.0",  "" +i);
 			}
-			
+
 		}
-		
+
 		if (mCompanyDetailList != null && mCompanyDetailList.size() > 0) {
-		String nearestLat = String.valueOf(mCompanyDetailList.get(0).getLatitude());
-		String nearestLongt = String.valueOf(mCompanyDetailList.get(0).getLongitude());
-		if (!StringUtil.isNullOrEmpty(nearestLat) && !StringUtil.isNullOrEmpty(nearestLongt) && !("0.0".equals(nearestLat)) && !("0.0".equals(nearestLongt))) {
-		nearestPosition = new LatLng(mCompanyDetailList.get(0).getLatitude(), mCompanyDetailList.get(0).getLongitude());
-		} else {
-			nearestPosition = fromPosition;	
+			String nearestLat = String.valueOf(mCompanyDetailList.get(0).getLatitude());
+			String nearestLongt = String.valueOf(mCompanyDetailList.get(0).getLongitude());
+			if (!StringUtil.isNullOrEmpty(nearestLat) && !StringUtil.isNullOrEmpty(nearestLongt) && !("0.0".equals(nearestLat)) && !("0.0".equals(nearestLongt))) {
+				nearestPosition = new LatLng(mCompanyDetailList.get(0).getLatitude(), mCompanyDetailList.get(0).getLongitude());
+			} else {
+				nearestPosition = fromPosition;	
+			}
 		}
-		}
-		
-//		LatLngBounds bounds = builder.build();
-//		int padding = 100; // offset from edges of the map in pixels
-//		CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-//		CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(fromPosition, padding);
+
+		//		LatLngBounds bounds = builder.build();
+		//		int padding = 100; // offset from edges of the map in pixels
+		//		CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+		//		CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(fromPosition, padding);
 		CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(nearestPosition, 10.0f);
 		mMap.animateCamera(cu);
 		final CameraPosition cameraPosition = new CameraPosition.Builder()
-				.target(fromPosition) // Sets the center of the map to Mountain
-										// View
-				.zoom(14) // Sets the zoom
-				.bearing(90) // Sets the orientation of the camera to east
-				.tilt(30) // Sets the tilt of the camera to 30 degrees
-				.build();
+		.target(fromPosition) // Sets the center of the map to Mountain
+		// View
+		.zoom(14) // Sets the zoom
+		.bearing(90) // Sets the orientation of the camera to east
+		.tilt(30) // Sets the tilt of the camera to 30 degrees
+		.build();
 		// mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 		mMapInfoWindowAdapter = new MapInfoWindowAdapter(this);
 		mMapInfoWindowAdapter.setData(mCompanyDetailList);
@@ -275,8 +273,8 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 					mCurrentCompId = marker.getSnippet().split(
 							AppConstants.SPLIT_STRING)[0];
 
-//					mCurrentCompId = marker.getSnippet().split(
-//							AppConstants.SPLIT_STRING)[0];
+					//					mCurrentCompId = marker.getSnippet().split(
+					//							AppConstants.SPLIT_STRING)[0];
 					CompanyDesc compDesc = mMapInfoWindowAdapter
 							.getValue(mCurrentCompId);
 					Intent intent;
@@ -377,11 +375,9 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 			this.finish();
 			break;
 		case R.id.mainSearchButton:
-			mSearchEditText
-					.setText(mSearchEditText.getText().toString().trim());
-
+			mSearchEditText.setText(mSearchEditText.getText().toString().trim());
 			String JSON_EXTRA = jsonForSearch();
-			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
+			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
@@ -397,8 +393,7 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 			if (cityListString != null && cityListString.size() > 0) {
 				localityItems = null;
 				selectedLocalityindex = null;
-				Intent cityIntent = new Intent(ViewAllOnMapActivity.this,
-						AdvanceSelectCity.class);
+				Intent cityIntent = new Intent(ViewAllOnMapActivity.this, AdvanceSelectCity.class);
 				cityIntent.putExtra("CITY_LIST", cityListString);
 				cityIntent.putExtra("SELECTED_CITY", selectedCity);
 				startActivityForResult(cityIntent, AppConstants.CITY_REQUEST);
@@ -409,13 +404,10 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 
 		case R.id.currentLocality:
 			if (localityItems != null && localityItems.size() > 0) {
-				Intent localityIntent = new Intent(ViewAllOnMapActivity.this,
-						AdvanceSelectLocalityActivity.class);
+				Intent localityIntent = new Intent(ViewAllOnMapActivity.this, AdvanceSelectLocalityActivity.class);
 				localityIntent.putExtra("LOCALITY_LIST", localityItems);
-				localityIntent.putStringArrayListExtra("LOCALITY_INDEX",
-						selectedLocalityindex);
-				startActivityForResult(localityIntent,
-						AppConstants.LOCALITY_REQUEST);
+				localityIntent.putStringArrayListExtra("LOCALITY_INDEX", selectedLocalityindex);
+				startActivityForResult(localityIntent, AppConstants.LOCALITY_REQUEST);
 			} else {
 				setSearchLocality(city_id);
 			}
@@ -450,16 +442,10 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				CityTable cityTable = new CityTable(
-						(MyApplication) getApplication());
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
-				// cityTable.addCityList(glistRes.getCityOrLocalityList());
 				cityList = glistRes.getCityOrLocalityList();
-				// inflateCityList(cityList);
-				Intent intent = new Intent(ViewAllOnMapActivity.this,
-						AdvanceSelectCity.class);
+				Intent intent = new Intent(ViewAllOnMapActivity.this, AdvanceSelectCity.class);
 				for (CityOrLocality cityOrLocality : cityList) {
-
 					cityListString.add(cityOrLocality.getName());
 				}
 				localityItems = null;
@@ -478,15 +464,13 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 			} else {
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
 				localityList = glistRes.getCityOrLocalityList();
-				Intent intent = new Intent(ViewAllOnMapActivity.this,
-						AdvanceSelectLocalityActivity.class);
+				Intent intent = new Intent(ViewAllOnMapActivity.this, AdvanceSelectLocalityActivity.class);
 				localityItems = new ArrayList<String>();
 				for (CityOrLocality dealCityOrLoc : localityList) {
 					localityItems.add(dealCityOrLoc.getName());
 				}
 				intent.putExtra("LOCALITY_LIST", localityItems);
-				intent.putStringArrayListExtra("LOCALITY_INDEX",
-						selectedLocalityindex);
+				intent.putStringArrayListExtra("LOCALITY_INDEX", selectedLocalityindex);
 				startActivityForResult(intent, AppConstants.LOCALITY_REQUEST);
 
 			}
@@ -495,7 +479,6 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 
 	@Override
 	public Activity getMyActivityReference() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -507,22 +490,18 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 
 		switch (id) {
 		case R.id.dialog_map_details:
-			Log.e("FINDIT", "ViewAllOnMapActivity : mCurrentCompId = "
-					+ mCurrentCompId);
+			Log.e("FINDIT", "ViewAllOnMapActivity : mCurrentCompId = " + mCurrentCompId);
 			if (!StringUtil.isNullOrEmpty(mCurrentCompId)) {
-				intent = new Intent(ViewAllOnMapActivity.this,
-						CompanyDetailActivity.class);
+				intent = new Intent(ViewAllOnMapActivity.this, CompanyDetailActivity.class);
 				bundle.putString(AppConstants.COMP_ID, mCurrentCompId);
-				bundle.putBoolean(AppConstants.IS_DEAL_LIST, getIntent()
-						.getExtras().getBoolean(AppConstants.IS_DEAL_LIST));
+				bundle.putBoolean(AppConstants.IS_DEAL_LIST, getIntent().getExtras().getBoolean(AppConstants.IS_DEAL_LIST));
 				intent.putExtras(bundle);
 			}
 			break;
 		case R.id.dialog_map_driving: {
 			if (companyDetail == null)
 				return;
-			intent = new Intent(ViewAllOnMapActivity.this,
-					FullMapActivity.class);
+			intent = new Intent(ViewAllOnMapActivity.this, FullMapActivity.class);
 			bundle.putParcelable(AppConstants.COMP_DETAIL_DATA, companyDetail);
 			bundle.putInt(AppConstants.MAP_MODE, AppConstants.MAP_DRIVING_MODE);
 			break;
@@ -530,8 +509,7 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 		case R.id.dialog_map_walking: {
 			if (companyDetail == null)
 				return;
-			intent = new Intent(ViewAllOnMapActivity.this,
-					FullMapActivity.class);
+			intent = new Intent(ViewAllOnMapActivity.this, FullMapActivity.class);
 			bundle.putParcelable(AppConstants.COMP_DETAIL_DATA, companyDetail);
 			bundle.putInt(AppConstants.MAP_MODE, AppConstants.MAP_WALKING_MODE);
 			break;
@@ -552,8 +530,7 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 				compDetail.setState(mCompanyDetailList.get(i).getState());
 				compDetail.setLocality("");
 				compDetail.setLatitude(mCompanyDetailList.get(i).getLatitude());
-				compDetail.setLongitude(mCompanyDetailList.get(i)
-						.getLongitude());
+				compDetail.setLongitude(mCompanyDetailList.get(i).getLongitude());
 				compDetail.setDistance(mCompanyDetailList.get(i).getDistance());
 				compDetail.setPincode("");
 				return compDetail;
@@ -565,20 +542,15 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 	@Override
 	public void onGlobalLayout() {
 		setUpMapIfNeeded();
-
 	}
 
 	public String jsonForSearch() {
-
-		// {"city":{"city_id":5,"city_name":"adyui"},"locality":[{"locality_id":5,"locality_name":"adyui"},{"locality_id":5,"locality_name":"adyui"}]}
 		JSONObject jArray = new JSONObject();
 		try {
-
 			if (city_id != -1) {
 				JSONObject array = new JSONObject();
 				array.put("city_id", city_id + "");
 				array.put("city_name", selectedCity);
-
 				jArray.put("city", array);
 
 				if (ids != null && ids.size() > 0) {
@@ -586,20 +558,16 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 					for (int i = 0; i < selectedLocalityItems.size(); i++) {
 						JSONObject localityArray = new JSONObject();
 						localityArray.put("locality_id", ids.get(i));
-						localityArray.put("locality_name",
-								selectedLocalityItems.get(i));
+						localityArray.put("locality_name", selectedLocalityItems.get(i));
 						jsonArray.put(localityArray);
-
 					}
 					jArray.put("locality", jsonArray);
 				}
 				return jArray.toString();
-
 			} else {
 				return null;
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -609,68 +577,46 @@ public class ViewAllOnMapActivity extends MaxisMainActivity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == AppConstants.AR_REPORT_ERROR_SUCCESS) {
-			showInfoDialog(getResources()
-					.getString(R.string.are_error_reported));
+			showInfoDialog(getResources().getString(R.string.are_error_reported));
 		} else if (resultCode == AppConstants.AR_REPORT_ERROR_FAILURE) {
 			showInfoDialog(getResources().getString(R.string.are_error_occured));
-		} else if (resultCode == RESULT_OK
-				&& requestCode == AppConstants.CITY_REQUEST) {
-			if (!selectedCity
-					.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
+		} else if (resultCode == RESULT_OK && requestCode == AppConstants.CITY_REQUEST) {
+			if (!selectedCity.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
 				localityItems = null;
 				ids = null;
 				selectedLocalityindex = null;
 				currentLocality.setText("Choose your Area");
 			}
 			selectedCity = data.getStringExtra("CITY_NAME");
-			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
-					+ "</b>"));
+			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity + "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
 			if(index==-1)
-			{
 				city_id =-1;
-			}else
-			{
-			city_id = cityList.get(index).getId();
-			}
+			else
+				city_id = cityList.get(index).getId();
 
-		} else if (resultCode == RESULT_OK
-				&& requestCode == AppConstants.LOCALITY_REQUEST) {
+		} else if (resultCode == RESULT_OK && requestCode == AppConstants.LOCALITY_REQUEST) {
 			String locality = "";
-
-			selectedLocalityItems = data
-					.getStringArrayListExtra("SELECTED_LOCALITIES");
-
-			selectedLocalityindex = data
-					.getStringArrayListExtra("SELECTED_LOCALITIES_INDEX");
-			if (selectedLocalityItems != null
-					&& selectedLocalityItems.size() > 0) {
+			selectedLocalityItems = data.getStringArrayListExtra("SELECTED_LOCALITIES");
+			selectedLocalityindex = data.getStringArrayListExtra("SELECTED_LOCALITIES_INDEX");
+			if (selectedLocalityItems != null && selectedLocalityItems.size() > 0) {
 				for (int i = 0; i < selectedLocalityItems.size(); i++) {
-
 					if (i == selectedLocalityItems.size() - 1) {
 						locality += selectedLocalityItems.get(i);
 					} else {
 						locality += selectedLocalityItems.get(i) + ",";
 					}
 				}
-				currentLocality.setText(Html.fromHtml("Your Selected Area "
-						+ "<b>" + locality + "</b>"));
+				currentLocality.setText(Html.fromHtml("Your Selected Area "	+ "<b>" + locality + "</b>"));
 			} else {
 				currentLocality.setText("Choose your Area");
 			}
-
 			ids = new ArrayList<String>();
-
-			if (selectedLocalityindex != null
-					&& selectedLocalityindex.size() > 0) {
+			if (selectedLocalityindex != null && selectedLocalityindex.size() > 0) {
 				for (int i = 0; i < selectedLocalityindex.size(); i++) {
-
-					ids.add(String.valueOf(localityList.get(
-							Integer.parseInt(selectedLocalityindex.get(i)))
-							.getId()));
+					ids.add(String.valueOf(localityList.get(Integer.parseInt(selectedLocalityindex.get(i))).getId()));
 				}
 			}
 		}
 	}
-
 }

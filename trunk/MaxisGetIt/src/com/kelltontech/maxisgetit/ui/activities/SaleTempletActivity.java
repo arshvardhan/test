@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +13,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -174,8 +174,7 @@ public class SaleTempletActivity extends MaxisMainActivity {
 
 		mLableTitle = (TextView) findViewById(R.id.atl_lbl_title);
 		if (isTitleMandatory) {
-			mLableTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0,
-					R.drawable.required_icon, 0);
+			mLableTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.required_icon, 0);
 		}
 		mTitle = (EditText) findViewById(R.id.atl_title);
 		mDescription = (EditText) findViewById(R.id.atl_desc);
@@ -184,8 +183,7 @@ public class SaleTempletActivity extends MaxisMainActivity {
 		mLayoutGuestDetail = (LinearLayout) findViewById(R.id.atl_guest_detail_controller);
 		if (mIsLoggedInUser) {
 			mUserId = mStore.getUserID();
-			mUsernameTxt.setText(getResources().getString(R.string.dear) + " "
-					+ mStore.getUserName());
+			mUsernameTxt.setText(getResources().getString(R.string.dear) + " " + mStore.getUserName());
 			mLayoutGuestDetail.setVisibility(View.GONE);
 		}
 		mEdUserName = (EditText) findViewById(R.id.atl_user_name);
@@ -204,8 +202,7 @@ public class SaleTempletActivity extends MaxisMainActivity {
 		if (cityList != null && cityList.size() > 0)
 			inflateCityList(cityList);
 		else {
-			CityAreaListController clController = new CityAreaListController(
-					SaleTempletActivity.this, Events.SALE_CITY_LISTING);
+			CityAreaListController clController = new CityAreaListController(SaleTempletActivity.this, Events.SALE_CITY_LISTING);
 			startSppiner();
 			clController.requestService(null);
 		}
@@ -218,8 +215,7 @@ public class SaleTempletActivity extends MaxisMainActivity {
 
 		currentCity = (TextView) findViewById(R.id.currentCity);
 		currentLocality = (TextView) findViewById(R.id.currentLocality);
-		currentCity.setText(Html
-				.fromHtml("in " + "<b>" + selectedCity + "</b>"));
+		currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity + "</b>"));
 
 		currentCity.setOnClickListener(this);
 		currentLocality.setOnClickListener(this);
@@ -232,8 +228,6 @@ public class SaleTempletActivity extends MaxisMainActivity {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-
 				if (!isAdvanceSearchLayoutOpen) {
 					isAdvanceSearchLayoutOpen = true;
 					advanceSearchLayout.setVisibility(View.VISIBLE);
@@ -648,10 +642,9 @@ public class SaleTempletActivity extends MaxisMainActivity {
 		switch (v.getId()) {
 		case R.id.search_icon_button:
 		case R.id.mainSearchButton:
-			mSearchEditText
-					.setText(mSearchEditText.getText().toString().trim());
+			mSearchEditText.setText(mSearchEditText.getText().toString().trim());
 			String JSON_EXTRA = jsonForSearch();
-			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
+			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
@@ -661,8 +654,7 @@ public class SaleTempletActivity extends MaxisMainActivity {
 			onProfileClick();
 			break;
 		case R.id.atl_terms_link:
-			Intent tcIntent = new Intent(SaleTempletActivity.this,
-					TermsAndConditionActivity.class);
+			Intent tcIntent = new Intent(SaleTempletActivity.this, TermsAndConditionActivity.class);
 			startActivity(tcIntent);
 			// showInfoDialog("Terms and Conditions");
 			break;
@@ -670,18 +662,13 @@ public class SaleTempletActivity extends MaxisMainActivity {
 			try {
 				JSONObject postJsonObject = verifyInput();
 				if (postJsonObject != null) {
-					PostClassifiedController controller = new PostClassifiedController(
-							SaleTempletActivity.this,
-							Events.POST_CLASSIFIED_EVENT);
+					PostClassifiedController controller = new PostClassifiedController(SaleTempletActivity.this, Events.POST_CLASSIFIED_EVENT);
 					controller.requestService(postJsonObject);
 					startSppiner();
 				}
 			} catch (JSONException e) {
 				showToast("Internal error : STA");
-				AnalyticsHelper.onError(
-						FlurryEventsConstants.DATA_VALIDATION_ERR,
-						"SaleTempletActivity : "
-								+ AppConstants.DATA_VALIDATION_ERROR_MSG, e);
+				AnalyticsHelper.onError(FlurryEventsConstants.DATA_VALIDATION_ERR, "SaleTempletActivity : " + AppConstants.DATA_VALIDATION_ERROR_MSG, e);
 			}
 			break;
 		case R.id.search_toggler:
@@ -711,8 +698,7 @@ public class SaleTempletActivity extends MaxisMainActivity {
 			if (cityListString != null && cityListString.size() > 0) {
 				localityItems = null;
 				selectedLocalityindex = null;
-				Intent cityIntent = new Intent(SaleTempletActivity.this,
-						AdvanceSelectCity.class);
+				Intent cityIntent = new Intent(SaleTempletActivity.this, AdvanceSelectCity.class);
 				cityIntent.putExtra("CITY_LIST", cityListString);
 				cityIntent.putExtra("SELECTED_CITY", selectedCity);
 				startActivityForResult(cityIntent, AppConstants.CITY_REQUEST);
@@ -723,13 +709,10 @@ public class SaleTempletActivity extends MaxisMainActivity {
 
 		case R.id.currentLocality:
 			if (localityItems != null && localityItems.size() > 0) {
-				Intent localityIntent = new Intent(SaleTempletActivity.this,
-						AdvanceSelectLocalityActivity.class);
+				Intent localityIntent = new Intent(SaleTempletActivity.this, AdvanceSelectLocalityActivity.class);
 				localityIntent.putExtra("LOCALITY_LIST", localityItems);
-				localityIntent.putStringArrayListExtra("LOCALITY_INDEX",
-						selectedLocalityindex);
-				startActivityForResult(localityIntent,
-						AppConstants.LOCALITY_REQUEST);
+				localityIntent.putStringArrayListExtra("LOCALITY_INDEX", selectedLocalityindex);
+				startActivityForResult(localityIntent, AppConstants.LOCALITY_REQUEST);
 			} else {
 				setSearchLocality(city_id);
 			}
@@ -750,13 +733,9 @@ public class SaleTempletActivity extends MaxisMainActivity {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				String text = mUsernameTxt.getText() + ", "
-						+ "your sell requirement has successfully be posted";
-				Intent notificationIntent = new Intent(
-						SaleTempletActivity.this,
-						AdPostNotificaitonActivity.class);
-				notificationIntent.putExtra(AppConstants.NOTIFICATION_TEXT,
-						text);
+				String text = mUsernameTxt.getText() + ", " + "your sell requirement has successfully be posted";
+				Intent notificationIntent = new Intent(SaleTempletActivity.this, AdPostNotificaitonActivity.class);
+				notificationIntent.putExtra(AppConstants.NOTIFICATION_TEXT, text);
 				startActivity(notificationIntent);
 				finish();
 			}
@@ -765,12 +744,10 @@ public class SaleTempletActivity extends MaxisMainActivity {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				CityTable cityTable = new CityTable(
-						(MyApplication) getApplication());
+				CityTable cityTable = new CityTable((MyApplication) getApplication());
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
 				cityTable.addCityList(glistRes.getCityOrLocalityList());
-				ArrayList<CityOrLocality> cityList = cityTable
-						.getAllCitiesList();
+				ArrayList<CityOrLocality> cityList = cityTable.getAllCitiesList();
 				inflateCityList(cityList);
 			}
 		} else if (msg.arg2 == Events.SALE_LOCALITY_LISTING) {
@@ -779,12 +756,9 @@ public class SaleTempletActivity extends MaxisMainActivity {
 				showInfoDialog((String) msg.obj);
 			} else {
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
-				ArrayList<CityOrLocality> localityList = glistRes
-						.getCityOrLocalityList();
+				ArrayList<CityOrLocality> localityList = glistRes.getCityOrLocalityList();
 				addDefaultSelect(localityList);
-				ArrayAdapter<CityOrLocality> localityAdp = new ArrayAdapter<CityOrLocality>(
-						SaleTempletActivity.this, R.layout.spinner_item,
-						localityList);
+				ArrayAdapter<CityOrLocality> localityAdp = new ArrayAdapter<CityOrLocality>(SaleTempletActivity.this, R.layout.spinner_item, localityList);
 				mLocalityDropDown.setAdapter(localityAdp);
 				mLocalityContainer.setVisibility(View.VISIBLE);
 			}
@@ -793,16 +767,10 @@ public class SaleTempletActivity extends MaxisMainActivity {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				CityTable cityTable = new CityTable(
-						(MyApplication) getApplication());
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
-				// cityTable.addCityList(glistRes.getCityOrLocalityList());
 				cityList = glistRes.getCityOrLocalityList();
-				// inflateCityList(cityList);
-				Intent intent = new Intent(SaleTempletActivity.this,
-						AdvanceSelectCity.class);
+				Intent intent = new Intent(SaleTempletActivity.this, AdvanceSelectCity.class);
 				for (CityOrLocality cityOrLocality : cityList) {
-
 					cityListString.add(cityOrLocality.getName());
 				}
 				localityItems = null;
@@ -821,20 +789,16 @@ public class SaleTempletActivity extends MaxisMainActivity {
 			} else {
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
 				localityList = glistRes.getCityOrLocalityList();
-				Intent intent = new Intent(SaleTempletActivity.this,
-						AdvanceSelectLocalityActivity.class);
+				Intent intent = new Intent(SaleTempletActivity.this, AdvanceSelectLocalityActivity.class);
 				localityItems = new ArrayList<String>();
 				for (CityOrLocality dealCityOrLoc : localityList) {
 					localityItems.add(dealCityOrLoc.getName());
 				}
 				intent.putExtra("LOCALITY_LIST", localityItems);
-				intent.putStringArrayListExtra("LOCALITY_INDEX",
-						selectedLocalityindex);
+				intent.putStringArrayListExtra("LOCALITY_INDEX", selectedLocalityindex);
 				startActivityForResult(intent, AppConstants.LOCALITY_REQUEST);
-
 			}
 		}
-
 	}
 
 	@Override
@@ -857,18 +821,15 @@ public class SaleTempletActivity extends MaxisMainActivity {
 	@Override
 	protected void onActivityResult(int reqCode, int resultCode, Intent data) {
 		super.onActivityResult(reqCode, resultCode, data);
-		// TODO Auto-generated method stub
 		if (resultCode == RESULT_OK && reqCode == AppConstants.CITY_REQUEST) {
-			if (!selectedCity
-					.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
+			if (!selectedCity.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
 				localityItems = null;
 				ids = null;
 				selectedLocalityindex = null;
 				currentLocality.setText("Choose your Area");
 			}
 			selectedCity = data.getStringExtra("CITY_NAME");
-			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
-					+ "</b>"));
+			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity + "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
 			if (index == -1) {
 				city_id = -1;
@@ -876,17 +837,13 @@ public class SaleTempletActivity extends MaxisMainActivity {
 				city_id = cityList.get(index).getId();
 			}
 
-		} else if (resultCode == RESULT_OK
-				&& reqCode == AppConstants.LOCALITY_REQUEST) {
+		} else if (resultCode == RESULT_OK && reqCode == AppConstants.LOCALITY_REQUEST) {
 			String locality = "";
 
-			selectedLocalityItems = data
-					.getStringArrayListExtra("SELECTED_LOCALITIES");
+			selectedLocalityItems = data.getStringArrayListExtra("SELECTED_LOCALITIES");
 
-			selectedLocalityindex = data
-					.getStringArrayListExtra("SELECTED_LOCALITIES_INDEX");
-			if (selectedLocalityItems != null
-					&& selectedLocalityItems.size() > 0) {
+			selectedLocalityindex = data.getStringArrayListExtra("SELECTED_LOCALITIES_INDEX");
+			if (selectedLocalityItems != null && selectedLocalityItems.size() > 0) {
 				for (int i = 0; i < selectedLocalityItems.size(); i++) {
 
 					if (i == selectedLocalityItems.size() - 1) {
@@ -895,62 +852,45 @@ public class SaleTempletActivity extends MaxisMainActivity {
 						locality += selectedLocalityItems.get(i) + ",";
 					}
 				}
-				currentLocality.setText(Html.fromHtml("Your Selected Area "
-						+ "<b>" + locality + "</b>"));
+				currentLocality.setText(Html.fromHtml("Your Selected Area " + "<b>" + locality + "</b>"));
 			} else {
 				currentLocality.setText("Choose your Area");
 			}
 
 			ids = new ArrayList<String>();
 
-			if (selectedLocalityindex != null
-					&& selectedLocalityindex.size() > 0) {
+			if (selectedLocalityindex != null && selectedLocalityindex.size() > 0) {
 				for (int i = 0; i < selectedLocalityindex.size(); i++) {
 
-					ids.add(String.valueOf(localityList.get(
-							Integer.parseInt(selectedLocalityindex.get(i)))
-							.getId()));
+					ids.add(String.valueOf(localityList.get(Integer.parseInt(selectedLocalityindex.get(i))).getId()));
 				}
 			}
-
 		}
-
 	}
 
 	public String jsonForSearch() {
-
-		// {"city":{"city_id":5,"city_name":"adyui"},"locality":[{"locality_id":5,"locality_name":"adyui"},{"locality_id":5,"locality_name":"adyui"}]}
 		JSONObject jArray = new JSONObject();
 		try {
-
 			if (city_id != -1) {
 				JSONObject array = new JSONObject();
 				array.put("city_id", city_id + "");
 				array.put("city_name", selectedCity);
-
 				jArray.put("city", array);
-
 				if (ids != null && ids.size() > 0) {
 					JSONArray jsonArray = new JSONArray();
 					for (int i = 0; i < selectedLocalityItems.size(); i++) {
 						JSONObject localityArray = new JSONObject();
 						localityArray.put("locality_id", ids.get(i));
-						localityArray.put("locality_name",
-								selectedLocalityItems.get(i));
+						localityArray.put("locality_name", selectedLocalityItems.get(i));
 						jsonArray.put(localityArray);
-
 					}
 					jArray.put("locality", jsonArray);
 				}
 				return jArray.toString();
-
-			}
-
-			else {
+			} else {
 				return null;
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

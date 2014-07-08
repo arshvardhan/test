@@ -321,7 +321,7 @@ public class LoginActivity extends MaxisMainActivity {
 			mSearchEditText
 			.setText(mSearchEditText.getText().toString().trim());
 			String JSON_EXTRA = jsonForSearch();
-			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
+			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			break;
 		case R.id.login_forget_password:
 			startActivity(new Intent(this, ForgetPasswordActivity.class));

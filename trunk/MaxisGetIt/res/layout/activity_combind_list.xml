@@ -62,13 +62,13 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/bannerView_LnrLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/cl_header_view"
         android:orientation="vertical"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <View
             android:layout_width="match_parent"
@@ -82,27 +82,38 @@
             android:layout_gravity="center_horizontal"
             android:src="@drawable/detail_cross" />
 
-        <!--
-                 <LinearLayout
-                android:id="@+id/indicatorlinearlayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|bottom"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/rounded_layout"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="5dp"
-                android:paddingTop="5dp" >
-            </LinearLayout>  -->
+        <ImageView
+            android:id="@+id/play_pasue_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/subcategory_banner"
+            android:layout_centerVertical="true"
+            android:layout_margin="5dp"
+            android:background="@drawable/banner_pause"
+            android:clickable="true"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/indicatorlinearlayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/subcategory_banner"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center|bottom"
+            android:background="@drawable/rounded_layout"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="gone" >
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_below="@id/subcategory_banner"
             android:background="@color/vertical_line_seprator" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/pagination"
@@ -209,7 +220,8 @@
             android:layout_weight="33.33"
             android:clickable="true"
             android:scaleType="fitXY"
-            android:src="@drawable/group_view_on_map" /> -->
+            android:src="@drawable/group_view_on_map" />
+        -->
     </LinearLayout>
 
     <LinearLayout

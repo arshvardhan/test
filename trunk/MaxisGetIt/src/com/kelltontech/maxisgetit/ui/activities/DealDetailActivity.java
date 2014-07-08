@@ -602,11 +602,9 @@ OnGlobalLayoutListener, OnClickListener {
 			AnalyticsHelper.logEvent(FlurryEventsConstants.MODIFY_SEARCH_CLICK);
 			break;
 		case R.id.mainSearchButton:
-			mSearchEditText
-			.setText(mSearchEditText.getText().toString().trim());
-
+			mSearchEditText.setText(mSearchEditText.getText().toString().trim());
 			String JSON_EXTRA = jsonForSearch();
-			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA);
+			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
@@ -1251,9 +1249,7 @@ OnGlobalLayoutListener, OnClickListener {
 
 		if (imgPathList != null && imgPathList.size() > 0) {
 			dealGallery.setVisibility(View.VISIBLE);
-			ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(
-					getSupportFragmentManager(), imgPathList, this,
-					"DealDetail");
+			ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), imgPathList, this, AppConstants.FLOW_FROM_DEAL_DETAIL);
 			if (imgPathList.size() > 1) {
 				addImage();
 				circleIndicator.setVisibility(View.VISIBLE);

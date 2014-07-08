@@ -7,12 +7,14 @@ import android.os.Parcelable;
 
 import com.kelltontech.framework.model.IModel;
 import com.kelltontech.framework.model.MaxisResponse;
+import com.kelltontech.maxisgetit.dao.Banner;
 import com.kelltontech.maxisgetit.dao.CategoryGroup;
 import com.kelltontech.maxisgetit.dao.SubCategory;
 
 public class SubCategoryResponse extends MaxisResponse implements IModel, Parcelable {
 	private CategoryGroup parentCat;
 	private ArrayList<SubCategory> categories = new ArrayList<SubCategory>();
+	private ArrayList<Banner> bannerList = new ArrayList<Banner>();
 
 	public ArrayList<SubCategory> getCategories() {
 		return categories;
@@ -30,6 +32,14 @@ public class SubCategoryResponse extends MaxisResponse implements IModel, Parcel
 		categories.add(cat);
 	}
 
+	public ArrayList<Banner> getBannerList() {
+		return bannerList;
+	}
+
+	public void addBanner(Banner banner) {
+		this.bannerList.add(banner);
+	}
+	
 	public static final Creator<SubCategoryResponse> CREATOR = new Creator<SubCategoryResponse>() {
 
 		@Override
@@ -53,9 +63,9 @@ public class SubCategoryResponse extends MaxisResponse implements IModel, Parcel
 	public SubCategoryResponse(Parcel in) {
 		errorMessage = in.readString();
 		errorCode = in.readInt();
-		in.readStringList(banner);
 		parentCat = in.readParcelable(SubCategory.class.getClassLoader());
 		in.readTypedList(categories, SubCategory.CREATOR);
+		in.readTypedList(bannerList, Banner.CREATOR);
 	}
 
 	public SubCategoryResponse() {
@@ -66,9 +76,9 @@ public class SubCategoryResponse extends MaxisResponse implements IModel, Parcel
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(errorMessage);
 		dest.writeInt(errorCode);
-		dest.writeStringList(banner);
 		dest.writeParcelable(parentCat, PARCELABLE_WRITE_RETURN_VALUE);
 		dest.writeTypedList(categories);
+		dest.writeTypedList(bannerList);
 	}
 
 }

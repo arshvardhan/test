@@ -7,7 +7,6 @@ import android.content.Context;
 import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.constants.AppConstants;
-import com.kelltontech.maxisgetit.controllers.SubCategoryController;
 import com.kelltontech.maxisgetit.dao.CatgoryBase;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
 
@@ -55,15 +54,16 @@ public class GenralRequest extends MaxisBaseRequest {
 	public static final String DEAL_DOWNLOAD_METHOD = "sendSmsbyuidanddealid.xml";
 
 	public static final String CITY_LISTING_DEALS_METHOD = "getDealCities.json"; // it
-																					// will
-																					// also
-																					// available
-																					// in
-																					// xml.
+	// will
+	// also
+	// available
+	// in
+	// xml.
 	public static final String LOCALITY_LISTING_DEALS_METHOD = "getDealLocalityByCity.json";
 	public static final String MY_ACCOUNT_DASHBOARD = "myaccount.json";
 	public static final String MY_ACCOUNT_DASHBOARD_LIFECYCLE = "mydashboard.json";
-
+	public static final String BANNER_NAVIGATION_METHOD = "logBannerReport.json";
+	
 	private String deviceId = MyApplication.getDeviceId();
 
 	private static final String KEY_APP_CODE = "app_code";
@@ -210,6 +210,13 @@ public class GenralRequest extends MaxisBaseRequest {
 		Hashtable<String, String> ht = getDefaultHeaders(screenName);
 		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		ht.put(KEY_UID, uId);
+		return ht;
+	}
+
+	public Hashtable<String, String> getHeadersWithBannerId(String bannerId, String screenName) {
+		Hashtable<String, String> ht = getDefaultHeaders(screenName);
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(KEY_BANNER_ID, bannerId + "");
 		return ht;
 	}
 
