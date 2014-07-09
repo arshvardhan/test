@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:drawable="@drawable/shape_bg_grey_recods_count"/>
+    <item
+        android:bottom="1dp"
+        android:drawable="@drawable/shape_bg_green_recods_count"
+        android:left="0dp"
+        android:right="0dp"
+        android:top="1dp"/>
+
+</layer-list>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bg_base_col"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/header_base_activity"
+        layout="@layout/header_base_screen" />
+
+    <RelativeLayout
+        android:id="@+id/cl_header_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_base_activity"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp" >
+
+        <ImageView
+            android:id="@+id/cl_category_iconw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/group_load" />
+
+        <TextView
+            android:id="@+id/cl_refine_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:text="@string/refine_search"
+            android:textColor="@color/maxis_green"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/cl_records_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="@string/record_found" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/cl_company_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/pagination"
+        android:layout_below="@id/cl_header_view"
+        android:divider="@null"
+        android:gravity="center_vertical"
+        android:listSelector="@drawable/main_box"
+        android:fadingEdge="none"
+        android:background="@color/app_bg_base_col"
+        android:numColumns="2" >
+    </ListView>
+
+        <RelativeLayout
+        android:id="@id/pagination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/cl_deal_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                android:clickable="true"
+                android:src="@drawable/deals" />
+
+            <LinearLayout
+                android:id="@+id/cl_navigation_btn_holder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_centerVertical="true" >
+
+                <Button
+                    android:id="@+id/cl_page_btn_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/selector_page_btn"
+                    android:visibility="gone"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:text="1" />
+
+                <Button
+                    android:id="@+id/cl_page_btn_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/selector_page_btn"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:visibility="gone"
+                    android:text="2" />
+
+                <Button
+                    android:id="@+id/cl_page_btn_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/black"
+                    android:background="@drawable/selector_page_btn"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:text="3" />
+
+                <Button
+                    android:id="@+id/cl_page_btn_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/black"
+                    android:background="@drawable/selector_page_btn"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:text="4" />
+
+                <Button
+                    android:id="@+id/cl_page_btn_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/selector_page_btn"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:textColor="@color/black"
+                    android:text="5" />
+
+                <TextView
+                    android:id="@+id/cl_more_option"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:clickable="true"
+                    android:visibility="gone"
+                    android:text="@string/more" />
+            </LinearLayout>
+        </RelativeLayout>
+
+</RelativeLayout>
