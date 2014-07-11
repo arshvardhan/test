@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/reg_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bg_base_col"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/header_base_activity"
+        layout="@layout/header_without_search" />
+
+    <ScrollView
+        android:id="@+id/reg_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header_base_activity" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:weightSum="1" >
+            <TextView
+                android:id="@+id/code_sent_to_mob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/a_code_sent"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_13" />
+			    
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:text="@string/enter_activation_code"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_13" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:weightSum="1" >
+
+                <EditText
+                    android:id="@+id/aact_code"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight=".25"
+                    android:background="@drawable/text_field"
+                    android:gravity="left|center_vertical"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_13" />
+
+                <TextView
+                    android:id="@+id/aact_validate_button"
+                    android:layout_width="0dp"
+                    android:layout_weight=".35"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/green_curve_box_with_less_padding"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:text="@string/continue_text"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+                 <TextView
+                    android:id="@+id/aact_resend_button"
+                    android:layout_width="0dp"
+                    android:layout_weight=".35"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/red_curved_box_with_less_pad"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:text="@string/resend_code"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>
