@@ -6,7 +6,5 @@
     android:textColor="@color/black"
     android:textSize="@dimen/sp_14"
     android:ellipsize="marquee"
-    android:singleLine="true"
-    >
-
+    android:singleLine="true" >
 </TextView>

@@ -943,8 +943,7 @@ public class DealsActivity extends MaxisMainActivity {
 	}
 
 	private void fetchRefineAttribute(String categoryId) {
-		RefineAttributeController refineController = new RefineAttributeController(
-				DealsActivity.this, Events.REFINE_ATTRIBUTES);
+		RefineAttributeController refineController = new RefineAttributeController(DealsActivity.this, Events.REFINE_ATTRIBUTES);
 		startSppiner();
 		RefineSearchRequest refineSearchRequest = new RefineSearchRequest();
 		refineSearchRequest.setCategoryId(categoryId);

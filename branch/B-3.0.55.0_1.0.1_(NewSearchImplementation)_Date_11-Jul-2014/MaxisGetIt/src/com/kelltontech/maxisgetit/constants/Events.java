@@ -77,4 +77,6 @@ public class Events {
 	public static final int BANNER_LANDING_COMPANY_DETAIL_EVENT = 63;
 	public static final int BANNER_LANDING_DEAL_DETAIL_EVENT = 64;
 	public static final int BANNER_LANDING_SEARCH_EVENT = 65;
+	
+	public static final int COMBIND_LISTING_VIEW_MORE_COMPANY_EVENT = 66;
 }

@@ -302,13 +302,10 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 	 */
 	private void startContestImageUploadActivity(IModel iModel, int uploadImageType) {
 		Distance distance = (Distance) iModel;
-		Intent poiListIntent = new Intent(ContestPoiListActivity.this,
-				ContestUploadImageActivity.class);
+		Intent poiListIntent = new Intent(ContestPoiListActivity.this, ContestUploadImageActivity.class);
 		poiListIntent.putExtra(AppConstants.CID_KEY, distance.getcId());
-		poiListIntent.putExtra(AppConstants.CATEGORY_ID_KEY,
-				distance.getCategoryId());
-		poiListIntent.putExtra(AppConstants.COMPANY_NAME_KEY,
-				distance.getCompanyName());
+		poiListIntent.putExtra(AppConstants.CATEGORY_ID_KEY, distance.getCategoryId());
+		poiListIntent.putExtra(AppConstants.COMPANY_NAME_KEY, distance.getCompanyName());
 		poiListIntent.putExtra(AppConstants.POST_IMAGE_REQUEST_KEY, uploadImageType);
 		startActivity(poiListIntent);
 	}
@@ -326,18 +323,15 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 		case Events.CATEGORY_LIST_EVENT: {
 			// showDialog(CustomDialog.PROGRESS_DIALOG);
 			startSppiner();
-			ContestListController listController1 = new ContestListController(
-					this, mRequestedEventType);
+			ContestListController listController1 = new ContestListController(this, mRequestedEventType);
 			RequestDistance distance = new RequestDistance();
 			distance.setPageNumber(mPageNumber == 0 ? 1 : mPageNumber);
 			distance.setRecordsPerPage(AppConstants.PAGE_SIZE_POI_LIST_BY_DISTANCE);
 			distance.setLatitude(mLattitude);
 			distance.setLongitude(mLongitude);
-			if (mRequestedEventType == Events.DISTANCE_LIST_EVENT
-					&& mSelectedCategory != null) {
+			if (mRequestedEventType == Events.DISTANCE_LIST_EVENT && mSelectedCategory != null) {
 				try {
-					distance.setCategoryId(Integer.parseInt(mSelectedCategory
-							.getCategoryId()));
+					distance.setCategoryId(Integer.parseInt(mSelectedCategory.getCategoryId()));
 				} catch (Exception e) {
 					// ignore
 					e.printStackTrace();
@@ -350,8 +344,7 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 			UiUtils.hideSoftKeyboard(this);
 			// showDialog(CustomDialog.PROGRESS_DIALOG);
 			startSppiner();
-			ContestPoiController contestPoiController = new ContestPoiController(
-					this, Events.POI_SEARCH_EVENT);
+			ContestPoiController contestPoiController = new ContestPoiController(this, Events.POI_SEARCH_EVENT);
 			RequestPoiSearch requestPoiSearch = new RequestPoiSearch();
 			requestPoiSearch.setLatitude(mLattitude);
 			requestPoiSearch.setLongitude(mLongitude);
@@ -360,11 +353,9 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put(FlurryEventsConstants.CONTEST_SEARCH_TEXT, searchTxt);
-			AnalyticsHelper.logEvent(FlurryEventsConstants.CONTEST_POI_SEARCH,
-					map);
+			AnalyticsHelper.logEvent(FlurryEventsConstants.CONTEST_POI_SEARCH, map);
 			requestPoiSearch.setPageNumber(mPageNumber == 0 ? 1 : mPageNumber);
-			requestPoiSearch
-			.setRecordsPerPage(AppConstants.PAGE_SIZE_POI_LIST_SEACH_RESULTS);
+			requestPoiSearch.setRecordsPerPage(AppConstants.PAGE_SIZE_POI_LIST_SEACH_RESULTS);
 			contestPoiController.requestService(requestPoiSearch);
 			break;
 		}
@@ -484,17 +475,16 @@ public class ContestPoiListActivity extends ContestBaseActivity {
 				stopSppiner();
 				switch (((MyError) msg.obj).getErrorcode()) {
 				case MyError.NETWORK_NOT_AVAILABLE:
-					Toast.makeText(getApplicationContext(),
-							"Network not available.", Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(), "Network not available.", Toast.LENGTH_LONG).show();
 					break;
 				case MyError.EXCEPTION:
 				case MyError.UNDEFINED:
-					Toast.makeText(getApplicationContext(),
-							"Server not responding.", Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(), "Server not responding.", Toast.LENGTH_LONG).show();
 					break;
 				}
 			} else if (msg.obj instanceof ResponseList
-					&& (mRequestedEventType == Events.DISTANCE_LIST_EVENT || mRequestedEventType == Events.CATEGORY_LIST_EVENT)) {
+					&& (mRequestedEventType == Events.DISTANCE_LIST_EVENT 
+					|| mRequestedEventType == Events.CATEGORY_LIST_EVENT)) {
 				ResponseList responselist = (ResponseList) msg.obj;
 				if (responselist.getList() != null
 						&& responselist.getList().size() > 0) {

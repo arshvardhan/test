@@ -203,7 +203,9 @@ public abstract class BaseServiceController implements IServiceController {
 		boolean isAppUpdated = false;
 		for(int i = 0; i < headers.length; i++){
 			if(headers[i].getName().equalsIgnoreCase("ForceAppUpdate")){
-				isAppUpdated = Integer.parseInt(headers[i].getValue())== 1 ? true : false;
+				isAppUpdated = (!StringUtil.isNullOrEmpty(headers[i].getValue()) && "1".equals(headers[i].getValue())) ? true : false;
+				//	isAppUpdated = Integer.parseInt(headers[i].getValue())== 1 ? true : false;
+				break;
 			}
 		}
 		return isAppUpdated;

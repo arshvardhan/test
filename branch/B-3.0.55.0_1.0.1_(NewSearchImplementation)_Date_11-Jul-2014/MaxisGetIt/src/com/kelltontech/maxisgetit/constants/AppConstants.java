@@ -274,5 +274,6 @@ public interface AppConstants {
 	String DashBoardLifeCycle 							= "DidLifeCycle";
 	String Screen_DealTnC 								= "DealTnCScreen";									//TermsAndConditionActivity
 	String Mall_listing 								= "MallListScreen";									//MallListActivity
+	String Stamp_Company_listing 						= "StampCompanyListScreen";							//CombinedListActivity
 
 }

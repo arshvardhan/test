@@ -120,13 +120,10 @@ public class RefineSearchActivity extends MaxisMainActivity {
 		mCategoryThumbUrl = bundle.getString(AppConstants.THUMB_URL);
 		selectorMode = bundle.getInt(RefineSearchActivity.SELECTOR_MODE);
 		mClRequest = bundle.getParcelable(AppConstants.DATA_LIST_REQUEST);
-		mLocalitySelectorDao = bundle
-				.getParcelable(AppConstants.LOCALITY_DAO_DATA);
-		
+		mLocalitySelectorDao = bundle.getParcelable(AppConstants.LOCALITY_DAO_DATA);
 		categoryId = bundle.getString("categoryId");
 		mClRequest.setPageNumber(1);
-		mCatResponse = (RefineCategoryResponse) bundle
-				.get(AppConstants.REFINE_CAT_RESPONSE);
+		mCatResponse = (RefineCategoryResponse) bundle.get(AppConstants.REFINE_CAT_RESPONSE);
 		mSearchContainer = (LinearLayout) findViewById(R.id.search_box_container);
 		mSearchToggler = (ImageView) findViewById(R.id.search_toggler);
 		mSearchToggler.setOnClickListener(this);
@@ -144,18 +141,15 @@ public class RefineSearchActivity extends MaxisMainActivity {
 		}
 		if (selectorMode == ATTR_SELECTION) {
 			loadCatThumb();
-			mSelctorResp = (RefineSelectorResponse) bundle
-					.get(AppConstants.REFINE_ATTR_RESPONSE);
+			mSelctorResp = (RefineSelectorResponse) bundle.get(AppConstants.REFINE_ATTR_RESPONSE);
 			if (mSelctorResp != null)
 				showFilters();
 		} else if (selectorMode == ATTR_SELECTION_BY_SEARCH) {
 			mCategorySpinnerConatainer.setVisibility(View.GONE);
 			TextView catText = (TextView) findViewById(R.id.ms_search_by_category_name_txt);
 			catText.setVisibility(View.VISIBLE);
-			catText.setText("Filter the search by specifying the attributes of Category :- '"
-					+ mClRequest.getSelectedCategoryNameBySearch() + "'");
-			mSelctorResp = (RefineSelectorResponse) bundle
-					.get(AppConstants.REFINE_ATTR_RESPONSE);
+			catText.setText("Filter the search by specifying the attributes of Category :- '" + mClRequest.getSelectedCategoryNameBySearch() + "'");
+			mSelctorResp = (RefineSelectorResponse) bundle.get(AppConstants.REFINE_ATTR_RESPONSE);
 			if (mSelctorResp != null)
 				showFilters();
 		} else if (selectorMode == CAT_SELECTION) {
@@ -166,8 +160,7 @@ public class RefineSearchActivity extends MaxisMainActivity {
 			} else {
 				showCategorySpinner();
 			}
-			mSelctorResp = (RefineSelectorResponse) bundle
-					.get(AppConstants.REFINE_ATTR_RESPONSE);
+			mSelctorResp = (RefineSelectorResponse) bundle.get(AppConstants.REFINE_ATTR_RESPONSE);
 			if (mSelctorResp != null)
 				showFilters();
 		}
@@ -180,8 +173,7 @@ public class RefineSearchActivity extends MaxisMainActivity {
 
 		currentCity = (TextView) findViewById(R.id.currentCity);
 		currentLocality = (TextView) findViewById(R.id.currentLocality);
-		currentCity.setText(Html
-				.fromHtml("in " + "<b>" + selectedCity + "</b>"));
+		currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity + "</b>"));
 
 		currentCity.setOnClickListener(this);
 		currentLocality.setOnClickListener(this);
@@ -192,11 +184,8 @@ public class RefineSearchActivity extends MaxisMainActivity {
 		wholeSearchBoxContainer = (LinearLayout) findViewById(R.id.whole_search_box_container);
 
 		mSearchEditText.setOnTouchListener(new OnTouchListener() {
-
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-
 				if (!isAdvanceSearchLayoutOpen) {
 					isAdvanceSearchLayoutOpen = true;
 					advanceSearchLayout.setVisibility(View.VISIBLE);
@@ -211,7 +200,7 @@ public class RefineSearchActivity extends MaxisMainActivity {
 		super.onResume();
 		AnalyticsHelper.trackSession(RefineSearchActivity.this, AppConstants.Modify_screen);
 	}
-	
+
 	private void showLocalitySpinner() {
 		if (mLocalitySelectorDao != null
 				&& mLocalitySelectorDao.getSelectorValues().size() > 1) {
@@ -237,8 +226,7 @@ public class RefineSearchActivity extends MaxisMainActivity {
 	private void showCategorySpinner() {
 		if (mCatResponse == null)
 			return;
-		ArrayAdapter adapter = new ArrayAdapter(this, R.layout.spinner_item,
-				mCatResponse.getCategories());
+		ArrayAdapter adapter = new ArrayAdapter(this, R.layout.spinner_item, mCatResponse.getCategories());
 		mCatSelector = (Spinner) findViewById(R.id.ms_spinner1);
 		mCatSelector.setAdapter(adapter);
 		mCatSelector.setSelection(mCatResponse.getSelectedCategoryIndex());
@@ -251,15 +239,11 @@ public class RefineSearchActivity extends MaxisMainActivity {
 				} else {
 					{
 						startSppiner();
-						RefineAttributeController refineController = new RefineAttributeController(
-								RefineSearchActivity.this,
-								Events.REFINE_ATTRIBUTES);
-						CategoryRefine cat = (CategoryRefine) arg0
-								.getSelectedItem();
+						RefineAttributeController refineController = new RefineAttributeController(RefineSearchActivity.this, Events.REFINE_ATTRIBUTES);
+						CategoryRefine cat = (CategoryRefine) arg0.getSelectedItem();
 						RefineSearchRequest refineSearchRequest = new RefineSearchRequest();
 						refineSearchRequest.setCategoryId(cat.getCategoryId());
-						refineSearchRequest.setDeal(!mClRequest
-								.isCompanyListing());
+						refineSearchRequest.setDeal(!mClRequest.isCompanyListing());
 						refineController.requestService(refineSearchRequest);
 						mCatResponse.setSelectedCategoryIndex(position);
 					}
@@ -283,69 +267,59 @@ public class RefineSearchActivity extends MaxisMainActivity {
 				SelectorDAO selector = mSelectors.get(i);
 				Spinner filterSpinner = inflateFilter(selector);
 				mSpinnerList.add(filterSpinner);
-				if (selector.getSearchKey().equalsIgnoreCase(
-						AppConstants.KEYWORD_CITY_OF_REFINE)) {
+				if (selector.getSearchKey().equalsIgnoreCase(AppConstants.KEYWORD_CITY_OF_REFINE)) {
 					handleCityOperations(filterSpinner);
 					defaultCitySelection = selector.getSelectedIndex();
 					showLocalitySpinner();
 				}
 			}
 		}
-
 	}
 
 	private void handleCityOperations(Spinner citySpinner) {
 		mCitySelSpinner = citySpinner;
 		mCitySelSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int position, long arg3) {
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
 				if (position == 0) {
 					mLocalitySpinnerContainer.setVisibility(View.GONE);
 				} else {
 					if (defaultCitySelection == position)
 						return;
 					defaultCitySelection = position;
-					RefineAttributeController localityController = new RefineAttributeController(
-							RefineSearchActivity.this,
-							Events.REFINE_SEARCH_LOCALITY);
+					RefineAttributeController localityController = new RefineAttributeController(RefineSearchActivity.this, Events.REFINE_SEARCH_LOCALITY);
 					JSONObject jsonData;
 					try {
 						jsonData = verifyAndGetSelectorsJson();
 					} catch (JSONException e) {
 						jsonData = null;
-						AnalyticsHelper
-								.onError(
-										FlurryEventsConstants.DATA_VALIDATION_ERR,
-										"RefineSearchActivity"
-												+ AppConstants.DATA_VALIDATION_ERROR_MSG,
-										e);
+						AnalyticsHelper.onError(FlurryEventsConstants.DATA_VALIDATION_ERR,"RefineSearchActivity" + AppConstants.DATA_VALIDATION_ERROR_MSG,e);
 					}
 					if (jsonData != null) {
 						startSppiner();
 						RefineSearchRequest refineSearchRequest = new RefineSearchRequest();
 						if (mClRequest.isBySearch()) {
-							refineSearchRequest.setSearchKeyword(mClRequest
-									.getKeywordOrCategoryId());
-							refineSearchRequest.setCategoryId(mClRequest
-									.getSelectedCategoryBySearch());
+							if((!StringUtil.isNullOrEmpty(mClRequest.getSearchCriteria()) && ("Stamp".equalsIgnoreCase(mClRequest.getSearchCriteria())))) {
+								refineSearchRequest.setStampId(!StringUtil.isNullOrEmpty(mClRequest.getStampId()) ? mClRequest.getStampId() : "");
+							} else {
+								refineSearchRequest.setSearchKeyword(mClRequest.getKeywordOrCategoryId());
+								refineSearchRequest.setSearchIn(mClRequest.getSearchIn());
+							}
+							refineSearchRequest.setCategoryId(mClRequest.getSelectedCategoryBySearch());
 						} else {
 							if (!StringUtil.isNullOrEmpty(categoryId)) {
 								refineSearchRequest.setCategoryId(categoryId);
 							} else {
-								refineSearchRequest.setCategoryId(mClRequest
-										.getKeywordOrCategoryId());
+								refineSearchRequest.setCategoryId(mClRequest.getKeywordOrCategoryId());
 							}
 						}
 						// refineSearchRequest.setCategoryId(mClRequest.getKeywordOrCategoryId());
-						refineSearchRequest.setDeal(!mClRequest
-								.isCompanyListing());
+						refineSearchRequest.setDeal(!mClRequest.isCompanyListing());
 						refineSearchRequest.setPostData(jsonData);
 						localityController.requestService(refineSearchRequest);
 					}
 				}
 			}
-
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
 			}
@@ -504,7 +478,6 @@ public class RefineSearchActivity extends MaxisMainActivity {
 
 	@Override
 	public Activity getMyActivityReference() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -514,11 +487,8 @@ public class RefineSearchActivity extends MaxisMainActivity {
 		if (mLocalitySpinnerContainer.getVisibility() == View.VISIBLE
 				&& mLocalitySelSpinner.getCount() > 0
 				&& mLocalitySelSpinner.getSelectedItemPosition() > 0) {
-			mLocalitySelectorDao.setSelectedIndex(mLocalitySelSpinner
-					.getSelectedItemPosition());
-			jsonSelector.put("locality_name", mLocalitySelSpinner
-					.getItemAtPosition(mLocalitySelSpinner
-							.getSelectedItemPosition()));
+			mLocalitySelectorDao.setSelectedIndex(mLocalitySelSpinner.getSelectedItemPosition());
+			jsonSelector.put("locality_name", mLocalitySelSpinner.getItemAtPosition(mLocalitySelSpinner.getSelectedItemPosition()));
 		}
 
 		for (int i = 0; i < mSpinnerList.size(); i++) {
@@ -575,7 +545,7 @@ public class RefineSearchActivity extends MaxisMainActivity {
 			break;
 		case R.id.mainSearchButton:
 			mSearchEditText
-					.setText(mSearchEditText.getText().toString().trim());
+			.setText(mSearchEditText.getText().toString().trim());
 
 			String JSON_EXTRA = jsonForSearch();
 			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
@@ -588,24 +558,18 @@ public class RefineSearchActivity extends MaxisMainActivity {
 				JSONObject postData = verifyAndGetSelectorsJson();
 				if (postData != null) {
 					mClRequest.setPostJsonPayload(postData.toString());
-					CombindListingController controller = new CombindListingController(
-							RefineSearchActivity.this,
-							Events.REFINE_SEARCH_RESULT);
+					CombindListingController controller = new CombindListingController(RefineSearchActivity.this, Events.REFINE_SEARCH_RESULT);
 					startSppiner();
 					controller.requestService(mClRequest);
 				}
 			} catch (JSONException e) {
-				AnalyticsHelper.onError(
-						FlurryEventsConstants.DATA_VALIDATION_ERR,
-						"RefineSearchActivity : "
-								+ AppConstants.DATA_VALIDATION_ERROR_MSG, e);
+				AnalyticsHelper.onError(FlurryEventsConstants.DATA_VALIDATION_ERR,"RefineSearchActivity : " + AppConstants.DATA_VALIDATION_ERROR_MSG, e);
 			}
 			break;
 		case R.id.goto_home_icon:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.GO_TO_HOME_CLICK);
 			showHomeScreen();
 			break;
-
 		case R.id.upArrow:
 			if (isAdvanceSearchLayoutOpen) {
 				isAdvanceSearchLayoutOpen = false;
@@ -625,7 +589,6 @@ public class RefineSearchActivity extends MaxisMainActivity {
 				setSearchCity();
 			}
 			break;
-
 		case R.id.currentLocality:
 			if (localityItems != null && localityItems.size() > 0) {
 				Intent localityIntent = new Intent(RefineSearchActivity.this,
@@ -641,7 +604,6 @@ public class RefineSearchActivity extends MaxisMainActivity {
 			break;
 		default:
 			break;
-
 		}
 	}
 
@@ -655,16 +617,14 @@ public class RefineSearchActivity extends MaxisMainActivity {
 			showInfoDialog(getResources().getString(R.string.are_error_occured));
 		} else if (resultCode == RESULT_OK
 				&& requestCode == AppConstants.CITY_REQUEST) {
-			if (!selectedCity
-					.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
+			if (!selectedCity.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
 				localityItems = null;
 				ids = null;
 				selectedLocalityindex = null;
 				currentLocality.setText("Choose your Area");
 			}
 			selectedCity = data.getStringExtra("CITY_NAME");
-			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
-					+ "</b>"));
+			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity + "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
 			if (index == -1) {
 				city_id = -1;
@@ -672,82 +632,56 @@ public class RefineSearchActivity extends MaxisMainActivity {
 				city_id = cityList.get(index).getId();
 			}
 
-		} else if (resultCode == RESULT_OK
-				&& requestCode == AppConstants.LOCALITY_REQUEST) {
+		} else if (resultCode == RESULT_OK	&& requestCode == AppConstants.LOCALITY_REQUEST) {
 			String locality = "";
-
-			selectedLocalityItems = data
-					.getStringArrayListExtra("SELECTED_LOCALITIES");
-
-			selectedLocalityindex = data
-					.getStringArrayListExtra("SELECTED_LOCALITIES_INDEX");
-			if (selectedLocalityItems != null
-					&& selectedLocalityItems.size() > 0) {
+			selectedLocalityItems = data.getStringArrayListExtra("SELECTED_LOCALITIES");
+			selectedLocalityindex = data.getStringArrayListExtra("SELECTED_LOCALITIES_INDEX");
+			if (selectedLocalityItems != null && selectedLocalityItems.size() > 0) {
 				for (int i = 0; i < selectedLocalityItems.size(); i++) {
-
 					if (i == selectedLocalityItems.size() - 1) {
 						locality += selectedLocalityItems.get(i);
 					} else {
 						locality += selectedLocalityItems.get(i) + ",";
 					}
 				}
-				currentLocality.setText(Html.fromHtml("Your Selected Area "
-						+ "<b>" + locality + "</b>"));
+				currentLocality.setText(Html.fromHtml("Your Selected Area " + "<b>" + locality + "</b>"));
 			} else {
 				currentLocality.setText("Choose your Area");
 			}
-
 			ids = new ArrayList<String>();
-
-			if (selectedLocalityindex != null
-					&& selectedLocalityindex.size() > 0) {
+			if (selectedLocalityindex != null && selectedLocalityindex.size() > 0) {
 				for (int i = 0; i < selectedLocalityindex.size(); i++) {
-
-					ids.add(String.valueOf(localityList.get(
-							Integer.parseInt(selectedLocalityindex.get(i)))
-							.getId()));
+					ids.add(String.valueOf(localityList.get(Integer.parseInt(selectedLocalityindex.get(i))).getId()));
 				}
 			}
-
 		}
-
 	}
 
 	public String jsonForSearch() {
-
-		// {"city":{"city_id":5,"city_name":"adyui"},"locality":[{"locality_id":5,"locality_name":"adyui"},{"locality_id":5,"locality_name":"adyui"}]}
 		JSONObject jArray = new JSONObject();
 		try {
-
 			if (city_id != -1) {
 				JSONObject array = new JSONObject();
 				array.put("city_id", city_id + "");
 				array.put("city_name", selectedCity);
-
 				jArray.put("city", array);
-
 				if (ids != null && ids.size() > 0) {
 					JSONArray jsonArray = new JSONArray();
 					for (int i = 0; i < selectedLocalityItems.size(); i++) {
 						JSONObject localityArray = new JSONObject();
 						localityArray.put("locality_id", ids.get(i));
-						localityArray.put("locality_name",
-								selectedLocalityItems.get(i));
+						localityArray.put("locality_name", selectedLocalityItems.get(i));
 						jsonArray.put(localityArray);
-
 					}
 					jArray.put("locality", jsonArray);
 				}
 				return jArray.toString();
-
 			} else {
 				return null;
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 	}
-
 }

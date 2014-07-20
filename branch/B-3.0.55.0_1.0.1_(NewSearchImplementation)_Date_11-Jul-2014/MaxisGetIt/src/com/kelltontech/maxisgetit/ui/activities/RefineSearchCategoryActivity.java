@@ -115,8 +115,7 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 		mClRequest.setPageNumber(1);
 		if (mClRequest.isBySearch())
 			mSearchEditText.setText(mClRequest.getKeywordOrCategoryId());
-		mCatResponse = (RefineCategoryResponse) bundle
-				.get(AppConstants.REFINE_CAT_RESPONSE);
+		mCatResponse = (RefineCategoryResponse) bundle.get(AppConstants.REFINE_CAT_RESPONSE);
 		showCategorySpinner();
 
 		advanceSearchLayout = (LinearLayout) findViewById(R.id.advanceSearch);
@@ -145,8 +144,6 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-
 				if (!isAdvanceSearchLayoutOpen) {
 					isAdvanceSearchLayoutOpen = true;
 					advanceSearchLayout.setVisibility(View.VISIBLE);
@@ -159,16 +156,14 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 	private void showCategorySpinner() {
 		if (mCatResponse == null)
 			return;
-		ArrayAdapter adapter = new ArrayAdapter(this, R.layout.spinner_item,
-				mCatResponse.getCategories());
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		ArrayAdapter adapter = new ArrayAdapter(this, R.layout.spinner_item, mCatResponse.getCategories());
 		mCatSelector = (Spinner) findViewById(R.id.rc_cat_spinner);
 		mCatSelector.setAdapter(adapter);
 		mCatSelector.setSelection(mCatResponse.getSelectedCategoryIndex());
 		mCatSelector.setOnItemSelectedListener(new OnItemSelectedListener() {
-
 			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int position, long arg3) {
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
 				{
 					mCatResponse.setSelectedCategoryIndex(position);
 				}
@@ -183,8 +178,7 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 
 	@Override
 	public void setScreenData(Object screenData, int event, long time) {
-		if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE
-				|| event == Events.USER_DETAIL) {
+		if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE || event == Events.USER_DETAIL) {
 			super.setScreenData(screenData, event, time);
 			return;
 		} else if (event == Events.REFINE_ATTRIBUTES) {
@@ -196,14 +190,12 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 			message.arg2 = event;
 			message.arg1 = 1;
 			if (response.isError()) {
-				message.obj = response.getErrorText() + " "
-						+ response.getErrorCode();
+				message.obj = response.getErrorText() + " "	+ response.getErrorCode();
 			} else {
 				if (response.getPayload() instanceof CompanyListResponse) {
 					mClResponse = (CompanyListResponse) response.getPayload();
 					if (mClResponse.getErrorCode() != 0) {
-						message.obj = getResources().getString(
-								R.string.communication_failure);
+						message.obj = getResources().getString(R.string.communication_failure);
 					} else {
 						if (mClResponse.getCompanyArrayList().size() < 1) {
 							message.obj = new String("No Result Found");
@@ -224,8 +216,7 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 
 	@Override
 	public void updateUI(Message msg) {
-		if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE
-				|| msg.arg2 == Events.USER_DETAIL) {
+		if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE || msg.arg2 == Events.USER_DETAIL) {
 			super.updateUI(msg);
 		} else if (msg.arg2 == Events.REFINE_SEARCH_RESULT) {
 			stopSppiner();
@@ -246,16 +237,13 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				CityTable cityTable = new CityTable(
-						(MyApplication) getApplication());
+				CityTable cityTable = new CityTable((MyApplication) getApplication());
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
 				// cityTable.addCityList(glistRes.getCityOrLocalityList());
 				cityList = glistRes.getCityOrLocalityList();
 				// inflateCityList(cityList);
-				Intent intent = new Intent(RefineSearchCategoryActivity.this,
-						AdvanceSelectCity.class);
+				Intent intent = new Intent(RefineSearchCategoryActivity.this, AdvanceSelectCity.class);
 				for (CityOrLocality cityOrLocality : cityList) {
-
 					cityListString.add(cityOrLocality.getName());
 				}
 				localityItems = null;
@@ -274,20 +262,16 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 			} else {
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
 				localityList = glistRes.getCityOrLocalityList();
-				Intent intent = new Intent(RefineSearchCategoryActivity.this,
-						AdvanceSelectLocalityActivity.class);
+				Intent intent = new Intent(RefineSearchCategoryActivity.this, AdvanceSelectLocalityActivity.class);
 				localityItems = new ArrayList<String>();
 				for (CityOrLocality dealCityOrLoc : localityList) {
 					localityItems.add(dealCityOrLoc.getName());
 				}
 				intent.putExtra("LOCALITY_LIST", localityItems);
-				intent.putStringArrayListExtra("LOCALITY_INDEX",
-						selectedLocalityindex);
+				intent.putStringArrayListExtra("LOCALITY_INDEX", selectedLocalityindex);
 				startActivityForResult(intent, AppConstants.LOCALITY_REQUEST);
-
 			}
 		}
-
 	}
 
 	@Override
@@ -302,27 +286,22 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 				|| (mClRequest
 						.getGroupActionType()
 						.trim()
-						.equalsIgnoreCase(
-								AppConstants.GROUP_ACTION_TYPE_CATEGORY_LIST_FOR_GROUP) && (mClRequest
+						.equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_CATEGORY_LIST_FOR_GROUP) && (mClRequest
 						.getGroupType().trim()
 						.equalsIgnoreCase(AppConstants.GROUP_TYPE_CATEGORY)))) {
 			if (mCatSelector.getSelectedItemPosition() < 1) {
 				showInfoDialog("Please select category.");
 				return null;
 			}
-			CategoryRefine catRef = mCatResponse.getCategories().get(
-					mCatSelector.getSelectedItemPosition());
-			mClRequest.setSelectedCategoryBySearch(catRef.getCategoryId(),
-					catRef.getCategoryTitle());
+			CategoryRefine catRef = mCatResponse.getCategories().get(mCatSelector.getSelectedItemPosition());
+			mClRequest.setSelectedCategoryBySearch(catRef.getCategoryId(),catRef.getCategoryTitle());
 			if (!mClRequest.isBySearch())
 				mClRequest.setKeywordOrCategoryId(catRef.getCategoryId());
 			// jsonObject.put("category_id", catRef.getCategoryId());
 		}
 		// else
 		// jsonObject.put("category_id", clRequest.getKeywordOrCategoryId());
-
-		if (!StringUtil.isNullOrEmpty(selectedCity)
-				&& !selectedCity.equalsIgnoreCase("Entire Malaysia")) {
+		if (!StringUtil.isNullOrEmpty(selectedCity) && !selectedCity.equalsIgnoreCase("Entire Malaysia")) {
 			jsonObject.put("city_name", selectedCity);
 			if (localitiesForHeaders != null && localities.size() > 0) {
 				if (!StringUtil.isNullOrEmpty(localities.get(0))) {
@@ -330,11 +309,9 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 				}
 			}
 		}
-		if (jsonSelector != null)
-		{
+		if (jsonSelector != null) {
 			if(jsonSelector.keys().hasNext())
 			jsonObject.put("selector", jsonSelector);
-
 		}
 		System.out.println(mSelctorResp);
 		System.out.println(jsonObject);
@@ -345,8 +322,7 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.mainSearchButton:
-			mSearchEditText
-					.setText(mSearchEditText.getText().toString().trim());
+			mSearchEditText.setText(mSearchEditText.getText().toString().trim());
 			String JSON_EXTRA = jsonForSearch();
 			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			break;
@@ -362,17 +338,13 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 				JSONObject postData = verifyAndFilter();
 				if (postData != null) {
 					mClRequest.setPostJsonPayload(postData.toString());
-					CombindListingController controller = new CombindListingController(
-							RefineSearchCategoryActivity.this,
-							Events.REFINE_SEARCH_RESULT);
+					mClRequest.setSearchRefined(true);
+					CombindListingController controller = new CombindListingController(RefineSearchCategoryActivity.this,Events.REFINE_SEARCH_RESULT);
 					startSppiner();
 					controller.requestService(mClRequest);
 				}
 			} catch (JSONException e) {
-				AnalyticsHelper.onError(
-						FlurryEventsConstants.DATA_VALIDATION_ERR,
-						"RefineSearchCategoryActivity : "
-								+ AppConstants.DATA_VALIDATION_ERROR_MSG, e);
+				AnalyticsHelper.onError(FlurryEventsConstants.DATA_VALIDATION_ERR,"RefineSearchCategoryActivity : " + AppConstants.DATA_VALIDATION_ERROR_MSG, e);
 			}
 			break;
 		case R.id.search_toggler:
@@ -403,9 +375,7 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 			if (cityListString != null && cityListString.size() > 0) {
 				localityItems = null;
 				selectedLocalityindex = null;
-				Intent cityIntent = new Intent(
-						RefineSearchCategoryActivity.this,
-						AdvanceSelectCity.class);
+				Intent cityIntent = new Intent(RefineSearchCategoryActivity.this,AdvanceSelectCity.class);
 				cityIntent.putExtra("CITY_LIST", cityListString);
 				cityIntent.putExtra("SELECTED_CITY", selectedCityForHeaders);
 				startActivityForResult(cityIntent, AppConstants.CITY_REQUEST);
@@ -413,17 +383,12 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 				setSearchCity();
 			}
 			break;
-
 		case R.id.currentLocality:
 			if (localityItems != null && localityItems.size() > 0) {
-				Intent localityIntent = new Intent(
-						RefineSearchCategoryActivity.this,
-						AdvanceSelectLocalityActivity.class);
+				Intent localityIntent = new Intent(RefineSearchCategoryActivity.this,AdvanceSelectLocalityActivity.class);
 				localityIntent.putExtra("LOCALITY_LIST", localityItems);
-				localityIntent.putStringArrayListExtra("LOCALITY_INDEX",
-						selectedLocalityindex);
-				startActivityForResult(localityIntent,
-						AppConstants.LOCALITY_REQUEST);
+				localityIntent.putStringArrayListExtra("LOCALITY_INDEX",selectedLocalityindex);
+				startActivityForResult(localityIntent,AppConstants.LOCALITY_REQUEST);
 			} else {
 				setSearchLocality(city_id);
 			}
@@ -434,18 +399,15 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 	@Override
 	protected void onActivityResult(int reqCode, int resultCode, Intent data) {
 		super.onActivityResult(reqCode, resultCode, data);
-		// TODO Auto-generated method stub
 		if (resultCode == RESULT_OK && reqCode == AppConstants.CITY_REQUEST) {
-			if (!selectedCityForHeaders
-					.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
+			if (!selectedCityForHeaders.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
 				localityItems = null;
 				ids = null;
 				selectedLocalityindex = null;
 				currentLocality.setText("Choose your Area");
 			}
 			selectedCityForHeaders = data.getStringExtra("CITY_NAME");
-			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCityForHeaders
-					+ "</b>"));
+			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCityForHeaders + "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
 			if (index == -1) {
 				city_id = -1;
@@ -453,81 +415,56 @@ public class RefineSearchCategoryActivity extends MaxisMainActivity {
 				city_id = cityList.get(index).getId();
 			}
 
-		} else if (resultCode == RESULT_OK
-				&& reqCode == AppConstants.LOCALITY_REQUEST) {
+		} else if (resultCode == RESULT_OK && reqCode == AppConstants.LOCALITY_REQUEST) {
 			String locality = "";
-
-			selectedLocalityItems = data
-					.getStringArrayListExtra("SELECTED_LOCALITIES");
-
-			selectedLocalityindex = data
-					.getStringArrayListExtra("SELECTED_LOCALITIES_INDEX");
-			if (selectedLocalityItems != null
-					&& selectedLocalityItems.size() > 0) {
+			selectedLocalityItems = data.getStringArrayListExtra("SELECTED_LOCALITIES");
+			selectedLocalityindex = data.getStringArrayListExtra("SELECTED_LOCALITIES_INDEX");
+			if (selectedLocalityItems != null && selectedLocalityItems.size() > 0) {
 				for (int i = 0; i < selectedLocalityItems.size(); i++) {
-
 					if (i == selectedLocalityItems.size() - 1) {
 						locality += selectedLocalityItems.get(i);
 					} else {
 						locality += selectedLocalityItems.get(i) + ",";
 					}
 				}
-				currentLocality.setText(Html.fromHtml("Your Selected Area "
-						+ "<b>" + locality + "</b>"));
+				currentLocality.setText(Html.fromHtml("Your Selected Area " + "<b>" + locality + "</b>"));
 			} else {
 				currentLocality.setText("Choose your Area");
 			}
 
 			ids = new ArrayList<String>();
-
-			if (selectedLocalityindex != null
-					&& selectedLocalityindex.size() > 0) {
+			if (selectedLocalityindex != null && selectedLocalityindex.size() > 0) {
 				for (int i = 0; i < selectedLocalityindex.size(); i++) {
-
-					ids.add(String.valueOf(localityList.get(
-							Integer.parseInt(selectedLocalityindex.get(i)))
-							.getId()));
+					ids.add(String.valueOf(localityList.get(Integer.parseInt(selectedLocalityindex.get(i))).getId()));
 				}
 			}
-
 		}
-
 	}
 
 	public String jsonForSearch() {
-
 		// {"city":{"city_id":5,"city_name":"adyui"},"locality":[{"locality_id":5,"locality_name":"adyui"},{"locality_id":5,"locality_name":"adyui"}]}
 		JSONObject jArray = new JSONObject();
 		try {
-
 			if (city_id != -1) {
 				JSONObject array = new JSONObject();
 				array.put("city_id", city_id + "");
 				array.put("city_name", selectedCityForHeaders);
-
 				jArray.put("city", array);
-
 				if (ids != null && ids.size() > 0) {
 					JSONArray jsonArray = new JSONArray();
 					for (int i = 0; i < selectedLocalityItems.size(); i++) {
 						JSONObject localityArray = new JSONObject();
 						localityArray.put("locality_id", ids.get(i));
-						localityArray.put("locality_name",
-								selectedLocalityItems.get(i));
+						localityArray.put("locality_name", selectedLocalityItems.get(i));
 						jsonArray.put(localityArray);
-
 					}
 					jArray.put("locality", jsonArray);
 				}
 				return jArray.toString();
-
-			}
-
-			else {
+			} else {
 				return null;
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

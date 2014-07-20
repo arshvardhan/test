@@ -19,10 +19,9 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:background="@drawable/shape_bg_green_grey_stroke"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp" >
+            android:padding="2dp" >
 
             <TextView
                 android:id="@+id/col_records_found"
@@ -30,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:paddingLeft="10dp"
+                android:paddingLeft="4dp"
                 android:singleLine="true"
                 android:text="@string/record_found"
                 android:textColor="@color/white"
@@ -38,15 +37,43 @@
                 android:textStyle="bold" />
 
             <Spinner
-                android:id="@+id/distance_filter_chooser"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:id="@+id/search_criteria_chooser"
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_toRightOf="@+id/col_records_found"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="2dp"
+                android:background="@drawable/selector_cl_search_criteria"
+                android:paddingRight="30dp"
+                android:textColor="@color/transparent"
+                android:textSize="@dimen/sp_13"
+                android:visibility="gone" />
+     <!--        
+             <Textview
+                android:id="@+id/search_criteria_chooser"
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="2dp"
+                android:background="@drawable/selector_cl_search_criteria"
+                android:paddingRight="30dp"
+                android:textColor="@color/transparent"
+                android:textSize="@dimen/sp_13"
+                android:visibility="gone" />
+ -->
+            <Spinner
+                android:id="@+id/distance_filter_chooser"
+                android:layout_width="100dp"
+                android:layout_height="26dp"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
+                android:layout_toLeftOf="@id/search_criteria_chooser"
                 android:background="@drawable/dropdown_box"
-                android:paddingRight="25dp"
+                android:gravity="center_vertical"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_13"
                 android:visibility="gone" />
@@ -55,10 +82,12 @@
                 android:id="@+id/nearMe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="8dp"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
+                android:layout_toLeftOf="@id/search_criteria_chooser"
                 android:background="@drawable/around_me_btn"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -68,7 +97,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/cl_header_view"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone" >
 
         <View
             android:layout_width="match_parent"
@@ -86,8 +115,8 @@
             android:id="@+id/play_pasue_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignBottom="@id/subcategory_banner"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_margin="5dp"
             android:background="@drawable/banner_pause"
@@ -146,13 +175,13 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:visibility="gone"
-        android:weightSum="99" >
+        android:weightSum="150" >
 
         <TextView
             android:id="@+id/col_deal_btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="33"
+            android:layout_weight="50"
             android:background="@color/transparent_footer_blue"
             android:clickable="true"
             android:gravity="center"
@@ -170,7 +199,7 @@
             android:id="@+id/col_refine_search"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="33"
+            android:layout_weight="50"
             android:background="@color/transparent_footer_blue"
             android:clickable="true"
             android:gravity="center"
@@ -188,7 +217,7 @@
             android:id="@+id/col_view_on_map"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="33"
+            android:layout_weight="50"
             android:background="@color/transparent_footer_blue"
             android:clickable="true"
             android:gravity="center"
@@ -220,8 +249,7 @@
             android:layout_weight="33.33"
             android:clickable="true"
             android:scaleType="fitXY"
-            android:src="@drawable/group_view_on_map" />
-        -->
+            android:src="@drawable/group_view_on_map" />   -->
     </LinearLayout>
 
     <LinearLayout
@@ -231,14 +259,14 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:visibility="visible"
-        android:weightSum="99" >
+        android:weightSum="150" >
 
         <TextView
             android:id="@+id/col_deal_btn1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="33"
-            android:background="@color/new_footer_color"
+            android:layout_weight="50"
+            android:background="@color/transparent_footer_blue"
             android:clickable="true"
             android:gravity="center"
             android:text="@string/cl_hot_deals"
@@ -255,8 +283,8 @@
             android:id="@+id/col_refine_search1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="33"
-            android:background="@color/new_footer_color"
+            android:layout_weight="50"
+            android:background="@color/transparent_footer_blue"
             android:clickable="true"
             android:gravity="center"
             android:text="Modify Search"
@@ -273,7 +301,7 @@
             android:id="@+id/col_view_on_map1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="33"
+            android:layout_weight="50"
             android:background="@color/transparent_footer_blue"
             android:clickable="true"
             android:gravity="center"

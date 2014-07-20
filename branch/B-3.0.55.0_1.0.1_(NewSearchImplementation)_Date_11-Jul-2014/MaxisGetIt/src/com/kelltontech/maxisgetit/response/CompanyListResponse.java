@@ -11,6 +11,8 @@ import com.kelltontech.framework.model.MaxisResponse;
 import com.kelltontech.maxisgetit.dao.Banner;
 import com.kelltontech.maxisgetit.dao.CategoryRefine;
 import com.kelltontech.maxisgetit.dao.CompanyDesc;
+import com.kelltontech.maxisgetit.dao.SearchAttribute;
+import com.kelltontech.maxisgetit.dao.SearchDisplayIn;
 
 public class CompanyListResponse extends MaxisResponse implements IModel, Parcelable {
 	private int totalrecordFound;
@@ -19,6 +21,8 @@ public class CompanyListResponse extends MaxisResponse implements IModel, Parcel
 	private ArrayList<CompanyDesc> companyArrayList = new ArrayList<CompanyDesc>();
 	private ArrayList<CategoryRefine> categoryList = new ArrayList<CategoryRefine>();
 	private ArrayList<Banner> bannerList = new ArrayList<Banner>();
+	private ArrayList<SearchAttribute> searchAttributeList = new ArrayList<SearchAttribute>();
+	private SearchDisplayIn displayIn;
 	private String search_distance;
 	
 	public String getSearch_distance() {
@@ -70,6 +74,22 @@ public class CompanyListResponse extends MaxisResponse implements IModel, Parcel
 	public void addBanner(Banner banner) {
 		this.bannerList.add(banner);
 	}
+	
+	public ArrayList<SearchAttribute> getSearchAttributeList() {
+		return searchAttributeList;
+	}
+
+	public void addSearchAttributeList(SearchAttribute searchAttribute) {
+		this.searchAttributeList.add(searchAttribute);
+	}
+	
+	public SearchDisplayIn getDisplayIn() {
+		return displayIn;
+	}
+
+	public void setDisplayIn(SearchDisplayIn displayIn) {
+		this.displayIn = displayIn;
+	}
 
 	public int getPagesCount() {
 		int pages = 0;
@@ -82,6 +102,7 @@ public class CompanyListResponse extends MaxisResponse implements IModel, Parcel
 		return pages;
 	}
 
+
 	public CompanyListResponse() { }
 
 	public CompanyListResponse(Parcel in) {
@@ -93,6 +114,8 @@ public class CompanyListResponse extends MaxisResponse implements IModel, Parcel
 		in.readTypedList(companyArrayList, CompanyDesc.CREATOR);
 		in.readTypedList(categoryList, CategoryRefine.CREATOR);
 		in.readTypedList(bannerList, Banner.CREATOR);
+		in.readTypedList(searchAttributeList, SearchAttribute.CREATOR);
+		displayIn = in.readParcelable(SearchDisplayIn.class.getClassLoader());
 		search_distance= in.readString();
 	}
 
@@ -150,14 +173,14 @@ public class CompanyListResponse extends MaxisResponse implements IModel, Parcel
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(errorMessage);
 		dest.writeInt(errorCode);
-//		dest.writeStringList(banner);
 		dest.writeInt(totalrecordFound);
 		dest.writeInt(pageNumber);
 		dest.writeInt(recordsPerPage);
 		dest.writeTypedList(companyArrayList);
 		dest.writeTypedList(categoryList);
 		dest.writeTypedList(bannerList);
+		dest.writeTypedList(searchAttributeList);
+		dest.writeParcelable(displayIn, PARCELABLE_WRITE_RETURN_VALUE);
 		dest.writeString(search_distance);
 	}
-
 }

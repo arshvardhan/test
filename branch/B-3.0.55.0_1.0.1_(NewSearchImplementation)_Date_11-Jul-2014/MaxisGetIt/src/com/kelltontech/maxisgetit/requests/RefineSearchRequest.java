@@ -11,6 +11,8 @@ public class RefineSearchRequest
 	private String categoryId;
 	private String searchKeyword;
 	private boolean isDeal;
+	private String searchIn = "";
+	private String stampId = "";
 	/**
 	 * @return the postData
 	 */
@@ -52,5 +54,29 @@ public class RefineSearchRequest
 	}
 	public void setDeal(boolean isDeal) {
 		this.isDeal = isDeal;
+	}
+	/**
+	 * @return the searchIn
+	 */
+	public String getSearchIn() {
+		return searchIn;
+	}
+	/**
+	 * @param searchIn the searchIn to set
+	 */
+	public void setSearchIn(String searchIn) {
+		this.searchIn = searchIn;
+	}
+	/**
+	 * @return the stampId
+	 */
+	public String getstampId() {
+		return stampId;
+	}
+	/**
+	 * @param stampId the stampId to set
+	 */
+	public void setStampId(String stampId) {
+		this.stampId = stampId;
 	}
 }

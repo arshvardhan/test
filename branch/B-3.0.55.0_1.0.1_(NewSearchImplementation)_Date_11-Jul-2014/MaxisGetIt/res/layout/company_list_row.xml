@@ -3,16 +3,14 @@
     android:id="@+id/cl_row_viewgroup"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="5dp" >
 
     <LinearLayout
         android:id="@+id/cl_row_base_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector_home_list_item_bg"
-        android:paddingBottom="5dp"
-        android:paddingLeft="5dp"
-        android:paddingTop="5dp" >
+        android:background="@drawable/selector_home_list_item_bg" >
 
         <ImageView
             android:id="@+id/cl_company_image"
@@ -24,7 +22,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
             android:orientation="vertical"
             android:paddingLeft="5dp" >
 
@@ -38,7 +35,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:singleLine="true"
                     android:textSize="@dimen/sp_13"
                     android:textStyle="bold" />
@@ -84,7 +80,8 @@
                 android:textSize="@dimen/sp_12" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/cl_rating_bar_container"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
 
@@ -93,8 +90,8 @@
                     style="@style/customFeedbackRatingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
                     android:isIndicator="true"
+                    android:layout_gravity="center_vertical"
                     android:numStars="5"
                     android:rating="0"
                     android:stepSize="0.5" />
@@ -103,12 +100,38 @@
                     android:id="@+id/videoIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:layout_gravity="center_vertical|center"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="6dp"
                     android:src="@drawable/video_icon"
                     android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/cl_view_stamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_gravity="center_vertical"
+                    android:singleLine="true"
+                    android:layout_marginLeft="6dp"
+                    android:clickable="true"
+                    android:text="@string/view_stamp"
+                    android:textColor="@color/head_title_col"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold"
+                    android:visibility="invisible"/>
+
+                <ImageView
+                    android:id="@+id/cl_stamp_image"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginLeft="6dp"
+                    android:src="@drawable/comp_list_loading"
+                    android:contentDescription="@string/view_stamp"
+                    android:visibility="invisible" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
 </RelativeLayout>

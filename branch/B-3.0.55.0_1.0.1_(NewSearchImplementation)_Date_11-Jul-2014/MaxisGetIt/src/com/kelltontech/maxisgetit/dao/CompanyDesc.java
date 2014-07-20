@@ -7,7 +7,6 @@ import com.kelltontech.framework.utils.StringUtil;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-
 public class CompanyDesc implements Parcelable {
 	private String iconUrl;
 	private String compId;
@@ -34,8 +33,9 @@ public class CompanyDesc implements Parcelable {
 	private String source;
 	private String dealDetailUrl;
 	
-	
-
+	private boolean isStamp;
+	private String stampId;
+	private String stampUrl;
 
 	public String getSource() {
 		return source;
@@ -139,7 +139,9 @@ public class CompanyDesc implements Parcelable {
 		video_url = in.readString();
 		source = in.readString();
 		dealDetailUrl = in.readString();
-		
+		isStamp = in.readInt()==1?true:false;
+		stampId = in.readString();
+		stampUrl = in.readString();
 	}
 
 	public static final Creator<CompanyDesc> CREATOR = new Creator<CompanyDesc>() {
@@ -264,7 +266,9 @@ public class CompanyDesc implements Parcelable {
 		dest.writeString(video_url);
 		dest.writeString(source);
 		dest.writeString(dealDetailUrl);
-		
+		dest.writeInt(isStamp?1:0);
+		dest.writeString(stampId);
+		dest.writeString(stampUrl);
 	}
 
 	public String getCity() {
@@ -333,6 +337,33 @@ public class CompanyDesc implements Parcelable {
 
 	public void addAttrGroups(AttributeGroup attrGroup) {
 		this.attrGroups.add(attrGroup);
+	}
+
+	public boolean isStamp() {
+		return isStamp;
+	}
+
+	public void setStamp(int isStamp) {
+		if(isStamp==1)
+			this.isStamp=true;
+		else
+			this.isStamp = false;
+	}
+
+	public String getStampId() {
+		return stampId;
+	}
+
+	public void setStampId(String stampId) {
+		this.stampId = stampId;
+	}
+
+	public String getStampUrl() {
+		return stampUrl;
+	}
+
+	public void setStampUrl(String stampUrl) {
+		this.stampUrl = stampUrl;
 	}
 
 	/* (non-Javadoc)
@@ -458,6 +489,5 @@ public class CompanyDesc implements Parcelable {
 			return false;
 		return true;
 	}
-
 
 }
