@@ -3,6 +3,10 @@ package com.kelltontech.maxisgetit.utils;
 import java.util.HashMap;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -91,7 +95,12 @@ public class AnalyticsHelper {
 		Log.e(AppConstants.FINDIT_ERROR_TAG, message, exception);
 	}
 
-	//Deprecated method
+	/**
+	 * @deprecated method
+	 * @param errorId
+	 * @param message
+	 * @param errorClass
+	 */
 	public static void onError(String errorId, String message, String errorClass) {
 		FlurryAgent.onError(errorId, message, errorClass);
 	}
@@ -105,31 +114,19 @@ public class AnalyticsHelper {
 		Log.i("FlurryAgent version", String.valueOf(v));
 	}
 
-	/*	public static boolean isFacebookAvailable(Activity activity) {
-
-	Intent intent = new Intent(Intent.ACTION_SEND);
-	intent.putExtra(Intent.EXTRA_TEXT, "Test; please ignore");
-	intent.setType("text/plain");
-
-	    final PackageManager pm = activity.getApplicationContext().getPackageManager();
-	    for(ResolveInfo resolveInfo: pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)){
-	        ActivityInfo activityInfo = resolveInfo.activityInfo;
-	        // Log.i("actividad ->", activity.name);
-	        if (activityInfo.name.contains("com.facebook.katana")) {
-	            return true;
-	        }
-	    }
-	    return false;
-	}*/
-
-	// For session tracking on server side as well as for App installation and App launch tracking using Facebook SDK
+	/**
+	 * @description For session tracking on server side as well as for App installation and App launch tracking using Facebook SDK
+	 * @param activity
+	 * @param screenName
+	 */
 	public static void trackSession(Activity activity, String screenName) {
 
 		// To measure total installs (through Adds on Facebook) and total times your app is launched.
-
-		//		if(isFacebookAvailable(activity)) {
-		com.facebook.AppEventsLogger.activateApp(activity, AppConstants.FACEBOOK_APP_ID);
-		//		}
+		if (AppConstants.PRODUCTION) {
+			if (isFacebookAvailable(activity)) {
+				com.facebook.AppEventsLogger.activateApp(activity, AppConstants.FACEBOOK_APP_ID);
+			}
+		}
 
 		// To track session on server side.
 		try {
@@ -159,5 +156,19 @@ public class AnalyticsHelper {
 		} catch (Exception e) {
 			AnalyticsHelper.onError(FlurryEventsConstants.REQUEST_SERVICE_ERR, MyApplication.class.getSimpleName() + " : " + AppConstants.REQUEST_SERVICE_ERROR_MSG, e);
 		}
+	}
+
+	public static boolean isFacebookAvailable(Activity activity) {
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.putExtra(Intent.EXTRA_TEXT, "Test; please ignore");
+		intent.setType("text/plain");
+		final PackageManager pm = activity.getApplicationContext().getPackageManager();
+		for(ResolveInfo resolveInfo: pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)){
+			ActivityInfo activityInfo = resolveInfo.activityInfo;
+			if (activityInfo.name.contains("com.facebook.katana")) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

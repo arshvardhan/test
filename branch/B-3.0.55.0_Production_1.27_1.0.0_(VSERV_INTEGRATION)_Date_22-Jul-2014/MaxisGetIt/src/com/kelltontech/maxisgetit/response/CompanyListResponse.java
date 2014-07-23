@@ -11,8 +11,7 @@ import com.kelltontech.framework.model.MaxisResponse;
 import com.kelltontech.maxisgetit.dao.CategoryRefine;
 import com.kelltontech.maxisgetit.dao.CompanyDesc;
 
-public class CompanyListResponse extends MaxisResponse implements IModel,
-		Parcelable {
+public class CompanyListResponse extends MaxisResponse implements IModel,Parcelable {
 	private int totalrecordFound;
 	private int recordsPerPage;
 	private int pageNumber;

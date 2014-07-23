@@ -2,29 +2,32 @@ package com.kelltontech.maxisgetit.constants;
 
 public interface AppConstants {
 
-	String API_VERSION = "1.7"; // Given for App Version 1.26
+	String API_VERSION = "1.71"; // Given for App Version 1.27 (Vserv Integration)
+	
+	// API_VERSION = "1.7" is given for App Version 1.26 and integrated Facebook SDK
 	// API_VERSION = "1.6" is given for App version 1.25 and provided force update on DealListing Screen
 
 	boolean PRODUCTION = true;
 
-	// String BASE_SERVER = "http://192.168.13.3/webservice/trunk/"; // local
+	// String BASE_SERVER 	= "http://192.168.13.3/webservice/trunk/"; // local
 	// Aaditya
 	//	 String BASE_SERVER = "http://192.168.13.22/webservice/trunk/"; // local
 	// Ankesh
-	// String BASE_SERVER = "http://192.168.13.16/webservice/trunk/"; // local Ankesh
+	// String BASE_SERVER 	= "http://192.168.13.16/webservice/trunk/"; // local Ankesh
 
-	//	String BASE_SERVER = "http://192.168.13.22/webservice/dev1.2/"; // local for Force Update
+	//	String BASE_SERVER 	= "http://192.168.13.22/webservice/dev1.2/"; // local for Force Update
 	// Diwakar
-	// String BASE_SERVER = "http://test.kelltontech.com/getitfms/"; //live dev
-	// String BASE_SERVER = "http://test.kelltontech.com/getitfms_qa/"; //QA
-	//	 String BASE_SERVER = "https://staging.findit.com.my/";// staging new
-	//	 String BASE_SERVER = "http://203.115.222.57:8070/"; //staging 8070
-
-	//	String BASE_SERVER = "http://203.115.222.57/"; // staging
+	// String BASE_SERVER 	= "http://test.kelltontech.com/getitfms/"; //live dev
+	// String BASE_SERVER 	= "http://test.kelltontech.com/getitfms_qa/"; //QA
+	// String BASE_SERVER 	= "https://staging.findit.com.my/";// staging new
+	// String BASE_SERVER 	= "http://203.115.222.57:8070/"; //staging 8070
+	// String BASE_SERVER 	= "http://203.115.222.103/"; 									// staging
+	// String BASE_SERVER	= "http://203.115.222.57/"; 									// pre-production
+	String BASE_SERVER 		= "https://webservice.findit.com.my/";							// Production
 	String LIFE_CYCLE_WEBVIEW_SERVER = "http://203.115.222.57:8080/users/didLifeCycleApp/";
 	// String BASE_SERVER = "http://203.115.222.69/";// Pre Production
 
-	String BASE_SERVER = "https://webservice.findit.com.my/";// Production
+	//	String BASE_SERVER = "https://webservice.findit.com.my/";// Production
 	// new
 
 	// String BASE_SERVER = "http://192.168.13.16/webservice/trunk/";//local
