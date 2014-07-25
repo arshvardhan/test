@@ -14,7 +14,7 @@ public interface AppConstants {
 	* API_VERSION : "1.6" is given for App version 1.25 and provided force update on DealListing Screen
 	*/	
 	
-	String API_VERSION 				= "1.8"; // Given for App Version 1.27
+	String API_VERSION = "1.71"; // Given for App Version 1.27 (Vserv Integration)
 	
 	// String BASE_SERVER 			= "http://192.168.13.3/webservice/trunk/"; 						// local Aaditya
 	// String BASE_SERVER 			= "http://192.168.13.22/webservice/trunk/"; 					// local Ankesh

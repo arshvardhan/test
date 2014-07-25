@@ -5,6 +5,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import mobi.vserv.android.trackingengine.VservTrackingManager;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -115,6 +117,9 @@ public class SplashActivity extends MaxisMainActivity {
 		}
 
 		printHashKey();
+		
+		// The following method call is made to track App installs via Vserv App Promotion and Campaign
+	    VservTrackingManager.process(this);
 	}
 
 	@Override

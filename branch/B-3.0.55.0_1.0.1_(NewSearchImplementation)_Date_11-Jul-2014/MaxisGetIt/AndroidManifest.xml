@@ -61,9 +61,32 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyD_YqXS8m5-0B6KJNo6ALDZSgDKNXy-VSM" />
         <!-- AIzaSyA-jAFl4en2sWyoYLbMY1Lt8nPpoNRV32M -->
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <service
             android:name="com.paypal.android.sdk.payments.PayPalService"
             android:exported="false" />
+
+        <receiver
+            android:name="mobi.vserv.android.trackingengine.VservCustomInstallReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <!--
+             <receiver
+            android:name=".receiver.VSERVCustomReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+        -->
 
         <activity android:name="com.paypal.android.sdk.payments.PaymentActivity" />
         <activity android:name="com.paypal.android.sdk.payments.LoginActivity" />
@@ -197,7 +220,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
-        </activity>
+        </activity>
         -->
         <activity
             android:name="com.kelltontech.maxisgetit.ui.activities.ClassifiedScrollActivity"
