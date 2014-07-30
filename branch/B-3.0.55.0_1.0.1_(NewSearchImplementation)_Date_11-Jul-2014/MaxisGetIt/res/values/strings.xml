@@ -63,7 +63,7 @@
     <string name="cd_msg_data_usage">You might incur data charges for use beyond this point.</string>
     <string name="cd_msg_add_to_fav">Please log in first to add this company to your favourite list.</string>
     <string name="cd_msg_remove_from_fav">Please log in first to remove this company to your favourite list.</string>
-    <string name="cd_you_may_also_browse">You may also browse</string>
+    <string name="cd_you_may_also_browse">Featured Companies</string>
 
     <!-- FavCompanyList activity -->
     <string name="fav_companies_found"><u>listing(s) added as your favourites.</u></string>
@@ -231,7 +231,7 @@
     <string name="not_available">Not Available</string>
     <string name="country_code">+60</string>
     <string name="country_code_excluding_plus">60</string>
-    <string name="msg_dont_ask_me_again">Don\'t ask me again</string>
+    <string name="msg_dont_ask_me_again">  Don\'t ask me again</string>
 
     <!-- verify registration screen -->
     <string name="dear_user">Dear User</string>

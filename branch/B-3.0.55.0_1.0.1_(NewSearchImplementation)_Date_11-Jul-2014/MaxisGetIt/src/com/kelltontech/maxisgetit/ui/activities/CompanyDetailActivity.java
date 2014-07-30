@@ -215,29 +215,6 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 		mCompanyDetail 		= bundle.getParcelable(AppConstants.COMP_DETAIL_DATA);
 		store 				= MaxisStore.getStore(this);
 
-		if (!mCompanyDetail.isPaid()) {
-			
-			mPaidCompanyListContainer 	=	(LinearLayout) 	findViewById(R.id.cd_layout_paid_comp_list);
-			mPaidCompanyListView		=	(ListView)		findViewById(R.id.cd_paid_company_list);
-			
-			mPaidCompanyListView.setOnItemClickListener(new OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-						CompanyDetailController companyDetailController = new CompanyDetailController(CompanyDetailActivity.this, Events.PAID_COMPANY_DETAIL_EVENT);
-						String id = ((PaidCompany)mPaidCompListAdapter.getItem(arg2)).getId() ;
-						DetailRequest detailRequest = new DetailRequest(CompanyDetailActivity.this, id, false,((PaidCompany) mPaidCompListAdapter.getItem(arg2)).getL3Catid());
-						startSppiner();
-						companyDetailController.requestService(detailRequest);
-				}
-			});
-			
-			PaidCompanyListController listContrller = new PaidCompanyListController(CompanyDetailActivity.this, Events.PAID_COMPANY_LIST_EVENT);
-			if((!StringUtil.isNullOrEmpty(mCompanyDetail.getCatId()))) {
-				listContrller.requestService(mCompanyDetail.getCatId());
-				startSppiner();
-			}
-		}
-
 		advanceSearchLayout.setVisibility(View.GONE);
 		currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity + "</b>"));
 
@@ -319,6 +296,31 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 	}
 
 	private void setData() {
+		
+		if (mCompanyDetail != null && !mCompanyDetail.isPaid()) {
+			
+			mPaidCompanyListContainer 	=	(LinearLayout) 	findViewById(R.id.cd_layout_paid_comp_list);
+			mPaidCompanyListView		=	(ListView)		findViewById(R.id.cd_paid_company_list);
+			
+			mPaidCompanyListView.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+						CompanyDetailController companyDetailController = new CompanyDetailController(CompanyDetailActivity.this, Events.PAID_COMPANY_DETAIL_EVENT);
+						String id = ((PaidCompany)mPaidCompListAdapter.getItem(arg2)).getId() ;
+						DetailRequest detailRequest = new DetailRequest(CompanyDetailActivity.this, id, false,((PaidCompany) mPaidCompListAdapter.getItem(arg2)).getL3Catid());
+						startSppiner();
+						companyDetailController.requestService(detailRequest);
+				}
+			});
+			
+			PaidCompanyListController listContrller = new PaidCompanyListController(CompanyDetailActivity.this, Events.PAID_COMPANY_LIST_EVENT);
+			if((!StringUtil.isNullOrEmpty(mCompanyDetail.getCatId()))) {
+				listContrller.requestService(mCompanyDetail.getCatId());
+				startSppiner();
+			}
+		} else {
+			stopSppiner();
+		}
 
 		mSearchContainer 					= (LinearLayout) 	findViewById(R.id.search_box_container);
 		mSearchToggler 						= (ImageView) 		findViewById(R.id.search_toggler);
@@ -475,11 +477,12 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 		} else if (msg.arg2 == Events.COMPANY_DETAIL) {
 			if (msg.arg1 == 1) {
 				showFinalDialog((String) msg.obj);
+				stopSppiner();
 			} else {
 				mCompanyDetail = (CompanyDetail) msg.obj;
 				setData();
 			}
-			stopSppiner();
+		
 		} else if (msg.arg2 == Events.COMPANY_DETAIL_ADD_FAV) {
 			stopSppiner();
 			if (msg.arg1 == 1) {
