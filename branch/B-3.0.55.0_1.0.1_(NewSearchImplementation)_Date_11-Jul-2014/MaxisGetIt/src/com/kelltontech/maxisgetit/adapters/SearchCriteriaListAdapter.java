@@ -94,7 +94,9 @@ public class SearchCriteriaListAdapter extends BaseAdapter implements OnClickLis
 			if (displayIn.trim().equalsIgnoreCase(searchAttribute.getType())) {
 				model.searchCriteriaRadioBtn.setChecked(true);
 				mSelectedPosition = position;
-			} 
+			} else {
+				model.searchCriteriaRadioBtn.setChecked(false);
+			}
 			model.searchCriteriaRadioBtn.setOnClickListener(new OnClickListener() {
 
 				@Override

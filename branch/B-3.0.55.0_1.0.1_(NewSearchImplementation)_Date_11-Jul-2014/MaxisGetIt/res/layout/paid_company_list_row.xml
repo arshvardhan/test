@@ -71,8 +71,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textSize="@dimen/sp_12"
-                android:textStyle="bold" />
+                android:textSize="@dimen/sp_12" />
 
             <!--
                  <TextView

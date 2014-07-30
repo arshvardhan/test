@@ -319,7 +319,8 @@ public class GenralRequest extends MaxisBaseRequest {
 	}
 
 	public Hashtable<String, String> getPaidCompListHeaders(String l3CatId, String screenName) {
-		Hashtable<String, String> ht = getDefaultHeaders(screenName);
+		Hashtable<String, String> ht = getDefaultHeadersWithGPS();
+		ht.put(AppConstants.KEY_PAGE_REVIEW, screenName + "");
 		ht.put(KEY_L3CATEGORY_ID, l3CatId);
 		return ht;
 	}
