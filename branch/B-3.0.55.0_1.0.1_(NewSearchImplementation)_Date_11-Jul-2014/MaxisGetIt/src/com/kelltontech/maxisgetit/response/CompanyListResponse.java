@@ -18,13 +18,13 @@ public class CompanyListResponse extends MaxisResponse implements IModel, Parcel
 	private int totalrecordFound;
 	private int recordsPerPage;
 	private int pageNumber;
-	private ArrayList<CompanyDesc> companyArrayList = new ArrayList<CompanyDesc>();
-	private ArrayList<CategoryRefine> categoryList = new ArrayList<CategoryRefine>();
-	private ArrayList<Banner> bannerList = new ArrayList<Banner>();
-	private ArrayList<SearchAttribute> searchAttributeList = new ArrayList<SearchAttribute>();
+	private ArrayList<CompanyDesc> companyArrayList 		= new ArrayList<CompanyDesc>();
+	private ArrayList<CategoryRefine> categoryList 			= new ArrayList<CategoryRefine>();
+	private ArrayList<Banner> bannerList 					= new ArrayList<Banner>();
+	private ArrayList<SearchAttribute> searchAttributeList 	= new ArrayList<SearchAttribute>();
 	private SearchDisplayIn displayIn;
 	private String search_distance;
-	
+
 	public String getSearch_distance() {
 		return search_distance;
 	}
@@ -38,24 +38,24 @@ public class CompanyListResponse extends MaxisResponse implements IModel, Parcel
 	}
 
 	public void appendCompListAtEnd(ArrayList<CompanyDesc> compList , boolean isFromFavList) {
-		
+
 		if(isFromFavList)
 		{
-		LinkedHashMap<String, Object> noDuplicates = new LinkedHashMap<String, Object>();
-		for (CompanyDesc companyDesc : companyArrayList) {
-			noDuplicates.put(companyDesc.getCompId_catId(), companyDesc);
-		}
-		for (CompanyDesc companyDesc : compList) {
-			noDuplicates.put(companyDesc.getCompId_catId(), companyDesc);
-		}
-		companyArrayList.removeAll(companyArrayList);
-		for (String key : noDuplicates.keySet()) {
-			companyArrayList.add((CompanyDesc) noDuplicates.get(key));
-		}
+			LinkedHashMap<String, Object> noDuplicates = new LinkedHashMap<String, Object>();
+			for (CompanyDesc companyDesc : companyArrayList) {
+				noDuplicates.put(companyDesc.getCompId_catId(), companyDesc);
+			}
+			for (CompanyDesc companyDesc : compList) {
+				noDuplicates.put(companyDesc.getCompId_catId(), companyDesc);
+			}
+			companyArrayList.removeAll(companyArrayList);
+			for (String key : noDuplicates.keySet()) {
+				companyArrayList.add((CompanyDesc) noDuplicates.get(key));
+			}
 		}
 		else
 		{
-		 companyArrayList.addAll(compList);
+			companyArrayList.addAll(compList);
 		}
 	}
 
@@ -66,7 +66,7 @@ public class CompanyListResponse extends MaxisResponse implements IModel, Parcel
 	public void addCategory(CategoryRefine category) {
 		this.categoryList.add(category);
 	}
-	
+
 	public ArrayList<Banner> getBannerList() {
 		return bannerList;
 	}
@@ -74,7 +74,7 @@ public class CompanyListResponse extends MaxisResponse implements IModel, Parcel
 	public void addBanner(Banner banner) {
 		this.bannerList.add(banner);
 	}
-	
+
 	public ArrayList<SearchAttribute> getSearchAttributeList() {
 		return searchAttributeList;
 	}
@@ -82,7 +82,7 @@ public class CompanyListResponse extends MaxisResponse implements IModel, Parcel
 	public void addSearchAttributeList(SearchAttribute searchAttribute) {
 		this.searchAttributeList.add(searchAttribute);
 	}
-	
+
 	public SearchDisplayIn getDisplayIn() {
 		return displayIn;
 	}

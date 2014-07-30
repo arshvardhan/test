@@ -8,7 +8,7 @@
     android:paddingTop="5dp" >
 
     <LinearLayout
-        android:id="@+id/cl_row_base_layout"
+        android:id="@+id/pcl_row_base_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_home_list_item_bg"
@@ -16,7 +16,7 @@
         android:paddingRight="5dp" >
 
         <ImageView
-            android:id="@+id/cl_company_image"
+            android:id="@+id/pcl_company_image"
             android:layout_width="65dp"
             android:layout_height="65dp"
             android:layout_gravity="center_vertical"
@@ -32,8 +32,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <TextView
-                    android:id="@+id/cl_comp_distance"
+                <!--
+                     <TextView
+                    android:id="@+id/pcl_comp_distance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -41,13 +42,13 @@
                     android:singleLine="true"
                     android:textSize="@dimen/sp_13"
                     android:textStyle="bold" />
+                -->
 
                 <TextView
-                    android:id="@+id/cl_company_title"
+                    android:id="@+id/pcl_company_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_toLeftOf="@id/cl_comp_distance"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textColor="@color/head_title_col"
@@ -56,7 +57,7 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/cl_company_desc"
+                android:id="@+id/pcl_company_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -65,7 +66,17 @@
                 android:textSize="@dimen/sp_12" />
 
             <TextView
-                android:id="@+id/cl_comp_addi_info"
+                android:id="@+id/pcl_comp_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold" />
+
+            <!--
+                 <TextView
+                android:id="@+id/pcl_comp_addi_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -75,13 +86,16 @@
                 android:textSize="@dimen/sp_12" />
 
             <TextView
-                android:id="@+id/cl_comp_addi_info2"
+                android:id="@+id/pcl_comp_addi_info2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:textColor="@color/app_txt"
                 android:textSize="@dimen/sp_12" />
+            -->
 
+
+            <!--
             <LinearLayout
                 android:id="@+id/cl_rating_bar_container"
                 android:layout_width="match_parent"
@@ -134,10 +148,12 @@
                     android:src="@drawable/comp_list_loading"
                     android:visibility="invisible" />
             </LinearLayout>
+            -->
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
+    <!--
+         <TextView
         android:id="@+id/cl_view_stamp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -155,5 +171,6 @@
         android:textSize="@dimen/sp_12"
         android:textStyle="bold"
         android:visibility="gone" />
+    -->
 
 </RelativeLayout>

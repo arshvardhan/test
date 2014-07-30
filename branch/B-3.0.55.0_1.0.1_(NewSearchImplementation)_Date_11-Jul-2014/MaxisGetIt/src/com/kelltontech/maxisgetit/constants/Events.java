@@ -79,4 +79,7 @@ public class Events {
 	public static final int BANNER_LANDING_SEARCH_EVENT = 65;
 	
 	public static final int COMBIND_LISTING_VIEW_MORE_COMPANY_EVENT = 66;
+	
+	public static final int PAID_COMPANY_LIST_EVENT = 67;
+	public static final int PAID_COMPANY_DETAIL_EVENT = 68;
 }

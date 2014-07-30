@@ -63,7 +63,8 @@ public class GenralRequest extends MaxisBaseRequest {
 	public static final String MY_ACCOUNT_DASHBOARD = "myaccount.json";
 	public static final String MY_ACCOUNT_DASHBOARD_LIFECYCLE = "mydashboard.json";
 	public static final String BANNER_NAVIGATION_METHOD = "logBannerReport.json";
-
+	public static final String PAID_COMPANY_LIST_METHOD = "getAssociatedPaidCompanies.json";
+	
 	private String deviceId = MyApplication.getDeviceId();
 
 	private static final String KEY_APP_CODE = "app_code";
@@ -314,6 +315,12 @@ public class GenralRequest extends MaxisBaseRequest {
 		ht.put(KEY_COMP_ID, compId);
 		ht.put(KEY_POST_DEAL_CATEGORY_ID, catId);
 		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		return ht;
+	}
+
+	public Hashtable<String, String> getPaidCompListHeaders(String l3CatId, String screenName) {
+		Hashtable<String, String> ht = getDefaultHeaders(screenName);
+		ht.put(KEY_L3CATEGORY_ID, l3CatId);
 		return ht;
 	}
 }

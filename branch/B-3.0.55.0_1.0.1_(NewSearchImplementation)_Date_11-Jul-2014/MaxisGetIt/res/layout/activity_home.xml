@@ -9,14 +9,11 @@
     <include
         android:id="@+id/header_base_activity"
         layout="@layout/header_base_screen" />
-<!-- 
+    <!--
     <include
         android:id="@+id/footer_base_screen"
-        layout="@layout/footer_home_screen" /> -->
-    
-     <include
-        android:id="@+id/footer_base_screen"
-        layout="@layout/footer_new" />
+        layout="@layout/footer_home_screen" />
+    -->
 
     <com.kelltontech.maxisgetit.ui.widgets.CustomGallery
         android:id="@+id/home_gallery"
@@ -32,25 +29,27 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_below="@id/home_gallery"
-        android:background="@color/vertical_line_seprator" 
-        android:visibility="gone"/>
+        android:background="@color/vertical_line_seprator"
+        android:visibility="gone" />
 
-    <ListView
+        <ListView
         android:id="@+id/home_category_list"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/btn_photo_contest"
+        android:layout_marginBottom="-20dp"
         android:layout_below="@id/home_vertical_seprator"
         android:cacheColorHint="@android:color/transparent"
         android:divider="@null"
         android:visibility="visible" />
-
+    
     <Button
         android:id="@+id/btn_photo_contest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/footer_base_screen"
         android:layout_centerHorizontal="true"
+        android:layout_below="@id/home_category_list"
+        android:layout_alignParentBottom="true"
+        android:layout_alignWithParentIfMissing="true"
         android:layout_margin="20dp"
         android:background="@drawable/btn_selector"
         android:paddingBottom="20dp"
@@ -60,8 +59,11 @@
         android:text="@string/header_photo_contest"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:textStyle="normal"
-        android:visibility="gone" >
+        android:textStyle="normal" >
     </Button>
+
+    <include
+        android:id="@+id/footer_base_screen"
+        layout="@layout/footer_new" />
 
 </RelativeLayout>

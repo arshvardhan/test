@@ -35,6 +35,7 @@ public class CompanyListParser extends AbstractSAXParser {
 	public static final String TAG_SEARCH_ATTRIBUTE_TYPE = "Type";
 	public static final String TAG_SEARCH_ATTRIBUTE_KEYWORD = "Keyword";
 	public static final String TAG_SEARCH_ATTRIBUTE_RECORD_FOUND = "RecordFound";
+	public static final String TAG_SEARCH_ATTRIBUTE_LABEL = "Label";
 	
 	public static final String TAG_DISPLAY_IN = "DisplayIn";
 	public static final String TAG_DISPLAY_IN_TYPE = "Type";
@@ -69,6 +70,7 @@ public class CompanyListParser extends AbstractSAXParser {
 	private static final String TAG_PIN = "PinCode";
 	private static final String TAG_LOCALITY = "Locality";
 	private static final String TAG_CONTACT_NO = "ContactNumber";
+	private static final String TAG_ATTRIBUTE_GROUP = "Attribute_Group";
 	private static final String TAG_GROUP_VAL = "Values";
 	private static final String TAG_ATTR_NAME = "Label";
 	private static final String TAG_ATTR_VAL = "Value";
@@ -205,6 +207,8 @@ public class CompanyListParser extends AbstractSAXParser {
 			attribute.setType(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_SEARCH_ATTRIBUTE_KEYWORD)&& parent.equalsIgnoreCase("Results,"+TAG_SEARCH_CRITERIA+","+TAG_SEARCH_ATTRIBUTE)) {
 			attribute.setKeyword(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_SEARCH_ATTRIBUTE_LABEL)&& parent.equalsIgnoreCase("Results,"+TAG_SEARCH_CRITERIA+","+TAG_SEARCH_ATTRIBUTE)) {
+			attribute.setLabel(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_DISPLAY_IN)) {
 			if (displayIn != null && !StringUtil.isNullOrEmpty(displayIn.getType()))
 				clResponse.setDisplayIn(displayIn);
@@ -214,14 +218,14 @@ public class CompanyListParser extends AbstractSAXParser {
 			displayIn.setKeyword(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_DISPLAY_IN_STAMP_ID) && parent.equalsIgnoreCase("Results,"+TAG_DISPLAY_IN)) {
 			displayIn.setStampId(getNodeValue());
-		} else if (localName.equalsIgnoreCase(TAG_ATTR_NAME)) {
+		} else if (localName.equalsIgnoreCase(TAG_ATTR_NAME) && parent.equalsIgnoreCase("Results,"+COMPANY_ROOT+","+TAG_ATTRIBUTE_GROUP+","+TAG_GROUP_VAL)) {
 			attrGroup.setLable(getNodeValue());
-		} else if (localName.equalsIgnoreCase(TAG_ATTR_VAL)) {
+		} else if (localName.equalsIgnoreCase(TAG_ATTR_VAL) && parent.equalsIgnoreCase("Results,"+COMPANY_ROOT+","+TAG_ATTRIBUTE_GROUP+","+TAG_GROUP_VAL)) {
 			if(attrGroup != null)
 				attrGroup.addValue(getNodeValue());
 			else
 				compDesc.appendAttributes(getNodeValue());
-		} else if(localName.equalsIgnoreCase(TAG_GROUP_VAL)){
+		} else if(localName.equalsIgnoreCase(TAG_GROUP_VAL) && parent.equalsIgnoreCase("Results,"+COMPANY_ROOT+","+TAG_ATTRIBUTE_GROUP)) {
 			compDesc.addAttrGroups(attrGroup);
 		} else if (localName.equalsIgnoreCase(TAG_CATEGORY_ID)) {
 			compDesc.setCat_id(getNodeValue());

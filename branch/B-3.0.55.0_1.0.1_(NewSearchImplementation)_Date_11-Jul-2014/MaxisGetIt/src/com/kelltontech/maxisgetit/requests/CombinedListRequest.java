@@ -173,7 +173,7 @@ public class CombinedListRequest implements Parcelable {
 		}
 		if (isBySearch()) {
 			if (isCompanyListing) {
-				if((!StringUtil.isNullOrEmpty(stampId)) && (!StringUtil.isNullOrEmpty(searchCriteria)) && "Stamp".equalsIgnoreCase(searchCriteria)) {
+				if((!StringUtil.isNullOrEmpty(stampId))/* && (!StringUtil.isNullOrEmpty(searchCriteria)) && "Stamp".equalsIgnoreCase(searchCriteria)*/) {
 					return METHOD_COMPANY_LIST_VIEW_MORE_COMPANY;
 				} else {
 					return METHOD_COMPANY_LIST_BY_SEARCH;
@@ -196,20 +196,20 @@ public class CombinedListRequest implements Parcelable {
 				+ MaxisBaseRequest.VALUE_PLATFORM);
 		ht.append("&" + MaxisBaseRequest.KEY_SCREEN_TYPE + "=" + mScreenType);
 		ht.append("&" + MaxisBaseRequest.KEY_LANGUAGE + "=" + localeCode);
-		/*		ht.append("&" + MaxisBaseRequest.KEY_LATITUDE + "="
+				ht.append("&" + MaxisBaseRequest.KEY_LATITUDE + "="
 				+ GPS_Data.getLatitude() + "");
 		ht.append("&" + MaxisBaseRequest.KEY_LONGITUDE + "="
-				+ GPS_Data.getLongitude() + "");*/
+				+ GPS_Data.getLongitude() + "");
 
-		ht.append("&" + MaxisBaseRequest.KEY_LATITUDE + "="
+	/*	ht.append("&" + MaxisBaseRequest.KEY_LATITUDE + "="
 				+ "3.1357399471" + "");
 		ht.append("&" + MaxisBaseRequest.KEY_LONGITUDE + "="
 				+ "101.6880963379" + "");
-
+*/
 		ht.append("&" + MaxisBaseRequest.DEVICE_ID + "=" + deviceId + "");
 
 		if (isBySearch) {
-			if((!StringUtil.isNullOrEmpty(stampId)) && (!StringUtil.isNullOrEmpty(searchCriteria)) && "Stamp".equalsIgnoreCase(searchCriteria)) {
+			if((!StringUtil.isNullOrEmpty(stampId))/* && (!StringUtil.isNullOrEmpty(searchCriteria)) && "Stamp".equalsIgnoreCase(searchCriteria)*/) {
 				ht.append("&" + KEY_STAMP_ID + "=" + stampId + "");
 				//				ht.append("&" + KEY_SEARCH_IN + "=" + searchCriteria + "");
 				ht.append("&" + AppConstants.KEY_PAGE_REVIEW + "=" + AppConstants.Stamp_Company_listing + "");
@@ -251,11 +251,11 @@ public class CombinedListRequest implements Parcelable {
 		ht.put(MaxisBaseRequest.KEY_PLATFORM, MaxisBaseRequest.VALUE_PLATFORM);
 		ht.put(MaxisBaseRequest.KEY_SCREEN_TYPE, mScreenType);
 		ht.put(MaxisBaseRequest.KEY_LANGUAGE, localeCode);
-		//		 ht.put(MaxisBaseRequest.KEY_LATITUDE, GPS_Data.getLatitude() + "");
-		//		 ht.put(MaxisBaseRequest.KEY_LONGITUDE, GPS_Data.getLongitude() + "");
+				 ht.put(MaxisBaseRequest.KEY_LATITUDE, GPS_Data.getLatitude() + "");
+				 ht.put(MaxisBaseRequest.KEY_LONGITUDE, GPS_Data.getLongitude() + "");
 
-		ht.put(MaxisBaseRequest.KEY_LATITUDE, "3.1357399471"); 
-		ht.put(MaxisBaseRequest.KEY_LONGITUDE, "101.6880963379");
+//		ht.put(MaxisBaseRequest.KEY_LATITUDE, "3.1357399471"); 
+//		ht.put(MaxisBaseRequest.KEY_LONGITUDE, "101.6880963379");
 
 		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		// ht.put(AppConstants.KEY_PAGE_REVIEW, AppConstants.Company_listing);
@@ -264,7 +264,7 @@ public class CombinedListRequest implements Parcelable {
 				ht.put(KEY_GROUP_ACTION_TYPE, groupActionType);
 			if (!StringUtil.isNullOrEmpty(groupType))
 				ht.put(KEY_RESULT_TYPE, groupType);
-			if((!StringUtil.isNullOrEmpty(stampId)) && (!StringUtil.isNullOrEmpty(searchCriteria)) && "Stamp".equalsIgnoreCase(searchCriteria)) {
+			if((!StringUtil.isNullOrEmpty(stampId))/* && (!StringUtil.isNullOrEmpty(searchCriteria)) && "Stamp".equalsIgnoreCase(searchCriteria)*/) {
 				ht.put(KEY_STAMP_ID, stampId + "");
 				//				ht.put(KEY_SEARCH_IN, searchCriteria);
 				ht.put(AppConstants.KEY_PAGE_REVIEW, AppConstants.Stamp_Company_listing);

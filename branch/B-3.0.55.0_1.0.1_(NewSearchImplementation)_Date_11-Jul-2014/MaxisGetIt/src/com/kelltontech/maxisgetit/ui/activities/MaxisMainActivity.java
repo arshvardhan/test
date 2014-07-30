@@ -135,7 +135,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		mListRequest.setCompanyListing(true);
 		if (event == Events.COMBIND_LISTING_VIEW_MORE_COMPANY_EVENT) {
 			mListRequest.setStampId(searchText.trim().split("-")[0].trim());
-			mListRequest.setKeywordOrCategoryId(searchText.split("-")[1].trim());
+			mListRequest.setKeywordOrCategoryId((searchText.split("-")[1].trim().equals("null")) ? "" :searchText.split("-")[1].trim());
 		} else
 			mListRequest.setKeywordOrCategoryId(Uri.encode(searchText.trim()));
 		HashMap<String,String>	map = new HashMap<String,String>();

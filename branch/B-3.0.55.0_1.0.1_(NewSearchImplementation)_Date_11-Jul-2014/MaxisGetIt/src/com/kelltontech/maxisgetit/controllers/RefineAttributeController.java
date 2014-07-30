@@ -51,7 +51,7 @@ public class RefineAttributeController extends BaseServiceController {
 			RefineSearchRequest refineSearchRequest = (RefineSearchRequest) requestData;
 
 			ServiceRequest serviceRq = new ServiceRequest();
-			serviceRq.setRequestData(refineSearchRequest.getPostData());
+			serviceRq.setRequestData(requestData);
 			serviceRq.setServiceController(this);
 			serviceRq.setDataType(mEventType);
 			serviceRq.setPriority(HttpClientConnection.PRIORITY.LOW);

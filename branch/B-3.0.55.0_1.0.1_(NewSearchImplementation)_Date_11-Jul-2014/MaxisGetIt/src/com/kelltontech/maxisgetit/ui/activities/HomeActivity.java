@@ -67,8 +67,7 @@ public class HomeActivity extends MaxisMainActivity {
 	private ImageView mSearchBtn;
 	private EditText mSearchEditText;
 	private RootCategoryAdapter mListAdapter;
-	private ImageView mHomeIconView, mFacebookIconView, mTwitterIconView,
-			mProfileIconView, mLogo;
+	private ImageView mHomeIconView, mFacebookIconView, mTwitterIconView, mProfileIconView, mLogo;
 	private CustomGallery mImgGallery;
 	private Timer mGalleryFlipperTimer;
 	private Intent mLocationServiceIntent;
