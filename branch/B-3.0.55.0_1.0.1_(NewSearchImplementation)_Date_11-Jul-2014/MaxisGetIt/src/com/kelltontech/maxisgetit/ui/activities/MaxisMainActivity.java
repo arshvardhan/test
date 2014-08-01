@@ -137,7 +137,7 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 			mListRequest.setStampId(searchText.trim().split("-")[0].trim());
 			mListRequest.setKeywordOrCategoryId((searchText.split("-")[1].trim().equals("null")) ? "" :searchText.split("-")[1].trim());
 		} else
-			mListRequest.setKeywordOrCategoryId(Uri.encode(searchText.trim()));
+			mListRequest.setKeywordOrCategoryId(searchText.trim());  //
 		HashMap<String,String>	map = new HashMap<String,String>();
 		map.put(FlurryEventsConstants.HOME_SEARCH_TEXT, searchText);
 		AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SCREEN_SEARCH,map);

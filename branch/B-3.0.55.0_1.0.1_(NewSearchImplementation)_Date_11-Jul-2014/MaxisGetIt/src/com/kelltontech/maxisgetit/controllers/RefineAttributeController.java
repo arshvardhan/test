@@ -64,7 +64,7 @@ public class RefineAttributeController extends BaseServiceController {
 				url += GenralRequest.REFINE_SEARCH_LOCALITY_METHOD;
 				url += baseRequest.getUrlAppendableDefaultHeaders() + "&category_id=" + refineSearchRequest.getCategoryId();
 				if (refineSearchRequest.getSearchKeyword() != null) {
-					url += "&keyword=" + Uri.encode(refineSearchRequest.getSearchKeyword());
+					url += "&keyword=" + refineSearchRequest.getSearchKeyword();
 				}
 				if (!StringUtil.isNullOrEmpty(refineSearchRequest.getstampId())) {
 					url += "&stampId=" + refineSearchRequest.getstampId() + "";

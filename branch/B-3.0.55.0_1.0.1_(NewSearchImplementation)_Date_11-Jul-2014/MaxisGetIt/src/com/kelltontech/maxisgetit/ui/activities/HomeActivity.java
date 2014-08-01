@@ -208,8 +208,8 @@ public class HomeActivity extends MaxisMainActivity {
 		// showDialogWithTitle(getResources().getString(R.string.disclaimer),
 		// getResources().getString(R.string.disclaimer_text));
 
-		View btnPhotoContest = findViewById(R.id.btn_photo_contest);
-		btnPhotoContest.setOnClickListener(this);
+//		View btnPhotoContest = findViewById(R.id.btn_photo_contest);
+//		btnPhotoContest.setOnClickListener(this);
 		// btnPhotoContest.setVisibility(View.GONE);
 
 		if (isLocationAware()) {
@@ -682,11 +682,11 @@ public class HomeActivity extends MaxisMainActivity {
 			AnalyticsHelper.logEvent(FlurryEventsConstants.TWITTER_CLICK);
 			checkPreferenceAndOpenBrowser(AppConstants.TWITTER_PAGE_URL);
 			break;
-		case R.id.btn_photo_contest:
+/*		case R.id.btn_photo_contest:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.PHOTO_CONTEST_CLICK);
 			startActivity(new Intent(HomeActivity.this,
 					ContestHomeActivity.class));
-			break;
+			break;*/
 
 		case R.id.logo:
 			startActivity(new Intent(HomeActivity.this, GetItInfoActivity.class));

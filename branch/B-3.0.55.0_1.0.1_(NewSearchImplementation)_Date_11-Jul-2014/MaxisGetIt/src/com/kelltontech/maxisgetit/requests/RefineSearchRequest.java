@@ -2,6 +2,8 @@ package com.kelltontech.maxisgetit.requests;
 
 import org.json.JSONObject;
 
+import android.net.Uri;
+
 /**
  * @author monish.agarwal
  */
@@ -42,12 +44,14 @@ public class RefineSearchRequest
 	 */
 	public String getSearchKeyword() {
 		return searchKeyword;
+//		return Uri.decode(searchKeyword);
 	}
 	/**
 	 * @param searchKeyword the searchKeyword to set
 	 */
 	public void setSearchKeyword(String searchKeyword) {
-		this.searchKeyword = searchKeyword;
+//		this.searchKeyword = searchKeyword;
+		this.searchKeyword = Uri.encode(searchKeyword);
 	}
 	public boolean isDeal() {
 		return isDeal;

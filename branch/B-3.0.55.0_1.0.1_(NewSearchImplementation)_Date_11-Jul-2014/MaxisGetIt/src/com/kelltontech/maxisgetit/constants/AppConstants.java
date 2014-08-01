@@ -19,8 +19,10 @@ public interface AppConstants {
 	
 	// String BASE_SERVER 			= "http://192.168.13.3/webservice/trunk/"; 						// local Aaditya
 	// String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch_search1.3/";
+//	   String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch1.4/";
 	// String BASE_SERVER 			= "http://192.168.13.22/webservice/trunk/"; 					// local Ankesh
 	// String BASE_SERVER 			= "http://192.168.13.16/webservice/trunk/"; 					// local Ankesh
+	
 	// String BASE_SERVER 			= "http://192.168.13.22/webservice/dev1.2/"; 					// local Ankesh for Force Update
 	// String BASE_SERVER 			= "http://test.kelltontech.com/getitfms/"; 						// live dev
 	// String BASE_SERVER 			= "http://test.kelltontech.com/getitfms_qa/"; 					// QA
@@ -31,7 +33,7 @@ public interface AppConstants {
 	// String BASE_SERVER 			= "http://192.168.13.22/webserviceNew/dev_build_ver1.1/"; 		// local ankesh for deal
 	// String BASE_SERVER 			= "http://192.168.13.63/webservice/trunk/";   					// Session Tracking Test
 	 String BASE_SERVER 			= "http://203.115.222.103/"; 									// staging
-	// String BASE_SERVER 			= "http://203.115.222.57/"; 									// pre-production
+//	 String BASE_SERVER 			= "http://203.115.222.57/"; 									// pre-production
 //	 String BASE_SERVER 			= "https://webservice.findit.com.my/";							// Production
 	String BASE_URL 				= BASE_SERVER + "restapi/";
 	String BASE_URL_CONTEST 		= BASE_SERVER + "restapicontest/";

@@ -558,6 +558,7 @@ public class RefineSearchActivity extends MaxisMainActivity {
 				JSONObject postData = verifyAndGetSelectorsJson();
 				if (postData != null) {
 					mClRequest.setPostJsonPayload(postData.toString());
+					mClRequest.setSearchRefined(true);
 					CombindListingController controller = new CombindListingController(RefineSearchActivity.this, Events.REFINE_SEARCH_RESULT);
 					startSppiner();
 					controller.requestService(mClRequest);

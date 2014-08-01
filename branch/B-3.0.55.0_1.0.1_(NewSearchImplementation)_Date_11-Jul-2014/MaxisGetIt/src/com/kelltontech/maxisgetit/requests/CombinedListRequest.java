@@ -344,7 +344,7 @@ public class CombinedListRequest implements Parcelable {
 	}
 
 	public void setKeywordOrCategoryId(String keywordOrCategoryId) {
-		this.keywordOrCategoryId = keywordOrCategoryId;
+		this.keywordOrCategoryId = Uri.encode(keywordOrCategoryId);
 	}
 
 	public boolean isBySearch() {

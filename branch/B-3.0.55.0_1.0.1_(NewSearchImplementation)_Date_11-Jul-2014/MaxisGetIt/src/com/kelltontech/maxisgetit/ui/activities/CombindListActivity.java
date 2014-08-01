@@ -161,6 +161,18 @@ public class CombindListActivity extends MaxisMainActivity implements OnClickLis
 				showHideBanner();
 				showHideSearchCriteriaChooser();
 				addAnEmptyRow();
+
+				mIsFreshSearch = (mClResponse != null && mClResponse.getCategoryList() != null && mClResponse.getCategoryList().size() > 1) ? true : false;
+
+				if (mIsFreshSearch) {
+					if (mClResponse.getCategoryList() != null && mClResponse.getCategoryList().size() == 1) {
+						mIsFreshSearch 				= 		false;
+						CategoryRefine tempCatref 	= 		mClResponse.getCategoryList().get(0);
+						mClRequest.setSelectedCategoryBySearch(tempCatref.getCategoryId(), tempCatref.getCategoryTitle());
+					} else
+						mRefineSearchView.setText(getResources().getString(R.string.cl_filter_by));
+				}
+
 				ArrayList<CompanyDesc> compListData = 		mClResponse.getCompanyArrayList();
 				mCompListAdapter.setData(compListData);
 				mCompListAdapter.notifyDataSetChanged();
@@ -891,6 +903,17 @@ public class CombindListActivity extends MaxisMainActivity implements OnClickLis
 				}
 
 				showHideSearchCriteriaChooser();
+
+				mIsFreshSearch = (mClResponse != null && mClResponse.getCategoryList() != null && mClResponse.getCategoryList().size() > 1) ? true : false;
+
+				if (mIsFreshSearch) {
+					if (mClResponse.getCategoryList() != null && mClResponse.getCategoryList().size() == 1) {
+						mIsFreshSearch 				= 		false;
+						CategoryRefine tempCatref 	= 		mClResponse.getCategoryList().get(0);
+						mClRequest.setSelectedCategoryBySearch(tempCatref.getCategoryId(), tempCatref.getCategoryTitle());
+					} else
+						mRefineSearchView.setText(getResources().getString(R.string.cl_filter_by));
+				}
 
 				if (mClResponse.getPageNumber() == 10 || mClResponse.getTotalrecordFound() == mClResponse.getCompanyArrayList().size()) { }
 				mRecordsFoundView.setText(mClResponse.getTotalrecordFound() + " " + getResources().getString(R.string.record_found));

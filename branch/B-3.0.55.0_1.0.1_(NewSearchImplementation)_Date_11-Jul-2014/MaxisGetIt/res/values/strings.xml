@@ -231,7 +231,7 @@
     <string name="not_available">Not Available</string>
     <string name="country_code">+60</string>
     <string name="country_code_excluding_plus">60</string>
-    <string name="msg_dont_ask_me_again">  Don\'t ask me again</string>
+    <string name="msg_dont_ask_me_again">    Don\'t ask me again</string>
 
     <!-- verify registration screen -->
     <string name="dear_user">Dear User</string>
