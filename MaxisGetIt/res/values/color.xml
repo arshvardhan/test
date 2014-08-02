@@ -27,6 +27,8 @@
     <color name="almost_full_transparent">#02000000</color>
     <color name="transparent2">#e6000000</color>
     <color name="little_transparent">#10000000</color>
+    <color name="search_criteria_dialog_header_bg">#4db848</color>
+    <color name="view_more_company_txv">#D9D9D9</color>
     <!-- Text color -->
     <color name="text_color_red">#e3222a</color>
     <color name="text_color_green">#58f00f</color>

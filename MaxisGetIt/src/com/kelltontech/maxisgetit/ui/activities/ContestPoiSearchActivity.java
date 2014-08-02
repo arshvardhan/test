@@ -93,7 +93,8 @@ public class ContestPoiSearchActivity extends ContestBaseActivity {
 					KeyEvent event) {
 				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
 					String _key = mSearchKeyEdtTxt.getText().toString().trim();
-					if (_key.length() == 0) {Toast.makeText(ContestPoiSearchActivity.this,getString(R.string.input_search),Toast.LENGTH_SHORT).show();
+					if (_key.length() == 0) {
+						Toast.makeText(ContestPoiSearchActivity.this,getString(R.string.input_search),Toast.LENGTH_SHORT).show();
 					} else {
 						mCurrentEventType = Events.POI_SEARCH_EVENT;
 						onLoad();

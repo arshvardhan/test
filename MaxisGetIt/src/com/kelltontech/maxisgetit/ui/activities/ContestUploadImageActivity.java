@@ -21,14 +21,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
-import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +47,7 @@ import com.kelltontech.maxisgetit.utils.BitmapCalculation;
  * This screen is shown after taking image from camera to upload it on server.
  */
 public class ContestUploadImageActivity extends ContestBaseActivity {
-//	private static final int CAMERA_REQUEST = 1888;
+	//	private static final int CAMERA_REQUEST = 1888;
 	// private double mLatitude,mLongitude,mLatitudeN,mLongitudeN;
 	private ExifInterface mExifInterface;
 	private String mImagePath;
@@ -65,7 +62,7 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 	private final int UPLOAD_IMAGE = 5;
 	private Bitmap newBitmap;
 	private MaxisStore store;
-	
+
 	private int	mRequestedPostImageType;
 
 	// private ImageView mLogo;
@@ -73,90 +70,92 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.contest_upload_img_activity);
+		try {
+			setContentView(R.layout.contest_upload_img_activity);
+			((TextView) findViewById(R.id.header_title)).setText(getString(R.string.header_photo_contest));
+			findViewById(R.id.header_btn_back).setOnClickListener(this);
+			findViewById(R.id.goto_home_icon).setOnClickListener(this);
+			findViewById(R.id.search_toggler).setVisibility(View.INVISIBLE);
+			findViewById(R.id.show_profile_icon).setOnClickListener(this);
+			store = MaxisStore.getStore(this);
 
-		((TextView) findViewById(R.id.header_title))
-				.setText(getString(R.string.header_photo_contest));
+			/*
+			 * findViewById(R.id.footer_facebook_icon).setOnClickListener(this);
+			 * findViewById(R.id.footer_twitterIcon).setOnClickListener(this); mLogo
+			 * = (ImageView) findViewById(R.id.logo);
+			 * mLogo.setOnClickListener(ContestUploadImageActivity.this);
+			 * 
+			 * mLogo.setOnClickListener(new OnClickListener() {
+			 * 
+			 * @Override public void onClick(View v) {
+			 * 
+			 * startActivity(new Intent(ContestUploadImageActivity.this,
+			 * GetItInfoActivity.class));
+			 * 
+			 * } });
+			 */
 
-		findViewById(R.id.header_btn_back).setOnClickListener(this);
-		findViewById(R.id.goto_home_icon).setOnClickListener(this);
-		findViewById(R.id.search_toggler).setVisibility(View.INVISIBLE);
-		findViewById(R.id.show_profile_icon).setOnClickListener(this);
-		store = MaxisStore.getStore(this);
+			// UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.rootLayout),
+			// this);
+			mUploadBtn = (Button) findViewById(R.id.upload_btn);
+			mUploadBtn.setOnClickListener(this);
 
-		/*
-		 * findViewById(R.id.footer_facebook_icon).setOnClickListener(this);
-		 * findViewById(R.id.footer_twitterIcon).setOnClickListener(this); mLogo
-		 * = (ImageView) findViewById(R.id.logo);
-		 * mLogo.setOnClickListener(ContestUploadImageActivity.this);
-		 * 
-		 * mLogo.setOnClickListener(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) {
-		 * 
-		 * startActivity(new Intent(ContestUploadImageActivity.this,
-		 * GetItInfoActivity.class));
-		 * 
-		 * } });
-		 */
-
-		// UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.rootLayout),
-		// this);
-		mUploadBtn = (Button) findViewById(R.id.upload_btn);
-		mUploadBtn.setOnClickListener(this);
-
-		Intent intent = getIntent();
-		mCid = intent.getIntExtra(AppConstants.CID_KEY, 0);
-		mCategoryId = intent.getIntExtra(AppConstants.CATEGORY_ID_KEY, 0);
-		mCompanyName = intent.getStringExtra(AppConstants.COMPANY_NAME_KEY);
-		mRequestedPostImageType = intent.getIntExtra(AppConstants.POST_IMAGE_REQUEST_KEY, 0);
-
-		mNumberEditTxt = ((EditText) findViewById(R.id.phone));
-		String number = AppSharedPreference.getString(
-				AppSharedPreference.MOBILE_NUMBER, "", getApplicationContext());
-
-		if (store.isLoogedInUser()) {
-			mNumberEditTxt.setText(store.getUserMobileNumberToDispaly());
-		} else {
-			mNumberEditTxt.setText(store.getAuthMobileNumber().substring(2));
-		}
-		// if (number.length() > 0)
-		// mNumberEditTxt.setText(number);
-		// else {
-		// TelephonyManager mTelephonyMgr = (TelephonyManager)
-		// getSystemService(Context.TELEPHONY_SERVICE);
-		// String yourNumber = mTelephonyMgr.getLine1Number();
-		//
-		// if (yourNumber != null && yourNumber.length() > 0) {
-		// mNumberEditTxt.setText(yourNumber);
-		// }
-		// }
-		mNameEditTxt = ((EditText) findViewById(R.id.name));
-		mNameEditTxt.setText(AppSharedPreference.getString(
-				AppSharedPreference.USER_NAME, "", getApplicationContext()));
-		mTitleEditTxt = ((EditText) findViewById(R.id.title));
-		mTitleEditTxt.setText(mCompanyName);
-
-		if (savedInstanceState == null) {
-			switch (mRequestedPostImageType) {
-			case AppConstants.GALLERY_REQUEST:
-				openGalery();
-				break;
-			case AppConstants.CAMERA_REQUEST:
-				takePhoto();
-				break;
-			default:
-				break;
+			Bundle bundle = getIntent().getExtras();
+			if(bundle != null){
+				Intent intent = getIntent();
+				mCid = intent.getIntExtra(AppConstants.CID_KEY, 0);
+				mCategoryId = intent.getIntExtra(AppConstants.CATEGORY_ID_KEY, 0);
+				mCompanyName = intent.getStringExtra(AppConstants.COMPANY_NAME_KEY);
+				mRequestedPostImageType = intent.getIntExtra(AppConstants.POST_IMAGE_REQUEST_KEY, 0);
 			}
+			mNumberEditTxt = ((EditText) findViewById(R.id.phone));
+			String number = AppSharedPreference.getString(AppSharedPreference.MOBILE_NUMBER, "", getApplicationContext());
+
+			if (store.isLoogedInUser()) {
+				mNumberEditTxt.setText(store.getUserMobileNumberToDispaly());
+			} else {
+				mNumberEditTxt.setText(store.getAuthMobileNumber().substring(2));
+			}
+			// if (number.length() > 0)
+			// mNumberEditTxt.setText(number);
+			// else {
+			// TelephonyManager mTelephonyMgr = (TelephonyManager)
+			// getSystemService(Context.TELEPHONY_SERVICE);
+			// String yourNumber = mTelephonyMgr.getLine1Number();
+			//
+			// if (yourNumber != null && yourNumber.length() > 0) {
+			// mNumberEditTxt.setText(yourNumber);
+			// }
+			// }
+			mNameEditTxt = ((EditText) findViewById(R.id.name));
+			mNameEditTxt.setText(AppSharedPreference.getString(AppSharedPreference.USER_NAME, "", getApplicationContext()));
+			mTitleEditTxt = ((EditText) findViewById(R.id.title));
+			mTitleEditTxt.setText(mCompanyName);
+
+			if (savedInstanceState == null) {
+				switch (mRequestedPostImageType) {
+				case AppConstants.GALLERY_REQUEST:
+					openGalery();
+					break;
+				case AppConstants.CAMERA_REQUEST:
+					takePhoto();
+					break;
+				default:
+					break;
+				}
+			}
+		} catch (Exception e) {
+			Toast.makeText(getApplicationContext(), getString(R.string.toast_some_error_try_again),Toast.LENGTH_LONG).show();
+			finish();
 		}
 	}
 
 	@Override
-		protected void onResume() {
-			super.onResume();
-			AnalyticsHelper.trackSession(ContestUploadImageActivity.this, AppConstants.Add_Images_In_Existing_POI);
-		}
-	
+	protected void onResume() {
+		super.onResume();
+		AnalyticsHelper.trackSession(ContestUploadImageActivity.this, AppConstants.Add_Images_In_Existing_POI);
+	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == AppConstants.CAMERA_REQUEST) {
@@ -164,12 +163,9 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 				finish();
 				return;
 			}
-			Object dataObj = data.getExtras() == null ? null : data.getExtras()
-					.get("data");
-			if (!(dataObj instanceof Bitmap)) {
-				Toast.makeText(getApplicationContext(),
-						getString(R.string.toast_some_error_try_again),
-						Toast.LENGTH_LONG).show();
+			Object dataObj = data.getExtras() == null ? null : data.getExtras().get("data");
+			if (dataObj == null || !(dataObj instanceof Bitmap)) {
+				Toast.makeText(getApplicationContext(),getString(R.string.toast_some_error_try_again),Toast.LENGTH_LONG).show();
 				finish();
 				return;
 			}
@@ -183,38 +179,28 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 			try {
 				Uri uri = data.getData();
 				String imagePath = getRealPathFromURI(uri);
-				mBitmap = BitmapCalculation.decodeSampledBitmapFromPath(
-						imagePath, 650, 650);
+				mBitmap = BitmapCalculation.decodeSampledBitmapFromPath(imagePath, 650, 650);
 
 				// TODO:: SET ORIENTATION
 				newBitmap = null;
 				if (mBitmap != null) {
-
 					mBitmap = decodeSampledBitmapFromFile(imagePath, 650, 650);
-
 					newBitmap = setOrientation(mBitmap, imagePath);
 					mBitmap = newBitmap;
 				}
 
 			} catch (Exception e) {
-				// TODO: handle exception
 			}
 
 			// System.out.println(mBitmap.getDensity());
 			// System.out.println(mBitmap.getHeight());
 			// System.out.println(mBitmap.getWidth());
-			mBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 75,
-					os);
-			String directoryPath = Environment.getExternalStorageDirectory()
-					.getAbsolutePath() + "/" + getString(R.string.app_name);
-			String imageFileName = getString(R.string.app_name) + "_"
-					+ System.currentTimeMillis() + ".jpg";
-			boolean fileCreated = StorageUtils.createFile(directoryPath,
-					imageFileName, os.toByteArray());
+			mBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 75, os);
+			String directoryPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + getString(R.string.app_name);
+			String imageFileName = getString(R.string.app_name) + "_" + System.currentTimeMillis() + ".jpg";
+			boolean fileCreated = StorageUtils.createFile(directoryPath, imageFileName, os.toByteArray());
 			if (!fileCreated) {
-				Toast.makeText(getApplicationContext(),
-						getString(R.string.toast_unable_to_save_image),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(),getString(R.string.toast_unable_to_save_image),Toast.LENGTH_LONG).show();
 				finish();
 				return;
 			}
@@ -236,8 +222,7 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 				Uri selectedImage = data.getData();
 				String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
-				Cursor cursor = this.getContentResolver().query(
-						selectedImage, filePathColumn, null, null, null);
+				Cursor cursor = this.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
 				cursor.moveToFirst();
 
 				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
@@ -245,25 +230,18 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 				cursor.close();
 				Log.e("File", "filePath: " + filePath);
 
-				File file = new File(new URI("file://"
-						+ filePath.replaceAll(" ", "%20")));
+				File file = new File(new URI("file://" + filePath.replaceAll(" ", "%20")));
 				int maxImageSize = BitmapCalculation.getMaxSize(this);
-				mBitmap = BitmapCalculation.getScaledBitmap(file,
-						maxImageSize);
+				mBitmap = BitmapCalculation.getScaledBitmap(file, maxImageSize);
 
 				ByteArrayOutputStream os = new ByteArrayOutputStream();
-				mBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 75,
-						os);
+				mBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 75, os);
 				String directoryPath = Environment.getExternalStorageDirectory()
 						.getAbsolutePath() + "/" + getString(R.string.app_name);
-				String imageFileName = getString(R.string.app_name) + "_"
-						+ System.currentTimeMillis() + ".jpg";
-				boolean fileCreated = StorageUtils.createFile(directoryPath,
-						imageFileName, os.toByteArray());
+				String imageFileName = getString(R.string.app_name) + "_" + System.currentTimeMillis() + ".jpg";
+				boolean fileCreated = StorageUtils.createFile(directoryPath, imageFileName, os.toByteArray());
 				if (!fileCreated) {
-					Toast.makeText(getApplicationContext(),
-							getString(R.string.toast_unable_to_save_image),
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(),getString(R.string.toast_unable_to_save_image),Toast.LENGTH_LONG).show();
 					finish();
 					return;
 				}
@@ -303,47 +281,33 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 		 */
 		case R.id.upload_btn: {
 			AnalyticsHelper.logEvent(FlurryEventsConstants.UPLOAD_IMAGE);
-			// TODO
 			if (mLattitudeN == 0 && mLattitude == 0) {
-				Toast.makeText(getApplicationContext(),
-						"Location not available.", Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), "Location not available.", Toast.LENGTH_LONG).show();
 				return;
 			}
 			String title = mTitleEditTxt.getText().toString();
 			if (title == null || title.trim().length() == 0) {
 
-				Toast.makeText(getApplicationContext(),
-						"Please enter image title.", Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), "Please enter image title.", Toast.LENGTH_LONG).show();
 				return;
 			}
 			String name = mNameEditTxt.getText().toString();
 			if (name == null || name.trim().length() == 0) {
-
-				Toast.makeText(getApplicationContext(), "Please enter name.",
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), "Please enter name.", Toast.LENGTH_LONG).show();
 				return;
 			}
-			AppSharedPreference.putString(AppSharedPreference.USER_NAME, name,
-					getApplicationContext());
+			AppSharedPreference.putString(AppSharedPreference.USER_NAME, name, getApplicationContext());
 			String phone = mNumberEditTxt.getText().toString();
 			if (phone == null || phone.trim().length() == 0) {
-				Toast.makeText(getApplicationContext(),
-						getString(R.string.number_empty), Toast.LENGTH_LONG)
-						.show();
+				Toast.makeText(getApplicationContext(), getString(R.string.number_empty), Toast.LENGTH_LONG).show();
 				return;
 				// Need TO Be Change Message.
 			} else if (!phone.trim().startsWith("1")) {
-				Toast.makeText(
-						getApplicationContext(),
-						getString(R.string.mobile_number_validation_contestapp),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), getString(R.string.mobile_number_validation_contestapp), Toast.LENGTH_LONG).show();
 				return;
 			} else if (phone.trim().length() <= 7
 					|| phone.trim().length() >= 12) {
-				Toast.makeText(
-						getApplicationContext(),
-						getString(R.string.mobile_number_validation_contestapp),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), getString(R.string.mobile_number_validation_contestapp), Toast.LENGTH_LONG).show();
 				return;
 			}
 
@@ -393,8 +357,7 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 					mRequestUploadPhoto.setCategoryId(mCategoryId + "");
 					mHitTime = System.currentTimeMillis();
 					contestUploadImageController.setHitTime(mHitTime);
-					contestUploadImageController
-							.requestService(mRequestUploadPhoto);
+					contestUploadImageController.requestService(mRequestUploadPhoto);
 				}
 			}).start();
 		} else
@@ -424,7 +387,7 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 					+ "\n");
 			builder.append("Focal Length: "
 					+ mExifInterface
-							.getAttribute(ExifInterface.TAG_FOCAL_LENGTH)
+					.getAttribute(ExifInterface.TAG_FOCAL_LENGTH)
 					+ "\n\n");
 			builder.append("GPS Datestamp: "
 					+ mExifInterface.getAttribute(ExifInterface.TAG_FLASH)
@@ -442,19 +405,19 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 
 			builder.append("GPS Latitude: "
 					+ mExifInterface
-							.getAttribute(ExifInterface.TAG_GPS_LATITUDE)
+					.getAttribute(ExifInterface.TAG_GPS_LATITUDE)
 					+ "\n");
 			builder.append("GPS Latitude Ref: "
 					+ mExifInterface
-							.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF)
+					.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF)
 					+ "\n");
 			builder.append("GPS Longitude: "
 					+ mExifInterface
-							.getAttribute(ExifInterface.TAG_GPS_LONGITUDE)
+					.getAttribute(ExifInterface.TAG_GPS_LONGITUDE)
 					+ "\n");
 			builder.append("GPS Longitude Ref: "
 					+ mExifInterface
-							.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF)
+					.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF)
 					+ "\n");
 			if (lat == null || lat.length() <= 0) {
 				/*
@@ -481,19 +444,19 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 
 				builder.append("NEW GPS Latitude: "
 						+ mExifInterface
-								.getAttribute(ExifInterface.TAG_GPS_LATITUDE)
+						.getAttribute(ExifInterface.TAG_GPS_LATITUDE)
 						+ "\n");
 				builder.append("NEW GPS Latitude Ref: "
 						+ mExifInterface
-								.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF)
+						.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF)
 						+ "\n");
 				builder.append("NEW GPS Longitude: "
 						+ mExifInterface
-								.getAttribute(ExifInterface.TAG_GPS_LONGITUDE)
+						.getAttribute(ExifInterface.TAG_GPS_LONGITUDE)
 						+ "\n");
 				builder.append("NEW GPS Longitude Ref: "
 						+ mExifInterface
-								.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF)
+						.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF)
 						+ "\n");
 			}
 			/*
@@ -502,19 +465,19 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 
 			builder.append("GPS Processing Method: "
 					+ mExifInterface
-							.getAttribute(ExifInterface.TAG_GPS_PROCESSING_METHOD)
+					.getAttribute(ExifInterface.TAG_GPS_PROCESSING_METHOD)
 					+ "\n");
 			builder.append("GPS Timestamp: "
 					+ mExifInterface
-							.getAttribute(ExifInterface.TAG_GPS_TIMESTAMP)
+					.getAttribute(ExifInterface.TAG_GPS_TIMESTAMP)
 					+ "\n\n");
 			builder.append("Image Length: "
 					+ mExifInterface
-							.getAttribute(ExifInterface.TAG_IMAGE_LENGTH)
+					.getAttribute(ExifInterface.TAG_IMAGE_LENGTH)
 					+ "\n");
 			builder.append("Image Width: "
 					+ mExifInterface
-							.getAttribute(ExifInterface.TAG_IMAGE_WIDTH)
+					.getAttribute(ExifInterface.TAG_IMAGE_WIDTH)
 					+ "\n\n");
 			builder.append("Camera Make: "
 					+ mExifInterface.getAttribute(ExifInterface.TAG_MAKE)
@@ -524,10 +487,10 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 					+ "\n");
 			builder.append("Camera Orientation: "
 					+ mExifInterface
-							.getAttribute(ExifInterface.TAG_ORIENTATION) + "\n");
+					.getAttribute(ExifInterface.TAG_ORIENTATION) + "\n");
 			builder.append("Camera White Balance: "
 					+ mExifInterface
-							.getAttribute(ExifInterface.TAG_WHITE_BALANCE)
+					.getAttribute(ExifInterface.TAG_WHITE_BALANCE)
 					+ "\n");
 
 			System.out.println(builder);
@@ -543,10 +506,7 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 			}).start();
 
 		} catch (IOException e) {
-			AnalyticsHelper.onError(
-					FlurryEventsConstants.CONTEST_UPLOAD_IMAGE_ERR,
-					"ContestUploadImageActivity : "
-							+ AppConstants.CONTEST_UPLOAD_IMAGE_ERROR_MSG, e);
+			AnalyticsHelper.onError(FlurryEventsConstants.CONTEST_UPLOAD_IMAGE_ERR,"ContestUploadImageActivity : " + AppConstants.CONTEST_UPLOAD_IMAGE_ERROR_MSG, e);
 		}
 	}
 
@@ -558,15 +518,11 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 					stopSppiner();
 					switch (((MyError) msg.obj).getErrorcode()) {
 					case MyError.NETWORK_NOT_AVAILABLE:
-						Toast.makeText(getApplicationContext(),
-								"Network not available.", Toast.LENGTH_LONG)
-								.show();
+						Toast.makeText(getApplicationContext(), "Network not available.", Toast.LENGTH_LONG).show();
 						break;
 					case MyError.EXCEPTION:
 					case MyError.UNDEFINED:
-						Toast.makeText(getApplicationContext(),
-								"Server not responding.", Toast.LENGTH_LONG)
-								.show();
+						Toast.makeText(getApplicationContext(), "Server not responding.", Toast.LENGTH_LONG).show();
 						break;
 
 					}
@@ -575,16 +531,11 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 
 					ResponseUploadPhoto photo = (ResponseUploadPhoto) msg.obj;
 					if (photo.isSuccess()) {
-						startActivity(new Intent(
-								ContestUploadImageActivity.this,
-								ContestUploadMoreActivity.class)
-								.putExtra("mImagePath", mImagePath)
-								.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-								.putExtra(AppConstants.CID_KEY, mCid)
-								.putExtra(AppConstants.CATEGORY_ID_KEY,
-										mCategoryId)
-								.putExtra(AppConstants.COMPANY_NAME_KEY,
-										mCompanyName));
+						startActivity(new Intent(ContestUploadImageActivity.this, ContestUploadMoreActivity.class)
+						.putExtra("mImagePath", mImagePath)
+						.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+						.putExtra(AppConstants.CID_KEY, mCid)
+						.putExtra(AppConstants.CATEGORY_ID_KEY, mCategoryId).putExtra(AppConstants.COMPANY_NAME_KEY, mCompanyName));
 						mBitmap = null;
 						// removeDialog(CustomDialog.PROGRESS_DIALOG);
 						stopSppiner();
@@ -593,8 +544,7 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 					} else {
 						// removeDialog(CustomDialog.PROGRESS_DIALOG);
 						stopSppiner();
-						Toast.makeText(getApplicationContext(),
-								photo.getErrorMsg(), Toast.LENGTH_LONG).show();
+						Toast.makeText(getApplicationContext(), photo.getErrorMsg(), Toast.LENGTH_LONG).show();
 					}
 
 				}
@@ -700,7 +650,7 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 		String latitudeStr = splitsArray[0] + "/1," + splitsArray[1] + "/1,"
 				+ seconds + "/1";
 		mExifInterface
-				.setAttribute(ExifInterface.TAG_GPS_LATITUDE, latitudeStr);
+		.setAttribute(ExifInterface.TAG_GPS_LATITUDE, latitudeStr);
 
 		mExifInterface.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF,
 				lat > 0 ? "N" : "S");
@@ -716,22 +666,16 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 		} else {
 			seconds = secnds[0];
 		}
-		String longitudeStr = splitsArray[0] + "/1," + splitsArray[1] + "/1,"
-				+ seconds + "/1";
+		String longitudeStr = splitsArray[0] + "/1," + splitsArray[1] + "/1," + seconds + "/1";
 
-		mExifInterface.setAttribute(ExifInterface.TAG_GPS_LONGITUDE,
-				longitudeStr);
-		mExifInterface.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF,
-				lon > 0 ? "E" : "W");
+		mExifInterface.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, longitudeStr);
+		mExifInterface.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF, lon > 0 ? "E" : "W");
 		try {
 			mExifInterface.saveAttributes();
 			// scanFile(this, mImagePath, "image/*");
 		} catch (IOException e) {
-			AnalyticsHelper.onError(FlurryEventsConstants.UPDATE_GEO_TAG_ERR,
-					"ContestUploadImageActivity : "
-							+ AppConstants.UPDATE_GEO_TAG_ERROR_MSG, e);
+			AnalyticsHelper.onError(FlurryEventsConstants.UPDATE_GEO_TAG_ERR, "ContestUploadImageActivity : " + AppConstants.UPDATE_GEO_TAG_ERROR_MSG, e);
 		}
-
 	}
 
 	@Override
@@ -791,21 +735,14 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 		final int height = options.outHeight;
 		final int width = options.outWidth;
 		int inSampleSize = 1;
-
-		inSampleSize = (int) Math.pow(
-				2.0,
-				(int) Math.round(Math.log(maxImageSize
-						/ (double) Math.max(height, width))
-						/ Math.log(0.5)));
-
+		inSampleSize = (int) Math.pow(2.0, (int) Math.round(Math.log(maxImageSize / (double) Math.max(height, width)) / Math.log(0.5)));
 		return inSampleSize;
 	}
 
 	public Uri getImageUri(Context inContext, Bitmap inImage) {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-		String path = Images.Media.insertImage(inContext.getContentResolver(),
-				inImage, "Title", null);
+		String path = Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
 		return Uri.parse(path);
 	}
 
@@ -814,8 +751,7 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 		if (cursor != null) {
 			cursor.moveToFirst();
 		} else {
-			Toast.makeText(getApplicationContext(), "manish",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "manish", Toast.LENGTH_SHORT).show();
 		}
 		int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
 		return cursor.getString(idx);
@@ -829,8 +765,7 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-				ExifInterface.ORIENTATION_NORMAL);
+		int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
 		Log.e("Exif Orientation", "oreination" + orientation);
 		Matrix matrix = new Matrix();
 		switch (orientation) {
@@ -844,11 +779,7 @@ public class ContestUploadImageActivity extends ContestBaseActivity {
 			matrix.postRotate(270);
 			break;
 		}
-
-		Bitmap originalImage = Bitmap
-				.createBitmap(sourceBitmap, 0, 0, sourceBitmap.getWidth(),
-						sourceBitmap.getHeight(), matrix, true);
-
+		Bitmap originalImage = Bitmap.createBitmap(sourceBitmap, 0, 0, sourceBitmap.getWidth(), sourceBitmap.getHeight(), matrix, true);
 		return originalImage;
 	}
 }

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:drawingCacheQuality="high"
     android:layout_alignParentBottom="true"
     android:orientation="vertical" >
 
@@ -9,8 +10,7 @@
          <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/vertical_line_seprator" />
-    -->
+        android:background="@color/vertical_line_seprator" />  -->
 
     <ImageView
         android:id="@+id/box"
@@ -77,17 +77,17 @@
             android:id="@+id/seprator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@drawable/seprator" 
-            android:visibility="gone"/>
+            android:background="@drawable/seprator"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/logo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
             android:layout_gravity="center"
             android:layout_weight=".5"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
             android:src="@drawable/getit_logo4" />
     </LinearLayout>
 

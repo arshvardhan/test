@@ -2,32 +2,37 @@ package com.kelltontech.maxisgetit.requests;
 
 import java.util.Hashtable;
 
+import android.content.Context;
+import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.utils.NativeHelper;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
 import com.kelltontech.maxisgetit.dao.MaxisStore;
-import android.content.Context;
-import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 public class CombinedListRequest implements Parcelable {
 	public static final String METHOD_CATEGORY_REFINE = "categoryRefine.xml";
 	public static final String METHOD_REFINE_SEARCH_RES = "RefineSearch.xml";
 	private static final String METHOD_COMPANY_LIST_BY_SEARCH = "search.xml";
-	private static final String METHOD_DEAL_LIST_BY_SEARCH = "getGroupCategoryData.xml";// "getDeal.xml";//"search.xml";
+	//	private static final String METHOD_DEAL_LIST_BY_SEARCH = "getGroupCategoryData.xml";// "getDeal.xml";//"search.xml";
 	private static final String METHOD_COMPANY_LIST_BY_CATEGORY = "getGroupCategoryData.xml";// "getCompany.xml";
 	// private static final String METHOD_DEAL_LIST_BY_CATEGORY =
 	// "getGroupCategoryData.xml";//"getDeal.xml-- previous one";
 
 	private static final String METHOD_DEAL_LIST_BY_CATEGORY = "getHotDeals.xml";// "getDeal.xml";
+	private static final String METHOD_COMPANY_LIST_VIEW_MORE_COMPANY = "getStampCompany.xml";
+
 	private static final String RESULT_DEAL = "DEAL";
 	private static final String RESULT_COMP = "COMPANY";
 	private static final String KEY_RESULT_TYPE = "type";
 	public static final String KEY_GROUP_ACTION_TYPE = "action_type";
 	public static final String KEY_SEARCH_DISTANCE = "search_distance";
+	public static final String KEY_SEARCH_IN = "search_in";
+	public static final String KEY_STAMP_ID = "stampId";
 
 	private int pageNumber = 1;
 	private String keywordOrCategoryId;
@@ -47,7 +52,11 @@ public class CombinedListRequest implements Parcelable {
 	private String deviceId = MyApplication.getDeviceId();
 
 	private String search_distance = "";
-	private String pageView;
+	//	private String pageView;
+	private String searchIn = "";
+	private String stampId = "";
+	private String searchCriteria = "";
+	private boolean isSearchRefined;
 
 	public CombinedListRequest(Parcel in) {
 		pageNumber = in.readInt();
@@ -66,6 +75,10 @@ public class CombinedListRequest implements Parcelable {
 		groupType = in.readString();
 		groupActionType = in.readString();
 		search_distance = in.readString();
+		searchIn = in.readString();
+		stampId = in.readString();
+		searchCriteria = in.readString();
+		isSearchRefined = in.readInt() == 0 ? false : true;
 	}
 
 	@Override
@@ -86,6 +99,10 @@ public class CombinedListRequest implements Parcelable {
 		dest.writeString(groupType);
 		dest.writeString(groupActionType);
 		dest.writeString(search_distance);
+		dest.writeString(searchIn);
+		dest.writeString(stampId);
+		dest.writeString(searchCriteria);
+		dest.writeInt(isSearchRefined ? 1 : 0);
 	}
 
 	public String getSearch_distance() {
@@ -143,9 +160,9 @@ public class CombinedListRequest implements Parcelable {
 	public String getRequestMethod() {
 		if (postJsonPayload != null) {
 			if (isBySearch()) {
-
-				if (!StringUtil.isNullOrEmpty(selectedCategoryBySearch)
-						&& !selectedCategoryBySearch.equalsIgnoreCase("-1"))
+				if (!StringUtil.isNullOrEmpty(selectedCategoryBySearch) 
+						&& !selectedCategoryBySearch.equalsIgnoreCase("-1") 
+						&& isSearchRefined)
 					return METHOD_REFINE_SEARCH_RES;
 				else {
 					return METHOD_COMPANY_LIST_BY_SEARCH;
@@ -155,9 +172,13 @@ public class CombinedListRequest implements Parcelable {
 			}
 		}
 		if (isBySearch()) {
-			if (isCompanyListing)
-				return METHOD_COMPANY_LIST_BY_SEARCH;
-			else
+			if (isCompanyListing) {
+				if((!StringUtil.isNullOrEmpty(stampId))/* && (!StringUtil.isNullOrEmpty(searchCriteria)) && "Stamp".equalsIgnoreCase(searchCriteria)*/) {
+					return METHOD_COMPANY_LIST_VIEW_MORE_COMPANY;
+				} else {
+					return METHOD_COMPANY_LIST_BY_SEARCH;
+				}
+			} else
 				return METHOD_DEAL_LIST_BY_CATEGORY;
 		} else {
 			if (isCompanyListing)
@@ -175,45 +196,51 @@ public class CombinedListRequest implements Parcelable {
 				+ MaxisBaseRequest.VALUE_PLATFORM);
 		ht.append("&" + MaxisBaseRequest.KEY_SCREEN_TYPE + "=" + mScreenType);
 		ht.append("&" + MaxisBaseRequest.KEY_LANGUAGE + "=" + localeCode);
-		ht.append("&" + MaxisBaseRequest.KEY_LATITUDE + "="
+				ht.append("&" + MaxisBaseRequest.KEY_LATITUDE + "="
 				+ GPS_Data.getLatitude() + "");
 		ht.append("&" + MaxisBaseRequest.KEY_LONGITUDE + "="
 				+ GPS_Data.getLongitude() + "");
 
+	/*	ht.append("&" + MaxisBaseRequest.KEY_LATITUDE + "="
+				+ "3.1357399471" + "");
+		ht.append("&" + MaxisBaseRequest.KEY_LONGITUDE + "="
+				+ "101.6880963379" + "");
+*/
 		ht.append("&" + MaxisBaseRequest.DEVICE_ID + "=" + deviceId + "");
 
 		if (isBySearch) {
-			ht.append("&" + "keyword" + "=" + keywordOrCategoryId);
-			if (!StringUtil.isNullOrEmpty(selectedCategoryBySearch)
-					&& !selectedCategoryBySearch.equalsIgnoreCase("-1"))
+			if((!StringUtil.isNullOrEmpty(stampId))/* && (!StringUtil.isNullOrEmpty(searchCriteria)) && "Stamp".equalsIgnoreCase(searchCriteria)*/) {
+				ht.append("&" + KEY_STAMP_ID + "=" + stampId + "");
+				//				ht.append("&" + KEY_SEARCH_IN + "=" + searchCriteria + "");
+				ht.append("&" + AppConstants.KEY_PAGE_REVIEW + "=" + AppConstants.Stamp_Company_listing + "");
+			} else {
+				if (!StringUtil.isNullOrEmpty(keywordOrCategoryId))
+					ht.append("&" + "keyword" + "=" + keywordOrCategoryId);
+				if (!StringUtil.isNullOrEmpty(searchIn))
+					ht.append("&" + KEY_SEARCH_IN + "=" + searchIn);
+				ht.append("&" + AppConstants.KEY_PAGE_REVIEW + "=" + AppConstants.Company_listing + "");
+				ht.append("&" + KEY_SEARCH_DISTANCE + "=" + search_distance + "");
+			}
+			if (!StringUtil.isNullOrEmpty(selectedCategoryBySearch) && !selectedCategoryBySearch.equalsIgnoreCase("-1") && isSearchRefined)
 				ht.append("&" + "category_id" + "=" + selectedCategoryBySearch);
-
-			ht.append("&" + AppConstants.KEY_PAGE_REVIEW + "="
-					+ AppConstants.Company_listing + "");
-			ht.append("&" + KEY_SEARCH_DISTANCE + "=" + search_distance);
-			
 		} else if (!StringUtil.isNullOrEmpty(groupActionType)
-				&& groupActionType
-						.equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_CATEGORY_LIST_FOR_GROUP)
+				&& groupActionType.equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_CATEGORY_LIST_FOR_GROUP)
 				&& !StringUtil.isNullOrEmpty(groupType)
 				&& groupType.equalsIgnoreCase(AppConstants.GROUP_TYPE_CATEGORY)) {
-			if (!StringUtil.isNullOrEmpty(selectedCategoryBySearch)
-					&& !selectedCategoryBySearch.equalsIgnoreCase("-1"))
+			if (!StringUtil.isNullOrEmpty(selectedCategoryBySearch) && !selectedCategoryBySearch.equalsIgnoreCase("-1") && isSearchRefined)
 				ht.append("&" + "category_id" + "=" + selectedCategoryBySearch);
-
 		} else
-			
 			ht.append("&" + "category_id" + "=" + keywordOrCategoryId);
 		ht.append("&" + "page_number" + "=" + pageNumber + "");
-		if (isCompanyListing) {
-			ht.append("&" + KEY_RESULT_TYPE + "=" + RESULT_COMP);
-			ht.append("&" + AppConstants.KEY_PAGE_REVIEW + "="
-					+ AppConstants.Company_listing + "");
-			ht.append("&" + KEY_SEARCH_DISTANCE + "=" + search_distance);
-		} else {
-			ht.append("&" + KEY_RESULT_TYPE + "=" + RESULT_DEAL);
-			ht.append("&" + AppConstants.KEY_PAGE_REVIEW + "="
-					+ AppConstants.Deal_Listing + "");
+		if(!isBySearch) {	
+			if (isCompanyListing) {
+				ht.append("&" + KEY_RESULT_TYPE + "=" + RESULT_COMP);
+				ht.append("&" + AppConstants.KEY_PAGE_REVIEW + "=" + AppConstants.Company_listing + "");
+				ht.append("&" + KEY_SEARCH_DISTANCE + "=" + search_distance + "");
+			} else {
+				ht.append("&" + KEY_RESULT_TYPE + "=" + RESULT_DEAL);
+				ht.append("&" + AppConstants.KEY_PAGE_REVIEW + "=" + AppConstants.Deal_Listing + "");
+			}
 		}
 		return ht.toString();
 	}
@@ -224,38 +251,43 @@ public class CombinedListRequest implements Parcelable {
 		ht.put(MaxisBaseRequest.KEY_PLATFORM, MaxisBaseRequest.VALUE_PLATFORM);
 		ht.put(MaxisBaseRequest.KEY_SCREEN_TYPE, mScreenType);
 		ht.put(MaxisBaseRequest.KEY_LANGUAGE, localeCode);
-		 ht.put(MaxisBaseRequest.KEY_LATITUDE, GPS_Data.getLatitude() + "");
-		 ht.put(MaxisBaseRequest.KEY_LONGITUDE, GPS_Data.getLongitude() + "");
+				 ht.put(MaxisBaseRequest.KEY_LATITUDE, GPS_Data.getLatitude() + "");
+				 ht.put(MaxisBaseRequest.KEY_LONGITUDE, GPS_Data.getLongitude() + "");
 
-//		ht.put(MaxisBaseRequest.KEY_LATITUDE, "3.1574399471"); 
-//		 ht.put(MaxisBaseRequest.KEY_LONGITUDE, "101.7149963379");
+//		ht.put(MaxisBaseRequest.KEY_LATITUDE, "3.1357399471"); 
+//		ht.put(MaxisBaseRequest.KEY_LONGITUDE, "101.6880963379");
 
 		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		// ht.put(AppConstants.KEY_PAGE_REVIEW, AppConstants.Company_listing);
 		if (isBySearch) {
-			ht.put("keyword", keywordOrCategoryId);
 			if (!StringUtil.isNullOrEmpty(groupActionType))
 				ht.put(KEY_GROUP_ACTION_TYPE, groupActionType);
 			if (!StringUtil.isNullOrEmpty(groupType))
 				ht.put(KEY_RESULT_TYPE, groupType);
-
-			ht.put(AppConstants.KEY_PAGE_REVIEW, AppConstants.Company_listing);
-			ht.put(KEY_SEARCH_DISTANCE, search_distance);
+			if((!StringUtil.isNullOrEmpty(stampId))/* && (!StringUtil.isNullOrEmpty(searchCriteria)) && "Stamp".equalsIgnoreCase(searchCriteria)*/) {
+				ht.put(KEY_STAMP_ID, stampId + "");
+				//				ht.put(KEY_SEARCH_IN, searchCriteria);
+				ht.put(AppConstants.KEY_PAGE_REVIEW, AppConstants.Stamp_Company_listing);
+			} else {
+				if (!StringUtil.isNullOrEmpty(keywordOrCategoryId))
+					ht.put("keyword", keywordOrCategoryId + "");
+				if (!StringUtil.isNullOrEmpty(searchIn))
+					ht.put(KEY_SEARCH_IN, searchIn);
+				ht.put(AppConstants.KEY_PAGE_REVIEW, AppConstants.Company_listing);
+				ht.put(KEY_SEARCH_DISTANCE, search_distance + "");
+			}
 		} else {
 			ht.put("category_id", keywordOrCategoryId);
 			if (!StringUtil.isNullOrEmpty(groupActionType))
 				ht.put(KEY_GROUP_ACTION_TYPE, groupActionType);
 			if (!StringUtil.isNullOrEmpty(groupType))
 				ht.put(KEY_RESULT_TYPE, groupType);
-
 			if (isCompanyListing) {
-				ht.put(AppConstants.KEY_PAGE_REVIEW,
-						AppConstants.Company_listing);
-				ht.put(KEY_SEARCH_DISTANCE, search_distance);
+				ht.put(AppConstants.KEY_PAGE_REVIEW, AppConstants.Company_listing);
+				ht.put(KEY_SEARCH_DISTANCE, search_distance + "");
 			} else {
 				ht.put(AppConstants.KEY_PAGE_REVIEW, AppConstants.Deal_Listing);
 			}
-
 		}
 		ht.put("page_number", pageNumber + "");
 		/*
@@ -274,13 +306,28 @@ public class CombinedListRequest implements Parcelable {
 		ht.put(MaxisBaseRequest.KEY_LONGITUDE, GPS_Data.getLongitude() + "");
 		ht.put("keyword", keywordOrCategoryId);
 		ht.put("page_number", pageNumber + "");
-
 		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
-
 		if (isCompanyListing)
 			ht.put(KEY_RESULT_TYPE, RESULT_COMP);
 		else
 			ht.put(KEY_RESULT_TYPE, RESULT_DEAL);
+		return ht;
+	}
+
+
+	public Hashtable<String, String> getViewMoreCompanyReqHeaders() {
+		Hashtable<String, String> ht = new Hashtable<String, String>();
+		ht.put(MaxisBaseRequest.KEY_APP_KEY, MaxisBaseRequest.VALUE_APP_KEY);
+		ht.put(MaxisBaseRequest.KEY_PLATFORM, MaxisBaseRequest.VALUE_PLATFORM);
+		ht.put(MaxisBaseRequest.KEY_SCREEN_TYPE, mScreenType);
+		ht.put(MaxisBaseRequest.KEY_LANGUAGE, localeCode);
+		ht.put(MaxisBaseRequest.KEY_LATITUDE, GPS_Data.getLatitude() + "");
+		ht.put(MaxisBaseRequest.KEY_LONGITUDE, GPS_Data.getLongitude() + "");
+		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		ht.put(AppConstants.KEY_PAGE_REVIEW, AppConstants.Stamp_Company_listing);
+		//		ht.put(KEY_SEARCH_IN, searchCriteria);
+		ht.put(KEY_STAMP_ID, stampId);
+		ht.put("page_number", pageNumber + "");
 		return ht;
 	}
 
@@ -297,7 +344,7 @@ public class CombinedListRequest implements Parcelable {
 	}
 
 	public void setKeywordOrCategoryId(String keywordOrCategoryId) {
-		this.keywordOrCategoryId = keywordOrCategoryId;
+		this.keywordOrCategoryId = Uri.encode(keywordOrCategoryId);
 	}
 
 	public boolean isBySearch() {
@@ -368,6 +415,38 @@ public class CombinedListRequest implements Parcelable {
 
 	public void setGroupActionType(String groupActionType) {
 		this.groupActionType = groupActionType;
+	}
+
+	public String getSearchIn() {
+		return searchIn;
+	}
+
+	public void setSearchIn(String searchIn) {
+		this.searchIn = searchIn;
+	}
+
+	public String getStampId() {
+		return stampId;
+	}
+
+	public void setStampId(String stampId) {
+		this.stampId = stampId;
+	}
+
+	public boolean isSearchRefined() {
+		return isSearchRefined;
+	}
+
+	public void setSearchRefined(boolean isSearchRefined) {
+		this.isSearchRefined = isSearchRefined;
+	}
+
+	public String getSearchCriteria() {
+		return searchCriteria;
+	}
+
+	public void setSearchCriteria(String searchCriteria) {
+		this.searchCriteria = searchCriteria;
 	}
 
 }

@@ -18,6 +18,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
@@ -54,6 +55,8 @@ import com.kelltontech.maxisgetit.dao.CategoryRefine;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.CompanyDesc;
 import com.kelltontech.maxisgetit.dao.CompanyDetail;
+import com.kelltontech.maxisgetit.dao.GPS_Data;
+import com.kelltontech.maxisgetit.dao.SearchAttribute;
 import com.kelltontech.maxisgetit.dao.SelectorDAO;
 import com.kelltontech.maxisgetit.requests.CombinedListRequest;
 import com.kelltontech.maxisgetit.requests.DetailRequest;
@@ -66,88 +69,79 @@ import com.kelltontech.maxisgetit.response.SubCategoryResponse;
 import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
-public class CombindListActivity extends MaxisMainActivity {
-	private LinearLayout mDealsFooter;
-	private LinearLayout mListFooter;
-	private LinearLayout advanceSearchLayout;
-	private LinearLayout mSearchContainer;
-	private LinearLayout wholeSearchBoxContainer;
-	private RelativeLayout bannerViewLayout;
-	private LinearLayout circleIndicator;
+public class CombindListActivity extends MaxisMainActivity implements OnClickListener {
 
-	private TextView mRecordsFoundView;
-	private TextView mRefineSearchView;
-	private TextView mDealBtnView;
-	private TextView mViewAllOnMap;
-	private TextView currentCity, currentLocality;
-	private TextView mainSearchButton;
-	private TextView mHeaderTitle;
-	private TextView nearMe;
+	private LinearLayout 			mDealsFooter;
+	private LinearLayout 			mListFooter;
+	private LinearLayout 			advanceSearchLayout;
+	private LinearLayout 			mSearchContainer;
+	private LinearLayout 			wholeSearchBoxContainer;
+	private RelativeLayout 			bannerViewLayout;
+	private LinearLayout 			circleIndicator;
+	private TextView 				mRecordsFoundView;
+	private TextView 				mRefineSearchView;
+	private TextView 				mDealBtnView;
+	private TextView 				mViewAllOnMap;
+	private TextView 				currentCity, currentLocality;
+	private TextView 				mainSearchButton;
+	private TextView 				mHeaderTitle;
+	private TextView 				nearMe;
 
-	private ImageView mSearchToggler;
-	private ImageView mSearchBtn;
-	private ImageView upArrow;
-	private ImageView mHomeIconView;
-	private ImageView mProfileIconView;
-	private ImageView mHeaderBackButton;
+	private ImageView 				mSearchToggler;
+	private ImageView 				mSearchBtn;
+	private ImageView 				upArrow;
+	private ImageView 				mHomeIconView;
+	private ImageView 				mProfileIconView;
+	private ImageView 				mHeaderBackButton;
 
-	private ListView mCompanyList;
-
-	private EditText mSearchEditText;
-
-	private Spinner mDistanceChooser;
-
-	private ViewPager bannerView;
-
-	private CombinedListRequest mClRequest;
-	private CombinedListRequest mdealRequest;
-	private RefineSelectorResponse mSelctorResp;
-	private RefineCategoryResponse mCatResponse;
-	private CompanyListResponse mClResponse;
-	private CompanyListResponse mDealResponse;
-	private SelectorDAO mLocalitySelectorDao;
-
-	ArrayList<CityOrLocality> localityList;
-	ArrayList<String> ids = new ArrayList<String>();
-	ArrayList<String> selectedLocalityindex;
-	ArrayList<CityOrLocality> cityList;
-	private ArrayList<String> selectedLocalityItemsforHeader = new ArrayList<String>();
-	private ArrayList<String> selectedLocalityItems = new ArrayList<String>();
-	private ArrayList<String> cityListString = new ArrayList<String>();
-	private ArrayList<String> localityItems;
-	//	private ArrayList<Banner> bannerList;
-	private int totalBanners;
+	private ListView 				mCompanyList;
+	private EditText 				mSearchEditText;
+	private Spinner 				mDistanceChooser;
+	private TextView 				mSearchCriteriaChooser;
+	private ViewPager	 			bannerView;
+	private CombinedListRequest 	mClRequest;
+	private CombinedListRequest 	mdealRequest;
+	private RefineSelectorResponse 	mSelctorResp;
+	private RefineCategoryResponse 	mCatResponse;
+	private CompanyListResponse 	mClResponse;
+	private CompanyListResponse 	mDealResponse;
+	private SelectorDAO 			mLocalitySelectorDao;
+	ArrayList<CityOrLocality> 		localityList;
+	ArrayList<String> 				ids = new ArrayList<String>();
+	ArrayList<String> 				selectedLocalityindex;
+	ArrayList<CityOrLocality> 		cityList;
+	private ArrayList<String> 		selectedLocalityItemsforHeader = new ArrayList<String>();
+	private ArrayList<String> 		selectedLocalityItems = new ArrayList<String>();
+	private ArrayList<String> 		cityListString	= new ArrayList<String>();
+	private ArrayList<String> 		localityItems;
+	private int 					totalBanners;
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	ArrayList<String> filter = new ArrayList(Arrays.asList("1 km", "2 km", "3 km", "4 km", "5 km", "10 km", "15 km", "20 km", "All"));
-
-	private CompanyListAdapter mCompListAdapter;
-	private BannerViewAdapter bannerViewAdapter;
-	private ArrayAdapter<String> mDistanceFilterAdapter;
-
-	private String selectedCityforHeader = "Entire Malaysia";
-	private String selectedCity = "Entire Malaysia";
-	private String mPreviousDistance;
-	private String mCategoryThumbUrl;
-
-	private boolean loadingNextPageData;
-	private boolean isModifySearchDialogOpen;
-	private boolean mScrollUp;
-	private boolean mIsFreshSearch = true;
-	private boolean isAdvanceSearchLayoutOpen = false;
-	private boolean stopSliding = false;
-	boolean isFirstTime = false;
-	boolean isSuccessfull = false;
-	boolean isFromNearMe = false;
-	boolean isFromSearch = false;
-
-	private int city_id = -1;
-	private int mPreviousSelectedIndex;
-	private int previousState, currentState;
-	private int flipperVisibleItemPosition = 0;
-
-	private Runnable animateViewPager;
-	private Handler bannerHandler;
-	private static final long ANIM_VIEWPAGER_DELAY = 5000;
+	ArrayList<String> 				filter = new ArrayList(Arrays.asList("1 km", "2 km", "3 km", "4 km", "5 km", "10 km", "15 km", "20 km", "All"));
+	private CompanyListAdapter 		mCompListAdapter;
+	private BannerViewAdapter 		bannerViewAdapter;
+	private ArrayAdapter<String> 	mDistanceFilterAdapter;
+	private String 					selectedCityforHeader = "Entire Malaysia";
+	private String 					selectedCity = "Entire Malaysia";
+	private String 					mPreviousDistance;
+	private String 					mCategoryThumbUrl;
+	private String 					mPreviousSelectedSearchCriteria = "";
+	private boolean 				loadingNextPageData;
+	private boolean 				isModifySearchDialogOpen;
+	private boolean 				mScrollUp;
+	private boolean 				mIsFreshSearch = true;
+	private boolean 				isAdvanceSearchLayoutOpen = false;
+	private boolean 				stopSliding = false;
+	boolean 						isFirstTime = false;
+	boolean 						isSuccessfull = false;
+	boolean 						isFromNearMe = false;
+	boolean 						isFromSearch = false;
+	private int 					city_id = -1;
+	private int 					mPreviousSelectedIndex;
+	private int 					previousState, currentState;
+	private int 					flipperVisibleItemPosition = 0;
+	private Runnable 				animateViewPager;
+	private Handler 				bannerHandler;
+	private static final long 		ANIM_VIEWPAGER_DELAY = 5000;
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -156,75 +150,112 @@ public class CombindListActivity extends MaxisMainActivity {
 			if (resultCode == RESULT_OK) {
 				mIsFreshSearch = false;
 				mRefineSearchView.setText(getResources().getString(R.string.cl_modify_search));
-				Bundle bundle = data.getExtras();
-				mClResponse = bundle.getParcelable(AppConstants.COMP_LIST_DATA);
-				mLocalitySelectorDao = bundle.getParcelable(AppConstants.LOCALITY_DAO_DATA);
-				mClRequest = bundle.getParcelable(AppConstants.DATA_LIST_REQUEST);
-				mSelctorResp = bundle.getParcelable(AppConstants.REFINE_ATTR_RESPONSE);
-				mCatResponse = bundle.getParcelable(AppConstants.REFINE_CAT_RESPONSE);
+				Bundle bundle 						= 		data.getExtras();
+				mClResponse 						= 		bundle.getParcelable(AppConstants.COMP_LIST_DATA);
+				mLocalitySelectorDao 				= 		bundle.getParcelable(AppConstants.LOCALITY_DAO_DATA);
+				mClRequest 							= 		bundle.getParcelable(AppConstants.DATA_LIST_REQUEST);
+				mSelctorResp 						= 		bundle.getParcelable(AppConstants.REFINE_ATTR_RESPONSE);
+				mCatResponse 						= 		bundle.getParcelable(AppConstants.REFINE_CAT_RESPONSE);
 				mRecordsFoundView.setText(mClResponse.getTotalrecordFound() + " " + getResources().getString(R.string.record_found));
+				mClRequest.setSearchRefined(true);
 				showHideBanner();
-
+				showHideSearchCriteriaChooser();
 				addAnEmptyRow();
-				ArrayList<CompanyDesc> compListData = mClResponse.getCompanyArrayList();
+
+				mIsFreshSearch = (mClResponse != null && mClResponse.getCategoryList() != null && mClResponse.getCategoryList().size() > 1) ? true : false;
+
+				if (mIsFreshSearch) {
+					if (mClResponse.getCategoryList() != null && mClResponse.getCategoryList().size() == 1) {
+						mIsFreshSearch 				= 		false;
+						CategoryRefine tempCatref 	= 		mClResponse.getCategoryList().get(0);
+						mClRequest.setSelectedCategoryBySearch(tempCatref.getCategoryId(), tempCatref.getCategoryTitle());
+					} else
+						mRefineSearchView.setText(getResources().getString(R.string.cl_filter_by));
+				}
+
+				ArrayList<CompanyDesc> compListData = 		mClResponse.getCompanyArrayList();
 				mCompListAdapter.setData(compListData);
 				mCompListAdapter.notifyDataSetChanged();
-
-				if (MaxisMainActivity.isCitySelected) {
+				mCompanyList.setAdapter(mCompListAdapter);
+				if ((!StringUtil.isNullOrEmpty(mClRequest.getStampId())) && (!StringUtil.isNullOrEmpty(mClRequest.getSearchCriteria()))) {
 					mDistanceChooser.setVisibility(View.GONE);
-					nearMe.setVisibility(View.VISIBLE);
-				} else {
 					nearMe.setVisibility(View.GONE);
-					mDistanceChooser.setVisibility(View.VISIBLE);
-					isSuccessfull = true;
-					String search_distance = mClResponse.getSearch_distance();
-					int index = setDistanceFilter(search_distance);
-					mDistanceChooser.setSelection(index);
+					mSearchCriteriaChooser.setVisibility(View.GONE);
+				} else {
+					if (MaxisMainActivity.isCitySelected) {
+						mDistanceChooser.setVisibility(View.GONE);
+						nearMe.setVisibility(View.VISIBLE);
+					} else {
+						if (GPS_Data.getLatitude() == 0 || GPS_Data.getLongitude() == 0) {
+							nearMe.setVisibility(View.VISIBLE);
+							mDistanceChooser.setVisibility(View.GONE);
+						} else {
+							nearMe.setVisibility(View.GONE);
+							mDistanceChooser.setVisibility(View.VISIBLE);
+						}
+						isSuccessfull 				= 		true;
+						String search_distance 		= 		mClResponse.getSearch_distance();
+						int index 					= 		setDistanceFilter(search_distance);
+						mDistanceChooser.setSelection(index);
+					}
 				}
 			}
 		} else if (resultCode == RESULT_OK && requestCode == AppConstants.CITY_REQUEST) {
 			if (!selectedCityforHeader.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
-				localityItems = null;
-				ids = null;
-				selectedLocalityindex = null;
+				localityItems 						= 		null;
+				ids 								= 		null;
+				selectedLocalityindex 				= 		null;
 				currentLocality.setText("Choose your Area");
 			}
-			selectedCityforHeader = data.getStringExtra("CITY_NAME");
-			selectedCity = data.getStringExtra("CITY_NAME");
+			selectedCityforHeader 					= 		data.getStringExtra("CITY_NAME");
+			selectedCity 							= 		data.getStringExtra("CITY_NAME");
 			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCityforHeader + "</b>"));
-			int index = data.getIntExtra("CITY_INDEX", 0);
-			if (index == -1) {
+			int index 								= 		data.getIntExtra("CITY_INDEX", 0);
+			if (index == -1) 
 				city_id = -1;
-			} else {
+			else 
 				city_id = cityList.get(index).getId();
-			}
-
 		} else if (resultCode == RESULT_OK && requestCode == AppConstants.LOCALITY_REQUEST) {
 			String locality = "";
-
 			selectedLocalityItemsforHeader = data.getStringArrayListExtra("SELECTED_LOCALITIES");
 			selectedLocalityItems = selectedLocalityItemsforHeader;
-
 			selectedLocalityindex = data.getStringArrayListExtra("SELECTED_LOCALITIES_INDEX");
 			if (selectedLocalityItemsforHeader != null && selectedLocalityItemsforHeader.size() > 0) {
 				for (int i = 0; i < selectedLocalityItemsforHeader.size(); i++) {
-					if (i == selectedLocalityItemsforHeader.size() - 1) {
+					if (i == selectedLocalityItemsforHeader.size() - 1)
 						locality += selectedLocalityItemsforHeader.get(i);
-					} else {
+					else
 						locality += selectedLocalityItemsforHeader.get(i) + ",";
-					}
 				}
 				currentLocality.setText(Html.fromHtml("Your Selected Area " + "<b>" + locality + "</b>"));
-			} else {
+			} else
 				currentLocality.setText("Choose your Area");
-			}
-
 			ids = new ArrayList<String>();
-
 			if (selectedLocalityindex != null && selectedLocalityindex.size() > 0) {
 				for (int i = 0; i < selectedLocalityindex.size(); i++) {
 					ids.add(String.valueOf(localityList.get(Integer.parseInt(selectedLocalityindex.get(i))).getId()));
 				}
+			}
+		} else if (resultCode == RESULT_OK && requestCode == AppConstants.SEARCH_CRITERIA_REQUEST) {
+			try {
+				SearchAttribute searchAttribute = ((data.getParcelableExtra("ChosenSearchCriteria") == null) ? null : (SearchAttribute) data.getParcelableExtra("ChosenSearchCriteria"));
+				String selectedItem = searchAttribute.getType();
+				mPreviousSelectedSearchCriteria = StringUtil.isNullOrEmpty(mClResponse.getDisplayIn().getType()) ? "" : mClResponse.getDisplayIn().getType();
+				if(!selectedItem.equals(mPreviousSelectedSearchCriteria)) {
+					for (SearchAttribute searchAttrib : mClResponse.getSearchAttributeList()) {
+						if(selectedItem.equals(searchAttrib.getType())) {
+							mClRequest.setSearchIn(searchAttrib.getType());
+							mClRequest.setKeywordOrCategoryId(searchAttrib.getKeyword());
+							break;
+						}
+					}
+					mClRequest.setPageNumber(1);
+					CombindListingController listingController = new CombindListingController(CombindListActivity.this, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
+					startSppiner();
+					listingController.requestService(mClRequest);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -236,57 +267,68 @@ public class CombindListActivity extends MaxisMainActivity {
 		setContentView(R.layout.activity_combind_list);
 		AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_COMBINED_LIST, true);
 		UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.cl_root_layout),this);
-		mHeaderTitle = (TextView) findViewById(R.id.header_title);
 		ImageLoader.initialize(CombindListActivity.this);
-		mProfileIconView = (ImageView) findViewById(R.id.show_profile_icon);
-		mProfileIconView.setOnClickListener(this);
-		mHeaderBackButton = (ImageView) findViewById(R.id.header_btn_back);
-		mHeaderBackButton.setOnClickListener(this);
-		mHomeIconView = (ImageView) findViewById(R.id.goto_home_icon);
-		mHomeIconView.setOnClickListener(this);
-		mViewAllOnMap = (TextView) findViewById(R.id.col_view_on_map);
-		mViewAllOnMap.setOnClickListener(this);
-		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
-		mSearchBtn.setOnClickListener(CombindListActivity.this);
-		mSearchEditText = (EditText) findViewById(R.id.search_box);
-		mDealsFooter = (LinearLayout) findViewById(R.id.cl_deals_footer);
-		mListFooter = (LinearLayout) findViewById(R.id.cl_company_list_footer);
 
+		mDealsFooter 			= (LinearLayout) 	findViewById(R.id.cl_deals_footer);
+		mListFooter 			= (LinearLayout) 	findViewById(R.id.cl_company_list_footer);
+		advanceSearchLayout 	= (LinearLayout) 	findViewById(R.id.advanceSearch);		
+		wholeSearchBoxContainer = (LinearLayout) 	findViewById(R.id.whole_search_box_container);
+		mSearchContainer 		= (LinearLayout) 	findViewById(R.id.search_box_container);
+		circleIndicator 		= (LinearLayout) 	findViewById(R.id.indicatorlinearlayout);
+		bannerViewLayout 		= (RelativeLayout) 	findViewById(R.id.bannerView_LnrLayout);
+		bannerView 				= (ViewPager) 		findViewById(R.id.subcategory_banner);
+		mProfileIconView 		= (ImageView) 		findViewById(R.id.show_profile_icon);
+		mHeaderBackButton 		= (ImageView) 		findViewById(R.id.header_btn_back);
+		mHomeIconView 			= (ImageView) 		findViewById(R.id.goto_home_icon);
+		mSearchBtn 				= (ImageView) 		findViewById(R.id.search_icon_button);
+		upArrow 				= (ImageView) 		findViewById(R.id.upArrow);
+		mSearchEditText 		= (EditText) 		findViewById(R.id.search_box);
+		mRefineSearchView 		= (TextView) 		findViewById(R.id.col_refine_search);
+		mViewAllOnMap 			= (TextView) 		findViewById(R.id.col_view_on_map);
+		currentCity 			= (TextView) 		findViewById(R.id.currentCity);
+		currentLocality 		= (TextView) 		findViewById(R.id.currentLocality);
+		mainSearchButton 		= (TextView) 		findViewById(R.id.mainSearchButton);
+		mHeaderTitle 			= (TextView) 		findViewById(R.id.header_title);
+		mRecordsFoundView 		= (TextView) 		findViewById(R.id.col_records_found);
+		mDealBtnView 			= (TextView) 		findViewById(R.id.col_deal_btn);
+		nearMe 					= (TextView) 		findViewById(R.id.nearMe);
+		mCompanyList 			= (ListView) 		findViewById(R.id.col_company_list);
+		mSearchToggler 			= (ImageView) 		findViewById(R.id.search_toggler);
+		mDistanceChooser 		= (Spinner) 		findViewById(R.id.distance_filter_chooser);
+		mSearchCriteriaChooser 	= (TextView) 		findViewById(R.id.search_criteria_chooser);
 		findViewById(R.id.col_view_on_map1).setOnClickListener(this);
+		findViewById(R.id.col_refine_search1).setOnClickListener(this);
+		findViewById(R.id.play_pasue_icon).setOnClickListener(this);
 
-		Bundle bundle = getIntent().getExtras();
-		mClRequest = bundle.getParcelable(AppConstants.DATA_LIST_REQUEST);
+		mProfileIconView.setOnClickListener(this);
+		mHeaderBackButton.setOnClickListener(this);
+		mHomeIconView.setOnClickListener(this);
+		mSearchBtn.setOnClickListener(CombindListActivity.this);
+		upArrow.setOnClickListener(this);
+		mRefineSearchView.setOnClickListener(this);
+		mViewAllOnMap.setOnClickListener(this);
+		currentCity.setOnClickListener(this);
+		currentLocality.setOnClickListener(this);
+		mainSearchButton.setOnClickListener(this);
+		mDealBtnView.setOnClickListener(this);
+		mSearchToggler.setOnClickListener(this);
+		nearMe.setOnClickListener(this);
+
+		advanceSearchLayout.setVisibility(View.GONE);
+		currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCityforHeader + "</b>"));
+
+		Bundle bundle 	= getIntent().getExtras();
+		mClRequest 		= bundle.getParcelable(AppConstants.DATA_LIST_REQUEST);
+		mClResponse 	= bundle.getParcelable(AppConstants.COMP_LIST_DATA);
+
 		if (mClRequest != null && !StringUtil.isNullOrEmpty(mClRequest.getCategoryTitle())) {
 			mHeaderTitle.setText(Html.fromHtml(mClRequest.getCategoryTitle()));
 			mCategoryThumbUrl = mClRequest.getParentThumbUrl();
 		}
-		mRefineSearchView = (TextView) findViewById(R.id.col_refine_search);
-		mRefineSearchView.setOnClickListener(this);
 
-		findViewById(R.id.col_refine_search1).setOnClickListener(this);
-
-		advanceSearchLayout = (LinearLayout) findViewById(R.id.advanceSearch);
-		advanceSearchLayout.setVisibility(View.GONE);
-
-		upArrow = (ImageView) findViewById(R.id.upArrow);
-		upArrow.setOnClickListener(this);
-
-		currentCity = (TextView) findViewById(R.id.currentCity);
-		currentLocality = (TextView) findViewById(R.id.currentLocality);
-		currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCityforHeader + "</b>"));
-
-		currentCity.setOnClickListener(this);
-		currentLocality.setOnClickListener(this);
-
-		mainSearchButton = (TextView) findViewById(R.id.mainSearchButton);
-		mainSearchButton.setOnClickListener(this);
-
-		wholeSearchBoxContainer = (LinearLayout) findViewById(R.id.whole_search_box_container);
-
-		String jsonForSearch = mClRequest.getPostJsonPayload();
-		if (!StringUtil.isNullOrEmpty(jsonForSearch)) {
+		if (mClRequest != null && !StringUtil.isNullOrEmpty(mClRequest.getPostJsonPayload())) {
 			try {
-				JSONObject jsonObject = new JSONObject(jsonForSearch);
+				JSONObject jsonObject = new JSONObject(mClRequest.getPostJsonPayload());
 				JSONObject jObject = jsonObject.getJSONObject("city");
 				int cityId = jObject.getInt("city_id");
 				String city_name = jObject.getString("city_name");
@@ -300,39 +342,34 @@ public class CombindListActivity extends MaxisMainActivity {
 				for (int i = 0; i < jArray.length(); i++) {
 					try {
 						JSONObject object = jArray.getJSONObject(i);
-						// Pulling items from the array
 						int locality_id = object.getInt("locality_id");
 						String locality_name = object.getString("locality_name");
 						ids.add(locality_id + "");
 						selectedLocalityItemsforHeader.add(locality_name);
 						selectedLocalityItems.add(locality_name);
-					} catch (JSONException e) {
-					}
+					} catch (JSONException e) { }
 				}
 				String locality = "";
 				if (selectedLocalityItemsforHeader != null && selectedLocalityItemsforHeader.size() > 0) {
 					for (int i = 0; i < selectedLocalityItemsforHeader.size(); i++) {
-						if (i == selectedLocalityItemsforHeader.size() - 1) {
+						if (i == selectedLocalityItemsforHeader.size() - 1) 
 							locality += selectedLocalityItemsforHeader.get(i);
-						} else {
+						else
 							locality += selectedLocalityItemsforHeader.get(i) + ",";
-						}
 					}
 					currentLocality.setText(Html.fromHtml("Your Selected Area " + "<b>" + locality + "</b>"));
-				} else {
+				} else
 					currentLocality.setText("Choose your Area");
-				}
-
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
-		mClResponse = bundle.getParcelable(AppConstants.COMP_LIST_DATA);
+
 		if (mClRequest.isBySearch()) {
 			if (mIsFreshSearch) {
 				if (mClResponse.getCategoryList() != null && mClResponse.getCategoryList().size() == 1) {
-					mIsFreshSearch = false;
-					CategoryRefine tempCatref = mClResponse.getCategoryList().get(0);
+					mIsFreshSearch 				= 		false;
+					CategoryRefine tempCatref 	= 		mClResponse.getCategoryList().get(0);
 					mClRequest.setSelectedCategoryBySearch(tempCatref.getCategoryId(), tempCatref.getCategoryTitle());
 				} else
 					mRefineSearchView.setText(getResources().getString(R.string.cl_filter_by));
@@ -341,21 +378,19 @@ public class CombindListActivity extends MaxisMainActivity {
 				mHeaderTitle.setText(Html.fromHtml(mClRequest.getKeywordOrCategoryId()));
 				mSearchEditText.setText(Html.fromHtml(mClRequest.getKeywordOrCategoryId()));
 			}
-		} else if ((mClRequest.getGroupActionType().trim().equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_CATEGORY_LIST_FOR_GROUP) && (mClRequest.getGroupType().trim().equalsIgnoreCase(AppConstants.GROUP_TYPE_CATEGORY)))) {
+		} else if ((mClRequest.getGroupActionType().trim().equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_CATEGORY_LIST_FOR_GROUP) 
+				&& (mClRequest.getGroupType().trim().equalsIgnoreCase(AppConstants.GROUP_TYPE_CATEGORY)))) {
 			if (mIsFreshSearch) {
 				if (mClResponse.getCategoryList() != null && mClResponse.getCategoryList().size() == 1) {
-					mIsFreshSearch = false;
-					CategoryRefine tempCatref = mClResponse.getCategoryList().get(0);
+					mIsFreshSearch 				= 		false;
+					CategoryRefine tempCatref 	= 		mClResponse.getCategoryList().get(0);
 					mClRequest.setSelectedCategoryBySearch(tempCatref.getCategoryId(),tempCatref.getCategoryTitle());
 				} else
 					mRefineSearchView.setText(getResources().getString(R.string.cl_filter_by));
 			}
-		} else {
+		} else
 			mHeaderTitle.setVisibility(View.VISIBLE);
-		}
-		mRecordsFoundView = (TextView) findViewById(R.id.col_records_found);
-		mDealBtnView = (TextView) findViewById(R.id.col_deal_btn);
-		mDealBtnView.setOnClickListener(this);
+
 		if (mClRequest.isCompanyListing()) {
 			mDealsFooter.setVisibility(View.GONE);
 			mListFooter.setVisibility(View.VISIBLE);
@@ -363,21 +398,19 @@ public class CombindListActivity extends MaxisMainActivity {
 			mDealsFooter.setVisibility(View.VISIBLE);
 			mListFooter.setVisibility(View.GONE);
 		}
+
 		mRecordsFoundView.setText(mClResponse.getTotalrecordFound() + " " + getResources().getString(R.string.record_found));
-		ArrayList<CompanyDesc> compListData = mClResponse.getCompanyArrayList();
-		mCompanyList = (ListView) findViewById(R.id.col_company_list);
-		mCompListAdapter = new CompanyListAdapter(CombindListActivity.this, mClRequest.isCompanyListing());
+
+		ArrayList<CompanyDesc> compListData 	= 		mClResponse.getCompanyArrayList();
+		mCompListAdapter 						= 		new CompanyListAdapter(CombindListActivity.this, mClRequest.isCompanyListing());
 		mCompListAdapter.setData(compListData);
-		mSearchContainer = (LinearLayout) findViewById(R.id.search_box_container);
-		mSearchToggler = (ImageView) findViewById(R.id.search_toggler);
-		mSearchToggler.setOnClickListener(this);
+		mCompListAdapter.notifyDataSetChanged();
 		mCompanyList.setAdapter(mCompListAdapter);
+
 		mCompanyList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-
-				if (arg2 == (mCompListAdapter.getCount() - 1) && arg2 != 0 && mClResponse.getTotalrecordFound() > 10) {
-					// do nothing
+				if (arg2 == (mCompListAdapter.getCount() - 1) && arg2 != 0 && mClResponse.getTotalrecordFound() > 10) { 
 				} else {
 					CompanyDetailController controller = new CompanyDetailController(CombindListActivity.this, Events.COMPANY_DETAIL);
 					String id = ((CompanyDesc) mCompListAdapter.getItem(arg2)).getCompId();
@@ -387,10 +420,10 @@ public class CombindListActivity extends MaxisMainActivity {
 				}
 			}
 		});
+
 		mCompanyList.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView listView, int scrollState) { }
-
 			@Override
 			public void onScroll(AbsListView listView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 				Log.w("", "firstVisibleItem " + firstVisibleItem + " visibleItemCount " + visibleItemCount + " totalItemCount " + totalItemCount);
@@ -399,18 +432,15 @@ public class CombindListActivity extends MaxisMainActivity {
 					if ((number) % mClResponse.getRecordsPerPage() == 0
 							&& number > 0
 							&& number == totalItemCount
-							&& totalItemCount < mClResponse
-							.getTotalrecordFound())// mNewsList.size()>totalItemCount
-					{
+							&& totalItemCount < mClResponse.getTotalrecordFound()) {
 						Log.d("maxis", "list detail before next page" + mClResponse.getPageNumber() + "  " + totalItemCount + " " + mClResponse.getCompanyArrayList().size());
 						if (loadingNextPageData)
 							return;
 						loadingNextPageData = true;
-						if (mClResponse.getPageNumber() < AppConstants.MAX_RECORD_COUNT / 10) {
+						if (mClResponse.getPageNumber() < AppConstants.MAX_RECORD_COUNT / 10)
 							loadPageData(mClResponse.getPageNumber() + 1);
-						}
 					} else if (number >= AppConstants.MAX_RECORD_COUNT && !isModifySearchDialogOpen && mScrollUp && mClResponse.getTotalrecordFound() > 100) {
-						showConfirmationDialog(CustomDialog.CONFIRMATION_DIALOG,getResources().getString(R.string.modify_to_filter));
+						showConfirmationDialog(CustomDialog.CONFIRMATION_DIALOG, getResources().getString(R.string.modify_to_filter));
 						isModifySearchDialogOpen = true;
 						AnalyticsHelper.logEvent(FlurryEventsConstants.COMBINED_LIST_VISITED_ITEMS_EXCEEDED_70);
 					}
@@ -421,7 +451,6 @@ public class CombindListActivity extends MaxisMainActivity {
 		mCompanyList.setOnTouchListener(new OnTouchListener() {
 			private float mInitialX;
 			private float mInitialY;
-
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
@@ -439,7 +468,6 @@ public class CombindListActivity extends MaxisMainActivity {
 						Log.d("maxis", "SCROLL DOWN");
 						mScrollUp = false;
 						break;
-
 					} else if (yDiff < 0.0) {
 						Log.d("maxis", "SCROLL up");
 						mScrollUp = true;
@@ -449,11 +477,9 @@ public class CombindListActivity extends MaxisMainActivity {
 				}
 				return false;
 			}
-
 		});
 
 		mSearchEditText.setOnTouchListener(new OnTouchListener() {
-
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (!isAdvanceSearchLayoutOpen) {
@@ -466,18 +492,30 @@ public class CombindListActivity extends MaxisMainActivity {
 
 		addAnEmptyRow();
 
-		mDistanceChooser = (Spinner) findViewById(R.id.distance_filter_chooser);
-		nearMe = (TextView) findViewById(R.id.nearMe);
-		nearMe.setOnClickListener(this);
+		mSearchCriteriaChooser.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent searchCriteriaIntent = new Intent(CombindListActivity.this, SearchCriteriaChooserActivity.class);
+				searchCriteriaIntent.putParcelableArrayListExtra("SearchCriteria", mClResponse.getSearchAttributeList());
+				searchCriteriaIntent.putExtra("displayIn", mClResponse.getDisplayIn().getType().trim());
+				startActivityForResult(searchCriteriaIntent, AppConstants.SEARCH_CRITERIA_REQUEST);
+			}
+		});
 
-		// TO Be CHANGE
+		showHideSearchCriteriaChooser();
 
-		if (MaxisMainActivity.isCitySelected || mClRequest.getLongitude() == 0.0 || mClRequest.getLatitude() == 0.0) {
+		if ((!StringUtil.isNullOrEmpty(mClRequest.getStampId())) /*&& (!StringUtil.isNullOrEmpty(mClRequest.getSearchCriteria()))*/) {
 			mDistanceChooser.setVisibility(View.GONE);
-			nearMe.setVisibility(View.VISIBLE);
-		} else {
 			nearMe.setVisibility(View.GONE);
-			mDistanceChooser.setVisibility(View.VISIBLE);
+			mSearchCriteriaChooser.setVisibility(View.GONE);
+		} else {
+			if (MaxisMainActivity.isCitySelected || mClRequest.getLongitude() == 0.0 || mClRequest.getLatitude() == 0.0) {
+				mDistanceChooser.setVisibility(View.GONE);
+				nearMe.setVisibility(View.VISIBLE);
+			} else {
+				nearMe.setVisibility(View.GONE);
+				mDistanceChooser.setVisibility(View.VISIBLE);
+			}
 		}
 
 		mDistanceFilterAdapter = new ArrayAdapter<String>(CombindListActivity.this, R.layout.spinner_item, filter);
@@ -485,9 +523,7 @@ public class CombindListActivity extends MaxisMainActivity {
 		String search_distance = mClResponse.getSearch_distance();
 		mDistanceChooser.setSelection(setDistanceFilter(search_distance));
 		mDistanceChooser.setOnItemSelectedListener(new OnItemSelectedListener() {
-
 			String distance = "";
-
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int pos, long arg3) {
 				if (filter.get(pos).equalsIgnoreCase("All")) {
@@ -495,7 +531,6 @@ public class CombindListActivity extends MaxisMainActivity {
 				} else {
 					distance = filter.get(pos).replace(" km", "");
 				}
-
 				if (isFirstTime) {
 					if (mPreviousSelectedIndex != pos && !isFromNearMe) {
 						mClRequest.setSearch_distance(distance);
@@ -511,18 +546,13 @@ public class CombindListActivity extends MaxisMainActivity {
 					mClRequest.setSearch_distance(distance);
 				}
 			}
-
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) { }
 		});
-		bannerViewLayout = (RelativeLayout) findViewById(R.id.bannerView_LnrLayout);
-		bannerView = (ViewPager) findViewById(R.id.subcategory_banner);
 
 		bannerView.setOnTouchListener(new OnTouchListener() {
-
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-
 				v.getParent().requestDisallowInterceptTouchEvent(true);
 				if (totalBanners > 1) {
 					switch (event.getAction()) {
@@ -533,9 +563,9 @@ public class CombindListActivity extends MaxisMainActivity {
 						circleIndicator.setVisibility(View.GONE);
 						if (((ImageView) findViewById(R.id.play_pasue_icon)).getBackground() != null 
 								&& ((ImageView) findViewById(R.id.play_pasue_icon)).getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.banner_pause).getConstantState())) {
-						stopSliding = false;
-						runnable(totalBanners);
-						bannerHandler.postDelayed(animateViewPager, ANIM_VIEWPAGER_DELAY);
+							stopSliding = false;
+							runnable(totalBanners);
+							bannerHandler.postDelayed(animateViewPager, ANIM_VIEWPAGER_DELAY);
 						}
 						break;
 					case MotionEvent.ACTION_MOVE:
@@ -578,13 +608,41 @@ public class CombindListActivity extends MaxisMainActivity {
 				}
 			}
 		});	
+	}
 
-		circleIndicator = (LinearLayout) findViewById(R.id.indicatorlinearlayout);
-		((ImageView) findViewById(R.id.play_pasue_icon)).setOnClickListener(this);
+	private void showHideSearchCriteriaChooser() {
+		if ((mClResponse != null) 
+				&& (mClResponse.getSearchAttributeList() != null) 
+				&& (mClResponse.getSearchAttributeList().size() > 0)) {
+			if(mClResponse.getSearchAttributeList().size() > 1) {
+				mSearchCriteriaChooser.setBackgroundResource(R.drawable.search_criteria_enable);
+				mSearchCriteriaChooser.setVisibility(View.VISIBLE);
+			} else {
+				mSearchCriteriaChooser.setBackgroundResource(R.drawable.search_criteria_disable);
+				mSearchCriteriaChooser.setVisibility(View.GONE);
+			}
+
+			if (mClResponse.getDisplayIn() != null 
+					&& "Stamp".equalsIgnoreCase(mClResponse.getDisplayIn().getType()) 
+					&& mClResponse.getCompanyArrayList() != null 
+					&& mClResponse.getCompanyArrayList().get(0).isStamp()) {
+				mRefineSearchView.setVisibility(View.GONE);
+				((TextView) findViewById (R.id.col_deal_btn)).setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 75));
+				((TextView) findViewById (R.id.col_view_on_map)).setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 75));
+			} else {
+				mRefineSearchView.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 50));
+				((TextView) findViewById (R.id.col_deal_btn)).setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 50));
+				((TextView) findViewById (R.id.col_view_on_map)).setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 50));
+				mRefineSearchView.setVisibility(View.VISIBLE);
+			}
+		}else {
+			mSearchCriteriaChooser.setVisibility(View.GONE);
+		}
 	}
 
 	private void showHideBanner() {
 		if (mClResponse != null && mClResponse.getBannerList() != null && mClResponse.getBannerList().size() > 0) {
+			ImageLoader.initialize(CombindListActivity.this);
 			ArrayList<Banner> bannerList = mClResponse.getBannerList();
 			totalBanners = bannerList.size();
 			bannerViewLayout.setVisibility(View.VISIBLE);
@@ -643,7 +701,7 @@ public class CombindListActivity extends MaxisMainActivity {
 	}
 
 	private void addAnEmptyRow() {
-		if (mClResponse.getTotalrecordFound() <= mClResponse.getRecordsPerPage() && mClResponse.getTotalrecordFound() > 5) {
+		if (mClResponse.getTotalrecordFound() <= mClResponse.getRecordsPerPage() && mClResponse.getTotalrecordFound() > 4) {
 			// Add one blank record.
 			CompanyDesc desc = new CompanyDesc();
 			desc.setCompId("-1");
@@ -651,11 +709,25 @@ public class CombindListActivity extends MaxisMainActivity {
 		}
 	}
 
+	public void viewMoreCopmay(CompanyDesc compDesc) {
+		if (mClRequest.isBySearch()) {
+			performSearch(compDesc.getStampId()+"-"+ mClResponse.getDisplayIn().getKeyword(), mClResponse.getDisplayIn().getType(), Events.COMBIND_LISTING_VIEW_MORE_COMPANY_EVENT);
+		} else {
+			performSearch(compDesc.getStampId()+"-"+"null", null, Events.COMBIND_LISTING_VIEW_MORE_COMPANY_EVENT);
+		}
+	}
+
 	@Override
 	protected void onResume() {
 		showHideBanner();
 		super.onResume();
-		AnalyticsHelper.trackSession(CombindListActivity.this, AppConstants.Company_listing);
+		if (mClResponse.getDisplayIn() != null 
+				&& (!StringUtil.isNullOrEmpty(mClResponse.getDisplayIn().getType())) 
+				&& "Stamp".equalsIgnoreCase(mClResponse.getDisplayIn().getType())) {
+			AnalyticsHelper.trackSession(CombindListActivity.this, AppConstants.Stamp_Company_listing);
+		} else {
+			AnalyticsHelper.trackSession(CombindListActivity.this, AppConstants.Company_listing);
+		}
 	}
 
 	@Override
@@ -673,7 +745,8 @@ public class CombindListActivity extends MaxisMainActivity {
 				|| event == Events.BANNER_LANDING_DEAL_DETAIL_EVENT
 				|| event == Events.BANNER_LANDING_COMPANY_DETAIL_EVENT
 				|| event == Events.BANNER_LANDING_COMPANY_LISTING_EVENT
-				|| event == Events.BANNER_LANDING_SEARCH_EVENT) {
+				|| event == Events.BANNER_LANDING_SEARCH_EVENT
+				|| event == Events.COMBIND_LISTING_VIEW_MORE_COMPANY_EVENT) {
 			super.setScreenData(screenData, event, time);
 			return;
 		} else if (event == Events.REFINE_ATTRIBUTES) {
@@ -751,7 +824,8 @@ public class CombindListActivity extends MaxisMainActivity {
 				|| msg.arg2 == Events.BANNER_LANDING_COMPANY_DETAIL_EVENT
 				|| msg.arg2 == Events.BANNER_LANDING_DEAL_DETAIL_EVENT
 				|| msg.arg2 == Events.BANNER_LANDING_COMPANY_LISTING_EVENT
-				|| msg.arg2 == Events.BANNER_LANDING_SEARCH_EVENT) {
+				|| msg.arg2 == Events.BANNER_LANDING_SEARCH_EVENT
+				|| msg.arg2 == Events.COMBIND_LISTING_VIEW_MORE_COMPANY_EVENT) {
 			super.updateUI(msg);
 		} else if (msg.arg2 == Events.COMPANY_DETAIL) {
 			if (msg.arg1 == 1) {
@@ -788,6 +862,7 @@ public class CombindListActivity extends MaxisMainActivity {
 				}
 				mCompListAdapter.setData(mClResponse.getCompanyArrayList());
 				mCompListAdapter.notifyDataSetChanged();
+				//				mCompanyList.setAdapter(mCompListAdapter);
 			}
 			stopSppiner();
 		} else if ((msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE && !isFromSearch) || (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE && isFromNearMe)) {
@@ -800,7 +875,6 @@ public class CombindListActivity extends MaxisMainActivity {
 				mClRequest.setSearch_distance(mPreviousDistance);
 			} else {
 				isSuccessfull = true;
-				// CompanyListResponse oldResponse = new CompanyListResponse();
 				mClResponse = (CompanyListResponse) msg.obj;
 				String search_distance = mClResponse.getSearch_distance();
 				int index = setDistanceFilter(search_distance);
@@ -809,13 +883,38 @@ public class CombindListActivity extends MaxisMainActivity {
 
 				showHideBanner();
 
-				if (MaxisMainActivity.isCitySelected) {
+				if ((!StringUtil.isNullOrEmpty(mClRequest.getStampId())) && (!StringUtil.isNullOrEmpty(mClRequest.getSearchCriteria()))) {
 					mDistanceChooser.setVisibility(View.GONE);
-					nearMe.setVisibility(View.VISIBLE);
-				} else {
 					nearMe.setVisibility(View.GONE);
-					mDistanceChooser.setVisibility(View.VISIBLE);
+					mSearchCriteriaChooser.setVisibility(View.GONE);
+				} else {
+					if (MaxisMainActivity.isCitySelected) {
+						mDistanceChooser.setVisibility(View.GONE);
+						nearMe.setVisibility(View.VISIBLE);
+					} else {
+						if (GPS_Data.getLatitude() == 0 || GPS_Data.getLongitude() == 0) {
+							nearMe.setVisibility(View.VISIBLE);
+							mDistanceChooser.setVisibility(View.GONE);
+						} else {
+							nearMe.setVisibility(View.GONE);
+							mDistanceChooser.setVisibility(View.VISIBLE);
+						}
+					}
 				}
+
+				showHideSearchCriteriaChooser();
+
+				mIsFreshSearch = (mClResponse != null && mClResponse.getCategoryList() != null && mClResponse.getCategoryList().size() > 1) ? true : false;
+
+				if (mIsFreshSearch) {
+					if (mClResponse.getCategoryList() != null && mClResponse.getCategoryList().size() == 1) {
+						mIsFreshSearch 				= 		false;
+						CategoryRefine tempCatref 	= 		mClResponse.getCategoryList().get(0);
+						mClRequest.setSelectedCategoryBySearch(tempCatref.getCategoryId(), tempCatref.getCategoryTitle());
+					} else
+						mRefineSearchView.setText(getResources().getString(R.string.cl_filter_by));
+				}
+
 				if (mClResponse.getPageNumber() == 10 || mClResponse.getTotalrecordFound() == mClResponse.getCompanyArrayList().size()) { }
 				mRecordsFoundView.setText(mClResponse.getTotalrecordFound() + " " + getResources().getString(R.string.record_found));
 				mCompListAdapter.setData(mClResponse.getCompanyArrayList());
@@ -826,14 +925,16 @@ public class CombindListActivity extends MaxisMainActivity {
 					mHeaderTitle.setText(Html.fromHtml(mClRequest.getCategoryTitle()));
 					mCategoryThumbUrl = mClRequest.getParentThumbUrl();
 				}
+
+				addAnEmptyRow();
 			}
 			stopSppiner();
 		} else if (msg.arg2 == Events.REFINE_ATTRIBUTES) {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				if (mClRequest.isBySearch())displayRefineWithAttributeSpinnersPreloaded((RefineSelectorResponse) 
-						msg.obj,RefineSearchActivity.ATTR_SELECTION_BY_SEARCH);
+				if (mClRequest.isBySearch())
+					displayRefineWithAttributeSpinnersPreloaded((RefineSelectorResponse) msg.obj,RefineSearchActivity.ATTR_SELECTION_BY_SEARCH);
 				else
 					displayRefineWithAttributeSpinnersPreloaded((RefineSelectorResponse) msg.obj,RefineSearchActivity.ATTR_SELECTION);
 			}
@@ -909,6 +1010,10 @@ public class CombindListActivity extends MaxisMainActivity {
 	private void loadPageData(int pageNumber) {
 		CombindListingController listingController = new CombindListingController(CombindListActivity.this, Events.COMBIND_LISTING_PAGINATION);
 		mClRequest.setPageNumber(pageNumber);
+		if(mClResponse != null && mClResponse.getDisplayIn() != null) {
+			mClRequest.setSearchIn(mClResponse.getDisplayIn().getType());
+			mClRequest.setKeywordOrCategoryId(mClResponse.getDisplayIn().getKeyword());
+		}
 		startSppiner();
 		listingController.requestService(mClRequest);
 	}
@@ -918,16 +1023,14 @@ public class CombindListActivity extends MaxisMainActivity {
 		switch (v.getId()) {
 		case R.id.search_toggler:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SEARCH_CLICK);
-			if (wholeSearchBoxContainer.getVisibility() == View.VISIBLE) {
+			if (wholeSearchBoxContainer.getVisibility() == View.VISIBLE) 
 				wholeSearchBoxContainer.setVisibility(View.GONE);
-			} else {
+			else
 				wholeSearchBoxContainer.setVisibility(View.VISIBLE);
-			}
-			if (mSearchContainer.getVisibility() == View.VISIBLE) {
+			if (mSearchContainer.getVisibility() == View.VISIBLE)
 				mSearchContainer.setVisibility(View.GONE);
-			} else {
+			else
 				mSearchContainer.setVisibility(View.VISIBLE);
-			}
 			break;
 		case R.id.header_btn_back:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.BACK_CLICK);
@@ -987,9 +1090,8 @@ public class CombindListActivity extends MaxisMainActivity {
 				cityIntent.putExtra("CITY_LIST", cityListString);
 				cityIntent.putExtra("SELECTED_CITY", selectedCityforHeader);
 				startActivityForResult(cityIntent, AppConstants.CITY_REQUEST);
-			} else {
+			} else
 				setSearchCity();
-			}
 			break;
 		case R.id.currentLocality:
 			if (localityItems != null && localityItems.size() > 0) {
@@ -998,20 +1100,20 @@ public class CombindListActivity extends MaxisMainActivity {
 				localityIntent.putExtra("SELECTED_LOCALITIES", selectedLocalityItemsforHeader);
 				localityIntent.putStringArrayListExtra("LOCALITY_INDEX", selectedLocalityindex);
 				startActivityForResult(localityIntent, AppConstants.LOCALITY_REQUEST);
-			} else {
+			} else 
 				setSearchLocality(city_id);
-			}
 			break;
 		case R.id.nearMe:
-			if (mClRequest.getLongitude() == 0.0 || mClRequest.getLatitude() == 0.0) {
+			if (mClRequest.getLongitude() == 0.0 || mClRequest.getLatitude() == 0.0)
 				showAlertDialog(getResources().getString(R.string.location_unavailable_switch_gps));
-			} else {
+			else {
 				mSelctorResp = null;
 				selectedCity = null;
 				selectedLocalityItems = null;
 				mDistanceChooser.setVisibility(View.VISIBLE);
 				nearMe.setVisibility(View.GONE);
 				mClRequest.setSearch_distance("");
+				mClRequest.setPageNumber(1);
 				mClRequest.setPostJsonPayload("");
 				MaxisMainActivity.isCitySelected = false;
 				isFromNearMe = true;
@@ -1042,7 +1144,9 @@ public class CombindListActivity extends MaxisMainActivity {
 	}
 
 	private void refineSearch() {
-		if (mClRequest.isBySearch() || (mClRequest.getGroupActionType().trim().equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_CATEGORY_LIST_FOR_GROUP) && (mClRequest.getGroupType().trim().equalsIgnoreCase(AppConstants.GROUP_TYPE_CATEGORY)))) {
+		if (mClRequest.isBySearch() 
+				|| (mClRequest.getGroupActionType().trim().equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_CATEGORY_LIST_FOR_GROUP) 
+						&& (mClRequest.getGroupType().trim().equalsIgnoreCase(AppConstants.GROUP_TYPE_CATEGORY)))) {
 			if (mIsFreshSearch) {
 				mCatResponse = new RefineCategoryResponse();
 				if (mClResponse.getCategoryList() == null || mClResponse.getCategoryList().size() < 1) {
@@ -1077,10 +1181,17 @@ public class CombindListActivity extends MaxisMainActivity {
 		startSppiner();
 		RefineSearchRequest refineSearchRequest = new RefineSearchRequest();
 		refineSearchRequest.setCategoryId(categoryId);
-		if(mClRequest.isBySearch()) 
-			refineSearchRequest.setSearchKeyword(mClRequest.getKeywordOrCategoryId());
-		else 
-			refineSearchRequest.setSearchKeyword("");	
+		if(mClRequest.isBySearch()) {
+			if((!StringUtil.isNullOrEmpty(mClRequest.getSearchCriteria()) 
+					&& ("Stamp".equalsIgnoreCase(mClRequest.getSearchCriteria())))) {
+				refineSearchRequest.setStampId(mClRequest.getStampId());
+			} else {
+				refineSearchRequest.setSearchKeyword(mClRequest.getKeywordOrCategoryId());
+				refineSearchRequest.setSearchIn(mClRequest.getSearchIn());
+			}
+		} else { 
+			refineSearchRequest.setSearchKeyword("");
+		}
 		refineSearchRequest.setDeal(!mClRequest.isCompanyListing());
 		refineController.requestService(refineSearchRequest);
 	}
@@ -1109,6 +1220,13 @@ public class CombindListActivity extends MaxisMainActivity {
 		}
 	}
 
+	@Override
+	public void onNegativeDialogbutton(int id) {
+		loadingNextPageData = false;
+		isModifySearchDialogOpen = false;
+		super.onNegativeDialogbutton(id);
+	}
+
 	private void showMap() {
 		if (isLocationAvailable()) {
 			Intent intent = new Intent(CombindListActivity.this,ViewAllOnMapActivity.class);
@@ -1119,13 +1237,6 @@ public class CombindListActivity extends MaxisMainActivity {
 			intent.putParcelableArrayListExtra(AppConstants.COMP_DETAIL_LIST,mClResponse.getCompanyArrayList());
 			startActivity(intent);
 		}
-	}
-
-	@Override
-	public void onNegativeDialogbutton(int id) {
-		loadingNextPageData = false;
-		isModifySearchDialogOpen = false;
-		super.onNegativeDialogbutton(id);
 	}
 
 	public String jsonForSearch() {
@@ -1185,5 +1296,4 @@ public class CombindListActivity extends MaxisMainActivity {
 		MaxisMainActivity.isCitySelected = false;
 		super.onBackPressed();
 	}
-
 }

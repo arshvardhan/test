@@ -10,6 +10,7 @@
     <string name="enter_activation_code">Please enter the code to authenticate your mobile number</string>
     <string name="validate">Validate</string>
     <string name="resend_code">Resend Code</string>
+    <string name="search_criteria_dialog_header">FILTER BY TYPE</string>
     <!-- App authentication -->
     <string name="please_confirm_mob">Please confirm your mobile number :</string>
     <string name="confirm">Confirm</string>
@@ -31,6 +32,8 @@
     <string name="cl_modify_search">Modify Search</string>
     <string name="cl_filter_by">Filter By</string>
     <string name="download_deal">The detail of this Deal has been sent to your phone number via a SMS.</string>
+    <string name="view_stamp">View Certified Companies</string>
+    <string name="no_filter_available">No filter available</string>
 
     <!-- Edit profile Activity -->
     <string name="enter_user_name">Please enter your Name.</string>
@@ -53,13 +56,14 @@
     <string name="cd_error_enable_gps">Please enable your GPS Settings.</string>
     <string name="cd_error_location_not_found">Unable to find your location. Please try again.</string>
     <string name="cd_error_sensor_not_found">Your device does not support this feature.</string>
-    <string name="txt_tnc">Terms &amp; Conditions</string>
+    <string name="txt_tnc"><u>Terms &amp; Conditions</u></string>
     <string name="cd_view_more">View more</string>
-    <string name="cd_write_review"><u>Write a Review</u></string>
-    <string name="cd_no_review">No review(s)</string>
+    <string name="cd_write_review"><u>write a review</u></string>
+    <string name="cd_no_review">No review(s) yet, </string>
     <string name="cd_msg_data_usage">You might incur data charges for use beyond this point.</string>
     <string name="cd_msg_add_to_fav">Please log in first to add this company to your favourite list.</string>
     <string name="cd_msg_remove_from_fav">Please log in first to remove this company to your favourite list.</string>
+    <string name="cd_you_may_also_browse">Featured Companies</string>
 
     <!-- FavCompanyList activity -->
     <string name="fav_companies_found"><u>listing(s) added as your favourites.</u></string>
@@ -188,6 +192,7 @@
     <string name="select_ad_type">Select an Ad Type to post</string>
     <string name="ad_type">Type</string>
     <string name="update">Update</string>
+    <string name="see_results">See Results</string>
     <string name="preferred_lang">Preferred Language</string>
     <string name="paid">Paid</string>
     <string name="password">Password</string>
@@ -226,7 +231,7 @@
     <string name="not_available">Not Available</string>
     <string name="country_code">+60</string>
     <string name="country_code_excluding_plus">60</string>
-    <string name="msg_dont_ask_me_again">Don\'t ask me again</string>
+    <string name="msg_dont_ask_me_again">    Don\'t ask me again</string>
 
     <!-- verify registration screen -->
     <string name="dear_user">Dear User</string>
@@ -401,7 +406,7 @@
     <string name="view_life_cycle"><u>View Life Cycle</u></string>
     <string name="title_activity_did_life_cycle">DidLifeCycleActivity</string>
     <string name="title_activity_company_or_category_filter">CompanyOrCategoryFilterActivity</string>
-
+    <string name="title_activity_search_criteria_chooser">SearchCriteriaChooserActivity</string>
     <!-- ViewDealMap Activity -->
     <string name="route">Route</string>
 

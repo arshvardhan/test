@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cl_row_viewgroup"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp" >
+
+    <LinearLayout
+        android:id="@+id/pcl_row_base_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_home_list_item_bg"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" >
+
+        <ImageView
+            android:id="@+id/pcl_company_image"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/comp_list_loading" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="5dp" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <!--
+                     <TextView
+                    android:id="@+id/pcl_comp_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="10dp"
+                    android:singleLine="true"
+                    android:textSize="@dimen/sp_13"
+                    android:textStyle="bold" />
+                -->
+
+                <TextView
+                    android:id="@+id/pcl_company_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/head_title_col"
+                    android:textSize="@dimen/sp_13"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/pcl_company_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/app_txt"
+                android:textSize="@dimen/sp_12" />
+
+            <TextView
+                android:id="@+id/pcl_comp_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textSize="@dimen/sp_12" />
+
+            <!--
+                 <TextView
+                android:id="@+id/pcl_comp_addi_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxEms="20"
+                android:singleLine="true"
+                android:textColor="@color/app_txt"
+                android:textSize="@dimen/sp_12" />
+
+            <TextView
+                android:id="@+id/pcl_comp_addi_info2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="@color/app_txt"
+                android:textSize="@dimen/sp_12" />
+            -->
+
+
+            <!--
+            <LinearLayout
+                android:id="@+id/cl_rating_bar_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <RatingBar
+                    android:id="@+id/cl_comp_rating"
+                    style="@style/customFeedbackRatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:rating="0"
+                    android:stepSize="0.5" />
+
+                <ImageView
+                    android:id="@+id/videoIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="6dp"
+                    android:src="@drawable/video_icon"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/cl_view_stamp_old"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:clickable="true"
+                    android:ellipsize="end"
+                    android:layout_weight="1"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="2dp"
+                    android:singleLine="true"
+                    android:text="@string/view_stamp"
+                    android:textColor="@color/head_title_col"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/cl_stamp_image"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center_vertical|right"
+                    android:contentDescription="@string/view_stamp"
+                    android:src="@drawable/comp_list_loading"
+                    android:visibility="invisible" />
+            </LinearLayout>
+            -->
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--
+         <TextView
+        android:id="@+id/cl_view_stamp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cl_row_base_layout"
+        android:layout_gravity="center_vertical"
+        android:background="@color/view_more_company_txv"
+        android:clickable="true"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
+        android:singleLine="true"
+        android:text="@string/view_stamp"
+        android:textColor="@color/head_title_col"
+        android:textSize="@dimen/sp_12"
+        android:textStyle="bold"
+        android:visibility="gone" />
+    -->
+
+</RelativeLayout>
