@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/reg_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bg_base_col"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/header_base_activity"
+        layout="@layout/header_base_screen" />
+
+
+    <ScrollView
+        android:id="@+id/reg_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header_base_activity" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:weightSum="1" >
+
+            <TextView
+                android:id="@+id/as_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/shape_green_curved_box"
+                android:clickable="true"
+                android:text="Click to Logout"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_15" 
+			android:textColorHighlight="@color/white"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/preferred_lang"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_13" 
+                    android:textStyle="bold"
+                    />
+
+                <RadioGroup
+                    android:id="@+id/as_lang_switcher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <RadioButton
+                        android:id="@+id/as_lang_en"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/english" />
+
+                    <RadioButton
+                        android:id="@+id/as_lang_ms"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/malay" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/as_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Use Localized Search" />
+
+            <TextView
+                android:id="@+id/as_save_lang_loc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/shape_green_curved_box"
+                android:clickable="true"
+                android:text="@string/save" 
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textColorHighlight="@color/white"
+                android:textSize="@dimen/sp_15"
+                />
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

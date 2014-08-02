@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cl_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/header_base_activity"
+        layout="@layout/header_with_popdown_search" />
+
+    <LinearLayout
+        android:id="@+id/cl_header_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_base_activity"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="#27517b"
+            android:padding="5dp"
+            android:paddingLeft="15dp"
+            android:singleLine="true"
+            android:text="@string/category_deals"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/pagination"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cl_header_view"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_bg_green_grey_stroke"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp" >
+
+            <TextView
+                android:id="@+id/col_records_found"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:text="@string/outlet_found"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/col_company_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fadingEdge="none"
+            android:gravity="center_vertical"
+            android:numColumns="2" >
+        </ListView>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/single_line_seprator" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cl_company_list_footer"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="99" >
+
+        <TextView
+            android:id="@+id/col_deal_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="33"
+            android:background="@color/transparent_footer_blue"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/cl_hot_deals"
+            android:textColor="@color/transparent_white"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/bar_light_grey" />
+
+        <TextView
+            android:id="@+id/col_refine_search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="33"
+            android:background="@color/transparent_footer_blue"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="Filter Deals"
+            android:textColor="@color/transparent_white"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/bar_light_grey" />
+
+        <TextView
+            android:id="@+id/col_view_on_map"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="33"
+            android:background="@color/transparent_footer_blue"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/cl_view_on_map"
+            android:textColor="@color/transparent_white"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cl_deals_footer"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:weightSum="1" >
+
+        <TextView
+            android:id="@+id/col_refine_search1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@color/transparent_footer_blue"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="Modify Search"
+            android:textColor="@color/transparent_white"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/bar_light_grey" />
+
+        <TextView
+            android:id="@+id/col_view_on_map1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@color/transparent_footer_blue"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="View on Map"
+            android:textColor="@color/transparent_white"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</RelativeLayout>

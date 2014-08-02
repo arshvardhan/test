@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+@author Atul Bhardwaj
+24th aug,2012
+
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="30dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/round_box"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:gravity="center_horizontal"
+    android:paddingBottom="10dp" >
+
+    <ImageView
+        android:id="@+id/spin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+		android:layout_marginTop="10dp"
+        android:src="@drawable/progress_spinner" />
+
+    <TextView
+        android:id="@+id/spinMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spin"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp"
+        android:gravity="center_horizontal"
+        android:textColor="#878787"
+        android:textSize="13sp" />
+
+</LinearLayout>
