@@ -133,9 +133,11 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		mListRequest = new CombinedListRequest(MaxisMainActivity.this);
 		mListRequest.setBySearch(true);
 		mListRequest.setCompanyListing(true);
-		//		String encodedText=URLEncoder.encode(searchText.trim());
-		//		mListRequest.setKeywordOrCategoryId(encodedText);
-		mListRequest.setKeywordOrCategoryId(Uri.encode(searchText.trim()));
+		if (event == Events.COMBIND_LISTING_VIEW_MORE_COMPANY_EVENT) {
+			mListRequest.setStampId(searchText.trim().split("-")[0].trim());
+			mListRequest.setKeywordOrCategoryId((searchText.split("-")[1].trim().equals("null")) ? "" :searchText.split("-")[1].trim());
+		} else
+			mListRequest.setKeywordOrCategoryId(searchText.trim());  //
 		HashMap<String,String>	map = new HashMap<String,String>();
 		map.put(FlurryEventsConstants.HOME_SEARCH_TEXT, searchText);
 		AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SCREEN_SEARCH,map);
@@ -144,8 +146,12 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 		mListRequest.setLongitude(GPS_Data.getLongitude());
 
 		if(postJsonPayload!=null) {
-			isCitySelected = true;
-			mListRequest.setPostJsonPayload(postJsonPayload);
+			if (event == Events.COMBIND_LISTING_VIEW_MORE_COMPANY_EVENT) {
+				mListRequest.setSearchCriteria(postJsonPayload.trim());
+			} else {
+				isCitySelected = true;
+				mListRequest.setPostJsonPayload(postJsonPayload);
+			}
 		}
 		else {
 			isCitySelected = false;
@@ -175,11 +181,16 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 	public void updateUI(Message msg) {
 		if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE 
 				|| msg.arg2 == Events.BANNER_LANDING_COMPANY_LISTING_EVENT
-				|| msg.arg2 == Events.BANNER_LANDING_SEARCH_EVENT) {
+				|| msg.arg2 == Events.BANNER_LANDING_SEARCH_EVENT
+				|| msg.arg2 == Events.COMBIND_LISTING_VIEW_MORE_COMPANY_EVENT) {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
 				Intent intent = new Intent(MaxisMainActivity.this, CombindListActivity.class);
+				if((msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE) && (mClResponse != null) && (mClResponse.getDisplayIn() != null)) {
+					mListRequest.setSearchIn(StringUtil.isNullOrEmpty(mClResponse.getDisplayIn().getType()) ? "" : mClResponse.getDisplayIn().getType());
+					mListRequest.setKeywordOrCategoryId(StringUtil.isNullOrEmpty(mClResponse.getDisplayIn().getKeyword()) ? "" : mClResponse.getDisplayIn().getKeyword());
+				}
 				intent.putExtra(AppConstants.COMP_LIST_DATA, mClResponse);
 				intent.putExtra(AppConstants.DATA_LIST_REQUEST, mListRequest);
 				startActivity(intent);
@@ -355,7 +366,8 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 				}
 			} else if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE 
 					|| event == Events.BANNER_LANDING_COMPANY_LISTING_EVENT
-					|| event == Events.BANNER_LANDING_SEARCH_EVENT){
+					|| event == Events.BANNER_LANDING_SEARCH_EVENT
+					|| event == Events.COMBIND_LISTING_VIEW_MORE_COMPANY_EVENT){
 				if (response.getPayload() instanceof CompanyListResponse) {
 					mClResponse = (CompanyListResponse) response.getPayload();
 					if (mClResponse.getErrorCode() != 0) {

@@ -63,6 +63,7 @@ public class GenralRequest extends MaxisBaseRequest {
 	public static final String MY_ACCOUNT_DASHBOARD = "myaccount.json";
 	public static final String MY_ACCOUNT_DASHBOARD_LIFECYCLE = "mydashboard.json";
 	public static final String BANNER_NAVIGATION_METHOD = "logBannerReport.json";
+	public static final String PAID_COMPANY_LIST_METHOD = "getAssociatedPaidCompanies.json";
 	
 	private String deviceId = MyApplication.getDeviceId();
 
@@ -80,13 +81,17 @@ public class GenralRequest extends MaxisBaseRequest {
 		return ht;
 	}
 
-	public Hashtable<String, String> getCategoryheadersForRefine(
-			String categoryId, String ScreenName, String keywordForSearch) {
+	public Hashtable<String, String> getCategoryheadersForRefine(String categoryId, String ScreenName, String keywordForSearch, String searchIn, String stampId) {
 		Hashtable<String, String> ht = getDefaultHeadersWithGPS();
 		ht.put(KEY_CATEGORY_ID, categoryId);
 		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		ht.put(AppConstants.KEY_PAGE_REVIEW, ScreenName);
-		ht.put("keyword", keywordForSearch);
+		if (!StringUtil.isNullOrEmpty(keywordForSearch))
+			ht.put("keyword", keywordForSearch+"");
+		if (!StringUtil.isNullOrEmpty(searchIn))
+			ht.put(KEY_SEARCH_RESULTS_IN, searchIn);
+		if (!StringUtil.isNullOrEmpty(stampId))
+			ht.put(KEY_STAMP_COMPANY_ID, stampId);
 		return ht;
 	}
 
@@ -310,6 +315,13 @@ public class GenralRequest extends MaxisBaseRequest {
 		ht.put(KEY_COMP_ID, compId);
 		ht.put(KEY_POST_DEAL_CATEGORY_ID, catId);
 		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
+		return ht;
+	}
+
+	public Hashtable<String, String> getPaidCompListHeaders(String l3CatId, String screenName) {
+		Hashtable<String, String> ht = getDefaultHeadersWithGPS();
+		ht.put(AppConstants.KEY_PAGE_REVIEW, screenName + "");
+		ht.put(KEY_L3CATEGORY_ID, l3CatId);
 		return ht;
 	}
 }

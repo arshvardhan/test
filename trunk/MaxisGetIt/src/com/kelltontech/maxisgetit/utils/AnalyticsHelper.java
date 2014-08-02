@@ -123,9 +123,7 @@ public class AnalyticsHelper {
 
 		// To measure total installs (through Adds on Facebook) and total times your app is launched.
 		if (AppConstants.PRODUCTION) {
-			if (isFacebookAvailable(activity)) {
-				com.facebook.AppEventsLogger.activateApp(activity, AppConstants.FACEBOOK_APP_ID);
-			}
+			com.facebook.AppEventsLogger.activateApp(activity, AppConstants.FACEBOOK_APP_ID);
 		}
 
 		// To track session on server side.

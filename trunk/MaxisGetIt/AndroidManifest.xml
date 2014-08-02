@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kelltontech.maxisgetit"
-    android:versionCode="10"
-    android:versionName="1.27" >
+    android:versionCode="11"
+    android:versionName="1.28" >
 
-    <!--
-    above version are updated 
-    Package should be com.findit333
-    -->
-    <!-- Current version code/name on play store as on 25-June-2014: code:9, name:1.26 -->
+    <!-- above version are updated | Package should be com.findit333 -->
+    <!-- Current version code/name on play store as on 23-Jul-2014: code:10, name:1.27 -->
+    <!-- Previous version code/name on play store as on 25-June-2014: code:9, name:1.26 -->
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -61,9 +59,32 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyD_YqXS8m5-0B6KJNo6ALDZSgDKNXy-VSM" />
         <!-- AIzaSyA-jAFl4en2sWyoYLbMY1Lt8nPpoNRV32M -->
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <service
             android:name="com.paypal.android.sdk.payments.PayPalService"
             android:exported="false" />
+
+        <receiver
+            android:name="mobi.vserv.android.trackingengine.VservCustomInstallReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <!--
+             <receiver
+            android:name=".receiver.VSERVCustomReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+        -->
 
         <activity android:name="com.paypal.android.sdk.payments.PaymentActivity" />
         <activity android:name="com.paypal.android.sdk.payments.LoginActivity" />
@@ -197,7 +218,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
-        </activity>
+        </activity>
         -->
         <activity
             android:name="com.kelltontech.maxisgetit.ui.activities.ClassifiedScrollActivity"
@@ -438,6 +459,12 @@
             android:name="com.kelltontech.maxisgetit.ui.activities.PhotoSlideActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenLayout|screenSize"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.kelltontech.maxisgetit.ui.activities.SearchCriteriaChooserActivity"
+            android:label="@string/title_activity_search_criteria_chooser"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SemiTransparent" >
         </activity>
     </application>
 

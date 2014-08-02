@@ -45,8 +45,6 @@ import com.kelltontech.maxisgetit.utils.BitmapCalculation;
  * This screen is shown after clicking on AddNewPOI button to take image from camera to upload it on server.
  */
 public class ContestAddNewPoiActivity extends ContestBaseActivity {
-
-
 	//		private static final int ADD_NEW_POI_CAMERA_REQUEST = 1999;
 	//		private static final int ADD_NEW_POI_GALLERY_REQUEST = 2000;
 	// private double mLatitude,mLongitude,mLatitudeN,mLongitudeN;
@@ -54,7 +52,6 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 	private String mImagePath;
 	private Button mSubmitBtn;
 	private Bitmap mBitmap;
-
 	private RequestAddNewPOI mRequestAddNewPOI;
 	private boolean isFetchingBase64;
 	private EditText mCompanyNameEditTxt, mCompanyAddressEditTxt, mBusinessTypeEditTxt, mCompanyContactEditText, mUserNameEditTxt, mUserNumberEditTxt;
@@ -72,75 +69,78 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_ADD_NEW_POI);
-		setContentView(R.layout.activity_contest_add_new_poi);
+		try {
+			AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_ADD_NEW_POI);
+			setContentView(R.layout.activity_contest_add_new_poi);
 
-		((TextView) findViewById(R.id.header_title))
-		.setText(getString(R.string.anp_header));
+			((TextView) findViewById(R.id.header_title)).setText(getString(R.string.anp_header));
 
-		findViewById(R.id.header_btn_back).setOnClickListener(this);
-		findViewById(R.id.goto_home_icon).setOnClickListener(this);
-		findViewById(R.id.search_toggler).setVisibility(View.INVISIBLE);
-		findViewById(R.id.show_profile_icon).setOnClickListener(this);
+			findViewById(R.id.header_btn_back).setOnClickListener(this);
+			findViewById(R.id.goto_home_icon).setOnClickListener(this);
+			findViewById(R.id.search_toggler).setVisibility(View.INVISIBLE);
+			findViewById(R.id.show_profile_icon).setOnClickListener(this);
 
-		store = MaxisStore.getStore(this);
+			store = MaxisStore.getStore(this);
 
-		UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.rootLayout),
-				this);
-		mSubmitBtn = (Button) findViewById(R.id.submit_btn);
-		mSubmitBtn.setOnClickListener(this);
-
-		Intent intent = getIntent();
-		mRequestedEventType = intent.getIntExtra(AppConstants.ADD_NEW_POI_KEY, 0);
-		mRequestedPostImageType = intent.getIntExtra(AppConstants.POST_IMAGE_REQUEST_KEY, 0);
-		/*			mCid = intent.getIntExtra(AppConstants.CID_KEY, 0);
+			UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.rootLayout), this);
+			mSubmitBtn = (Button) findViewById(R.id.submit_btn);
+			mSubmitBtn.setOnClickListener(this);
+			
+			Bundle bundle = getIntent().getExtras();
+			if(bundle != null){
+				Intent intent = getIntent();
+				mRequestedEventType = intent.getIntExtra(AppConstants.ADD_NEW_POI_KEY, 0);
+				mRequestedPostImageType = intent.getIntExtra(AppConstants.POST_IMAGE_REQUEST_KEY, 0);
+			}
+			/*			mCid = intent.getIntExtra(AppConstants.CID_KEY, 0);
 			mCategoryId = intent.getIntExtra(AppConstants.CATEGORY_ID_KEY, 0);
 			mCompanyName = intent.getStringExtra(AppConstants.COMPANY_NAME_KEY);
-		 */
-		mUserNumberEditTxt = ((EditText) findViewById(R.id.user_contact));
-		String userNumber = AppSharedPreference.getString(
-				AppSharedPreference.MOBILE_NUMBER, "", getApplicationContext());
+			 */
+			mUserNumberEditTxt = ((EditText) findViewById(R.id.user_contact));
+			String userNumber = AppSharedPreference.getString(AppSharedPreference.MOBILE_NUMBER, "", getApplicationContext());
 
-		if (store.isLoogedInUser()) {
-			mUserNumberEditTxt.setText(store.getUserMobileNumberToDispaly());
-		} else {
-			mUserNumberEditTxt.setText(store.getAuthMobileNumber().substring(2));
-
-		}
-
-		//			if (userNumber.length() > 0)
-		//				mUserNumberEditTxt.setText(userNumber);
-		//			else {
-		//				TelephonyManager mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-		//				String yourNumber = mTelephonyMgr.getLine1Number();
-		//
-		//				if (yourNumber != null && yourNumber.length() > 0) {
-		//					mUserNumberEditTxt.setText(yourNumber);
-		//				}
-		//			}
-		mUserNameEditTxt = ((EditText) findViewById(R.id.user_name));
-		mUserNameEditTxt.setText(AppSharedPreference.getString(
-				AppSharedPreference.USER_NAME, "", getApplicationContext()));
-		mCompanyNameEditTxt = ((EditText) findViewById(R.id.company_name));
-		//mCompanyNameEditTxt.setText(mCompanyName);
-
-		mCompanyAddressEditTxt = ((EditText) findViewById(R.id.company_address));
-
-		mBusinessTypeEditTxt = ((EditText) findViewById(R.id.business_type));
-
-		mCompanyContactEditText = ((EditText) findViewById(R.id.company_contact));
-
-		if (savedInstanceState == null) {
-			switch (mRequestedPostImageType) {
-			case AppConstants.GALLERY_REQUEST:
-				openGalery();
-				break;
-			case AppConstants.CAMERA_REQUEST:
-				takePhoto();
-				break;
-			default:
-				break;
+			if (store.isLoogedInUser()) {
+				mUserNumberEditTxt.setText(store.getUserMobileNumberToDispaly());
+			} else {
+				mUserNumberEditTxt.setText(store.getAuthMobileNumber().substring(2));
 			}
+
+			//			if (userNumber.length() > 0)
+			//				mUserNumberEditTxt.setText(userNumber);
+			//			else {
+			//				TelephonyManager mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+			//				String yourNumber = mTelephonyMgr.getLine1Number();
+			//
+			//				if (yourNumber != null && yourNumber.length() > 0) {
+			//					mUserNumberEditTxt.setText(yourNumber);
+			//				}
+			//			}
+			mUserNameEditTxt = ((EditText) findViewById(R.id.user_name));
+			mUserNameEditTxt.setText(AppSharedPreference.getString(AppSharedPreference.USER_NAME, "", getApplicationContext()));
+			mCompanyNameEditTxt = ((EditText) findViewById(R.id.company_name));
+			//mCompanyNameEditTxt.setText(mCompanyName);
+
+			mCompanyAddressEditTxt = ((EditText) findViewById(R.id.company_address));
+
+			mBusinessTypeEditTxt = ((EditText) findViewById(R.id.business_type));
+
+			mCompanyContactEditText = ((EditText) findViewById(R.id.company_contact));
+
+			if (savedInstanceState == null) {
+				switch (mRequestedPostImageType) {
+				case AppConstants.GALLERY_REQUEST:
+					openGalery();
+					break;
+				case AppConstants.CAMERA_REQUEST:
+					takePhoto();
+					break;
+				default:
+					break;
+				}
+			}
+		} catch (Exception e) {
+			Toast.makeText(getApplicationContext(), getString(R.string.toast_some_error_try_again),Toast.LENGTH_LONG).show();
+			finish();
 		}
 	}
 
@@ -149,7 +149,7 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 		super.onResume();
 		AnalyticsHelper.trackSession(ContestAddNewPoiActivity.this, AppConstants.Add_New_POI);
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == AppConstants.CAMERA_REQUEST) {
@@ -157,29 +157,20 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 				finish();
 				return;
 			}
-			Object dataObj = data.getExtras() == null ? null : data.getExtras()
-					.get("data");
-			if (!(dataObj instanceof Bitmap)) {
-				Toast.makeText(getApplicationContext(),
-						getString(R.string.toast_some_error_try_again),
-						Toast.LENGTH_LONG).show();
+			Object dataObj = data.getExtras() == null ? null : data.getExtras().get("data");
+			if (dataObj == null || !(dataObj instanceof Bitmap)) {
+				Toast.makeText(getApplicationContext(), getString(R.string.toast_some_error_try_again),Toast.LENGTH_LONG).show();
 				finish();
 				return;
 			}
 			mBitmap = (Bitmap) dataObj;
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			mBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 75,
-					os);
-			String directoryPath = Environment.getExternalStorageDirectory()
-					.getAbsolutePath() + "/" + getString(R.string.app_name);
-			String imageFileName = getString(R.string.app_name) + "_"
-					+ System.currentTimeMillis() + ".jpg";
-			boolean fileCreated = StorageUtils.createFile(directoryPath,
-					imageFileName, os.toByteArray());
+			mBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 75, os);
+			String directoryPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + getString(R.string.app_name);
+			String imageFileName = getString(R.string.app_name) + "_" + System.currentTimeMillis() + ".jpg";
+			boolean fileCreated = StorageUtils.createFile(directoryPath, imageFileName, os.toByteArray());
 			if (!fileCreated) {
-				Toast.makeText(getApplicationContext(),
-						getString(R.string.toast_unable_to_save_image),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), getString(R.string.toast_unable_to_save_image), Toast.LENGTH_LONG).show();
 				finish();
 				return;
 			}
@@ -494,15 +485,11 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 				public void run() {
 					mRequestAddNewPOI = new RequestAddNewPOI();
 					mRequestAddNewPOI.setImageData(getBase64Image());
-
 				}
 			}).start();
 
 		} catch (IOException e) {
-			AnalyticsHelper.onError(
-					FlurryEventsConstants.CONTEST_UPLOAD_IMAGE_ERR,
-					"ContestUploadImageActivity : "
-							+ AppConstants.CONTEST_UPLOAD_IMAGE_ERROR_MSG, e);
+			AnalyticsHelper.onError(FlurryEventsConstants.CONTEST_UPLOAD_IMAGE_ERR, "ContestUploadImageActivity : " + AppConstants.CONTEST_UPLOAD_IMAGE_ERROR_MSG, e);
 		}
 	}
 
@@ -514,26 +501,17 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 					stopSppiner();
 					switch (((MyError) msg.obj).getErrorcode()) {
 					case MyError.NETWORK_NOT_AVAILABLE:
-						Toast.makeText(getApplicationContext(),
-								"Network not available.", Toast.LENGTH_LONG)
-								.show();
+						Toast.makeText(getApplicationContext(), "Network not available.", Toast.LENGTH_LONG).show();
 						break;
 					case MyError.EXCEPTION:
 					case MyError.UNDEFINED:
-						Toast.makeText(getApplicationContext(),
-								"Server not responding.", Toast.LENGTH_LONG)
-								.show();
+						Toast.makeText(getApplicationContext(), "Server not responding.", Toast.LENGTH_LONG).show();
 						break;
-
 					}
-
 				} else if (msg.obj instanceof ResponseUploadPhoto) {
-
 					ResponseUploadPhoto photo = (ResponseUploadPhoto) msg.obj;
 					if (photo.isSuccess()) {
-						startActivity(new Intent(
-								ContestAddNewPoiActivity.this,
-								ContestUploadMoreActivity.class)
+						startActivity(new Intent(ContestAddNewPoiActivity.this, ContestUploadMoreActivity.class)
 						.putExtra("mImagePath", mImagePath)
 						.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
 						.putExtra(AppConstants.ADD_NEW_POI_KEY, mRequestedEventType));
@@ -592,8 +570,7 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 	private void formateLatLongToFloat(String LATITUDE, String LATITUDE_REF,
 			String LONGITUDE, String LONGITUDE_REF) {
 
-		if ((LATITUDE != null) && (LATITUDE_REF != null) && (LONGITUDE != null)
-				&& (LONGITUDE_REF != null)) {
+		if ((LATITUDE != null) && (LATITUDE_REF != null) && (LONGITUDE != null) && (LONGITUDE_REF != null)) {
 			if (LATITUDE_REF.equals("N")) {
 				mLattitude = convertToDegree(LATITUDE);
 			} else {
@@ -605,9 +582,7 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 			} else {
 				mLongitude = 0 - convertToDegree(LONGITUDE);
 			}
-
 		}
-
 	}
 
 	/**
@@ -650,13 +625,10 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 			seconds = secnds[0];
 		}
 
-		String latitudeStr = splitsArray[0] + "/1," + splitsArray[1] + "/1,"
-				+ seconds + "/1";
-		mExifInterface
-		.setAttribute(ExifInterface.TAG_GPS_LATITUDE, latitudeStr);
+		String latitudeStr = splitsArray[0] + "/1," + splitsArray[1] + "/1," + seconds + "/1";
+		mExifInterface.setAttribute(ExifInterface.TAG_GPS_LATITUDE, latitudeStr);
 
-		mExifInterface.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF,
-				lat > 0 ? "N" : "S");
+		mExifInterface.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF, lat > 0 ? "N" : "S");
 
 		double alon = Math.abs(lon);
 
@@ -680,11 +652,8 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 			mExifInterface.saveAttributes();
 			// scanFile(this, mImagePath, "image/*");
 		} catch (IOException e) {
-			AnalyticsHelper.onError(FlurryEventsConstants.UPDATE_GEO_TAG_ERR,
-					"ContestUploadImageActivity : "
-							+ AppConstants.UPDATE_GEO_TAG_ERROR_MSG, e);
+			AnalyticsHelper.onError(FlurryEventsConstants.UPDATE_GEO_TAG_ERR, "ContestUploadImageActivity : " + AppConstants.UPDATE_GEO_TAG_ERROR_MSG, e);
 		}
-
 	}
 
 	@Override
@@ -716,6 +685,4 @@ public class ContestAddNewPoiActivity extends ContestBaseActivity {
 	public Activity getMyActivityReference() {
 		return this;
 	}
-
 }
-

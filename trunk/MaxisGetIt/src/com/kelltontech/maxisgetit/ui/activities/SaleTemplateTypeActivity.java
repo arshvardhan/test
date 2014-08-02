@@ -314,8 +314,7 @@ public class SaleTemplateTypeActivity extends MaxisMainActivity {
 			if (("-1").equalsIgnoreCase(mSelectedType.getType())) {
 				showInfoDialog(getString(R.string.add_type));
 			} else {
-				showTempletScreen(mSelectdCategory.getCategoryId(),
-						mSelectedType.getType());
+				showTempletScreen(mSelectdCategory.getCategoryId(), mSelectedType.getType());
 			}
 			break;
 		case R.id.upArrow:

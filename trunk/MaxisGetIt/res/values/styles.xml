@@ -2,13 +2,13 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="android:Theme.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
         -->
     </style>
 
@@ -16,7 +16,7 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerItem.DropDownItem</item>
-        
+
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
@@ -25,11 +25,13 @@
         <item name="android:minHeight">14dp</item>
         <item name="android:maxHeight">15dp</item>
     </style>
-    
+
     <style name="customFeedbackLargeRatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/feedback_large_rating_bar_selector</item>
-        <!-- <item name="android:minHeight">wrap_content</item>
-        <item name="android:maxHeight">wrap_content</item> -->
+        <!--
+        <item name="android:minHeight">wrap_content</item>
+        <item name="android:maxHeight">wrap_content</item>
+        -->
     </style>
 
     <style name="Theme.Almost_full_transparent" parent="android:Theme">
@@ -38,6 +40,16 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
+    <style name="Theme.SemiTransparent" parent="android:Theme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <!-- <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item> -->
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:colorForeground">#fff</item>
+    </style>
+
     <!-- android:TextAppearance.Widget.TextView.SpinnerItem -->
     <!-- @android:style/Widget.TextView.SpinnerItem -->
     <style name="SpinnerItem" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
@@ -51,7 +63,7 @@
     <style name="Rmytheme" parent="@android:style/Theme.Dialog">
         <item name="android:textColor">#FF0000</item>
     </style>
-    	
+
     <style name="common_green_button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -63,7 +75,7 @@
         <item name="android:textSize">@dimen/sp_16</item>
         <item name="android:textStyle">bold</item>
     </style>
-    
+
     <style name="common_light_green_button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -75,7 +87,7 @@
         <item name="android:textSize">@dimen/sp_16</item>
         <item name="android:textStyle">bold</item>
     </style>
-    
+
     <style name="common_red_button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -95,7 +107,7 @@
         <item name="android:shadowRadius">1.5</item>
         <item name="android:textColor">@color/white</item>
     </style>
-    
+
     <style name="TextStyleBold">
         <item name="android:shadowColor">@color/black</item>
         <item name="android:shadowDx">1</item>
@@ -104,21 +116,22 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/white</item>
     </style>
-    
+
     <style name="Theme.Dialog2" parent="android:Theme.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@color/transparent2</item>
     </style>
-    
-    <!--style for header beta version  -->
+
+    <!-- style for header beta version -->
     <style name="common_style_for_beta_version_header">
-       <item name="android:layout_height">wrap_content</item>
-       <item name="android:layout_width">fill_parent</item>
-       <item name="android:padding">5dp</item>
-       <item name="android:background">@color/common_bg_color_for_beta_version</item>
-   		<item name="android:textColor">@color/common_text_color_yellow</item>
-   		<item name="android:text">@string/common_header_text_beta_version</item>
-   		<item name="android:gravity">center</item>
-   		<item name="android:textSize">@dimen/sp_12</item>
-     </style>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:background">@color/common_bg_color_for_beta_version</item>
+        <item name="android:textColor">@color/common_text_color_yellow</item>
+        <item name="android:text">@string/common_header_text_beta_version</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/sp_12</item>
+    </style>
+
 </resources>
