@@ -867,6 +867,7 @@ public class CombindListActivity extends MaxisMainActivity implements OnClickLis
 			stopSppiner();
 		} else if ((msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE && !isFromSearch) || (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE && isFromNearMe)) {
 			isFromNearMe = false;
+			mClRequest.setFromNearMe(isFromNearMe);
 
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
@@ -1115,8 +1116,10 @@ public class CombindListActivity extends MaxisMainActivity implements OnClickLis
 				mClRequest.setSearch_distance("");
 				mClRequest.setPageNumber(1);
 				mClRequest.setPostJsonPayload("");
+				
 				MaxisMainActivity.isCitySelected = false;
 				isFromNearMe = true;
+				mClRequest.setFromNearMe(isFromNearMe);
 				CombindListingController listingController = new CombindListingController(CombindListActivity.this, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 				startSppiner();
 				listingController.requestService(mClRequest);
