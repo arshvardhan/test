@@ -84,7 +84,6 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 	private TextView 					mTxtRateMe;
 	private TextView 					mTxtDistanceTitle;
 	private TextView 					mAddressView;
-	private TextView 					mMoreDesc;
 	private TextView 					currentCity, currentLocality;
 	private TextView 					mainSearchButton;
 	private TextView 					mHeaderTitle;
@@ -103,6 +102,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 	private ImageView 					mSearchToggler;
 	private ImageView 					upArrow;
 	private ImageView 					videoThumbnail;
+	private ImageView 					mMoreDesc;
 
 	private	LinearLayout 				mlayoutContacts;
 	private LinearLayout 				mReviewList;
@@ -336,17 +336,17 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 
 			findViewById(R.id.layout_comp_desc).setVisibility(View.VISIBLE);
 			mCompDesc 						= (EllipsizingTextView) findViewById(R.id.cd_description);
-			mMoreDesc 						= (TextView) 			findViewById(R.id.cd_desc_more);
+			mMoreDesc 						= (ImageView) 			findViewById(R.id.cd_desc_more);
 
 			mCompDesc.setText(Html.fromHtml(mCompanyDetail.getDescription()));
 			mCompDesc.setMaxLines(5);
 
-			if (mCompanyDetail.getDescription().length() < 280)
+			if (mCompanyDetail.getDescription().length() < 280) {
 				mMoreDesc.setVisibility(View.GONE);
-			else
+			} else {
 				mMoreDesc.setVisibility(View.VISIBLE);
+			}
 
-			mMoreDesc.setText(Html.fromHtml("<u>" + getResources().getString(R.string.more) + "</u>"));
 			mMoreDesc.setOnClickListener(this);
 		} else
 			findViewById(R.id.layout_comp_desc).setVisibility(View.GONE);
@@ -850,11 +850,11 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 		case R.id.cd_desc_more:
 			if (mIsCollapsedView) {
 				mCompDesc.setMaxLines(Integer.MAX_VALUE);
-				mMoreDesc.setText(Html.fromHtml("<u>" + getResources().getString(R.string.less) + "</u>"));
+				mMoreDesc.setImageResource(R.drawable.less);
 				mIsCollapsedView = false;
 			} else {
 				mCompDesc.setMaxLines(5);
-				mMoreDesc.setText(Html.fromHtml("<u>" + getResources().getString(R.string.more) + "</u>"));
+				mMoreDesc.setImageResource(R.drawable.more);
 				mIsCollapsedView = true;
 			}
 			break;

@@ -46,7 +46,8 @@
                 android:text="@string/test_string"
                 android:textColor="@color/rainbow_green"
                 android:textSize="@dimen/sp_16"
-                android:textStyle="bold" />  -->
+                android:textStyle="bold" />
+            -->
 
 
             <!-- android:background="@drawable/shape_box" -->
@@ -69,12 +70,13 @@
                     android:gravity="center_horizontal"
                     android:paddingBottom="3dp"
                     android:paddingTop="5dp"
-                    android:text="@string/map" />  -->
+                    android:text="@string/map" />
+                -->
                 <!--
                      <TextView
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_weight=".04" />
+                    android:layout_weight=".04" />
                 -->
 
                 <ImageView
@@ -121,8 +123,7 @@
                      <TextView
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_weight=".04" />
-                -->
+                    android:layout_weight=".04" />                  -->
                 <!--
                      <TextView
                     android:id="@+id/cd_sms_btn"
@@ -136,14 +137,12 @@
                     android:gravity="center_horizontal"
                     android:paddingBottom="3dp"
                     android:paddingTop="5dp"
-                    android:text="@string/sms" />
-                -->
+                    android:text="@string/sms" />                -->
                 <!--
                       <TextView
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_weight=".04" />
-                -->
+                    android:layout_weight=".04" />                -->
                 <!--
                      <TextView
                     android:id="@+id/cd_sms_btn"
@@ -157,7 +156,7 @@
                     android:gravity="center_horizontal"
                     android:paddingBottom="3dp"
                     android:paddingTop="5dp"
-                    android:text="@string/sms" />
+                    android:text="@string/sms" />
                 -->
             </LinearLayout>
 
@@ -173,8 +172,7 @@
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:paddingTop="4dp"
-                android:src="@drawable/detail_cross" />
-            -->
+                android:src="@drawable/detail_cross" />            -->
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/comp_image_pager"
@@ -226,8 +224,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:clickable="true"
-                    android:src="@drawable/add_contact" />
-                -->
+                    android:src="@drawable/add_contact" />                -->
                 <!--
                      <ImageView
                     android:id="@+id/cd_img_profile_bar"
@@ -239,8 +236,7 @@
                     android:layout_marginRight="7dp"
                     android:layout_marginTop="3dp"
                     android:layout_toLeftOf="@+id/img_add_profile"
-                    android:background="@color/pink" />
-                -->
+                    android:background="@color/pink" />                -->
 
                 <LinearLayout
                     android:id="@+id/cd_layout_comp_detail"
@@ -331,7 +327,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|right"
                         android:layout_weight="0.3"
-                        android:textSize="@dimen/sp_12" />
+                        android:textSize="@dimen/sp_12" />
                     -->
                 </LinearLayout>
             </RelativeLayout>
@@ -584,16 +580,18 @@
                     android:textColor="@color/title_dark_grey"
                     android:textSize="@dimen/sp_13" />
 
-                <TextView
+                <ImageView
                     android:id="@+id/cd_desc_more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginRight="10dp"
+                    android:src="@drawable/more"
                     android:clickable="true"
-                    android:paddingBottom="2dp"
+                    android:padding="2dp"
                     android:textColor="@color/maxis_green"
-                    android:textStyle="italic" />
+                    android:textStyle="italic" 
+                    android:visibility="gone"/>
             </LinearLayout>
             <!--
             <LinearLayout
@@ -621,7 +619,7 @@
                     android:layout_weight=".65"
                     android:padding="5dp"
                     android:textColor="@color/text_light_grey"
-                    android:textSize="@dimen/sp_13" />           </LinearLayout>
+                    android:textSize="@dimen/sp_13" />           </LinearLayout>
             -->
 
             <ImageView

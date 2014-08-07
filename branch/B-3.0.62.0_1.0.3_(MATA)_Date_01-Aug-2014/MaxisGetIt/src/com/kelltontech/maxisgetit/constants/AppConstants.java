@@ -7,7 +7,7 @@ package com.kelltontech.maxisgetit.constants;
 
 public interface AppConstants {
 	
-	boolean PRODUCTION = false;
+	boolean PRODUCTION = true;
 	
 	/**
 	* API_VERSION : "1.71" is given for App Version 1.27 (Vserv Integration)
@@ -32,9 +32,9 @@ public interface AppConstants {
 	// String BASE_SERVER 			= "http://192.168.13.16/webservice/trunk/";						// local diwakar
 	// String BASE_SERVER 			= "http://192.168.13.22/webserviceNew/dev_build_ver1.1/"; 		// local ankesh for deal
 	// String BASE_SERVER 			= "http://192.168.13.63/webservice/trunk/";   					// Session Tracking Test
-	 String BASE_SERVER 			= "http://203.115.222.103/"; 									// staging
+//	 String BASE_SERVER 			= "http://203.115.222.103/"; 									// staging
 //	 String BASE_SERVER 			= "http://203.115.222.57/"; 									// pre-production
-//	 String BASE_SERVER 			= "https://webservice.findit.com.my/";							// Production
+	 String BASE_SERVER 			= "https://webservice.findit.com.my/";							// Production
 	String BASE_URL 				= BASE_SERVER + "restapi/";
 	String BASE_URL_CONTEST 		= BASE_SERVER + "restapicontest/";
 	String BASE_URL_VIDEOS 			= "http://";
