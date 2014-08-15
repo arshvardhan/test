@@ -81,7 +81,7 @@
         style="@style/common_style_for_beta_version_header"
         android:visibility="gone" />
 
-    <LinearLayout
+    <com.kelltontech.maxisgetit.ui.widgets.AnimatedLinearLayout
         android:id="@+id/whole_search_box_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
         android:orientation="vertical"
         android:visibility="gone" >
 
-        <LinearLayout
+        <com.kelltontech.maxisgetit.ui.widgets.AnimatedLinearLayout
             android:id="@+id/search_box_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -123,9 +123,9 @@
                 android:background="@drawable/search_btn"
                 android:clickable="true"
                 android:visibility="gone" />
-        </LinearLayout>
+        </com.kelltontech.maxisgetit.ui.widgets.AnimatedLinearLayout>
 
-        <LinearLayout
+        <com.kelltontech.maxisgetit.ui.widgets.AnimatedLinearLayout
             android:id="@+id/advanceSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -189,7 +189,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:src="@drawable/up_arrow" />
-        </LinearLayout>
-    </LinearLayout>
+        </com.kelltontech.maxisgetit.ui.widgets.AnimatedLinearLayout>
+    </com.kelltontech.maxisgetit.ui.widgets.AnimatedLinearLayout>
 
 </LinearLayout>

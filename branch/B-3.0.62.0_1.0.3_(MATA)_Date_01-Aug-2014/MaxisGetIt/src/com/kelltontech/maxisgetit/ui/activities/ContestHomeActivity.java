@@ -9,8 +9,6 @@ import android.widget.TextView;
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
-import com.kelltontech.maxisgetit.service.ContestLocationFinderService;
-import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
 /**

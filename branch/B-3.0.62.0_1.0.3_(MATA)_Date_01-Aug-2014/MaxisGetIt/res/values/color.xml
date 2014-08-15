@@ -58,16 +58,6 @@
     <color name="transparent_blue_map_route">#c80081c2</color>
     <color name ="new_footer_color">#3980f4</color>
     
-    <!-- Copied from Photo COntest App -->
-    <color name="fully_transparent">#00000000</color>
-    <color name="transparent">#72000000</color>
-    <color name="transparent4">#b2000000</color>
-    <color name="almost_full_transparent">#02000000</color>
-    <color name="transparent2">#e6000000</color>
-    <color name="little_transparent">#10000000</color>
-    <!-- Text color -->
-    <color name="text_color_red">#e3222a</color>
-    <color name="breadcrumbs_bg">#a6e5ff</color>
     <color name="more_btn">#F58909</color>
 
     <!-- Home screen -->
@@ -90,6 +80,8 @@
     <color name ="light_color_black">#585858</color>
     <color name="footer_bg_color">#f2f2f2</color>
     <color name ="section_side_text_color">#2899DB</color>
+    <color name="dark_green_stroke_color">#2E6D2B</color>
+    <color name="orange_color">#FFC000</color>
     
     <color name="common_bg_color_for_beta_version">#396091</color>
     <color name="common_text_color_yellow">#fff000</color>

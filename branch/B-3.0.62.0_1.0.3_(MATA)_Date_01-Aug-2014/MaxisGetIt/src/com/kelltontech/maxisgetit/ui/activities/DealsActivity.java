@@ -985,7 +985,6 @@ public class DealsActivity extends MaxisMainActivity {
 
 	public String jsonForSearch() {
 
-		// {"city":{"city_id":5,"city_name":"adyui"},"locality":[{"locality_id":5,"locality_name":"adyui"},{"locality_id":5,"locality_name":"adyui"}]}
 		JSONObject jArray = new JSONObject();
 		try {
 
@@ -1018,5 +1017,4 @@ public class DealsActivity extends MaxisMainActivity {
 			return null;
 		}
 	}
-
 }

@@ -47,9 +47,12 @@ import com.kelltontech.maxisgetit.adapters.RootCategoryAdapter;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
+import com.kelltontech.maxisgetit.constants.matta.MattaConstants;
+import com.kelltontech.maxisgetit.constants.matta.MattaEvents;
 import com.kelltontech.maxisgetit.controllers.CombindListingController;
 import com.kelltontech.maxisgetit.controllers.SubCategoryController;
 import com.kelltontech.maxisgetit.controllers.TypeByCategoryController;
+import com.kelltontech.maxisgetit.controllers.matta.MattaHallListingController;
 import com.kelltontech.maxisgetit.dao.CategoryGroup;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
@@ -57,8 +60,10 @@ import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.requests.CombinedListRequest;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.response.SubCategoryResponse;
+import com.kelltontech.maxisgetit.response.matta.MattaHallListResponse;
 import com.kelltontech.maxisgetit.service.AppSharedPreference;
 import com.kelltontech.maxisgetit.service.LocationFinderService;
+import com.kelltontech.maxisgetit.ui.activities.matta.MattaHallListActivity;
 import com.kelltontech.maxisgetit.ui.widgets.CustomGallery;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
@@ -95,6 +100,7 @@ public class HomeActivity extends MaxisMainActivity {
 
 	public static boolean fromHomeClick = false;
 	public String countryName = "";
+	private CategoryGroup cat;
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -181,7 +187,7 @@ public class HomeActivity extends MaxisMainActivity {
 
 		mainSearchButton = (TextView) findViewById(R.id.mainSearchButton);
 		mainSearchButton.setOnClickListener(this);
-		
+
 		mSearchEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS); 
 
 		// uncomment for displaying banner also uncomment start flipping in
@@ -200,16 +206,15 @@ public class HomeActivity extends MaxisMainActivity {
 		mListView.setAdapter(mListAdapter);
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				gotoScreen(position);
 			}
 		});
 		// showDialogWithTitle(getResources().getString(R.string.disclaimer),
 		// getResources().getString(R.string.disclaimer_text));
 
-//		View btnPhotoContest = findViewById(R.id.btn_photo_contest);
-//		btnPhotoContest.setOnClickListener(this);
+		//		View btnPhotoContest = findViewById(R.id.btn_photo_contest);
+		//		btnPhotoContest.setOnClickListener(this);
 		// btnPhotoContest.setVisibility(View.GONE);
 
 		if (isLocationAware()) {
@@ -231,7 +236,6 @@ public class HomeActivity extends MaxisMainActivity {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
 
 				if (!isAdvanceSearchLayoutOpen) {
 					isAdvanceSearchLayoutOpen = true;
@@ -294,7 +298,7 @@ public class HomeActivity extends MaxisMainActivity {
 	}
 
 	protected void gotoScreen(int position) {
-		CategoryGroup cat = (CategoryGroup) mListAdapter.getItem(position);
+		cat = (CategoryGroup) mListAdapter.getItem(position);
 		if (!StringUtil.isNullOrEmpty(cat.getCategoryTitle().trim())
 				&& !StringUtil.isNullOrEmpty(cat.getCategoryId().trim())) {
 			HashMap<String, String> map = new HashMap<String, String>();
@@ -313,24 +317,15 @@ public class HomeActivity extends MaxisMainActivity {
 				AppConstants.PHOTO_CONTEST_CAT_ID)) {
 			return;
 		}
-		if (cat.getMgroupType().trim()
-				.equalsIgnoreCase(AppConstants.GROUP_TYPE_CATEGORY)) {
-			if (cat.getmGroupActionType().trim()
-					.equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_LIST)) {
-				// showDealListing(cat);
+		if (cat.getMgroupType().trim().equalsIgnoreCase(AppConstants.GROUP_TYPE_CATEGORY)) {
+			if (cat.getmGroupActionType().trim().equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_LIST)) {
+//				 showHallListing(cat);
 				showSubcategories(cat);
-			} else if (cat.getmGroupActionType().trim()
-					.equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_DEAL)) {
+			} else if (cat.getmGroupActionType().trim().equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_DEAL)) {
 				// TODO : for Hot Deals.
 				showDealcategories(cat);
-			} else if (cat
-					.getmGroupActionType()
-					.trim()
-					.equalsIgnoreCase(
-							AppConstants.GROUP_ACTION_TYPE_CATEGORY_LIST_FOR_GROUP)) {
-				showCompanyDealListing(cat.getCategoryId(),
-						cat.getCategoryTitle(), cat.getThumbUrl(), true,
-						cat.getMgroupType(), cat.getmGroupActionType(), Events.COMBIND_LISTING_NEW_LISTING_PAGE);
+			} else if (cat.getmGroupActionType().trim().equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_CATEGORY_LIST_FOR_GROUP)) {
+				showCompanyDealListing(cat.getCategoryId(), cat.getCategoryTitle(), cat.getThumbUrl(), true, cat.getMgroupType(), cat.getmGroupActionType(), Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 			}
 			/*
 			 * else
@@ -338,17 +333,16 @@ public class HomeActivity extends MaxisMainActivity {
 			 * .GROUP_ACTION_TYPE_LIST)){ showSubcategories(cat); }
 			 */
 
+		} else if (cat.getMgroupType().trim().equalsIgnoreCase(AppConstants.GROUP_TYPE_MATTA_HALL)) {
+			if (cat.getmGroupActionType().trim().equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_LIST)) {
+				showHallListing(cat);
+			} 
 		} else {
-			if (cat.getmGroupActionType().trim()
-					.equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_DEAL)) {
+			if (cat.getmGroupActionType().trim().equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_DEAL)) {
 				showDealListing(cat);
-			} else if (cat.getmGroupActionType().trim()
-					.equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_LIST)) {
-				showCompanyDealListing(cat.getCategoryId(),
-						cat.getCategoryTitle(), cat.getThumbUrl(), true,
-						cat.getMgroupType(), cat.getmGroupActionType(), Events.COMBIND_LISTING_NEW_LISTING_PAGE);
-			} else if (cat.getmGroupActionType().trim()
-					.equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_ATTRIBUTE)) {
+			} else if (cat.getmGroupActionType().trim().equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_LIST)) {
+				showCompanyDealListing(cat.getCategoryId(),cat.getCategoryTitle(), cat.getThumbUrl(), true,cat.getMgroupType(), cat.getmGroupActionType(), Events.COMBIND_LISTING_NEW_LISTING_PAGE);
+			} else if (cat.getmGroupActionType().trim().equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_ATTRIBUTE)) {
 				showTypeByCategoryScreen(cat.getCategoryId());
 			}
 		}
@@ -434,10 +428,10 @@ public class HomeActivity extends MaxisMainActivity {
 				stopService(mLocationServiceIntent);
 			} catch (Exception e) {
 				AnalyticsHelper
-						.onError(
-								FlurryEventsConstants.LOCATION_SERVICE_STOP_ERR,
-								"HomeActivity : "
-										+ AppConstants.LOCATION_SERVICE_NOT_STOP_ERROR_MSG,
+				.onError(
+						FlurryEventsConstants.LOCATION_SERVICE_STOP_ERR,
+						"HomeActivity : "
+								+ AppConstants.LOCATION_SERVICE_NOT_STOP_ERROR_MSG,
 								e);
 			}
 		}
@@ -529,7 +523,7 @@ public class HomeActivity extends MaxisMainActivity {
 					FlurryEventsConstants.CURRENT_LOCATION_NOT_SET_ERR,
 					"HomeActivity : "
 							+ AppConstants.CURRENT_LOCATION_NOT_SET_ERROR_MSG,
-					e);
+							e);
 		}
 	}
 
@@ -573,6 +567,17 @@ public class HomeActivity extends MaxisMainActivity {
 						DealsActivity.class);
 				intent.putExtra(AppConstants.DATA_SUBCAT_RESPONSE,
 						categoriesResp);
+				startActivity(intent);
+			}
+			stopSppiner();
+		} else if (msg.arg2 == MattaEvents.MATTA_HALL_LIST_EVENT) {
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+			} else {
+				MattaHallListResponse hallListResp = (MattaHallListResponse) msg.obj;
+				Intent intent = new Intent(HomeActivity.this, MattaHallListActivity.class);
+				intent.putExtra(MattaConstants.DATA_MATTA_HALL_LIST_RESPONSE, hallListResp);
+				intent.putExtra(MattaConstants.DATA_MATTA_BOOTH_LIST_TITLE, cat);
 				startActivity(intent);
 			}
 			stopSppiner();
@@ -639,10 +644,8 @@ public class HomeActivity extends MaxisMainActivity {
 	}
 
 	private void showDealListing(CategoryGroup cat) {
-		CombindListingController listingController = new CombindListingController(
-				HomeActivity.this, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
-		CombinedListRequest newListReq = new CombinedListRequest(
-				HomeActivity.this);
+		CombindListingController listingController = new CombindListingController(HomeActivity.this, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
+		CombinedListRequest newListReq = new CombinedListRequest(HomeActivity.this);
 		newListReq.setBySearch(false);
 		newListReq.setCompanyListing(false);
 		newListReq.setKeywordOrCategoryId("-1");
@@ -682,7 +685,7 @@ public class HomeActivity extends MaxisMainActivity {
 			AnalyticsHelper.logEvent(FlurryEventsConstants.TWITTER_CLICK);
 			checkPreferenceAndOpenBrowser(AppConstants.TWITTER_PAGE_URL);
 			break;
-/*		case R.id.btn_photo_contest:
+			/*		case R.id.btn_photo_contest:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.PHOTO_CONTEST_CLICK);
 			startActivity(new Intent(HomeActivity.this,
 					ContestHomeActivity.class));
@@ -746,25 +749,28 @@ public class HomeActivity extends MaxisMainActivity {
 	}
 
 	protected void showTypeByCategoryScreen(String categoryId) {
-		TypeByCategoryController tBCController = new TypeByCategoryController(
-				HomeActivity.this, Events.TYPE_BY_CATEGORY_EVENT);
+		TypeByCategoryController tBCController = new TypeByCategoryController(HomeActivity.this, Events.TYPE_BY_CATEGORY_EVENT);
 		startSppiner();
 		tBCController.requestService(categoryId);
 	}
 
 	protected void showSubcategories(CategoryGroup cat) {
-		SubCategoryController controller = new SubCategoryController(
-				HomeActivity.this, Events.SUBCATEGORY_EVENT);
+		SubCategoryController controller = new SubCategoryController(HomeActivity.this, Events.SUBCATEGORY_EVENT);
 		controller.isForDeal = false;
 		controller.requestService(cat);
 		startSppiner();
 	}
 
 	protected void showDealcategories(CategoryGroup cat) {
-		SubCategoryController controller = new SubCategoryController(
-				HomeActivity.this, Events.DEALCATEGORY_EVENT);
+		SubCategoryController controller = new SubCategoryController(HomeActivity.this, Events.DEALCATEGORY_EVENT);
 		controller.isForDeal = true;
 		controller.requestService(cat);
+		startSppiner();
+	}
+	
+	protected void showHallListing(CategoryGroup cat) {
+		MattaHallListingController hallListingController = new MattaHallListingController(HomeActivity.this, MattaEvents.MATTA_HALL_LIST_EVENT);
+		hallListingController.requestService(cat);
 		startSppiner();
 	}
 
@@ -773,16 +779,14 @@ public class HomeActivity extends MaxisMainActivity {
 		super.onActivityResult(reqCode, resultCode, data);
 		// TODO Auto-generated method stub
 		if (resultCode == RESULT_OK && reqCode == AppConstants.CITY_REQUEST) {
-			if (!selectedCity
-					.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
+			if (!selectedCity.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
 				localityItems = null;
 				ids = null;
 				selectedLocalityindex = null;
 				currentLocality.setText("Choose your Area");
 			}
 			selectedCity = data.getStringExtra("CITY_NAME");
-			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity
-					+ "</b>"));
+			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity + "</b>"));
 			int index = data.getIntExtra("CITY_INDEX", 0);
 			if (index == -1) {
 				city_id = -1;
@@ -831,8 +835,6 @@ public class HomeActivity extends MaxisMainActivity {
 	}
 
 	public String jsonForSearch() {
-
-		// {"city":{"city_id":5,"city_name":"adyui"},"locality":[{"locality_id":5,"locality_name":"adyui"},{"locality_id":5,"locality_name":"adyui"}]}
 		JSONObject jArray = new JSONObject();
 		try {
 

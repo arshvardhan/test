@@ -395,9 +395,9 @@
     <string name="title_activity_deal_detail">DealDetailActivity</string>
     <string name="title_activity_deal_form">DealForm</string>
     <string name="title_activity_video_play">VideoPlayActivity</string>
-    <string name="mobile_number_validation">Mobile Number should be 8-11 digits and start with 1.</string>
-    <string name="mobile_number_validation_contestapp">Your Contact Number should be 8-11 digits and start with 1.</string>
-    <string name="mobile_number_validation_contestapp_company">Company Contact Number must be 8-11 digits, starting with Non-Zero and excluding Country Code.</string>
+    <string name="mobile_number_validation">Mobile Number should be 8–11 digits and start with 1.</string>
+    <string name="mobile_number_validation_contestapp">Your Contact Number should be 8–11 digits and start with 1.</string>
+    <string name="mobile_number_validation_contestapp_company">Company Contact Number must be 8–11 digits, starting with Non-Zero and excluding Country Code.</string>
     <string name="blank_mobile_number">Please enter Mobile Number.</string>
     <string name="title_activity_view_deal_map">ViewDealMapActivity</string>
     <string name="title_activity_view_all_outlets">ViewAllOutletsActivity</string>
@@ -407,7 +407,28 @@
     <string name="title_activity_did_life_cycle">DidLifeCycleActivity</string>
     <string name="title_activity_company_or_category_filter">CompanyOrCategoryFilterActivity</string>
     <string name="title_activity_search_criteria_chooser">SearchCriteriaChooserActivity</string>
+    
     <!-- ViewDealMap Activity -->
     <string name="route">Route</string>
+    
+    
+    <!--Matta Module Strings  -->
+    <string name="title_activity_matta_hall_listing">MattaHallListActivity</string>
+    <string name="title_activity_matta_booth_listing">MattaBoothListActivity</string>
+    <string name="title_activity_matta_booth_detail">MattaBoothDetailActivity</string>
+    <string name="title_activity_matta_package_list">MattaPackageListActivity</string>
+    <string name="title_activity_matta_package_detail">MattaPackageDetailActivity</string>
+    <string name="title_activity_matta_filter_search">MattaFilterSearchActivity</string>
+    
+    <string name="imv_booth_detail_image">Booth Detail Image</string>
+    <string name="imv_play_pause_image">Play Pause Image</string>
+    <string name="imv_separator">Separator Image</string>
+    <string name="package_list_arrow_img">Package Listing Arrow Image.</string>
+    <string name="hall_img">Hall Number Image.</string>
+    <string name="booth_listing_travel_packages">Travel Packages</string>
+    <string name="separator">Separator</string>
+    <string name="travel_package_image">Travel Package Image</string>
+    <string name="matta_record_found">Record(s) Found</string>
+    <string name="filter_search_btn_lbl">Filter Search</string>
 
 </resources>

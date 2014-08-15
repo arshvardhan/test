@@ -9,8 +9,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import android.util.Log;
-
 public abstract class AbstractSAXParser extends DefaultHandler implements IParser {
 	protected StringBuffer sb = null;
 	protected String parent;

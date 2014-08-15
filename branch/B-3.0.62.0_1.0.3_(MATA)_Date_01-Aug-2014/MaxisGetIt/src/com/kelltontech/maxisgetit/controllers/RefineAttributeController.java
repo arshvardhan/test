@@ -5,11 +5,9 @@ import java.util.Hashtable;
 import org.apache.http.entity.ByteArrayEntity;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Message;
 import android.util.Log;
 
-import com.kelltontech.maxisgetit.R;
 import com.kelltontech.framework.controller.BaseServiceController;
 import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.network.HttpClientConnection;
@@ -18,6 +16,7 @@ import com.kelltontech.framework.network.ServiceRequest;
 import com.kelltontech.framework.ui.IActionController;
 import com.kelltontech.framework.utils.NativeHelper;
 import com.kelltontech.framework.utils.StringUtil;
+import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.parsers.RefineAttributeParser;

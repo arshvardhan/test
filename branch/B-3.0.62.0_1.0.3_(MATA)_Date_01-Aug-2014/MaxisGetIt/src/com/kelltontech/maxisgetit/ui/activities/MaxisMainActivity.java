@@ -15,6 +15,7 @@ import android.text.Spanned;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.EditText;
 
 import com.kelltontech.framework.model.Response;
@@ -44,7 +45,7 @@ import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 /**
  * Base class for all Activity of application.
  */
-public abstract class MaxisMainActivity extends BaseMainActivity {
+public abstract class MaxisMainActivity extends BaseMainActivity/* implements AnimationListener*/ {
 	private CompanyListResponse mClResponse;
 	private CombinedListRequest mListRequest;
 	private static MaxisStore mStore;

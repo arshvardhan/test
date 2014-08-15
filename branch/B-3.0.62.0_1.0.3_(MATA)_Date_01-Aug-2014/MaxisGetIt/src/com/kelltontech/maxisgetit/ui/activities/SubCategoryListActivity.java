@@ -48,6 +48,7 @@ import com.kelltontech.maxisgetit.requests.CombinedListRequest;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.response.SubCategoryResponse;
 import com.kelltontech.maxisgetit.response.TypeByCategoryResponse;
+import com.kelltontech.maxisgetit.ui.widgets.AnimatedLinearLayout;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
 public class SubCategoryListActivity extends MaxisMainActivity {
@@ -91,7 +92,7 @@ public class SubCategoryListActivity extends MaxisMainActivity {
 	ArrayList<String> ids = new ArrayList<String>();
 	TextView mainSearchButton;
 	ArrayList<String> selectedLocalityindex;
-	LinearLayout wholeSearchBoxContainer;
+	AnimatedLinearLayout wholeSearchBoxContainer;
 
 	ImageView box;
 	LinearLayout followus;
@@ -158,7 +159,7 @@ public class SubCategoryListActivity extends MaxisMainActivity {
 		mainSearchButton = (TextView) findViewById(R.id.mainSearchButton);
 		mainSearchButton.setOnClickListener(this);
 
-		wholeSearchBoxContainer = (LinearLayout) findViewById(R.id.whole_search_box_container);
+		wholeSearchBoxContainer = (AnimatedLinearLayout) findViewById(R.id.whole_search_box_container);
 
 		mParentTitle = (TextView) findViewById(R.id.parent_title_field);
 		mGridView = (ListView) findViewById(R.id.grid_list);

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cl_row_viewgroup"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/travel_pkg_image"
+        android:layout_width="2560dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:scaleType="fitXY"
+        android:src="@drawable/travel_package_default"
+        android:contentDescription="@string/travel_package_image" />
+
+    <TextView
+        android:id="@+id/travel_pkg_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:ellipsize="end"
+        android:padding="10dp"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_18"
+        android:textStyle="bold" />
+
+</RelativeLayout>

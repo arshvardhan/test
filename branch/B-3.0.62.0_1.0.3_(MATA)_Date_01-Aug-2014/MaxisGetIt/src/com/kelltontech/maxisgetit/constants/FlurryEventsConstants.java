@@ -137,6 +137,9 @@ public class FlurryEventsConstants {
 	public static final String UPDATE_CLICK = "Force update performed";
 	public static final String Current_API_Version = "Current API version";
 	
+	// MattaHallListing Screen Events
+	public static final String MATTA_HALL_LISTING = "MattaHallList Screen";
+	
 
 	/*
 	 * Error constants for flurry

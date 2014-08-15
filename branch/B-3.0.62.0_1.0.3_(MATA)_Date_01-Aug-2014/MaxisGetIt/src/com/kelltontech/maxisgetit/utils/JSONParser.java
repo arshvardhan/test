@@ -1,8 +1,6 @@
 package com.kelltontech.maxisgetit.utils;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.NameValuePair;

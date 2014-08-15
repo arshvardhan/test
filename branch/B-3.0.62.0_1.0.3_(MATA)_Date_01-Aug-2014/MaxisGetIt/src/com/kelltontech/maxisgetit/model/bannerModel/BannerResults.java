@@ -3,7 +3,7 @@ package com.kelltontech.maxisgetit.model.bannerModel;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class BannerResults implements Parcelable{
+public class BannerResults implements Parcelable {
 
 	private String Error_Code;
 	private String Error_Message;
@@ -98,13 +98,21 @@ public class BannerResults implements Parcelable{
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		// TODO Auto-generated method stub
+		dest.writeString(Error_Code);
+		dest.writeString(Error_Message);
+		dest.writeString(landingUrl);
+		dest.writeString(screenName);
+		dest.writeString(categoryId);
+		dest.writeString(catName);
+		dest.writeString(itemId);
+		dest.writeString(keyword);
+		dest.writeString(actionType);
+		dest.writeString(type);
 	}
 
 	public BannerResults (Parcel in)
@@ -120,5 +128,18 @@ public class BannerResults implements Parcelable{
 		actionType = in.readString();
 		type = in.readString();
 	}
+	
+	public static final Creator<BannerResults> CREATOR = new Creator<BannerResults>() {
+
+		@Override
+		public BannerResults createFromParcel(Parcel source) {
+			return new BannerResults(source);
+		}
+
+		@Override
+		public BannerResults[] newArray(int size) {
+			return new BannerResults[size];
+		}
+	};
 
 }
