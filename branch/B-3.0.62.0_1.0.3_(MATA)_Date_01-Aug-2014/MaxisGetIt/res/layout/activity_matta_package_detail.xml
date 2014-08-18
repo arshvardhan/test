@@ -19,23 +19,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="5dp"
-            android:paddingLeft="0dp"
-            android:paddingRight="0dp"
-            android:paddingTop="0dp"
+            android:paddingBottom="3dp"
             android:weightSum="1" >
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/dealtopbanner"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="160dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:paddingBottom="9dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:paddingTop="4dp"
+                android:padding="3dp"
                 android:src="@drawable/detail_cross" />
 
             <LinearLayout
@@ -47,10 +39,10 @@
                 android:background="@drawable/rounded_layout"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="5dp"
-                android:paddingTop="5dp"
+                android:paddingBottom="3dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="3dp"
+                android:paddingTop="3dp"
                 android:visibility="gone" >
             </LinearLayout>
 
@@ -58,23 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/cd_name_header"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="5dp" >
-
-                <!--
-                     <LinearLayout
-                    android:id="@+id/cd_layout_comp_detail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginRight="7dp" >
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
-                -->
+                android:padding="5dp" >
 
                 <TextView
                     android:id="@+id/txt_deal_name"
@@ -86,76 +62,6 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_13"
                     android:textStyle="bold" />
-
-                <!--
-                             <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/txt_deal_name" >
-
-                            <LinearLayout
-                                android:id="@+id/cd_layout_rate_us"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:weightSum="1" >
-
-                                <com.kelltontech.maxisgetit.ui.widgets.EllipsizingTextView
-                                    android:id="@+id/validin"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center_vertical"
-                                    android:layout_weight=".55"
-                                    android:ellipsize="end"
-                                    android:paddingTop="10dp"
-                                    android:singleLine="true"
-                                    android:text="Valid In Entire Malasia"
-                                    android:textColor="@color/white"
-                                    android:textSize="@dimen/sp_12" />
-
-                                <TextView
-                                    android:id="@+id/more"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center_vertical"
-                                    android:layout_weight=".15"
-                                    android:clickable="true"
-                                    android:paddingTop="10dp"
-                                    android:singleLine="true"
-                                    android:text="@string/more"
-                                    android:textColor="@color/white"
-                                    android:textSize="@dimen/sp_12"
-                                    android:textStyle="bold|italic"
-                                    android:visibility="invisible" />
-
-                                <ImageView
-                                    android:id="@+id/cd_separator_bar"
-                                    android:layout_width="1dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_gravity="center_vertical"
-                                    android:layout_marginLeft="5dp"
-                                    android:layout_marginRight="5dp"
-                                    android:background="@color/bar_light_grey"
-                                    android:visibility="gone" />
-
-                                <TextView
-                                    android:id="@+id/validdate"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center_vertical|right"
-                                    android:layout_weight=".30"
-                                    android:gravity="right"
-                                    android:paddingTop="10dp"
-                                    android:singleLine="true"
-                                    android:text="Till 10 May 2014"
-                                    android:textColor="@color/white"
-                                    android:textSize="@dimen/sp_12"
-                                    android:visibility="visible" />
-                            </LinearLayout>
-                        </RelativeLayout>    -->
-                <!--
-                </RelativeLayout>
-                </LinearLayout>
-                -->
             </RelativeLayout>
 
             <View
@@ -171,15 +77,14 @@
                 android:orientation="horizontal" >
 
                 <TextView
-                    android:id="@+id/about_deal"
+                    android:id="@+id/highlights"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@color/green"
                     android:gravity="center"
-                    android:text="Highlights"
-                    android:textColor="@color/white"
-                    android:visibility="gone" />
+                    android:text="@string/highlights_tab"
+                    android:textColor="@color/white" />
 
                 <View
                     android:layout_width="1dp"
@@ -187,14 +92,13 @@
                     android:background="@color/green" />
 
                 <TextView
-                    android:id="@+id/nearest_outlet"
+                    android:id="@+id/itinerary"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Itinerary"
-                    android:textColor="@color/black"
-                    android:visibility="gone" />
+                    android:text="@string/itinerary_tab"
+                    android:textColor="@color/black" />
 
                 <View
                     android:layout_width="1dp"
@@ -202,14 +106,13 @@
                     android:background="@color/green" />
 
                 <TextView
-                    android:id="@+id/deal_all_outlet"
+                    android:id="@+id/contacts"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Contacts"
-                    android:textColor="@color/black" 
-                    android:visibility="gone"/>
+                    android:text="@string/contacts_tab"
+                    android:textColor="@color/black" />
             </LinearLayout>
 
             <View
@@ -218,7 +121,7 @@
                 android:background="@color/green" />
 
             <WebView
-                android:id="@+id/deal_desc"
+                android:id="@+id/highlights_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#ebebeb"
@@ -274,253 +177,6 @@
                     android:textSize="@dimen/sp_18"
                     android:textStyle="bold" />
             </LinearLayout>
-
-            <!--
-                 <include
-                android:id="@+id/nearestLayout"
-                layout="@layout/outlet_list_item"
-                android:visibility="gone" />
-
-            <View
-                android:id="@+id/outlet_seprator"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/grey"
-                android:visibility="gone" />
-            -->
-            <!--
-            <LinearLayout
-                android:id="@+id/outlets_names"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:visibility="visible" >
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <View
-                        android:id="@+id/trans_img"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-                    <ListView
-                        android:id="@+id/outlets_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="fill_parent"
-                        android:divider="@color/bar_light_grey"
-                        android:dividerHeight="0dp" >
-                    </ListView>
-                </FrameLayout>
-            </LinearLayout>
-            -->
-            <!--
-        <TextView
-                android:id="@+id/mapLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/new_footer_color"
-                android:padding="5dp"
-                android:paddingLeft="10dp"
-                android:text="Map"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_15"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:id="@+id/mapLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/view_on_map_image_background"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="visible" >
-
-                <TextView
-                    android:id="@+id/viewOnMap_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/view_on_map_btn" />
-
-                <FrameLayout
-                    android:id="@+id/frame_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:visibility="gone" >
-
-                    <fragment
-                        android:id="@+id/map"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        class="com.google.android.gms.maps.SupportMapFragment" />
-
-                    <View
-                        android:id="@+id/trans_img"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-                </FrameLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:background="@color/white"
-                android:gravity="center"
-                android:orientation="horizontal" />
-        </LinearLayout>
-            -->
         </LinearLayout>
     </com.kelltontech.maxisgetit.ui.widgets.CustomScrollView>
-
-    <!--
-         <RelativeLayout
-        android:id="@+id/leftOutletRltLayout"
-        android:layout_width="115dp"
-        android:layout_height="45dp"
-        android:layout_above="@+id/cl_deals_footer"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="30dp" > -->
-
-
-    <!--
-    <LinearLayout
-            android:id="@+id/leftOutletLayout"
-            android:layout_width="100dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/rectangleborderblack"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:visibility="visible" >
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical" >
-
-                <TextView
-                    android:id="@+id/outlets_count"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:ellipsize="marquee"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:gravity="center"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:text=" Outlets"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-            </FrameLayout>
-
-            
-                 <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:paddingBottom="5dp"
-                android:paddingLeft="18dp"
-                android:paddingRight="22dp"
-                android:text="Outlets"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-           
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/cross_btn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:clickable="true"
-            android:padding="5dp"
-            android:src="@drawable/outlet_cross_icon" />
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/rightlayout"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_above="@+id/cl_deals_footer"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/rectanglebordergreen"
-        android:gravity="center_vertical"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/view_on_map"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="View On Map"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-    -->
-    <!--
-         <LinearLayout
-        android:id="@+id/cl_deals_footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical"
-        android:visibility="visible" >
-    -->
-
-
-    <!--
-    <LinearLayout
-        android:id="@+id/cl_deals_footer"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:visibility="visible"
-        android:weightSum="1" >
-
-        <TextView
-            android:id="@+id/deal_download"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:background="@color/transparent_footer_blue"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="Get Info"
-            android:textColor="@color/transparent_white"
-            android:textSize="@dimen/sp_14"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/bar_light_grey" />
-
-        <TextView
-            android:id="@+id/tnc"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:background="@color/transparent_footer_blue"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="@string/txt_tnc"
-            android:textColor="@color/transparent_white"
-            android:textSize="@dimen/sp_14"
-            android:textStyle="bold" />
-    </LinearLayout>  -->
-    <!-- </LinearLayout> -->
-
-</RelativeLayout>
+</RelativeLayout>

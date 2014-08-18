@@ -432,5 +432,9 @@
     <string name="filter_search_btn_lbl">Filter Search</string>
     <string name="call_us_btn_lbl">Call Us</string>
     <string name="locate_us_btn_lbl">Locate Us</string>
+    <string name="itinerary_tab">Itinerary</string>
+    <string name="contacts_tab">Contacts</string>
+    <string name="highlights_tab">Highlights</string>
+    
 
 </resources>

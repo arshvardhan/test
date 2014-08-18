@@ -15,7 +15,6 @@ import android.text.Spanned;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.Animation.AnimationListener;
 import android.widget.EditText;
 
 import com.kelltontech.framework.model.Response;

@@ -632,7 +632,7 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 			} else {
 				MattaPackageDetailResponse detailResponse = (MattaPackageDetailResponse) msg.obj;
 				if (!StringUtil.isNullOrEmpty(detailResponse.getResults().getPackage().getId())) {
-					Intent intent = new Intent(MattaPackageListActivity.this, MattaBoothDetailActivity.class);
+					Intent intent = new Intent(MattaPackageListActivity.this, MattaPackageDetailActivity.class);
 					if (!StringUtil.isNullOrEmpty(mMattaPackageListRequest.getKeyword()))
 						intent.putExtra(AppConstants.GLOBAL_SEARCH_KEYWORD,mMattaPackageListRequest.getKeyword());
 					intent.putExtra(MattaConstants.DATA_MATTA_PACKAGE_DETAIL_RESPONSE, detailResponse);

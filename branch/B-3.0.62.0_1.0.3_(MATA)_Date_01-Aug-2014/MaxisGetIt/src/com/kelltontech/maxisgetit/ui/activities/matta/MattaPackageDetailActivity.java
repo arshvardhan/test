@@ -9,12 +9,12 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Html;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,30 +26,18 @@ import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
-import com.kelltontech.maxisgetit.adapters.DealMapInfoWindowAdapter;
 import com.kelltontech.maxisgetit.adapters.matta.MattaViewPagerAdapter;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
 import com.kelltontech.maxisgetit.constants.matta.MattaConstants;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
-import com.kelltontech.maxisgetit.dao.CompanyDetail;
-import com.kelltontech.maxisgetit.dao.MaxisStore;
-import com.kelltontech.maxisgetit.dao.OutLet;
-import com.kelltontech.maxisgetit.dao.OutLetDetails;
-import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.model.matta.packages.detail.MattaPackageDetailResponse;
-import com.kelltontech.maxisgetit.requests.CombinedListRequest;
-import com.kelltontech.maxisgetit.requests.OutLetDetailRequest;
 import com.kelltontech.maxisgetit.requests.matta.MattaPackageDetailRequest;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.ui.activities.AdvanceSelectCity;
@@ -69,15 +57,11 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 
 	private TextView mHeaderText;
 	private TextView mDealTitle;
-	//	private EllipsizingTextView validIn;
-	//	private TextView validDate;
-	private TextView aboutUs;
-	private TextView nearOutLets;
-	private TextView tNc;
-	private WebView dealDesc;
+	private TextView highlightsTab;
+	private TextView itineraryTab;
+	private TextView contactsTab;
+	private WebView highlightsDesc;
 	private WebView itineraryDesc;
-	private TextView downloadDeal;
-	private TextView viewAllOutlets;
 	private LinearLayout mSearchContainer, contactContainer;
 	private EditText mSearchEditText;
 	private ImageView mSearchBtn;
@@ -85,27 +69,11 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 	private ImageView mHeaderBackButton;
 	private ImageView mHomeIconView;
 	private ImageView mSearchToggler;
-	private CombinedListRequest mClRequest;
-	// ArrayList<NearOutLets> outLets;
-	private DealMapInfoWindowAdapter mMapInfoWindowAdapter;
 
-	private GoogleMap mMap;
-	// private Marker sourceMarker;
-	private String comp_id;
-	private String deal_id;
-	private String l3cat_id;
-	private OutLetDetails outLetResponse;
-	ArrayList<OutLet> outLets = new ArrayList<OutLet>();
-	private String termsNdcond;
 	private boolean isNearestOutlet = false;
 	LinearLayout outLetsName;
-	private final int textId = 1104;
-	private int tagId = 0;
 	boolean viewAdded = false;
-	private MaxisStore store;
-	String userNo;
-	String userName;
-
+	//	private MaxisStore store;
 	private boolean isAdvanceSearchLayoutOpen = false;
 	private LinearLayout advanceSearchLayout;
 	private TextView currentCity, currentLocality;
@@ -124,40 +92,10 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 	private LinearLayout wholeSearchBoxContainer;
 	private boolean onTapNearestOutletEnable = false;
 
-	private View seprator_outlet;
-
-	private RelativeLayout nearestOutletLayout;
-	private ListView outLetsList;
-	private TextView nearestOutLetTitle;
-	private TextView nearestOutLetAddress;
-	private int index;
-
-	private TextView outletCount;
-	private ImageView crossBtn;
-	private TextView viewOnMap;
-	private RelativeLayout leftInfoLayout;
-	private LinearLayout rightLayout;
-	private OutLetDetailRequest detailRequest;
-	private LinearLayout mapLayout;
-	private TextView view_map;
-	private TextView mapLabel;
-	private TextView mMoreDesc;
-	//	private boolean mIsCollapsedView = true;
-	private int mapIndex;
-	private String externalDealURL;
-	private int currentEvent = -1;
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == 2) {
-			if (resultCode == RESULT_OK) {
-				Bundle bundle = data.getExtras();
-				userName = bundle.getString("name");
-				userNo = bundle.getString("phoneNo");
-				//				dealDownload();
-			}
-		} else if (resultCode == RESULT_OK
+		if (resultCode == RESULT_OK
 				&& requestCode == AppConstants.CITY_REQUEST) {
 			if (!selectedCity
 					.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
@@ -224,19 +162,15 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 		setContentView(R.layout.activity_matta_package_detail);
 
 		circleIndicator = (LinearLayout) findViewById(R.id.indicatorlinearlayout);
-		store = MaxisStore.getStore(this);
-		//		outLetsName = (LinearLayout) findViewById(R.id.outlets_names);
 		Bundle bundle = getIntent().getExtras();
-		mMattaPackageDetailResponse = (MattaPackageDetailResponse) bundle.getSerializable(MattaConstants.DATA_MATTA_PACKAGE_DETAIL_REQUEST);
+		mMattaPackageDetailResponse = (MattaPackageDetailResponse) bundle.getSerializable(MattaConstants.DATA_MATTA_PACKAGE_DETAIL_RESPONSE);
 		mMattaPackageDetailRequest = (MattaPackageDetailRequest) bundle.getSerializable(MattaConstants.DATA_MATTA_PACKAGE_DETAIL_REQUEST);
-		mClRequest = bundle.getParcelable(AppConstants.DATA_LIST_REQUEST);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
-		//		seprator_outlet = (View) findViewById(R.id.outlet_seprator);
-		dealDesc = (WebView) findViewById(R.id.deal_desc);
-		WebSettings settings = dealDesc.getSettings();
+		highlightsDesc = (WebView) findViewById(R.id.highlights_desc);
+		WebSettings settings = highlightsDesc.getSettings();
 		settings.setJavaScriptEnabled(true);
-		dealDesc.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-		dealDesc.setWebViewClient(new WebViewClient() {
+		highlightsDesc.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+		highlightsDesc.setWebViewClient(new WebViewClient() {
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				return overrideWebViewUrlLoading(url);
 			}
@@ -330,8 +264,7 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 
 		currentCity = (TextView) findViewById(R.id.currentCity);
 		currentLocality = (TextView) findViewById(R.id.currentLocality);
-		currentCity.setText(Html
-				.fromHtml("in " + "<b>" + selectedCity + "</b>"));
+		currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity + "</b>"));
 
 		currentCity.setOnClickListener(this);
 		currentLocality.setOnClickListener(this);
@@ -345,8 +278,6 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-
 				if (!isAdvanceSearchLayoutOpen) {
 					isAdvanceSearchLayoutOpen = true;
 					advanceSearchLayout.setVisibility(View.VISIBLE);
@@ -355,7 +286,7 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 			}
 		});
 
-		//		dealDesc.setOnClickListener(new OnClickListener() {
+		//		highlightsDesc.setOnClickListener(new OnClickListener() {
 		//
 		//			@Override
 		//			public void onClick(View v) {
@@ -379,61 +310,6 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 		//			}
 		//		});
 
-		final com.kelltontech.maxisgetit.ui.widgets.CustomScrollView mainScrollView = (com.kelltontech.maxisgetit.ui.widgets.CustomScrollView) findViewById(R.id.scroll_view);
-		// View transparentImageView = (View) findViewById(R.id.trans_img);
-		//
-		// transparentImageView.setOnTouchListener(new View.OnTouchListener() {
-		//
-		// @Override
-		// public boolean onTouch(View v, MotionEvent event) {
-		// int action = event.getAction();
-		// switch (action) {
-		// case MotionEvent.ACTION_DOWN:
-		// // Disallow ScrollView to intercept touch events.
-		// mainScrollView.requestDisallowInterceptTouchEvent(true);
-		// // Disable touch on transparent view
-		// return false;
-		//
-		// case MotionEvent.ACTION_UP:
-		// // Allow ScrollView to intercept touch events.
-		// mainScrollView.requestDisallowInterceptTouchEvent(false);
-		// return true;
-		//
-		// case MotionEvent.ACTION_MOVE:
-		// mainScrollView.requestDisallowInterceptTouchEvent(true);
-		// return false;
-		//
-		// default:
-		// return true;
-		// }
-		// }
-		// });
-
-		/*		outLetsList.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
-					long arg3) {
-				if (outLets != null && outLets.size() > 0) {
-					String catId = outLets.get(pos).getCatid();
-					String comp_id = outLets.get(pos).getId();
-
-					Intent intent = new Intent(MattaPackageDetailActivity.this,
-							CompanyDetailActivity.class);
-
-					Bundle bundle = new Bundle();
-					bundle.putString(AppConstants.COMP_ID, comp_id);
-					bundle.putString(AppConstants.GLOBAL_SEARCH_KEYWORD,
-							mSearchKeyword);
-					bundle.putBoolean(AppConstants.IS_DEAL_LIST, true);
-					intent.putExtra(AppConstants.CATEGORY_ID_KEY, catId);
-					intent.putExtras(bundle);
-					startActivity(intent);
-
-				}
-			}
-		});*/
-
 	}
 
 	@Override
@@ -450,89 +326,47 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.about_deal:
-			//			if (outLets != null && outLets.size() > 0) {
-			//				isNearestOutlet = false;
-			//				onTapNearestOutletEnable = false;
-			//				aboutUs.setBackgroundColor(getResources().getColor(R.color.green));
-			//				aboutUs.setTextColor(Color.WHITE);
-			//				nearOutLets.setBackgroundColor(Color.WHITE);
-			//				nearOutLets.setTextColor(Color.BLACK);
-			//				viewAllOutlets.setBackgroundColor(Color.WHITE);
-			//				viewAllOutlets.setTextColor(Color.BLACK);
-			//				outLetsName.setVisibility(View.GONE);
-			//				seprator_outlet.setVisibility(View.GONE);
-			//				nearestOutletLayout.setVisibility(View.GONE);
-			//				dealDesc.setVisibility(View.VISIBLE);
-			//				mapLayout.setVisibility(View.VISIBLE);
-			//
-			//				leftInfoLayout.setVisibility(View.GONE);
-			//				rightLayout.setVisibility(View.GONE);
-			//				mapLabel.setVisibility(View.VISIBLE);
-			//
-			//				if (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getDescription()))
-			//					dealDesc.loadDataWithBaseURL("", mMattaPackageDetailResponse.getDescription(), "text/html", "UTF-8","");
-			//				//				setText(Html.fromHtml(mMattaPackageDetailResponse.getDescription()));
-			//			} 
+		case R.id.highlights:
+			if (mMattaPackageDetailResponse.getResults().getPackage().getHighlights() != null 
+			&& !StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().getValue())) {
+				isNearestOutlet = false;
+				onTapNearestOutletEnable = false;
+				highlightsTab.setBackgroundColor(getResources().getColor(R.color.green));
+				highlightsTab.setTextColor(Color.WHITE);
+				itineraryTab.setBackgroundColor(Color.WHITE);
+				itineraryTab.setTextColor(Color.BLACK);
+				contactsTab.setBackgroundColor(Color.WHITE);
+				contactsTab.setTextColor(Color.BLACK);
+				highlightsDesc.setVisibility(View.VISIBLE);
+				highlightsDesc.loadDataWithBaseURL("", mMattaPackageDetailResponse.getResults().getPackage().getHighlights().getValue(), "text/html", "UTF-8","");
+				itineraryDesc.setVisibility(View.GONE);
+			}  else {
+				showInfoDialog(getResources().getString(R.string.no_result_found));
+			}
 
 			break;
-		case R.id.nearest_outlet:
-			//			if  (outLets != null && outLets.size() > 0) {
-			//				isNearestOutlet = true;
-			//				outLetsName.setVisibility(View.GONE);
-			//				aboutUs.setBackgroundColor(Color.WHITE);
-			//				aboutUs.setTextColor(Color.BLACK);
-			//				nearOutLets.setBackgroundColor(getResources().getColor(
-			//						R.color.green));
-			//				nearOutLets.setTextColor(Color.WHITE);
-			//				viewAllOutlets.setBackgroundColor(Color.WHITE);
-			//				viewAllOutlets.setTextColor(Color.BLACK);
-			//				seprator_outlet.setVisibility(View.GONE);
-			//				nearestOutletLayout.setVisibility(View.VISIBLE);
-			//				nearestOutletLayout.setBackgroundColor(getResources().getColor(
-			//						R.color.light_green));
-			//				dealDesc.setVisibility(View.GONE);
-			//				mapLayout.setVisibility(View.VISIBLE);
-			//
-			//				leftInfoLayout.setVisibility(View.GONE);
-			//				rightLayout.setVisibility(View.GONE);
-			//				mapLabel.setVisibility(View.VISIBLE);
-			//				// setUpMapIfNeeded();
-			//				if (outLets != null && outLets.size() > 0) {
-			//					if (!StringUtil.isNullOrEmpty(outLetResponse.getOutlet().get(0).getAddress())) {
-			//						String text = outLets.get(0).getTitle() + ", "+ outLets.get(0).getAddress();
-			//						//	dealDesc.setText(outLets.get(0).getTitle() + ", "+ outLets.get(0).getAddress());
-			//						dealDesc.loadDataWithBaseURL("", text, "text/html", "UTF-8","");
-			//						onTapNearestOutletEnable = true;
-			//					}
-			//				} else {
-			//					//	dealDesc.setText("Nearest OutLet Address not available .");
-			//					dealDesc.loadDataWithBaseURL("", "Nearest OutLet Address not available .", "text/html", "UTF-8","");
-			//					onTapNearestOutletEnable = false;
-			//				}
-			//			} else {
-			//				showInfoDialog(getResources().getString(R.string.no_result_found));
-			//			}
+		case R.id.itinerary:
+			if (mMattaPackageDetailResponse.getResults().getPackage().getItinerary() != null 
+			&& !StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getItinerary().getValue())) {
+				isNearestOutlet = true;
+				highlightsTab.setBackgroundColor(Color.WHITE);
+				highlightsTab.setTextColor(Color.BLACK);
+				itineraryTab.setBackgroundColor(getResources().getColor(R.color.green));
+				itineraryTab.setTextColor(Color.WHITE);
+				contactsTab.setBackgroundColor(Color.WHITE);
+				contactsTab.setTextColor(Color.BLACK);
+				highlightsDesc.setVisibility(View.GONE);
+				itineraryDesc.loadDataWithBaseURL("", mMattaPackageDetailResponse.getResults().getPackage().getItinerary().getValue(), "text/html", "UTF-8","");
+				itineraryDesc.setVisibility(View.VISIBLE);
+				onTapNearestOutletEnable = true;
+			} else {
+				onTapNearestOutletEnable = false;
+				showInfoDialog(getResources().getString(R.string.no_result_found));
+			}
 			break;
-
-		case R.id.deal_all_outlet:
-			//			if (outLets != null && outLets.size() > 0) {
-			//				onViewAllOutletClick();
-			//			} else {
-			//				showInfoDialog(getResources().getString(R.string.no_result_found));
-			//			}
+		case R.id.contacts:
+			onViewAllOutletClick();
 			break;
-
-			//		case R.id.tnc:
-			//			// TODO
-			//			Intent tncintent = new Intent(MattaPackageDetailActivity.this,
-			//					TermsAndConditionActivity.class);
-			//			tncintent.putExtra(AppConstants.TNC_FROM,
-			//					AppConstants.TNC_FROM_DEAL);
-			//			tncintent.putExtra("TnC_Data", termsNdcond);
-			//			startActivity(tncintent);
-			//
-			//			break;
 		case R.id.search_toggler:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SEARCH_CLICK);
 			if (wholeSearchBoxContainer.getVisibility() == View.VISIBLE) {
@@ -552,10 +386,6 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 			.endTimedEvent(FlurryEventsConstants.APPLICATION_COMBINED_LIST);
 			this.finish();
 			break;
-			//		case R.id.col_refine_search:
-			//		case R.id.col_refine_search1:
-			//			AnalyticsHelper.logEvent(FlurryEventsConstants.MODIFY_SEARCH_CLICK);
-			//			break;
 		case R.id.mainSearchButton:
 			mSearchEditText.setText(mSearchEditText.getText().toString().trim());
 			String JSON_EXTRA = jsonForSearch();
@@ -568,44 +398,6 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 		case R.id.show_profile_icon:
 			onProfileClick();
 			break;
-
-			//		case R.id.deal_download:
-			//			// TODO
-			//			AnalyticsHelper.logEvent(FlurryEventsConstants.GET_INFO_CLICK);
-			//			getDownloadDetails();
-			//			break;
-
-			//		case R.id.outletName:
-			//		case R.id.outletAddress:
-			//			index = Integer.parseInt(v.getTag().toString());
-			//
-			//			if (index == -1) {
-			//				index = 0;
-			//			}
-			//
-			//			String catId = outLets.get(index).getCatid();
-			//			String comp_id = outLets.get(index).getId();
-			//
-			//			Intent intent = new Intent(MattaPackageDetailActivity.this,
-			//					CompanyDetailActivity.class);
-			//
-			//			Bundle bundle = new Bundle();
-			//			bundle.putString(AppConstants.COMP_ID, comp_id);
-			//			bundle.putString(AppConstants.GLOBAL_SEARCH_KEYWORD, mSearchKeyword);
-			//			bundle.putBoolean(AppConstants.IS_DEAL_LIST, true);
-			//			intent.putExtra(AppConstants.CATEGORY_ID_KEY, catId);
-			//			intent.putExtras(bundle);
-			//			startActivity(intent);
-			//
-			//			break;
-			//		case R.id.mapIcon:
-			//			index = Integer.parseInt(v.getTag().toString());
-			//			if (index == -1) {
-			//				index = 0;
-			//			}
-			//			showMap(index);
-			//
-			//			break;
 
 		case R.id.upArrow:
 			if (isAdvanceSearchLayoutOpen) {
@@ -626,7 +418,6 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 				setSearchCity();
 			}
 			break;
-
 		case R.id.currentLocality:
 			if (localityItems != null && localityItems.size() > 0) {
 				Intent localityIntent = new Intent(MattaPackageDetailActivity.this,
@@ -644,292 +435,56 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 			break;
 		case R.id.locate_us_btn:
 			break;
-			//		case R.id.cross_btn:
-			//			leftInfoLayout.setVisibility(View.GONE);
-			//			break;
-
-			//		case R.id.view_on_map:
-			//			index = -1;
-			//			showMap(index);
-			//			break;
-			//		case R.id.mapLayout:
-			//		case R.id.viewOnMap_view:
-			//
-			//			index = 0;
-			//			showMap(index);
-			//
-			//
-			//			break;
-			//		case R.id.more:
-			//			onViewAllOutletClick();
-			//			break;
 		default:
 			break;
 		}
 
 	}
 
-	/*	private void onViewAllOutletClick() {
+	private void onViewAllOutletClick() {
 		isNearestOutlet = false;
-		outLetsName.setVisibility(View.VISIBLE);
-		aboutUs.setBackgroundColor(Color.WHITE);
-		aboutUs.setTextColor(Color.BLACK);
-		nearOutLets.setBackgroundColor(Color.WHITE);
-		nearOutLets.setTextColor(Color.BLACK);
-		viewAllOutlets.setBackgroundColor(getResources().getColor(
-				R.color.green));
-		viewAllOutlets.setTextColor(Color.WHITE);
-
-		if (outLetResponse !=null) {
-			if (Integer.parseInt(outLetResponse.getTotal_records()) > 10)
-				leftInfoLayout.setVisibility(View.VISIBLE);
-			else
-				leftInfoLayout.setVisibility(View.GONE);
-		}
-		rightLayout.setVisibility(View.VISIBLE);
-		// dealDesc.setText(termsNdcond);
-		dealDesc.setVisibility(View.GONE);
-		mapLayout.setVisibility(View.GONE);
-		nearestOutletLayout.setVisibility(View.GONE);
-		mapLabel.setVisibility(View.GONE);
-		// nearestOutletLayout.setBackgroundColor(getResources().getColor(
-		// R.color.light_green));
-
+		highlightsTab.setBackgroundColor(Color.WHITE);
+		highlightsTab.setTextColor(Color.BLACK);
+		itineraryTab.setBackgroundColor(Color.WHITE);
+		itineraryTab.setTextColor(Color.BLACK);
+		contactsTab.setBackgroundColor(getResources().getColor(R.color.green));
+		contactsTab.setTextColor(Color.WHITE);
+		// highlightsDesc.setText(termsNdcond);
+		highlightsDesc.setVisibility(View.GONE);
+		itineraryDesc.setVisibility(View.GONE);
 		onTapNearestOutletEnable = false;
-		seprator_outlet.setVisibility(View.GONE);
-		try {
-			// setUpMapIfNeeded();
-			addOutLets();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}*/
+	}
 
 	private void indicatorchange(int pos) {
 		for (int i = 0; i < imgPathList.size(); i++) {
-			circleIndicator.getChildAt(i).setBackgroundResource(
-					R.drawable.circle_white);
+			circleIndicator.getChildAt(i).setBackgroundResource(R.drawable.circle_white);
 		}
-		circleIndicator.getChildAt(pos).setBackgroundResource(
-				R.drawable.circle_blue);
+		circleIndicator.getChildAt(pos).setBackgroundResource(R.drawable.circle_blue);
 	}
 
 	private void addImage() {
-		Log.e("manish", "inside add");
-
-		// circleIndicator = (LinearLayout)
-		// findViewById(R.id.indicatorlinearlayout);
-
 		for (int i = 0; i < imgPathList.size(); i++) {
 			ImageView image = new ImageView(this);
-			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			layoutParams.setMargins(0, 0, (int) (5 * getResources()
-					.getDisplayMetrics().density), 0);
+			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			layoutParams.setMargins(0, 0, (int) (5 * getResources().getDisplayMetrics().density), 0);
 			int padding = (int) (3 * getResources().getDisplayMetrics().density);
 			image.setPadding(padding, padding, padding, padding);
 			image.setLayoutParams(layoutParams);
-
 			circleIndicator.addView(image, i);
-
 		}
 		indicatorchange(flipperVisibleItemPosition);
 	}
 
-	/*	@Override
-	public void onGlobalLayout() {
-		// TODO Auto-generated method stub
-		// setUpMapIfNeeded();
-	}*/
-
-	/*	private void setUpMapIfNeeded() {
-		// Do a null check to confirm that we have not already instantiated the
-		// map.
-		if (mMap == null) {
-			// Try to obtain the map from the SupportMapFragment.
-			mMap = ((SupportMapFragment) getSupportFragmentManager()
-					.findFragmentById(R.id.map)).getMap();
-			// Check if we were successful in obtaining the map.
-			if (mMap != null) {
-				setUpMap();
-			}
-		}
-	}*/
-
-	/*	private void setUpMap() {
-		mMap.setMyLocationEnabled(true);
-		// Location loc = mMap.getMyLocation();
-		// loc.getLatitude()!=0&&loc.getLongitude()!=0
-		LatLng fromPosition = new LatLng(GPS_Data.getLatitude(),
-				GPS_Data.getLongitude());
-		// LatLng fromPosition=new LatLng(6.419371,99.810822);
-		// 28.589345,77.040825
-
-		// LatLng toPosition=new LatLng(28.393213,77.248878);
-		LatLngBounds.Builder builder = new LatLngBounds.Builder();
-		// builder.include(fromPosition);
-		// sourceMarker = mMap.addMarker(new MarkerOptions()
-		// .position(fromPosition)
-		// .title("You are here")
-		// .icon(BitmapDescriptorFactory
-		// .fromResource(R.drawable.map_user_marker)));
-		// builder.include(sourceMarker.getPosition());
-		LatLng toPosition = null;
-		LatLng nearestPosition = null;
-		if (outLets != null) {
-			for (int i = 0; i < outLets.size(); i++) {
-
-				if (StringUtil.isNullOrEmpty(outLets.get(i).getLat())
-						|| StringUtil.isNullOrEmpty(outLets.get(i).getLat())) {
-
-				} else {
-					toPosition = new LatLng(Double.parseDouble(outLets.get(i)
-							.getLat()), Double.parseDouble(outLets.get(i)
-									.getLongt()));
-					mMap.addMarker(new MarkerOptions()
-					.icon(BitmapDescriptorFactory
-							.fromResource(R.drawable.map_company_marker))
-							.position(toPosition)
-							.title(outLets.get(i).getTitle())
-							.snippet(getSnippet(outLets.get(i))));
-					builder.include(toPosition);
-				}
-			}
-
-			nearestPosition = new LatLng(Double.parseDouble(outLets.get(0)
-					.getLat()), Double.parseDouble(outLets.get(0).getLongt()));
-		}
-		if (nearestPosition == null) {
-			nearestPosition = fromPosition;
-		}
-		LatLngBounds bounds = builder.build();
-		int padding = 50; // offset from edges of the map in pixels
-		// CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds,
-		// padding);
-		CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(nearestPosition,
-				14.0f);
-
-		mMap.animateCamera(cu);
-
-		final CameraPosition cameraPosition = new CameraPosition.Builder()
-		.target(nearestPosition) // Sets the center of the map to
-		// Mountain
-		// View
-		.zoom(14) // Sets the zoom
-		.bearing(90) // Sets the orientation of the camera to east
-		.tilt(30) // Sets the tilt of the camera to 30 degrees
-		.build();
-		// mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-		if (outLets != null && outLets.size() > 0) {
-			if (isNearestOutlet) {
-				mMapInfoWindowAdapter = new DealMapInfoWindowAdapter(this);
-				ArrayList<OutLet> nearestOutlet = new ArrayList<OutLet>();
-
-				nearestOutlet.add(outLets.get(0));
-				mMapInfoWindowAdapter.setData(nearestOutlet);
-				mMap.setInfoWindowAdapter(mMapInfoWindowAdapter);
-
-			} else {
-				mMapInfoWindowAdapter = new DealMapInfoWindowAdapter(this);
-				mMapInfoWindowAdapter.setData(outLets);
-				mMap.setInfoWindowAdapter(mMapInfoWindowAdapter);
-			}
-		}
-		mMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
-
-			@Override
-			public void onInfoWindowClick(Marker marker) {
-				if (!StringUtil.isNullOrEmpty(marker.getSnippet())) {
-					String mCurrentCompId;
-					mCurrentCompId = marker.getSnippet().split(
-							AppConstants.SPLIT_STRING)[0];
-
-					//					mCurrentCompId = marker.getSnippet().split(
-					//							AppConstants.SPLIT_STRING)[0];
-					OutLet outLet = mMapInfoWindowAdapter
-							.getValue(mCurrentCompId);
-					Intent intent = new Intent(MattaPackageDetailActivity.this,
-							CompanyDetailActivity.class);
-
-					Bundle bundle = new Bundle();
-					bundle.putString(AppConstants.COMP_ID, mCurrentCompId);
-					bundle.putString(AppConstants.GLOBAL_SEARCH_KEYWORD,
-							mSearchKeyword);
-					bundle.putBoolean(AppConstants.IS_DEAL_LIST, true);
-					intent.putExtra(AppConstants.CATEGORY_ID_KEY,
-							outLet.getCatid());
-					intent.putExtras(bundle);
-					startActivity(intent);
-
-
-	 * Dialog dialog =
-	 * CustomDialog.CreateCustomDialog(ViewAllOnMapActivity
-	 * .this, CustomDialog.MAP_DIALOG, marker.getTitle());
-	 * dialog.show();
-
-				}
-			}
-		});
-		mMap.setOnMyLocationChangeListener(new OnMyLocationChangeListener() {
-			@Override
-			public void onMyLocationChange(Location location) {
-				if (location.getLatitude() != 0 && location.getLongitude() != 0) {
-					GPS_Data.setLatitude(location.getLatitude());
-					GPS_Data.setLongitude(location.getLongitude());
-					// sourceMarker.setPosition(new
-					// LatLng(GPS_Data.getLatitude(),
-					// GPS_Data.getLongitude()));
-				}
-			}
-		});
-		mMap.setOnMyLocationButtonClickListener(new OnMyLocationButtonClickListener() {
-			@Override
-			public boolean onMyLocationButtonClick() {
-				mMap.animateCamera(CameraUpdateFactory
-						.newCameraPosition(cameraPosition));
-				return true;
-			}
-		});
-
-	}*/
-
-	/*private String getSnippet(OutLet outLet) {
-		// id + location + image + distance
-		String adddress = "";
-		adddress = outLet.getAddress();
-		String snippet = outLet.getId() + AppConstants.SPLIT_STRING + adddress
-				+ AppConstants.SPLIT_STRING + outLet.getIcon_url()
-				+ AppConstants.SPLIT_STRING + outLet.getPhone_no();
-		return snippet;
-	}*/
-
-	/*	public void getOutLets() {
-		try {
-
-			OutLetDetailtController detailtController = new OutLetDetailtController(
-					MattaPackageDetailActivity.this, Events.OUTLET_DETAIL);
-			detailRequest = new OutLetDetailRequest();
-
-			detailRequest.setComp_id(comp_id);
-			detailRequest.setDeal_id(deal_id);
-			detailRequest.setL3cat_id(l3cat_id);
-			startSppiner();
-			detailtController.requestService(detailRequest);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}*/
-
 	@Override
 	public void setScreenData(Object screenData, int event, long time) {
-		/*	if (event == Events.DOWNLOAD_DEAL) {
-			Message message = (Message) screenData;
-			handler.sendMessage(message);
-		} */if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE
-				|| event == Events.USER_DETAIL) {
+		if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE || event == Events.USER_DETAIL) {
 			super.setScreenData(screenData, event, time);
 		} else if (event == Events.TYPE_BY_CATEGORY_EVENT || event == Events.SUBCATEGORY_EVENT) {
 			handler.sendMessage((Message) screenData);
+		} else if (event == Events.CITY_LISTING || event == Events.LOCALITY_LISTING) {
+			Message message = (Message) screenData;
+			handler.sendMessage(message);
+			return;
 		} else {
 			System.out.println(screenData);
 			Response response = (Response) screenData;
@@ -939,114 +494,13 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 			if (response.isError()) {
 				message.obj = response.getErrorText();
 			}
-
-			/*else if (event == Events.OUTLET_DETAIL) {
-
-				try {
-					if (response.getPayload() instanceof OutLetDetails) {
-						OutLetDetails outLetDetails = (OutLetDetails) response
-								.getPayload();
-						if (outLetDetails.getErrorCode() != 0) {
-							message.obj = getResources().getString(
-									R.string.communication_failure);
-						} else {
-							if (outLetDetails.getOutlet().size() < 1) {
-								message.obj = new String(getResources()
-										.getString(R.string.no_result_found));
-							} else {
-								message.arg1 = 0;
-								message.obj = outLetDetails;
-							}
-						}
-					} else {
-						message.obj = new String(getResources().getString(
-								R.string.communication_failure));
-					}
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-			}*/ /*else if (event == Events.DEAL_DETAIL) {
-				if (response.getPayload() instanceof CompanyDetail) {
-					CompanyDetail compDetail = (CompanyDetail) response
-							.getPayload();
-					if (compDetail.getErrorCode() != 0) {
-						message.obj = getResources().getString(
-								R.string.communication_failure);
-					} else {
-						message.arg1 = 0;
-						message.obj = compDetail;
-					}
-				} else {
-					message.obj = new String(getResources().getString(
-							R.string.communication_failure));
-				}
-			}*/
 			handler.sendMessage(message);
 		}
 	}
 
 	@Override
 	public void updateUI(Message msg) {
-		/*if (msg.arg2 == Events.OUTLET_DETAIL) {
-			try {
-				if (msg.arg1 == 1) {
-					showInfoDialog((String) msg.obj);
-				} else {
-					outLetResponse = (OutLetDetails) msg.obj;
-					outLets = outLetResponse.getOutlet();
-					if (outLets != null && outLets.size() > 0) {
-						nearestOutLetTitle.setText(outLets.get(0).getTitle());
-						nearestOutLetAddress.setText(outLets.get(0)
-								.getAddress());
-						// leftInfoLayout.setVisibility(View.VISIBLE);
-						outletCount.setText(outLetResponse.getTotal_records() + " " + "Outlets");
-					}
-					// setUpMapIfNeeded();
-				}
-				stopSppiner();
-			} catch (Exception e) {
-			}
-		}*/ /*else if (msg.arg2 == Events.DOWNLOAD_DEAL) {
-			if (msg.arg1 == 1) {
-				showInfoDialog((String) msg.obj);
-			} else if (msg.arg1 == 0) {
-				MaxisResponse genResp = (MaxisResponse) msg.obj;
-				if (mMattaPackageDetailResponse.getSource().equalsIgnoreCase("GROUPON")) {
-					currentEvent = msg.arg2;
-					externalDealURL = mMattaPackageDetailResponse.getDealDetailUrl();
-					if (isDialogToBeShown()) {
-						showConfirmationDialog(CustomDialog.DATA_USAGE_DIALOG, getResources().getString(R.string.cd_msg_data_usage));
-					} else {
-						showExternalDealInBrowser(externalDealURL);
-					}
-
-				} else {
-					showInfoDialog(getString(R.string.download_deal));
-				}
-			}
-			stopSppiner();
-		}*/ /*else if (msg.arg2 == Events.DEAL_DETAIL) {
-			if (msg.arg1 == 1) {
-				showInfoDialog((String) msg.obj);
-			} else {
-				mMattaPackageDetailResponse = (CompanyDetail) msg.obj;
-				if (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getId())) {
-					deal_id = mMattaPackageDetailResponse.getId();
-					comp_id = mMattaPackageDetailResponse.getCid();
-					l3cat_id = mMattaPackageDetailResponse.getCatId();
-					setdata();
-					getOutLets();
-					// intent.putExtra(AppConstants.THUMB_URL,
-					// mCategoryThumbUrl);
-					// intent.putExtra(AppConstants.IS_DEAL_LIST,
-					// !mClRequest.isCompanyListing());
-				} else {
-					showInfoDialog(getResources().getString(
-							R.string.no_result_found));
-				}
-			}
-			// stopSppiner();
-		} */if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE
+		if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE
 				|| msg.arg2 == Events.USER_DETAIL) {
 			super.updateUI(msg);
 		} else if (msg.arg2 == Events.CITY_LISTING) {
@@ -1054,16 +508,10 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				CityTable cityTable = new CityTable(
-						(MyApplication) getApplication());
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
-				// cityTable.addCityList(glistRes.getCityOrLocalityList());
 				cityList = glistRes.getCityOrLocalityList();
-				// inflateCityList(cityList);
-				Intent intent = new Intent(MattaPackageDetailActivity.this,
-						AdvanceSelectCity.class);
+				Intent intent = new Intent(MattaPackageDetailActivity.this, AdvanceSelectCity.class);
 				for (CityOrLocality cityOrLocality : cityList) {
-
 					cityListString.add(cityOrLocality.getName());
 				}
 				localityItems = null;
@@ -1097,34 +545,7 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 		}
 	}
 
-	/*	private void showExternalDealInBrowser(String url) {
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-		startActivity(browserIntent);
-	}*/
-
-	/*	public void getDownloadDetails() {
-
-		if (store.isLoogedInUser()) {
-			userNo = "60" + store.getUserMobileNumberToDispaly();
-			userName = store.getUserName();
-			dealDownload();
-
-		} else {
-			userNo = store.getAuthMobileNumber();
-			userName = "";
-			dealDownload();
-			// Intent intent = new Intent(getApplicationContext(),
-			// DealForm.class);
-			// startActivityForResult(intent, 2);
-
-		}
-
-	}*/
-
 	public void setdata() {
-		//		termsNdcond = mMattaPackageDetailResponse.getTermsNdCondition();
-		// outLets = mMattaPackageDetailResponse.getNearoutlets();
-
 		contactContainer = (LinearLayout) findViewById(R.id.contacts_container);
 		contactContainer.setVisibility(View.GONE);
 
@@ -1135,58 +556,25 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 
 		mHeaderText = (TextView) findViewById(R.id.header_title);
 		mDealTitle = (TextView) findViewById(R.id.txt_deal_name);
-		//		validIn = (EllipsizingTextView) findViewById(R.id.validin);
-		//		validIn.setMaxLines(1);
-		//		validDate = (TextView) findViewById(R.id.validdate);
-		aboutUs = (TextView) findViewById(R.id.about_deal);
+		highlightsTab = (TextView) findViewById(R.id.highlights);
 		if (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().getLabel())) {
-			aboutUs.setVisibility(View.VISIBLE);
-			aboutUs.setText(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().getLabel());
+			highlightsTab.setVisibility(View.VISIBLE);
+			highlightsTab.setText(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().getLabel());
 		} else {
-			aboutUs.setVisibility(View.GONE);
+			highlightsTab.setVisibility(View.GONE);
 		}
-		
-		
-		nearOutLets = (TextView) findViewById(R.id.nearest_outlet);
-		//		tNc = (TextView) findViewById(R.id.tnc);
 
-		// dealDownload = (Button)findViewById(R.id.);
-		//		downloadDeal = (TextView) findViewById(R.id.deal_download);
-		//		viewAllOutlets = (TextView) findViewById(R.id.deal_all_outlet);
 
-		//		if (mMattaPackageDetailResponse.getSource().equalsIgnoreCase("GROUPON")) {
-		//			downloadDeal.setText("Buy Now");
-		//		}
-		//		downloadDeal.setOnClickListener(this);
-		//		viewAllOutlets.setOnClickListener(this);
+		itineraryTab = (TextView) findViewById(R.id.itinerary);
+		contactsTab = (TextView) findViewById(R.id.contacts);
 
 		if (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getTitle())) {
 			mHeaderText.setText(mMattaPackageDetailResponse.getResults().getPackage().getTitle());
 			mDealTitle.setText(mMattaPackageDetailResponse.getResults().getPackage().getTitle());
 		}
 
-
-		//		if (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getValidIn()))
-		//			validIn.setText(mMattaPackageDetailResponse.getValidIn());
-		//		mMoreDesc = (TextView) findViewById(R.id.more);
-		//		mMoreDesc.setText(Html.fromHtml("<u>" + getResources().getString(R.string.more) + "</u>"));
-		//		mMoreDesc.setOnClickListener(this);
-		//		if (validIn.isEllipsized()) {
-		//			mMoreDesc.setVisibility(View.VISIBLE);
-		//		} else {
-		//			mMoreDesc.setVisibility(View.INVISIBLE);
-		//		}
-		//		if (mMattaPackageDetailResponse.getValidIn().length() > 25) {
-		//			mMoreDesc.setVisibility(View.VISIBLE);
-		//		} else {
-		//			mMoreDesc.setVisibility(View.INVISIBLE);
-		//		}
-		//		if (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getValidDate()))
-		//			validDate.setText(mMattaPackageDetailResponse.getValidDate());
-
 		if (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().getValue()))
-			dealDesc.loadDataWithBaseURL("", mMattaPackageDetailResponse.getResults().getPackage().getHighlights().getValue(), "text/html", "UTF-8","");
-		//		dealDesc.setText(Html.fromHtml(mMattaPackageDetailResponse.getDescription()));
+			highlightsDesc.loadDataWithBaseURL("", mMattaPackageDetailResponse.getResults().getPackage().getHighlights().getValue(), "text/html", "UTF-8","");
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
 		mProfileIconView = (ImageView) findViewById(R.id.show_profile_icon);
@@ -1198,14 +586,14 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 		mSearchToggler = (ImageView) findViewById(R.id.search_toggler);
 		mSearchToggler.setOnClickListener(this);
 
-		//		aboutUs.setOnClickListener(this);
-		//		tNc.setOnClickListener(this);
-		nearOutLets.setOnClickListener(this);
+		highlightsTab.setOnClickListener(this);
+		itineraryTab.setOnClickListener(this);
+		contactsTab.setOnClickListener(this);
 		mSearchContainer.setOnClickListener(this);
 		mSearchEditText.setOnClickListener(this);
 		mSearchBtn.setOnClickListener(this);
 
-		//		imgPathList = mMattaPackageDetailResponse.getIconUrl();
+		imgPathList = mMattaPackageDetailResponse.getResults().getPackage().getImages().getImage();
 
 		dealGallery = (ViewPager) findViewById(R.id.dealtopbanner);
 
@@ -1253,110 +641,7 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 			}
 		});
 
-		// getOutLets();
 	}
-
-	/*	public void addOutLets() {
-
-		if (outLets != null && outLets.size() > 0) {
-			// OutLetsName
-			// LayoutInflater inflater = (LayoutInflater)
-			// getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			// View view = inflater.inflate(
-			// R.layout.offerlistheader, null, true);
-			seprator_outlet.setVisibility(View.GONE);
-			if (!viewAdded) {
-				viewAdded = true;
-
-				for (OutLet outlets : outLets) {
-
-
-	 * if (tagId <= 4) {
-	 * 
-	 * LayoutInflater inflater = (LayoutInflater) this
-	 * .getSystemService(Context.LAYOUT_INFLATER_SERVICE); View
-	 * outletRow = inflater.inflate( R.layout.outlet_list_item,
-	 * null);
-	 * 
-	 * // TextView name = new TextView(this); //
-	 * LinearLayout.LayoutParams layoutParams = //
-	 * (LinearLayout.LayoutParams) name // .getLayoutParams();
-	 * // // name.setPadding(10, 10, 10, 10); // //
-	 * name.setTextSize(, size) // //
-	 * name.setCompoundDrawablesWithIntrinsicBounds( // //
-	 * R.drawable.circle_blue, 0, 0, 0); // int count = tagId +
-	 * 1; //
-	 * name.setText(Html.fromHtml("<b><font color='black'>" // +
-	 * count + "</font></b>" + "  " // + "<font color='blue'>" +
-	 * title.getTitle() // + "</font>")); // //
-	 * name.setTag(tagId); // name.setOnClickListener(this); //
-	 * name.setId(textId);
-	 * 
-	 * TextView dealTitle = (TextView) outletRow
-	 * .findViewById(R.id.outletName); TextView dealAddress =
-	 * (TextView) outletRow .findViewById(R.id.outletAddress);
-	 * ImageView mapIcon = (ImageView) outletRow
-	 * .findViewById(R.id.mapIcon); TextView outletCount =
-	 * (TextView) outletRow .findViewById(R.id.outletCount);
-	 * 
-	 * dealTitle.setText(outlets.getTitle());
-	 * dealAddress.setText(outlets.getAddress());
-	 * outletCount.setText(tagId + 1 + "");
-	 * outLetsName.addView(outletRow); dealTitle.setTag(tagId);
-	 * dealAddress.setTag(tagId); mapIcon.setTag(tagId);
-	 * tagId++;
-	 * 
-	 * mapIcon.setOnClickListener(this);
-	 * dealTitle.setOnClickListener(this);
-	 * dealAddress.setOnClickListener(this); } else { break; } }
-
-					Log.e("manish",
-							":"
-									+ Integer.parseInt(outLetResponse
-											.getTotal_records()));
-
-					DealOutletsAdapter adapter = new DealOutletsAdapter(this,
-							true, Integer.parseInt(outLetResponse
-									.getTotal_records()));
-					adapter.setData(outLets);
-					outLetsList.setAdapter(adapter);
-					if (outLets.size() > 1) {
-						android.widget.LinearLayout.LayoutParams lp = (android.widget.LinearLayout.LayoutParams) outLetsName
-								.getLayoutParams();
-						lp.height = (getWindowManager().getDefaultDisplay()
-								.getHeight() / 2);
-						outLetsName.setLayoutParams(lp);
-					} else {
-						android.widget.LinearLayout.LayoutParams lp = (android.widget.LinearLayout.LayoutParams) outLetsName
-								.getLayoutParams();
-						lp.height = (220);
-						outLetsName.setLayoutParams(lp);
-					}
-				}
-
-				outLetsName.setVisibility(View.VISIBLE);
-			} else {
-				outLetsName.setVisibility(View.VISIBLE);
-			}
-
-		}
-	}*/
-
-	/*public void dealDownload() {
-		DownloadDealReq dealReq = new DownloadDealReq();
-		dealReq.setName(userName);
-		dealReq.setPhoneNo(userNo);
-		dealReq.setDeal_id(deal_id);
-		if(mMattaPackageDetailResponse != null && !StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getSource()) && mMattaPackageDetailResponse.getSource().equalsIgnoreCase("GROUPON")) {
-			dealReq.setSource("groupon");
-		} else {
-			dealReq.setSource("findit");	
-		}
-		DownloadDealController downloadDealController = new DownloadDealController(MattaPackageDetailActivity.this, Events.DOWNLOAD_DEAL);
-		downloadDealController.fromDeal = false;
-		startSppiner();
-		downloadDealController.requestService(dealReq);
-	}*/
 
 	public String jsonForSearch() {
 
@@ -1393,54 +678,9 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 
 	}
 
-	/*	public void showMap(int index) {
-		if (outLets != null && outLets.size() > 0) {
-		mapIndex = index;
-		if (isDialogToBeShown()) {
-			showConfirmationDialog(CustomDialog.DATA_USAGE_DIALOG, getResources().getString(R.string.cd_msg_data_usage));
-		} else {
-			if (isLocationAvailable()) {
-				//				if(index == -1) {
-				redirectToMap();
-				//				} else {
-				//					showMapActivity();
-				//				}
-			}
-		}
-		} else {
-			showInfoDialog(getResources().getString(R.string.no_result_found));
-		}
-	}*/
-
-	/*	public void viewAllOutlets() {
-		// TODO
-		Intent intent = new Intent(MattaPackageDetailActivity.this,
-				ViewAllOutletsActivity.class);
-		intent.putExtra(AppConstants.OUTLET_DETAIL_DATA, outLetResponse);
-		intent.putExtra("totalCount",
-				Integer.parseInt(outLetResponse.getTotal_records()));
-		intent.putExtra("OutletRequest", detailRequest);
-		intent.putExtra("deal_title", mMattaPackageDetailResponse.getTitle());
-		startActivity(intent);
-
-	}*/
-
 	@Override
 	public void onPositiveDialogButton(int id) {
 		if (id == CustomDialog.DATA_USAGE_DIALOG) {
-			/*if (currentEvent == Events.DOWNLOAD_DEAL) {
-				showExternalDealInBrowser(externalDealURL);
-				currentEvent = -1;
-			}
-		else {
-			if (isLocationAvailable()) {
-				//				if(index == -1) {
-				redirectToMap();
-				//				} else {
-				//					showMapActivity();
-				//				}
-			}
-		}*/
 		} else {
 			super.onPositiveDialogButton(id);
 		}
@@ -1457,54 +697,10 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 		}
 	}
 
-	/*	public void redirectToMap() {
-		Intent intent = new Intent(DealDetailActivity.this,
-				ViewDealMapActivity.class);
-
-		intent.putParcelableArrayListExtra(AppConstants.OUTLET_DATA, outLets);
-		intent.putExtra("index", mapIndex)
-		if (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getTitle()))
-			intent.putExtra("DEAL_TITLE", mMattaPackageDetailResponse.getTitle());
-		startActivity(intent);
-	}*/
-
-	/*public void redirectToMap() {
-	if (outLets != null && outLets.size() > 0) {
-	Intent intent = new Intent(MattaPackageDetailActivity.this, ViewDealMapActivity.class);
-	intent.putParcelableArrayListExtra(AppConstants.OUTLET_DATA, outLets);
-	intent.putExtra("index", mapIndex);
-	if (mapIndex != -1) {
-		if (!StringUtil.isNullOrEmpty(outLets.get(mapIndex).getTitle()))
-			intent.putExtra("DEAL_TITLE", outLets.get(mapIndex).getTitle());
-	} else {
-		if (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getTitle()))
-			intent.putExtra("DEAL_TITLE", mMattaPackageDetailResponse.getTitle());
-	}
-	startActivity(intent);
-} else {
-	showInfoDialog(getResources().getString(R.string.no_result_found));
-}
-}*/
-
-	/*	private void showMapActivity() {
-		if (isLocationAvailable()) {
-			String url = "http://maps.google.com/maps?saddr="
-					+ GPS_Data.getLatitude() + "," + GPS_Data.getLongitude()
-					+ "&daddr=" + outLets.get(index).getLat() + ","
-					+ outLets.get(index).getLongt() + "&mode=driving";
-			Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-					Uri.parse(url));
-			intent.setClassName("com.google.android.apps.maps",
-					"com.google.android.maps.MapsActivity");
-			startActivity(intent);
-		}
-	}*/
-
 	public void viewFlipperTapped() {
 		Intent intents = new Intent(MattaPackageDetailActivity.this, MattaPhotoSlideActivity.class);
 		intents.putStringArrayListExtra("list", imgPathList);
 		intents.putExtra("position", flipperVisibleItemPosition);
 		startActivity(intents);
 	}
-
 }

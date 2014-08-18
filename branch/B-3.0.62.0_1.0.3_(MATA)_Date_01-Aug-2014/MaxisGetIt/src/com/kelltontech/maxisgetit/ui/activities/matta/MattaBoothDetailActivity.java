@@ -376,6 +376,7 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 		} else if (event == Events.CITY_LISTING || event == Events.LOCALITY_LISTING) {
 			Message message = (Message) screenData;
 			handler.sendMessage(message);
+			return;
 		} else if (event == MattaEvents.MATTA_PACKAGE_LIST_EVENT) {
 			MattaPackageListResponse packageListRes = (MattaPackageListResponse) screenData;
 			Message message = new Message();
