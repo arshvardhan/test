@@ -17,17 +17,17 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingBottom="3dp"
+            android:paddingBottom="5dp"
             android:weightSum="1" >
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/dealtopbanner"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="250dp"
                 android:layout_gravity="center_horizontal"
-                android:padding="3dp"
+                android:padding="5dp"
                 android:src="@drawable/detail_cross" />
 
             <LinearLayout
@@ -35,14 +35,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/rounded_layout"
+                android:layout_marginBottom="5dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
-                android:paddingBottom="3dp"
-                android:paddingLeft="7dp"
-                android:paddingRight="3dp"
-                android:paddingTop="3dp"
+                android:paddingBottom="0dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:paddingTop="0dp"
                 android:visibility="gone" >
             </LinearLayout>
 
@@ -144,7 +143,6 @@
                 android:id="@+id/contacts_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#ebebeb"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
                 android:padding="10dp"
@@ -155,12 +153,12 @@
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/selector_package_detail_btn"
                     android:gravity="center"
                     android:text="@string/call_us_btn_lbl"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/sp_18"
+                    android:textSize="@dimen/sp_24"
                     android:textStyle="bold" />
 
                 <TextView
@@ -168,15 +166,16 @@
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="30dp"
+                    android:layout_marginTop="30dp"
                     android:background="@drawable/selector_package_detail_btn"
                     android:gravity="center"
                     android:text="@string/locate_us_btn_lbl"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/sp_18"
+                    android:textSize="@dimen/sp_24"
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
     </com.kelltontech.maxisgetit.ui.widgets.CustomScrollView>
-</RelativeLayout>
+
+</RelativeLayout>

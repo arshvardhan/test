@@ -2,6 +2,8 @@ package com.kelltontech.maxisgetit.controllers.matta;
 
 import java.util.Hashtable;
 
+import org.apache.http.entity.ByteArrayEntity;
+
 import android.app.Activity;
 import android.util.Log;
 
@@ -22,7 +24,7 @@ import com.kelltontech.maxisgetit.utils.GsonUtil;
 
 /**
  * @author arsh.vardhan
- * @modified 02-Aug-2014
+ * @modified 20-Aug-2014
  */
 public class MattaBoothListController extends BaseServiceController {
 	private Activity mActivity;
@@ -59,7 +61,16 @@ public class MattaBoothListController extends BaseServiceController {
 			if(BuildConfig.DEBUG) 
 				Log.d(AppConstants.FINDIT_DEBUG_TAG, "url " + url);
 			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, urlParams));
-			serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
+
+			if (boothListReq.getPostJsonPayload() == null) {
+				serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
+			} else {
+				serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
+				serviceRq.setPostData(new ByteArrayEntity(boothListReq.getPostJsonPayload().toString().getBytes()));
+				if(BuildConfig.DEBUG) 
+					Log.d(AppConstants.FINDIT_DEBUG_TAG, "post payload " + boothListReq.getPostJsonPayload().toString());
+			}
+
 			HttpClientConnection.getInstance().addRequest(serviceRq);
 		} catch (Exception e) {
 			logRequestException(e, "MattaBoothListController");
@@ -70,11 +81,9 @@ public class MattaBoothListController extends BaseServiceController {
 
 	@Override
 	public void responseService(Object object) {
-//		JSONParser jsonParser = JSONHandler.getInstanse();
 		if (object instanceof Response) {
 			try {
 				String responseStr = ((Response) object).getResponseText();
-//				MattaBoothListResponse boothListResponse = jsonParser.mapFromJSON(responseStr, MattaBoothListResponse.class);
 				MattaBoothListResponse boothListResponse =  GsonUtil.mapFromJSONHanldeObject(responseStr, MattaBoothListResponse.class);
 				mScreen.setScreenData(boothListResponse, mEventType, 0);
 			} catch (Exception e) {

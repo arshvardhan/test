@@ -2,6 +2,8 @@ package com.kelltontech.maxisgetit.controllers.matta;
 
 import java.util.Hashtable;
 
+import org.apache.http.entity.ByteArrayEntity;
+
 import android.app.Activity;
 import android.util.Log;
 
@@ -22,7 +24,7 @@ import com.kelltontech.maxisgetit.utils.GsonUtil;
 
 /**
  * @author arsh.vardhan
- * @modified 14-Aug-2014
+ * @modified 20-Aug-2014
  */
 public class MattaPackageListController extends BaseServiceController {
 	private Activity mActivity;
@@ -59,8 +61,17 @@ public class MattaPackageListController extends BaseServiceController {
 			if(BuildConfig.DEBUG) 
 				Log.d(AppConstants.FINDIT_DEBUG_TAG, "url " + url);
 			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, urlParams));
-			serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
+
+			if (packageListReq.getPostJsonPayload() == null) {
+				serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
+			} else {
+				serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
+				serviceRq.setPostData(new ByteArrayEntity(packageListReq.getPostJsonPayload().toString().getBytes()));
+				if(BuildConfig.DEBUG) 
+					Log.d(AppConstants.FINDIT_DEBUG_TAG, "post payload " + packageListReq.getPostJsonPayload().toString());
+			}
 			HttpClientConnection.getInstance().addRequest(serviceRq);
+			
 		} catch (Exception e) {
 			logRequestException(e, "MattaPackageListController");
 			Response res = getErrorResponse(mActivity.getResources().getString(R.string.communication_failure), 111);
@@ -70,11 +81,9 @@ public class MattaPackageListController extends BaseServiceController {
 
 	@Override
 	public void responseService(Object object) {
-//		JSONParser jsonParser = JSONHandler.getInstanse();
 		if (object instanceof Response) {
 			try {
 				String responseStr = ((Response) object).getResponseText();
-//				MattaPackageListResponse packageListResponse = jsonParser.mapFromJSON(responseStr, MattaPackageListResponse.class);
 				MattaPackageListResponse packageListResponse = GsonUtil.mapFromJSONHanldeObject(responseStr, MattaPackageListResponse.class);
 				mScreen.setScreenData(packageListResponse, mEventType, 0);
 			} catch (Exception e) {

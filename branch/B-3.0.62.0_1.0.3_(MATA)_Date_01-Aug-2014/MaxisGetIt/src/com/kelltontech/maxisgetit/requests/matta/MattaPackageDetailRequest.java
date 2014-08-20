@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * @author arsh.vardhan
- * @modified 14-Aug-2014
+ * @modified 19-Aug-2014
  */
 public class MattaPackageDetailRequest implements Serializable {
 	/**
@@ -13,13 +13,7 @@ public class MattaPackageDetailRequest implements Serializable {
 	private static final long serialVersionUID = -6797073551429377536L;
 	private String packageId;
 	private String source;
-	
-
-	/*public MattaPackageDetailRequest(Context context, String packageId, String source) {
-		super(context);
-		this.packageId = packageId;
-		this.source = source;
-	}*/
+	private String keyword;
 
 	public String getPackageId() {
 		return packageId;
@@ -35,6 +29,14 @@ public class MattaPackageDetailRequest implements Serializable {
 
 	public void setSource(String source) {
 		this.source = source;
+	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
 	
 }

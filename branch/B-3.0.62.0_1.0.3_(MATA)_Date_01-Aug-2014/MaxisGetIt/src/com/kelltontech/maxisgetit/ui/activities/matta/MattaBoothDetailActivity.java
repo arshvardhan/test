@@ -93,8 +93,6 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 	private boolean 					isAdvanceSearchLayoutOpen = false;
 
 	private String 						selectedCity = "Entire Malaysia";
-	private String 						mCategoryid;
-	private String 						id;
 	private String 						mNumberToBeCalled;
 
 	private ArrayList<String> 			imgPathList;
@@ -113,15 +111,13 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 	private MattaPackageListRequest 	packageListReq;
 	private TravelPackagesListAdapter 	mTravelPackagesListAdapter;
 
-	//	private MaxisStore 					store;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_matta_booth_detail);
 		ImageLoader.initialize(MattaBoothDetailActivity.this);
-		AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_COMPANY_DETAIL);
+		AnalyticsHelper.logEvent(FlurryEventsConstants.MATTA_BOOTH_DETAIL);
 
 		findViewById(R.id.img_add_profile).setOnClickListener(this);
 		mlayoutContacts 			=	(LinearLayout) 	findViewById(R.id.layout_contacts);
@@ -139,6 +135,7 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 		currentLocality 			= 	(TextView) 		findViewById(R.id.currentLocality);
 		mainSearchButton 			= 	(TextView) 		findViewById(R.id.mainSearchButton);
 		mSearchEditText 			= 	(EditText) 		findViewById(R.id.search_box);
+		mPackageListContainer 		=	(LinearLayout) 	findViewById(R.id.cd_layout_paid_comp_list);
 
 		mHomeIconView.setOnClickListener(this);
 		mReferFB.setOnClickListener(this);
@@ -155,8 +152,7 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 			mMattaBoothDetailResponse 		= (MattaBoothDetailResponse) bundle.getSerializable(MattaConstants.DATA_MATTA_BOOTH_DETAIL_RESPONSE);
 			mMattaBoothDetailRequest 		= (MattaBoothDetailRequest) bundle.getSerializable(MattaConstants.DATA_MATTA_BOOTH_DETAIL_REQUEST);
 		}
-		//		store = MaxisStore.getStore(this);
-
+		mMattaBoothDetailRequest.setSource(!StringUtil.isNullOrEmpty(mMattaBoothDetailResponse.getResults().getCompany().getSource()) ? mMattaBoothDetailResponse.getResults().getCompany().getSource() : "");
 		advanceSearchLayout.setVisibility(View.GONE);
 		currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity + "</b>"));
 
@@ -180,7 +176,6 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 				&& mMattaBoothDetailResponse.getResults().getCompany().getPackages().getPackage().size() > 0) {
 			packageList = mMattaBoothDetailResponse.getResults().getCompany().getPackages().getPackage();
 
-			mPackageListContainer 		=	(LinearLayout) 	findViewById(R.id.cd_layout_paid_comp_list);
 			mTravelPackagesListView		=	(ExpandableListView)  findViewById(R.id.cd_paid_company_list);
 
 			setPackageListData();
@@ -192,12 +187,13 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 					String postJsonPayload = jsonForPkg(((PackageList)mTravelPackagesListAdapter.getItem(position)).getKey(), ((PackageList)mTravelPackagesListAdapter.getItem(position)).getValue());
 					MattaPackageListController packageListController = new MattaPackageListController(MattaBoothDetailActivity.this, MattaEvents.MATTA_PACKAGE_LIST_EVENT);
 					packageListReq = new MattaPackageListRequest();
-					packageListReq.setCompanyId(companyId);
-					packageListReq.setPostJsonPayload(postJsonPayload);
+					packageListReq.setCompanyId(!StringUtil.isNullOrEmpty(companyId) ? companyId : "");
+					packageListReq.setPostJsonPayload(!StringUtil.isNullOrEmpty(postJsonPayload) ? postJsonPayload : "");
+					packageListReq.setHallId(!StringUtil.isNullOrEmpty(mMattaBoothDetailResponse.getResults().getCompany().getHallId()) ? mMattaBoothDetailResponse.getResults().getCompany().getHallId() : "");
+					packageListReq.setSource(!StringUtil.isNullOrEmpty(mMattaBoothDetailResponse.getResults().getCompany().getSource()) ? mMattaBoothDetailResponse.getResults().getCompany().getSource() : "");
 					packageListController.requestService(packageListReq);
 					startSppiner();
 				}
-
 			});
 
 		} else {
@@ -257,11 +253,6 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 
 		imgPathList 		= new ArrayList<String>();
 		imgPathList.add(mMattaBoothDetailResponse.getResults().getCompany().getImage());
-//		imgPathList.add("http://static.zerochan.net/Yes%21.Pretty.Cure.5.full.1623394.jpg");
-//		imgPathList.add("http://static.zerochan.net/Kimura.Daisuke.full.1351098.jpg");
-//		imgPathList.add("http://t0.gstatic.com/images?q=tbn:ANd9GcTrgHuowj0bflRLu6ZXA0PSQSrwdEcrhFrcUNqOqotnLQ5bbExg");
-//		imgPathList.add("http://t0.gstatic.com/images?q=tbn:ANd9GcT7BxKs6Ui_H9eZNMqD4IRfLPWjUYBBiZuwA3meq8Ulc3Q5Zkxr");
-//		imgPathList.add("http://media-cache-ec0.pinimg.com/736x/86/9d/6e/869d6ee66f64fc723aa01956fd59c9bd.jpg");
 
 		comDetailGallery 	= (ViewPager) 		findViewById(R.id.comp_image_pager);
 		circleIndicator 	= (LinearLayout) 	findViewById(R.id.indicatorlinearlayout);
@@ -301,7 +292,6 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 
 	private String getAddressText() {
 		String str = "";
-		//		str += (!StringUtil.isNullOrEmpty(mMattaBoothDetailResponse.getResults().getCompany().getHall())) ? mMattaBoothDetailResponse.getResults().getCompany().getHall() + "- " : "";
 		str += (!StringUtil.isNullOrEmpty(mMattaBoothDetailResponse.getResults().getCompany().getLocation())) ? mMattaBoothDetailResponse.getResults().getCompany().getLocation() : "";
 		return str;
 	}
@@ -382,8 +372,15 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 			Message message = new Message();
 			message.arg2 = event;
 			if ((packageListRes.getResults() != null) && (!StringUtil.isNullOrEmpty(packageListRes.getResults().getError_Code())) && (packageListRes.getResults().getError_Code().equals("0"))) {
-				message.arg1 = 0;
-				message.obj = packageListRes;
+				if (packageListRes.getResults().getPackage().size() < 1 
+						|| StringUtil.isNullOrEmpty(packageListRes.getResults().getTotal_Records_Found()) 
+						|| packageListRes.getResults().getTotal_Records_Found().equals("0")) {
+					message.arg1 = 1;
+					message.obj = new String("No Result Found");
+				} else {
+					message.arg1 = 0;
+					message.obj = packageListRes;
+				}
 			} else {
 				message.arg1 = 1;
 				message.obj = getResources().getString(R.string.communication_failure);
@@ -566,40 +563,6 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 		}
 	}
 
-	/*	public JSONObject verifyInput() throws JSONException {
-
-		String userId 			= null;
-		JSONObject postJson 	= new JSONObject();
-		if (store.isLoogedInUser()) 
-			userId = store.getUserID();
-
-		if (StringUtil.isNullOrEmpty(userId)) {
-			showConfirmationDialog(CustomDialog.LOGIN_CONFIRMATION_DIALOG, getString(R.string.cd_msg_remove_from_fav));
-			stopSppiner();
-			return null;
-		} else 
-			postJson.put("user_id", userId);
-
-		JSONArray companyCategoryArr 	= new JSONArray();
-		JSONObject comIdCatId 			= new JSONObject();
-		String compId 					= mCompanyDetail.getId();
-		String categoryId 				= mCompanyDetail.getCatId();
-		if (StringUtil.isNullOrEmpty(compId)) 
-			return null;
-		else 
-			comIdCatId.put("company_id", compId);
-
-		if (StringUtil.isNullOrEmpty(categoryId)) 
-			return null;
-		else 
-			comIdCatId.put("category_id", categoryId);
-
-		companyCategoryArr.put(comIdCatId);
-		postJson.put("company_category", companyCategoryArr);
-		return postJson;
-
-	}*/
-
 	private void checkPreferenceAndMakeCall(String numberToBeCalled) {
 		mNumberToBeCalled = numberToBeCalled;
 		NativeHelper.makeCall(MattaBoothDetailActivity.this, numberToBeCalled);
@@ -744,9 +707,9 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 
 	private void indicatorchange(int pos) {
 		for (int i = 0; i < imgPathList.size(); i++) {
-			circleIndicator.getChildAt(i).setBackgroundResource(R.drawable.circle_white);
+			circleIndicator.getChildAt(i).setBackgroundResource(R.drawable.circle_gray);
 		}
-		circleIndicator.getChildAt(pos).setBackgroundResource(R.drawable.circle_blue);
+		circleIndicator.getChildAt(pos).setBackgroundResource(R.drawable.circle_black);
 	}
 
 	private void addImage() {
@@ -765,7 +728,7 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 	public void viewFlipperTapped() {
 		Intent intents = new Intent(MattaBoothDetailActivity.this, MattaPhotoSlideActivity.class);
 		intents.putStringArrayListExtra("list", imgPathList);
-		//		intents.putParcelableArrayListExtra("list", imgPathList);
+		intents.putExtra("flowFrom", MattaConstants.FLOW_FROM_MATTA_BOOTH_DETAIL);
 		intents.putExtra("position", flipperVisibleItemPosition);
 		startActivity(intents);
 	}
@@ -777,5 +740,4 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 		mTravelPackagesListView.setAdapter(mTravelPackagesListAdapter);
 		mPackageListContainer.setVisibility(View.VISIBLE);
 	}
-
 }

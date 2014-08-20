@@ -25,9 +25,10 @@ public class MattaPhotoSlideActivity extends MaxisMainActivity{
 		Bundle bundle=getIntent().getExtras();
 		if(bundle!=null){
 			ArrayList<String> listingData=getIntent().getExtras().getStringArrayList("list");
+			String mflowFrom =getIntent().getExtras().getString("flowFrom");
 			if(listingData!=null && listingData.size()>0){
 				int position =getIntent().getExtras().getInt("position");
-				MattaImagePinchZoomAdapter adapter = new MattaImagePinchZoomAdapter(this,listingData);
+				MattaImagePinchZoomAdapter adapter = new MattaImagePinchZoomAdapter(this,listingData, mflowFrom);
 				viewPager.setAdapter(adapter);
 				viewPager.setCurrentItem(position);
 			}
@@ -47,5 +48,4 @@ public class MattaPhotoSlideActivity extends MaxisMainActivity{
 			break;
 		}
 	}
-
 }

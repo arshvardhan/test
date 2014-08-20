@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.Html;
@@ -17,8 +16,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,9 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.imageloader.ImageLoader;
-import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.framework.utils.UiUtils;
 import com.kelltontech.maxisgetit.R;
@@ -36,17 +31,16 @@ import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
 import com.kelltontech.maxisgetit.constants.matta.MattaConstants;
-import com.kelltontech.maxisgetit.controllers.CombindListingController;
-import com.kelltontech.maxisgetit.controllers.RefineAttributeController;
-import com.kelltontech.maxisgetit.dao.CategoryRefine;
+import com.kelltontech.maxisgetit.constants.matta.MattaEvents;
+import com.kelltontech.maxisgetit.controllers.matta.MattaBoothListController;
+import com.kelltontech.maxisgetit.controllers.matta.MattaPackageListController;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.SelectorDAO;
-import com.kelltontech.maxisgetit.db.CityTable;
-import com.kelltontech.maxisgetit.requests.CombinedListRequest;
-import com.kelltontech.maxisgetit.requests.RefineSearchRequest;
-import com.kelltontech.maxisgetit.response.CompanyListResponse;
+import com.kelltontech.maxisgetit.model.matta.booths.list.MattaBoothListResponse;
+import com.kelltontech.maxisgetit.model.matta.packages.list.MattaPackageListResponse;
+import com.kelltontech.maxisgetit.requests.matta.MattaBoothListRequest;
+import com.kelltontech.maxisgetit.requests.matta.MattaPackageListRequest;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
-import com.kelltontech.maxisgetit.response.RefineCategoryResponse;
 import com.kelltontech.maxisgetit.response.RefineSelectorResponse;
 import com.kelltontech.maxisgetit.ui.activities.AdvanceSelectCity;
 import com.kelltontech.maxisgetit.ui.activities.AdvanceSelectLocalityActivity;
@@ -55,29 +49,22 @@ import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
 public class MattaFilterSearchActivity extends MaxisMainActivity {
 	public static final String SELECTOR_MODE = "SELECTOR_MODE";
-	public static final int CAT_SELECTION = 1;
-	public static final int ATTR_SELECTION_BY_SEARCH = 4;
+	public static final int ATTR_SELECTION_BY_SEARCH = 1;
 	public static final int ATTR_SELECTION = 2;
-	public static final int CAT_ATTR_SELECTION_MODI = 3;
-	private int selectorMode = CAT_SELECTION;
-	private Spinner mCatSelector, mCitySelSpinner, mLocalitySelSpinner;
+	private int selectorMode = ATTR_SELECTION_BY_SEARCH;
+	private Spinner mLocalitySelSpinner;
 	private LinearLayout mSpinnerHolder, mLocalitySpinnerContainer;
 	private ImageView mSearchBtn;
 	private ArrayList<SelectorDAO> mSelectors;
 	private EditText mSearchEditText;
 	private LinearLayout mCategorySpinnerConatainer;
 	private ImageView mProfileIconView;
-	private String mCategoryThumbUrl;
 	private TextView mRefineBtn;
-	private Drawable mThumbLoading;
-	private Drawable mThumbError;
 	private ArrayList<Spinner> mSpinnerList = new ArrayList<Spinner>();
 	private RefineSelectorResponse mSelctorResp;
-	private RefineCategoryResponse mCatResponse;
-	private CombinedListRequest mClRequest;
-	private CompanyListResponse mClResponse;
+	private MattaBoothListRequest mMattaBoothListRequest;
+	private MattaPackageListRequest mMattaPackageListRequest;
 	private SelectorDAO mLocalitySelectorDao;
-	private int defaultCitySelection = 0;
 	private LinearLayout mSearchContainer;
 	private ImageView mSearchToggler;
 	private TextView mHeaderTitle;
@@ -102,6 +89,8 @@ public class MattaFilterSearchActivity extends MaxisMainActivity {
 	LinearLayout wholeSearchBoxContainer;
 	String categoryId = "";
 
+	private String citySelected = "";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -119,14 +108,6 @@ public class MattaFilterSearchActivity extends MaxisMainActivity {
 		mRefineBtn = (TextView) findViewById(R.id.ms_refine_btn);
 		mRefineBtn.setOnClickListener(this);
 		mSpinnerHolder = (LinearLayout) findViewById(R.id.ms_spinner_holder);
-		Bundle bundle = getIntent().getExtras();
-		mCategoryThumbUrl = bundle.getString(AppConstants.THUMB_URL);
-		selectorMode = bundle.getInt(MattaFilterSearchActivity.SELECTOR_MODE);
-		mClRequest = bundle.getParcelable(AppConstants.DATA_LIST_REQUEST);
-		mLocalitySelectorDao = bundle.getParcelable(AppConstants.LOCALITY_DAO_DATA);
-		categoryId = bundle.getString("categoryId");
-		mClRequest.setPageNumber(1);
-		mCatResponse = (RefineCategoryResponse) bundle.get(AppConstants.REFINE_CAT_RESPONSE);
 		mSearchContainer = (LinearLayout) findViewById(R.id.search_box_container);
 		mSearchToggler = (ImageView) findViewById(R.id.search_toggler);
 		mSearchToggler.setOnClickListener(this);
@@ -137,32 +118,33 @@ public class MattaFilterSearchActivity extends MaxisMainActivity {
 		mHomeIconView.setOnClickListener(this);
 
 		mHeaderTitle = (TextView) findViewById(R.id.header_title);
-		mHeaderTitle.setText(mClRequest.getCategoryTitle());
-		if (mClRequest.isBySearch()) {
-			mSearchEditText.setText(mClRequest.getKeywordOrCategoryId());
-			mHeaderTitle.setText(mClRequest.getKeywordOrCategoryId());
-		}
-		if (selectorMode == ATTR_SELECTION) {
-			loadCatThumb();
-			mSelctorResp = (RefineSelectorResponse) bundle.get(AppConstants.REFINE_ATTR_RESPONSE);
-			if (mSelctorResp != null)
-				showFilters();
-		} else if (selectorMode == ATTR_SELECTION_BY_SEARCH) {
+
+		Bundle bundle = getIntent().getExtras();
+		selectorMode = bundle.getInt(MattaFilterSearchActivity.SELECTOR_MODE);
+
+		if (selectorMode == ATTR_SELECTION_BY_SEARCH) {
+			mMattaBoothListRequest = (MattaBoothListRequest) bundle.getSerializable(MattaConstants.DATA_MATTA_BOOTH_LIST_REQUEST);
+			mMattaBoothListRequest.setPageNumber(1);
+			mHeaderTitle.setText(mMattaBoothListRequest.getmHallTitle());
 			mCategorySpinnerConatainer.setVisibility(View.GONE);
-			TextView catText = (TextView) findViewById(R.id.ms_search_by_category_name_txt);
-			catText.setVisibility(View.VISIBLE);
-			catText.setText("Filter the search by specifying the attributes of Category :- '" + mClRequest.getSelectedCategoryNameBySearch() + "'");
 			mSelctorResp = (RefineSelectorResponse) bundle.get(AppConstants.REFINE_ATTR_RESPONSE);
 			if (mSelctorResp != null)
 				showFilters();
-		} else if (selectorMode == CAT_SELECTION) {
-			showCategorySpinner();
-		} else if (selectorMode == CAT_ATTR_SELECTION_MODI) {
-			if (mCatResponse == null) {
-				loadCatThumb();
-			} else {
-				showCategorySpinner();
+		} else if (selectorMode == ATTR_SELECTION) {
+			mMattaPackageListRequest = (MattaPackageListRequest) bundle.getSerializable(MattaConstants.DATA_MATTA_PACKAGE_LIST_REQUEST);
+			mMattaPackageListRequest.setPageNumber(1);
+			mHeaderTitle.setText(Html.fromHtml("Tour & Travel Packages"));
+			if (mMattaPackageListRequest != null && !StringUtil.isNullOrEmpty(mMattaPackageListRequest.getPostJsonPayload())) {
+				try {
+					JSONObject jsonObject = new JSONObject(mMattaPackageListRequest.getPostJsonPayload());
+					JSONObject jObject = jsonObject.getJSONObject("selector");
+					JSONArray jArray = jObject.getJSONArray("field_1");
+					citySelected = jArray.getString(0);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 			}
+			mCategorySpinnerConatainer.setVisibility(View.GONE);
 			mSelctorResp = (RefineSelectorResponse) bundle.get(AppConstants.REFINE_ATTR_RESPONSE);
 			if (mSelctorResp != null)
 				showFilters();
@@ -204,62 +186,6 @@ public class MattaFilterSearchActivity extends MaxisMainActivity {
 		AnalyticsHelper.trackSession(MattaFilterSearchActivity.this, MattaConstants.Matta_Filter_Search);
 	}
 
-	private void showLocalitySpinner() {
-		if (mLocalitySelectorDao != null
-				&& mLocalitySelectorDao.getSelectorValues().size() > 1) {
-			ArrayAdapter<String> localityAdp = new ArrayAdapter<String>(
-					MattaFilterSearchActivity.this, R.layout.spinner_item,
-					mLocalitySelectorDao.getSelectorValues());
-			mLocalitySelSpinner.setAdapter(localityAdp);
-			mLocalitySpinnerContainer.setVisibility(View.VISIBLE);
-			if (mLocalitySelectorDao.getSelectedIndex() > 0)
-				mLocalitySelSpinner.setSelection(mLocalitySelectorDao
-						.getSelectedIndex());
-		} else {
-			mLocalitySpinnerContainer.setVisibility(View.GONE);
-		}
-	}
-
-	private void loadCatThumb() {
-		mCategorySpinnerConatainer.setVisibility(View.GONE);
-		mThumbLoading = getResources().getDrawable(R.drawable.group_load);
-		mThumbError = getResources().getDrawable(R.drawable.group_cross);
-	}
-
-	private void showCategorySpinner() {
-		if (mCatResponse == null)
-			return;
-		ArrayAdapter adapter = new ArrayAdapter(this, R.layout.spinner_item, mCatResponse.getCategories());
-		mCatSelector = (Spinner) findViewById(R.id.ms_spinner1);
-		mCatSelector.setAdapter(adapter);
-		mCatSelector.setSelection(mCatResponse.getSelectedCategoryIndex());
-		mCatSelector.setOnItemSelectedListener(new OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int position, long arg3) {
-				if (position == 0) {
-					mSpinnerHolder.setVisibility(View.GONE);
-				} else {
-					{
-						startSppiner();
-						RefineAttributeController refineController = new RefineAttributeController(MattaFilterSearchActivity.this, Events.REFINE_ATTRIBUTES);
-						CategoryRefine cat = (CategoryRefine) arg0.getSelectedItem();
-						RefineSearchRequest refineSearchRequest = new RefineSearchRequest();
-						refineSearchRequest.setCategoryId(cat.getCategoryId());
-						refineSearchRequest.setDeal(!mClRequest.isCompanyListing());
-						refineController.requestService(refineSearchRequest);
-						mCatResponse.setSelectedCategoryIndex(position);
-					}
-				}
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-				showInfoDialog("nothing selected");
-			}
-		});
-	}
-
 	private void showFilters() {
 		mSpinnerHolder.removeAllViews();
 		mSpinnerHolder.setVisibility(View.VISIBLE);
@@ -270,77 +196,27 @@ public class MattaFilterSearchActivity extends MaxisMainActivity {
 				SelectorDAO selector = mSelectors.get(i);
 				Spinner filterSpinner = inflateFilter(selector);
 				mSpinnerList.add(filterSpinner);
-				if (selector.getSearchKey().equalsIgnoreCase(AppConstants.KEYWORD_CITY_OF_REFINE)) {
-					handleCityOperations(filterSpinner);
-					defaultCitySelection = selector.getSelectedIndex();
-					showLocalitySpinner();
+				if (selector.getSearchKey().equalsIgnoreCase(AppConstants.KEYWORD_DESTINATION_CITY)) {
+					for (int j = 0; j < selector.getSelectorValues().size(); j++) {
+						if(selector.getSelectorValues().get(j).equalsIgnoreCase(citySelected)) {
+							filterSpinner.setSelection(j);
+							break;
+						}
+					}
 				}
 			}
 		}
-	}
-
-	private void handleCityOperations(Spinner citySpinner) {
-		mCitySelSpinner = citySpinner;
-		mCitySelSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
-				if (position == 0) {
-					mLocalitySpinnerContainer.setVisibility(View.GONE);
-				} else {
-					if (defaultCitySelection == position)
-						return;
-					defaultCitySelection = position;
-					RefineAttributeController localityController = new RefineAttributeController(MattaFilterSearchActivity.this, Events.REFINE_SEARCH_LOCALITY);
-					JSONObject jsonData;
-					try {
-						jsonData = verifyAndGetSelectorsJson();
-					} catch (JSONException e) {
-						jsonData = null;
-						AnalyticsHelper.onError(FlurryEventsConstants.DATA_VALIDATION_ERR,"RefineSearchActivity" + AppConstants.DATA_VALIDATION_ERROR_MSG,e);
-					}
-					if (jsonData != null) {
-						startSppiner();
-						RefineSearchRequest refineSearchRequest = new RefineSearchRequest();
-						if (mClRequest.isBySearch()) {
-							if((!StringUtil.isNullOrEmpty(mClRequest.getSearchCriteria()) && ("Stamp".equalsIgnoreCase(mClRequest.getSearchCriteria())))) {
-								refineSearchRequest.setStampId(!StringUtil.isNullOrEmpty(mClRequest.getStampId()) ? mClRequest.getStampId() : "");
-							} else {
-								refineSearchRequest.setSearchKeyword(mClRequest.getKeywordOrCategoryId());
-								refineSearchRequest.setSearchIn(mClRequest.getSearchIn());
-							}
-							refineSearchRequest.setCategoryId(mClRequest.getSelectedCategoryBySearch());
-						} else {
-							if (!StringUtil.isNullOrEmpty(categoryId)) {
-								refineSearchRequest.setCategoryId(categoryId);
-							} else {
-								refineSearchRequest.setCategoryId(mClRequest.getKeywordOrCategoryId());
-							}
-						}
-						// refineSearchRequest.setCategoryId(mClRequest.getKeywordOrCategoryId());
-						refineSearchRequest.setDeal(!mClRequest.isCompanyListing());
-						refineSearchRequest.setPostData(jsonData);
-						localityController.requestService(refineSearchRequest);
-					}
-				}
-			}
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-			}
-		});
 	}
 
 	private Spinner inflateFilter(SelectorDAO selector) {
 		ArrayList<String> values = selector.getSelectorValues();
 		String text = selector.getDisplayName();
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		LinearLayout spinnerContainer = (LinearLayout) inflater.inflate(
-				R.layout.refine_search_spinner_layout, null);
+		LinearLayout spinnerContainer = (LinearLayout) inflater.inflate(R.layout.refine_search_spinner_layout, null);
 		TextView v = (TextView) spinnerContainer.findViewById(R.id.spin_txt);
 		v.setText(text);
-		Spinner spinner = (Spinner) spinnerContainer
-				.findViewById(R.id.spin_spin);
-		ArrayAdapter<String> madapter = new ArrayAdapter<String>(this,
-				R.layout.spinner_item, values);
+		Spinner spinner = (Spinner) spinnerContainer.findViewById(R.id.spin_spin);
+		ArrayAdapter<String> madapter = new ArrayAdapter<String>(this,R.layout.spinner_item, values);
 		spinner.setAdapter(madapter);
 		spinner.setSelection(selector.getSelectedIndex());
 		mSpinnerHolder.addView(spinnerContainer);
@@ -350,42 +226,52 @@ public class MattaFilterSearchActivity extends MaxisMainActivity {
 
 	@Override
 	public void setScreenData(Object screenData, int event, long time) {
-		if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE
-				|| event == Events.USER_DETAIL) {
+		if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE || event == Events.USER_DETAIL) {
 			super.setScreenData(screenData, event, time);
 			return;
 		} else if (event == Events.REFINE_ATTRIBUTES) {
 			Message catRefine = (Message) screenData;
 			handler.sendMessage(catRefine);
-		} else if (event == Events.REFINE_SEARCH_RESULT) {
-			Response response = (Response) screenData;
+		} else if (event == MattaEvents.MATTA_BOOTH_LIST_EVENT) {
+			MattaBoothListResponse boothListRes = (MattaBoothListResponse) screenData;
 			Message message = new Message();
 			message.arg2 = event;
-			message.arg1 = 1;
-			if (response.isError()) {
-				message.obj = response.getErrorText() + " "
-						+ response.getErrorCode();
-			} else {
-				if (response.getPayload() instanceof CompanyListResponse) {
-					mClResponse = (CompanyListResponse) response.getPayload();
-					if (mClResponse.getErrorCode() != 0) {
-						message.obj = getResources().getString(
-								R.string.communication_failure);
-					} else {
-						if (mClResponse.getCompanyArrayList().size() < 1) {
-							message.obj = new String("No Result Found");
-						} else {
-							message.arg1 = 0;
-							message.obj = mClResponse;
-						}
-					}
+			if ((boothListRes.getResults() != null) && (!StringUtil.isNullOrEmpty(boothListRes.getResults().getError_Code())) && (boothListRes.getResults().getError_Code().equals("0"))) {
+				if (boothListRes.getResults().getBooth().size() < 1 
+						|| StringUtil.isNullOrEmpty(boothListRes.getResults().getTotalRecordsFound()) 
+						|| boothListRes.getResults().getTotalRecordsFound().equals("0")) {
+					message.arg1 = 1;
+					message.obj = new String("No Result Found");
 				} else {
-					message.obj = new String("Internal Error");
+					message.arg1 = 0;
+					message.obj = boothListRes;
 				}
+			} else {
+				message.arg1 = 1;
+				message.obj = getResources().getString(R.string.communication_failure);
 			}
 			handler.sendMessage(message);
-		} else if (event == Events.REFINE_SEARCH_LOCALITY) {
-			handler.sendMessage((Message) screenData);
+			return;	
+		} else if (event == MattaEvents.MATTA_PACKAGE_LIST_EVENT) {
+			MattaPackageListResponse packageListRes = (MattaPackageListResponse) screenData;
+			Message message = new Message();
+			message.arg2 = event;
+			if ((packageListRes.getResults() != null) && (!StringUtil.isNullOrEmpty(packageListRes.getResults().getError_Code())) && (packageListRes.getResults().getError_Code().equals("0"))) {
+				if (packageListRes.getResults().getPackage().size() < 1 
+						|| StringUtil.isNullOrEmpty(packageListRes.getResults().getTotal_Records_Found()) 
+						|| packageListRes.getResults().getTotal_Records_Found().equals("0")) {
+					message.arg1 = 1;
+					message.obj = new String("No Result Found");
+				} else {
+					message.arg1 = 0;
+					message.obj = packageListRes;
+				}
+			} else {
+				message.arg1 = 1;
+				message.obj = getResources().getString(R.string.communication_failure);
+			}
+			handler.sendMessage(message);
+			return;			
 		} else if (event == Events.CITY_LISTING
 				|| event == Events.LOCALITY_LISTING) {
 			Message message = (Message) screenData;
@@ -407,41 +293,39 @@ public class MattaFilterSearchActivity extends MaxisMainActivity {
 					showFilters();
 			}
 			stopSppiner();
-		} else if (msg.arg2 == Events.REFINE_SEARCH_RESULT) {
-			stopSppiner();
+		} else if (msg.arg2 == MattaEvents.MATTA_BOOTH_LIST_EVENT) {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				mClResponse = (CompanyListResponse) msg.obj;
+				MattaBoothListResponse boothRes = (MattaBoothListResponse) msg.obj;
 				Intent intent = new Intent();
-				intent.putExtra(AppConstants.COMP_LIST_DATA, mClResponse);
-				intent.putExtra(AppConstants.DATA_LIST_REQUEST, mClRequest);
+				intent.putExtra(MattaConstants.DATA_MATTA_BOOTH_LIST_RESPONSE, boothRes);
+				intent.putExtra(MattaConstants.DATA_MATTA_BOOTH_LIST_REQUEST, mMattaBoothListRequest);
 				intent.putExtra(AppConstants.REFINE_ATTR_RESPONSE, mSelctorResp);
-				intent.putExtra(AppConstants.REFINE_CAT_RESPONSE, mCatResponse);
-				intent.putExtra(AppConstants.LOCALITY_DAO_DATA, mLocalitySelectorDao);
 				setResult(RESULT_OK, intent);
 				finish();
 			}
-		} else if (msg.arg2 == Events.REFINE_SEARCH_LOCALITY) {
 			stopSppiner();
+		} else if (msg.arg2 == MattaEvents.MATTA_PACKAGE_LIST_EVENT) {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				RefineSelectorResponse glistRes = (RefineSelectorResponse) msg.obj;
-				mLocalitySelectorDao = glistRes.getSelectors().get(0);
-				showLocalitySpinner();
+				MattaPackageListResponse packageResponse = (MattaPackageListResponse) msg.obj;
+				Intent intent = new Intent();
+				intent.putExtra(MattaConstants.DATA_MATTA_PACKAGE_LIST_RESPONSE, packageResponse);
+				intent.putExtra(MattaConstants.DATA_MATTA_PACKAGE_LIST_REQUEST, mMattaPackageListRequest);
+				intent.putExtra(AppConstants.REFINE_ATTR_RESPONSE, mSelctorResp);
+				setResult(RESULT_OK, intent);
+				finish();
 			}
+			stopSppiner();
 		} else if (msg.arg2 == Events.CITY_LISTING) {
 			stopSppiner();
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				CityTable cityTable = new CityTable(
-						(MyApplication) getApplication());
 				GenralListResponse glistRes = (GenralListResponse) msg.obj;
-				// cityTable.addCityList(glistRes.getCityOrLocalityList());
 				cityList = glistRes.getCityOrLocalityList();
-				// inflateCityList(cityList);
 				Intent intent = new Intent(MattaFilterSearchActivity.this,
 						AdvanceSelectCity.class);
 				for (CityOrLocality cityOrLocality : cityList) {
@@ -474,7 +358,6 @@ public class MattaFilterSearchActivity extends MaxisMainActivity {
 				intent.putStringArrayListExtra("LOCALITY_INDEX",
 						selectedLocalityindex);
 				startActivityForResult(intent, AppConstants.LOCALITY_REQUEST);
-
 			}
 		}
 	}
@@ -516,13 +399,6 @@ public class MattaFilterSearchActivity extends MaxisMainActivity {
 		jsonObject.put("selector", jsonSelector);
 		System.out.println(mSelctorResp);
 		System.out.println(jsonObject);
-		if (jsonObject.has(AppConstants.KEYWORD_CITY_OF_REFINE)) {
-			MaxisMainActivity.isCitySelected = true;
-			mClRequest.setSearch_distance("");
-		} else {
-			MaxisMainActivity.isCitySelected = false;
-		}
-
 		return jsonObject;
 	}
 
@@ -547,8 +423,7 @@ public class MattaFilterSearchActivity extends MaxisMainActivity {
 			this.finish();
 			break;
 		case R.id.mainSearchButton:
-			mSearchEditText
-			.setText(mSearchEditText.getText().toString().trim());
+			mSearchEditText.setText(mSearchEditText.getText().toString().trim());
 
 			String JSON_EXTRA = jsonForSearch();
 			performSearch(mSearchEditText.getText().toString(), JSON_EXTRA, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
@@ -560,11 +435,19 @@ public class MattaFilterSearchActivity extends MaxisMainActivity {
 			try {
 				JSONObject postData = verifyAndGetSelectorsJson();
 				if (postData != null) {
-					mClRequest.setPostJsonPayload(postData.toString());
-					mClRequest.setSearchRefined(true);
-					CombindListingController controller = new CombindListingController(MattaFilterSearchActivity.this, Events.REFINE_SEARCH_RESULT);
-					startSppiner();
-					controller.requestService(mClRequest);
+					if (selectorMode == ATTR_SELECTION_BY_SEARCH) {
+						mMattaBoothListRequest.setPostJsonPayload(postData.toString());
+						mMattaBoothListRequest.setSearchRefined(true);
+						MattaBoothListController controller = new MattaBoothListController(MattaFilterSearchActivity.this, MattaEvents.MATTA_BOOTH_LIST_EVENT);
+						startSppiner();
+						controller.requestService(mMattaBoothListRequest);
+					} else if (selectorMode == ATTR_SELECTION) {
+						mMattaPackageListRequest.setPostJsonPayload(postData.toString());
+						mMattaPackageListRequest.setSearchRefined(true);
+						MattaPackageListController controller = new MattaPackageListController(MattaFilterSearchActivity.this, MattaEvents.MATTA_PACKAGE_LIST_EVENT);
+						startSppiner();
+						controller.requestService(mMattaPackageListRequest);
+					}
 				}
 			} catch (JSONException e) {
 				AnalyticsHelper.onError(FlurryEventsConstants.DATA_VALIDATION_ERR,"RefineSearchActivity : " + AppConstants.DATA_VALIDATION_ERROR_MSG, e);
@@ -615,12 +498,10 @@ public class MattaFilterSearchActivity extends MaxisMainActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == AppConstants.AR_REPORT_ERROR_SUCCESS) {
-			showInfoDialog(getResources()
-					.getString(R.string.are_error_reported));
+			showInfoDialog(getResources().getString(R.string.are_error_reported));
 		} else if (resultCode == AppConstants.AR_REPORT_ERROR_FAILURE) {
 			showInfoDialog(getResources().getString(R.string.are_error_occured));
-		} else if (resultCode == RESULT_OK
-				&& requestCode == AppConstants.CITY_REQUEST) {
+		} else if (resultCode == RESULT_OK && requestCode == AppConstants.CITY_REQUEST) {
 			if (!selectedCity.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
 				localityItems = null;
 				ids = null;

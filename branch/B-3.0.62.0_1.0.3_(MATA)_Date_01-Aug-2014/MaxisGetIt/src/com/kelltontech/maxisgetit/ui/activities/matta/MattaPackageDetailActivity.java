@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kelltontech.framework.model.Response;
+import com.kelltontech.framework.utils.NativeHelper;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.adapters.matta.MattaViewPagerAdapter;
@@ -36,8 +37,12 @@ import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
 import com.kelltontech.maxisgetit.constants.matta.MattaConstants;
+import com.kelltontech.maxisgetit.constants.matta.MattaEvents;
+import com.kelltontech.maxisgetit.controllers.matta.MattaBoothDetailController;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
+import com.kelltontech.maxisgetit.model.matta.booths.detail.MattaBoothDetailResponse;
 import com.kelltontech.maxisgetit.model.matta.packages.detail.MattaPackageDetailResponse;
+import com.kelltontech.maxisgetit.requests.matta.MattaBoothDetailRequest;
 import com.kelltontech.maxisgetit.requests.matta.MattaPackageDetailRequest;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.ui.activities.AdvanceSelectCity;
@@ -51,6 +56,7 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 	private ViewPager dealGallery;
 	private MattaPackageDetailResponse mMattaPackageDetailResponse;
 	private MattaPackageDetailRequest mMattaPackageDetailRequest;
+	private MattaBoothDetailRequest mMattaBoothDetailRequest;
 	private LinearLayout circleIndicator;
 	private int flipperVisibleItemPosition = 0;
 	private ArrayList<String> imgPathList;
@@ -70,10 +76,8 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 	private ImageView mHomeIconView;
 	private ImageView mSearchToggler;
 
-	private boolean isNearestOutlet = false;
 	LinearLayout outLetsName;
 	boolean viewAdded = false;
-	//	private MaxisStore store;
 	private boolean isAdvanceSearchLayoutOpen = false;
 	private LinearLayout advanceSearchLayout;
 	private TextView currentCity, currentLocality;
@@ -90,7 +94,6 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 	private TextView mainSearchButton;
 	private ArrayList<String> selectedLocalityindex;
 	private LinearLayout wholeSearchBoxContainer;
-	private boolean onTapNearestOutletEnable = false;
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -158,7 +161,7 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_DEAL_DETAIL);
+		AnalyticsHelper.logEvent(FlurryEventsConstants.MATTA_PACKAGE_DETAIL);
 		setContentView(R.layout.activity_matta_package_detail);
 
 		circleIndicator = (LinearLayout) findViewById(R.id.indicatorlinearlayout);
@@ -191,70 +194,7 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 		});
 		itineraryDesc.setVisibility(View.GONE);
 
-		//		nearestOutletLayout = (RelativeLayout) findViewById(R.id.nearestLayout);
-		//		nearestOutLetTitle = (TextView) nearestOutletLayout.findViewById(R.id.outletName);
-		//		nearestOutLetTitle.setTag(-1);
-		//		nearestOutLetTitle.setOnClickListener(this);
-		//		nearestOutLetAddress = (TextView) nearestOutletLayout.findViewById(R.id.outletAddress);
-		//		nearestOutLetAddress.setTag(-1);
-		//		nearestOutLetAddress.setOnClickListener(this);
-		//		ImageView imageView = (ImageView) nearestOutletLayout.findViewById(R.id.imageIcon);
-		//		imageView.setVisibility(View.VISIBLE);
-
-		//		mapLayout = (LinearLayout) findViewById(R.id.mapLayout);
-		//		mapLayout.setVisibility(View.VISIBLE);
-		//		mapLayout.setOnClickListener(this);
-
-		//		mapLabel = (TextView) findViewById(R.id.mapLabel);
-		//		mapLabel.setVisibility(View.VISIBLE);
-		//		view_map = (TextView) findViewById(R.id.viewOnMap_view);
-		//		view_map.setOnClickListener(this);
-
-		//		ImageView mapIcon = (ImageView) findViewById(R.id.mapIcon);
-		//		mapIcon.setTag(-1);
-		//		mapIcon.setOnClickListener(this);
-
-		//		FrameLayout layout = (FrameLayout) nearestOutletLayout.findViewById(R.id.outletCountLayout);
-		//		layout.setVisibility(View.GONE);
-
-		//		outLetsList = (ListView) findViewById(R.id.outlets_list);
-
-		//		outletCount = (TextView) findViewById(R.id.outlets_count);
-		//		crossBtn = (ImageView) findViewById(R.id.cross_btn);
-		//		viewOnMap = (TextView) findViewById(R.id.view_on_map);
-		//		leftInfoLayout = (RelativeLayout) findViewById(R.id.leftOutletRltLayout);
-		//		leftInfoLayout.setVisibility(View.GONE);
-
-		//		rightLayout = (LinearLayout) findViewById(R.id.rightlayout);
-		//		rightLayout.setVisibility(View.GONE);
-
-		//		crossBtn.setOnClickListener(this);
-		//		viewOnMap.setOnClickListener(this);
-
-		//		if (mMattaPackageDetailResponse == null) {
-		//			try {
-		//				comp_id = bundle.getString(AppConstants.COMP_ID);
-		//				String mCategoryid = getIntent().getStringExtra(
-		//						AppConstants.CATEGORY_ID_KEY);
-		//				CompanyDetailController controller = new CompanyDetailController(
-		//						MattaPackageDetailActivity.this, Events.DEAL_DETAIL);
-		//				DetailRequest detailRequest = new DetailRequest(
-		//						MattaPackageDetailActivity.this, comp_id, getIntent()
-		//						.getExtras().getBoolean(
-		//								AppConstants.IS_DEAL_LIST), "");
-		//
-		//				startSppiner();
-		//				controller.requestService(detailRequest);
-		//			} catch (Exception e) {
-		//				e.printStackTrace();
-		//			}
-		//		} else {
-		//		comp_id = mMattaPackageDetailResponse.getCid();
-		//		deal_id = mMattaPackageDetailResponse.getId();
-		//		l3cat_id = mMattaPackageDetailResponse.getCatId();
 		setdata();
-		//		getOutLets();
-		//		}
 
 		advanceSearchLayout = (LinearLayout) findViewById(R.id.advanceSearch);
 		advanceSearchLayout.setVisibility(View.GONE);
@@ -286,30 +226,6 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 			}
 		});
 
-		//		highlightsDesc.setOnClickListener(new OnClickListener() {
-		//
-		//			@Override
-		//			public void onClick(View v) {
-		//
-		//				if (onTapNearestOutletEnable) {
-		//					String catId = outLets.get(0).getCatid();
-		//					String comp_id = outLets.get(0).getId();
-		//
-		//					Intent intent = new Intent(DealDetailActivity.this,
-		//							CompanyDetailActivity.class);
-		//
-		//					Bundle bundle = new Bundle();
-		//					bundle.putString(AppConstants.COMP_ID, comp_id);
-		//					bundle.putString(AppConstants.GLOBAL_SEARCH_KEYWORD,
-		//							mSearchKeyword);
-		//					bundle.putBoolean(AppConstants.IS_DEAL_LIST, true);
-		//					intent.putExtra(AppConstants.CATEGORY_ID_KEY, catId);
-		//					intent.putExtras(bundle);
-		//					startActivity(intent);
-		//				}
-		//			}
-		//		});
-
 	}
 
 	@Override
@@ -327,45 +243,13 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.highlights:
-			if (mMattaPackageDetailResponse.getResults().getPackage().getHighlights() != null 
-			&& !StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().getValue())) {
-				isNearestOutlet = false;
-				onTapNearestOutletEnable = false;
-				highlightsTab.setBackgroundColor(getResources().getColor(R.color.green));
-				highlightsTab.setTextColor(Color.WHITE);
-				itineraryTab.setBackgroundColor(Color.WHITE);
-				itineraryTab.setTextColor(Color.BLACK);
-				contactsTab.setBackgroundColor(Color.WHITE);
-				contactsTab.setTextColor(Color.BLACK);
-				highlightsDesc.setVisibility(View.VISIBLE);
-				highlightsDesc.loadDataWithBaseURL("", mMattaPackageDetailResponse.getResults().getPackage().getHighlights().getValue(), "text/html", "UTF-8","");
-				itineraryDesc.setVisibility(View.GONE);
-			}  else {
-				showInfoDialog(getResources().getString(R.string.no_result_found));
-			}
-
+			onViewHighlightsClick();
 			break;
 		case R.id.itinerary:
-			if (mMattaPackageDetailResponse.getResults().getPackage().getItinerary() != null 
-			&& !StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getItinerary().getValue())) {
-				isNearestOutlet = true;
-				highlightsTab.setBackgroundColor(Color.WHITE);
-				highlightsTab.setTextColor(Color.BLACK);
-				itineraryTab.setBackgroundColor(getResources().getColor(R.color.green));
-				itineraryTab.setTextColor(Color.WHITE);
-				contactsTab.setBackgroundColor(Color.WHITE);
-				contactsTab.setTextColor(Color.BLACK);
-				highlightsDesc.setVisibility(View.GONE);
-				itineraryDesc.loadDataWithBaseURL("", mMattaPackageDetailResponse.getResults().getPackage().getItinerary().getValue(), "text/html", "UTF-8","");
-				itineraryDesc.setVisibility(View.VISIBLE);
-				onTapNearestOutletEnable = true;
-			} else {
-				onTapNearestOutletEnable = false;
-				showInfoDialog(getResources().getString(R.string.no_result_found));
-			}
+			onViewItineraryClick();
 			break;
 		case R.id.contacts:
-			onViewAllOutletClick();
+			onViewContactsClick();
 			break;
 		case R.id.search_toggler:
 			AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SEARCH_CLICK);
@@ -409,8 +293,7 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 			if (cityListString != null && cityListString.size() > 0) {
 				localityItems = null;
 				selectedLocalityindex = null;
-				Intent cityIntent = new Intent(MattaPackageDetailActivity.this,
-						AdvanceSelectCity.class);
+				Intent cityIntent = new Intent(MattaPackageDetailActivity.this, AdvanceSelectCity.class);
 				cityIntent.putExtra("CITY_LIST", cityListString);
 				cityIntent.putExtra("SELECTED_CITY", selectedCity);
 				startActivityForResult(cityIntent, AppConstants.CITY_REQUEST);
@@ -420,20 +303,19 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 			break;
 		case R.id.currentLocality:
 			if (localityItems != null && localityItems.size() > 0) {
-				Intent localityIntent = new Intent(MattaPackageDetailActivity.this,
-						AdvanceSelectLocalityActivity.class);
+				Intent localityIntent = new Intent(MattaPackageDetailActivity.this, AdvanceSelectLocalityActivity.class);
 				localityIntent.putExtra("LOCALITY_LIST", localityItems);
-				localityIntent.putStringArrayListExtra("LOCALITY_INDEX",
-						selectedLocalityindex);
-				startActivityForResult(localityIntent,
-						AppConstants.LOCALITY_REQUEST);
+				localityIntent.putStringArrayListExtra("LOCALITY_INDEX", selectedLocalityindex);
+				startActivityForResult(localityIntent, AppConstants.LOCALITY_REQUEST);
 			} else {
 				setSearchLocality(city_id);
 			}
 			break;
 		case R.id.call_us_btn:
+			makeCall();
 			break;
 		case R.id.locate_us_btn:
+			viewBoothDetail();
 			break;
 		default:
 			break;
@@ -441,25 +323,78 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 
 	}
 
-	private void onViewAllOutletClick() {
-		isNearestOutlet = false;
+	private void makeCall() {
+		if (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getPTCMo()))
+			NativeHelper.makeCall(MattaPackageDetailActivity.this, mMattaPackageDetailResponse.getResults().getPackage().getPTCMo());
+		else
+			showAlertDialog(getResources().getString(R.string.mobile_no_not_available));
+	} 
+
+	private void viewBoothDetail() {
+		MattaBoothDetailController boothDetailcontroller = new MattaBoothDetailController(MattaPackageDetailActivity.this, MattaEvents.MATTA_BOOTH_DETAIL_EVENT);
+		mMattaBoothDetailRequest = new MattaBoothDetailRequest();
+		mMattaBoothDetailRequest.setCompanyId(!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getCId()) ? mMattaPackageDetailResponse.getResults().getPackage().getCId() : "");
+		mMattaBoothDetailRequest.setSource(!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getSource()) ? mMattaPackageDetailResponse.getResults().getPackage().getSource() : "");
+		mMattaBoothDetailRequest.setHallId(!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getHallId()) ? mMattaPackageDetailResponse.getResults().getPackage().getHallId() : "");
+		startSppiner();
+		boothDetailcontroller.requestService(mMattaBoothDetailRequest);
+	}
+
+	private void onViewContactsClick() {
+		contactContainer.setVisibility(View.VISIBLE);
 		highlightsTab.setBackgroundColor(Color.WHITE);
 		highlightsTab.setTextColor(Color.BLACK);
 		itineraryTab.setBackgroundColor(Color.WHITE);
 		itineraryTab.setTextColor(Color.BLACK);
 		contactsTab.setBackgroundColor(getResources().getColor(R.color.green));
 		contactsTab.setTextColor(Color.WHITE);
-		// highlightsDesc.setText(termsNdcond);
 		highlightsDesc.setVisibility(View.GONE);
 		itineraryDesc.setVisibility(View.GONE);
-		onTapNearestOutletEnable = false;
+	}
+
+	private void onViewItineraryClick() {
+		highlightsTab.setBackgroundColor(Color.WHITE);
+		highlightsTab.setTextColor(Color.BLACK);
+		itineraryTab.setBackgroundColor(getResources().getColor(R.color.green));
+		itineraryTab.setTextColor(Color.WHITE);
+		contactsTab.setBackgroundColor(Color.WHITE);
+		contactsTab.setTextColor(Color.BLACK);
+		highlightsDesc.setVisibility(View.GONE);
+		itineraryDesc.setVisibility(View.VISIBLE);
+		contactContainer.setVisibility(View.GONE);
+		/*	if (mMattaPackageDetailResponse.getResults().getPackage().getItinerary() != null 
+				&& mMattaPackageDetailResponse.getResults().getPackage().getItinerary().size() > 0
+				&& mMattaPackageDetailResponse.getResults().getPackage().getItinerary().get(0) != null
+				&& !StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getItinerary().get(0).getValue())) {
+		} else {
+			showInfoDialog(getResources().getString(R.string.no_result_found));
+		}*/
+	}
+
+	private void onViewHighlightsClick() {
+		highlightsTab.setBackgroundColor(getResources().getColor(R.color.green));
+		highlightsTab.setTextColor(Color.WHITE);
+		itineraryTab.setBackgroundColor(Color.WHITE);
+		itineraryTab.setTextColor(Color.BLACK);
+		contactsTab.setBackgroundColor(Color.WHITE);
+		contactsTab.setTextColor(Color.BLACK);
+		highlightsDesc.setVisibility(View.VISIBLE);
+		itineraryDesc.setVisibility(View.GONE);
+		contactContainer.setVisibility(View.GONE);
+		/*		if (mMattaPackageDetailResponse.getResults().getPackage().getHighlights() != null
+				&& mMattaPackageDetailResponse.getResults().getPackage().getHighlights().size() > 0
+				&& mMattaPackageDetailResponse.getResults().getPackage().getHighlights().get(0) != null
+				&& !StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().get(0).getValue())) {
+		}  else {
+			showInfoDialog(getResources().getString(R.string.no_result_found));
+		}*/
 	}
 
 	private void indicatorchange(int pos) {
 		for (int i = 0; i < imgPathList.size(); i++) {
-			circleIndicator.getChildAt(i).setBackgroundResource(R.drawable.circle_white);
+			circleIndicator.getChildAt(i).setBackgroundResource(R.drawable.circle_gray);
 		}
-		circleIndicator.getChildAt(pos).setBackgroundResource(R.drawable.circle_blue);
+		circleIndicator.getChildAt(pos).setBackgroundResource(R.drawable.circle_black);
 	}
 
 	private void addImage() {
@@ -485,6 +420,24 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 			Message message = (Message) screenData;
 			handler.sendMessage(message);
 			return;
+		} else if (event == MattaEvents.MATTA_BOOTH_DETAIL_EVENT) {
+			MattaBoothDetailResponse boothDetail = (MattaBoothDetailResponse) screenData;
+			Message message = new Message();
+			message.arg2 = event;
+			if ((boothDetail.getResults() != null) && (!StringUtil.isNullOrEmpty(boothDetail.getResults().getError_Code())) && (boothDetail.getResults().getError_Code().equals("0"))) {
+				if (boothDetail.getResults().getCompany() == null || StringUtil.isNullOrEmpty(boothDetail.getResults().getCompany().getCName())) {
+					message.arg1 = 1;
+					message.obj = new String("No Result Found");
+				} else {
+					message.arg1 = 0;
+					message.obj = boothDetail;
+				}
+			} else {
+				message.arg1 = 1;
+				message.obj = getResources().getString(R.string.communication_failure);
+			}
+			handler.sendMessage(message);
+			return;	
 		} else {
 			System.out.println(screenData);
 			Response response = (Response) screenData;
@@ -542,13 +495,28 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 				startActivityForResult(intent, AppConstants.LOCALITY_REQUEST);
 
 			}
+		} else if (msg.arg2 == MattaEvents.MATTA_BOOTH_DETAIL_EVENT) {
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+			} else {
+				MattaBoothDetailResponse detailResponse = (MattaBoothDetailResponse) msg.obj;
+				if (!StringUtil.isNullOrEmpty(detailResponse.getResults().getCompany().getCName())) {
+					Intent intent = new Intent(MattaPackageDetailActivity.this, MattaBoothDetailActivity.class);
+					intent.putExtra(AppConstants.GLOBAL_SEARCH_KEYWORD, !StringUtil.isNullOrEmpty(mMattaPackageDetailRequest.getKeyword()) ? mMattaPackageDetailRequest.getKeyword() : "");
+					intent.putExtra(MattaConstants.DATA_MATTA_BOOTH_DETAIL_RESPONSE, detailResponse);
+					intent.putExtra(MattaConstants.DATA_MATTA_BOOTH_DETAIL_REQUEST, mMattaBoothDetailRequest);
+					startActivity(intent);
+				} else {
+					showInfoDialog(getResources().getString(R.string.no_result_found));
+				}
+			}
+			stopSppiner();
 		}
 	}
 
 	public void setdata() {
 		contactContainer = (LinearLayout) findViewById(R.id.contacts_container);
 		contactContainer.setVisibility(View.GONE);
-
 		((TextView) findViewById(R.id.call_us_btn)).setOnClickListener(this);
 		((TextView) findViewById(R.id.locate_us_btn)).setOnClickListener(this);
 
@@ -557,24 +525,34 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 		mHeaderText = (TextView) findViewById(R.id.header_title);
 		mDealTitle = (TextView) findViewById(R.id.txt_deal_name);
 		highlightsTab = (TextView) findViewById(R.id.highlights);
-		if (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().getLabel())) {
+		itineraryTab = (TextView) findViewById(R.id.itinerary);
+		contactsTab = (TextView) findViewById(R.id.contacts);
+		if (mMattaPackageDetailResponse.getResults().getPackage().getHighlights() != null 
+				&& mMattaPackageDetailResponse.getResults().getPackage().getHighlights().size() > 0
+				&& mMattaPackageDetailResponse.getResults().getPackage().getHighlights().get(0) != null
+				&& !StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().get(0).getLabel())) {
 			highlightsTab.setVisibility(View.VISIBLE);
-			highlightsTab.setText(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().getLabel());
+			highlightsTab.setText(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().get(0).getLabel());
+			highlightsDesc.loadDataWithBaseURL("", !StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().get(0).getValue()) ? mMattaPackageDetailResponse.getResults().getPackage().getHighlights().get(0).getValue() : "", "text/html", "UTF-8","");
 		} else {
 			highlightsTab.setVisibility(View.GONE);
 		}
-
-
-		itineraryTab = (TextView) findViewById(R.id.itinerary);
-		contactsTab = (TextView) findViewById(R.id.contacts);
-
-		if (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getTitle())) {
-			mHeaderText.setText(mMattaPackageDetailResponse.getResults().getPackage().getTitle());
-			mDealTitle.setText(mMattaPackageDetailResponse.getResults().getPackage().getTitle());
+		if (mMattaPackageDetailResponse.getResults().getPackage().getItinerary() != null 
+				&& mMattaPackageDetailResponse.getResults().getPackage().getItinerary().size() > 0
+				&& mMattaPackageDetailResponse.getResults().getPackage().getItinerary().get(0) != null
+				&& !StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getItinerary().get(0).getLabel())) {
+			itineraryTab.setVisibility(View.VISIBLE);
+			itineraryTab.setText(mMattaPackageDetailResponse.getResults().getPackage().getItinerary().get(0).getLabel());
+			itineraryDesc.loadDataWithBaseURL("", !StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getItinerary().get(0).getValue()) ? mMattaPackageDetailResponse.getResults().getPackage().getItinerary().get(0).getValue() : "", "text/html", "UTF-8","");
+		} else {
+			itineraryTab.setVisibility(View.GONE);
 		}
 
-		if (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().getValue()))
-			highlightsDesc.loadDataWithBaseURL("", mMattaPackageDetailResponse.getResults().getPackage().getHighlights().getValue(), "text/html", "UTF-8","");
+		mHeaderText.setText(!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getTitle()) ? mMattaPackageDetailResponse.getResults().getPackage().getTitle() : "");
+		mDealTitle.setText(!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getTitle()) ? mMattaPackageDetailResponse.getResults().getPackage().getTitle() : "");
+
+		highlightsDesc.setVisibility(View.VISIBLE);
+
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
 		mProfileIconView = (ImageView) findViewById(R.id.show_profile_icon);
@@ -593,7 +571,11 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 		mSearchEditText.setOnClickListener(this);
 		mSearchBtn.setOnClickListener(this);
 
-		imgPathList = mMattaPackageDetailResponse.getResults().getPackage().getImages().getImage();
+		if (mMattaPackageDetailResponse.getResults().getPackage().getImages() != null 
+				&& mMattaPackageDetailResponse.getResults().getPackage().getImages().size() > 0
+				&& mMattaPackageDetailResponse.getResults().getPackage().getImages().get(0) != null
+				&& mMattaPackageDetailResponse.getResults().getPackage().getImages().get(0).getImage() != null ) 
+			imgPathList = (ArrayList<String>) mMattaPackageDetailResponse.getResults().getPackage().getImages().get(0).getImage();
 
 		dealGallery = (ViewPager) findViewById(R.id.dealtopbanner);
 
@@ -675,7 +657,6 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 			e.printStackTrace();
 			return null;
 		}
-
 	}
 
 	@Override
@@ -701,6 +682,7 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 		Intent intents = new Intent(MattaPackageDetailActivity.this, MattaPhotoSlideActivity.class);
 		intents.putStringArrayListExtra("list", imgPathList);
 		intents.putExtra("position", flipperVisibleItemPosition);
+		intents.putExtra("flowFrom", MattaConstants.FLOW_FROM_MATTA_PACKAGE_DETAIL);
 		startActivity(intents);
 	}
 }

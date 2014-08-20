@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * @author arsh.vardhan
- * @modified 12-Aug-2014
+ * @modified 19-Aug-2014
  */
 public class CompanyModel implements Serializable {
 	/**
@@ -14,12 +14,14 @@ public class CompanyModel implements Serializable {
 	
 	private String CName;
 	private String Hall;
+	private String HallId;
 	private String Booth;
 	private String Location;
 	private String PTCMo;
 	private String PTCEmail;
 	private String Website;
 	private String Image;
+	private String Source;
 	private PackagesCollection Packages;
 
 	public String getPTCEmail() {
@@ -36,6 +38,14 @@ public class CompanyModel implements Serializable {
 
 	public void setHall(String Hall) {
 		this.Hall = Hall;
+	}
+	
+	public String getHallId() {
+		return HallId;
+	}
+
+	public void setHallId(String hallId) {
+		this.HallId = hallId;
 	}
 
 	public String getCName() {
@@ -83,7 +93,15 @@ public class CompanyModel implements Serializable {
 	}
 
 	public void setImage(String image) {
-		Image = image;
+		this.Image = image;
+	}
+	
+	public String getSource() {
+		return Source;
+	}
+
+	public void setSource(String source) {
+		this.Source = source;
 	}
 
 	public String getWebsite() {

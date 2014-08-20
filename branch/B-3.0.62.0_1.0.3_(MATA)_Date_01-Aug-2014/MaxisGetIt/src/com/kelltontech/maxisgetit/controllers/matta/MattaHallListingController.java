@@ -13,6 +13,7 @@ import com.kelltontech.framework.network.HttpHelper;
 import com.kelltontech.framework.network.ServiceRequest;
 import com.kelltontech.framework.ui.IActionController;
 import com.kelltontech.framework.utils.NativeHelper;
+import com.kelltontech.maxisgetit.BuildConfig;
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.dao.CategoryGroup;
@@ -22,7 +23,7 @@ import com.kelltontech.maxisgetit.response.matta.MattaHallListResponse;
 
 /**
  * @author arsh.vardhan
- * @modified 02-Aug-2014
+ * @modified 20-Aug-2014
  */
 public class MattaHallListingController extends BaseServiceController {
 	private Context mActivity;
@@ -37,9 +38,7 @@ public class MattaHallListingController extends BaseServiceController {
 	}
 
 	@Override
-	public void initService() {
-		// Auto-generated method stub
-	}
+	public void initService() { }
 
 	@Override
 	public void requestService(Object requestData) {
@@ -66,7 +65,8 @@ public class MattaHallListingController extends BaseServiceController {
 			serviceRq.setHttpHeaders(API_HEADER_NAMES_ARRAY_2, getApiHeaderValuesArray2());
 
 			String url = AppConstants.BASE_URL + MattaRequest.MATTA_CATEGORY_METHOD;
-			Log.d("maxis", "url " + url);
+			if(BuildConfig.DEBUG) 
+				Log.d("maxis", "url " + url);
 			serviceRq.setUrl(HttpHelper.getURLWithPrams(url, urlParams));
 
 			serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);

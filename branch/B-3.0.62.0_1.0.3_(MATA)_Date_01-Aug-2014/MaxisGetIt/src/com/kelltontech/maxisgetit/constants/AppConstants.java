@@ -16,7 +16,7 @@ public interface AppConstants {
 	* API_VERSION : "1.6" is given for App version 1.25 and provided force update on DealListing Screen
 	*/	
 	
-	String API_VERSION = "1.8"; // Given for App Version 1.29 (MATTA Module Integration)
+	String API_VERSION = "1.9"; // Given for App Version 1.29 (MATTA Module Integration)
 	
 	// String BASE_SERVER 			= "http://192.168.13.3/webservice/trunk/"; 						// local Aaditya
 	// String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch_search1.3/";
@@ -36,7 +36,7 @@ public interface AppConstants {
 //	 String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch1.5/";
 	 String BASE_SERVER 			= "http://203.115.222.103/"; 									// staging
 //	 String BASE_SERVER 			= "http://203.115.222.57/"; 									// pre-production
-	// String BASE_SERVER 			= "https://webservice.findit.com.my/";							// Production
+//	 String BASE_SERVER 			= "https://webservice.findit.com.my/";							// Production
 	String BASE_URL 				= BASE_SERVER + "restapi/";
 	String BASE_URL_CONTEST 		= BASE_SERVER + "restapicontest/";
 	String BASE_URL_VIDEOS 			= "http://";
@@ -116,7 +116,7 @@ public interface AppConstants {
 	String PHOTO_CONTEST_CAT_ID 	= "PHOTO_CONTEST";
 	String GLOBAL_SEARCH_KEYWORD 	= "GLOBAL_SEARCH_KEYWORD";
 	String CATEGORY_ID 				= "CATEGORY_ID";
-
+	String KEYWORD_DESTINATION_CITY	= "field_1";
 	String LIFE_CYCLE_URL 			= "LIFE_CYCLE_URL";
 	
 	

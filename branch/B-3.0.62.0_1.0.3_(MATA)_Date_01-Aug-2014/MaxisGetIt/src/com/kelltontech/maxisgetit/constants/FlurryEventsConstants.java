@@ -139,7 +139,11 @@ public class FlurryEventsConstants {
 	
 	// MattaHallListing Screen Events
 	public static final String MATTA_HALL_LISTING = "MattaHallList Screen";
-	
+	public static final String MATTA_BOOTH_LISTING = "MattaBoothList Screen";
+	public static final String MATTA_BOOTH_DETAIL = "MattaBoothDetail Screen";
+	public static final String MATTA_PACKAGE_LISTING = "MattaPackageList Screen";
+	public static final String MATTA_PACKAGE_DETAIL = "MattaPackageDetail Screen";
+	public static final String MATTA_FILTER_SEARCH = "MattaFilterSearch Screen";
 
 	/*
 	 * Error constants for flurry

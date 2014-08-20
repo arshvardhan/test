@@ -13,6 +13,7 @@ public class BoothModel implements Serializable {
 	private static final long serialVersionUID = 9164063875659249012L;
 	private String BoothLocation;
 	private String CName;
+	private String HallId;
 	private String CId;
 	private String Itmid;
 	private String L2Cat;
@@ -43,6 +44,14 @@ public class BoothModel implements Serializable {
 
 	public void setCName(String CName) {
 		this.CName = CName;
+	}
+
+	public String getHallId() {
+		return HallId;
+	}
+
+	public void setHallId(String hallId) {
+		this.HallId = hallId;
 	}
 
 	public String getL2Cat() {

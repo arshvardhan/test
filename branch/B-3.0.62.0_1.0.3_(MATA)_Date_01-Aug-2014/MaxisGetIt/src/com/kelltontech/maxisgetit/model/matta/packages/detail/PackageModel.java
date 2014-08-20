@@ -1,10 +1,11 @@
 package com.kelltontech.maxisgetit.model.matta.packages.detail;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author arsh.vardhan
- * @modified 11-Aug-2014
+ * @modified 20-Aug-2014
  */
 public class PackageModel implements Serializable {
 
@@ -15,13 +16,16 @@ public class PackageModel implements Serializable {
 	
 	private String Id;
 	private String Title;
+	private String HallId;
 	private String CId;
 	private String CName;
 	private String L2Cat;
 	private String L3Cat;
-	private ImagesUrl Images;
-	private ItineraryTab Itinerary;
-	private HighlightsTab Highlights;
+	private String PTCMo;
+	private List<ImagesUrl> Images;
+	private List<ItineraryTab> Itinerary;
+	private List<HighlightsTab> Highlights;
+	private String Source;
 
 	public String getId() {
 		return Id;
@@ -37,6 +41,14 @@ public class PackageModel implements Serializable {
 
 	public void setTitle(String Title) {
 		this.Title = Title;
+	}
+	
+	public String getHallId() {
+		return HallId;
+	}
+
+	public void setHallId(String hallId) {
+		this.HallId = hallId;
 	}
 
 	public String getCName() {
@@ -70,29 +82,45 @@ public class PackageModel implements Serializable {
 	public void setL3Cat(String L3Cat) {
 		this.L3Cat = L3Cat;
 	}
+	
+	public String getPTCMo() {
+		return PTCMo;
+	}
 
-	public ImagesUrl getImages() {
+	public void setPTCMo(String pTCMo) {
+		this.PTCMo = pTCMo;
+	}
+
+	public List<ImagesUrl> getImages() {
 		return Images;
 	}
 
-	public void setImages(ImagesUrl images) {
+	public void setImages(List<ImagesUrl> images) {
 		this.Images = images;
 	}
 
-	public ItineraryTab getItinerary() {
+	public List<ItineraryTab> getItinerary() {
 		return Itinerary;
 	}
 
-	public void setItinerary(ItineraryTab itinerary) {
+	public void setItinerary(List<ItineraryTab> itinerary) {
 		this.Itinerary = itinerary;
 	}
 
-	public HighlightsTab getHighlights() {
+	public List<HighlightsTab> getHighlights() {
 		return Highlights;
 	}
 
-	public void setHighlights(HighlightsTab highlights) {
+	public void setHighlights(List<HighlightsTab> highlights) {
 		this.Highlights = highlights;
 	}
 
+	public String getSource() {
+		return Source;
+	}
+
+	public void setSource(String source) {
+		this.Source = source;
+	}
+	
 }

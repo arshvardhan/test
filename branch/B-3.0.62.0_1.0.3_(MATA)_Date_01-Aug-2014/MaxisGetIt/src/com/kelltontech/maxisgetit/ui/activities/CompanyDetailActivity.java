@@ -1069,6 +1069,7 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 
 	private void showMapActivity() {
 		if (isLocationAvailable()) {
+			try {
 			String url = "http://maps.google.com/maps?saddr="
 					+ GPS_Data.getLatitude() + "," + GPS_Data.getLongitude()
 					+ "&daddr=" + mCompanyDetail.getLatitude() + ","
@@ -1076,6 +1077,9 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url));
 			intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
 			startActivity(intent);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

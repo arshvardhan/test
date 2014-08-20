@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * @author arsh.vardhan
- * @modified 11-Aug-2014
+ * @modified 20-Aug-2014
  */
 public class MattaPackageDetailResponse implements Serializable {
 

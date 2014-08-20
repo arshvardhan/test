@@ -425,7 +425,7 @@
     <string name="imv_separator">Separator Image</string>
     <string name="package_list_arrow_img">Package Listing Arrow Image.</string>
     <string name="hall_img">Hall Number Image.</string>
-    <string name="booth_listing_travel_packages">Travel Packages</string>
+    <string name="booth_listing_travel_packages">Travel Package(s)</string>
     <string name="separator">Separator</string>
     <string name="travel_package_image">Travel Package Image</string>
     <string name="matta_record_found">Record(s) Found</string>
@@ -435,6 +435,7 @@
     <string name="itinerary_tab">Itinerary</string>
     <string name="contacts_tab">Contacts</string>
     <string name="highlights_tab">Highlights</string>
+    <string name="mobile_no_not_available">Mobile number not available</string>
     
 
 </resources>

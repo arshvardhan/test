@@ -26,8 +26,8 @@ public class MattaHallListAdapter extends BaseAdapter {
 	public MattaHallListAdapter(Context context) {
 		mcontext = context;
 		ImageLoader.initialize(mcontext);
-		dummyDrawable=mcontext.getResources().getDrawable(R.drawable.group_load);
-		errorDrawable=mcontext.getResources().getDrawable(R.drawable.group_cross);
+		dummyDrawable=mcontext.getResources().getDrawable(R.drawable.hall_loading);
+		errorDrawable=mcontext.getResources().getDrawable(R.drawable.hall_no_image);
 	}
 	public void setData(ArrayList<MattaHallList> hallList){
 		if(hallList!=null && hallList.size()>0)
@@ -67,7 +67,7 @@ public class MattaHallListAdapter extends BaseAdapter {
 		}
 		MattaHallList mHallList=hallList.get(position);
 		if(!StringUtil.isNullOrEmpty(mHallList.getmHallName()))
-			holder.tv.setText(Html.fromHtml(mHallList.getmHallName()));                    //TO DO
+			holder.tv.setText(Html.fromHtml(mHallList.getmHallName()));                    //TODO
 		ImageLoader.start(mHallList.getmHallImage(), holder.v, dummyDrawable, errorDrawable);
 		return convertView;
 	}
@@ -76,5 +76,4 @@ public class MattaHallListAdapter extends BaseAdapter {
 		ImageView v;
 		TextView tv;
 	}
-
 }

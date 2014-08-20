@@ -48,7 +48,6 @@ import com.kelltontech.maxisgetit.controllers.matta.MattaPackageDetailController
 import com.kelltontech.maxisgetit.controllers.matta.MattaPackageListController;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.CompanyDetail;
-import com.kelltontech.maxisgetit.dao.SelectorDAO;
 import com.kelltontech.maxisgetit.model.matta.packages.detail.MattaPackageDetailResponse;
 import com.kelltontech.maxisgetit.model.matta.packages.list.MattaPackageListResponse;
 import com.kelltontech.maxisgetit.model.matta.packages.list.PackageListBanner;
@@ -58,7 +57,6 @@ import com.kelltontech.maxisgetit.requests.matta.MattaPackageDetailRequest;
 import com.kelltontech.maxisgetit.requests.matta.MattaPackageListRequest;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.response.RefineSelectorResponse;
-import com.kelltontech.maxisgetit.response.SubCategoryResponse;
 import com.kelltontech.maxisgetit.ui.activities.AdvanceSelectCity;
 import com.kelltontech.maxisgetit.ui.activities.AdvanceSelectLocalityActivity;
 import com.kelltontech.maxisgetit.ui.activities.MaxisMainActivity;
@@ -94,7 +92,7 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 	private RefineSelectorResponse 			mSelctorResp;
 	//	private RefineCategoryResponse 			mCatResponse;
 	private MattaPackageListResponse 		mMattaPackageListResponse;
-	private SelectorDAO 					mLocalitySelectorDao;
+//	private SelectorDAO 					mLocalitySelectorDao;
 	ArrayList<CityOrLocality> 				localityList;
 	ArrayList<String> 						ids = new ArrayList<String>();
 	ArrayList<String> 						selectedLocalityindex;
@@ -108,11 +106,10 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 	private PackageListBannerViewAdapter 	mMattaBannerViewAdapter;
 	private String 							selectedCityforHeader = "Entire Malaysia";
 	private String 							selectedCity = "Entire Malaysia";
-	private String 							mMattaThumbUrl;
+//	private String 							mMattaThumbUrl;
 	private boolean 						loadingNextPageData;
 	private boolean 						isModifySearchDialogOpen;
 	private boolean 						mScrollUp;
-	private boolean 						mIsFreshSearch = true;
 	private boolean 						isAdvanceSearchLayoutOpen = false;
 	private boolean 						stopSliding = false;
 	boolean 								isFirstTime = false;
@@ -130,17 +127,17 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 1) {
 			if (resultCode == RESULT_OK) {
-				mIsFreshSearch = false;
-				mRefineSearchView.setText(getResources().getString(R.string.cl_modify_search));
 				Bundle bundle 						= 		data.getExtras();
-				mMattaPackageListResponse 			= 		bundle.getParcelable(AppConstants.COMP_LIST_DATA);
-				mLocalitySelectorDao 				= 		bundle.getParcelable(AppConstants.LOCALITY_DAO_DATA);
-				mMattaPackageListRequest 			= 		bundle.getParcelable(AppConstants.DATA_LIST_REQUEST);
+				mMattaPackageListResponse 			= 		(MattaPackageListResponse) bundle.getSerializable(MattaConstants.DATA_MATTA_PACKAGE_LIST_RESPONSE);
+				mMattaPackageListRequest 			= 		(MattaPackageListRequest) bundle.getSerializable(MattaConstants.DATA_MATTA_PACKAGE_LIST_REQUEST);
 				mSelctorResp 						= 		bundle.getParcelable(AppConstants.REFINE_ATTR_RESPONSE);
 				mRecordsFoundView.setText(mMattaPackageListResponse.getResults().getTotal_Records_Found() + " " + getResources().getString(R.string.matta_record_found));
 				mMattaPackageListRequest.setSearchRefined(true);
+				if (StringUtil.isNullOrEmpty(mMattaPackageListResponse.getResults().getTotal_Records_Found()) 
+						|| mMattaPackageListResponse.getResults().getTotal_Records_Found().equals("0") )
+					showInfoDialog(getResources().getString(R.string.no_result_found));
+
 				showHideBanner();
-				//				addAnEmptyRow();
 
 				ArrayList<PackageModel> mPackageModel = 		mMattaPackageListResponse.getResults().getPackage();
 				mMattaPackageListAdapter.setData(mPackageModel);
@@ -191,7 +188,7 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_matta_package_list);
-		AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_COMBINED_LIST, true);
+		AnalyticsHelper.logEvent(FlurryEventsConstants.MATTA_PACKAGE_LISTING, true);
 		UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.cl_root_layout),this);
 		ImageLoader.initialize(MattaPackageListActivity.this);
 
@@ -234,13 +231,12 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 			mMattaPackageListRequest 	= (MattaPackageListRequest) bundle.getSerializable(MattaConstants.DATA_MATTA_PACKAGE_LIST_REQUEST);
 			mMattaPackageListResponse  	= (MattaPackageListResponse) bundle.getSerializable(MattaConstants.DATA_MATTA_PACKAGE_LIST_RESPONSE);
 		}
-		
+
 		mHeaderTitle.setText(Html.fromHtml("Tour & Travel Packages"));
-		
-		if (mMattaPackageListRequest != null /*&& !StringUtil.isNullOrEmpty(mMattaPackageListRequest.getmHallTitle())*/) {
-			//			mHeaderTitle.setText(Html.fromHtml(mMattaPackageListRequest.getmHallTitle()));
-			mMattaThumbUrl = mMattaPackageListRequest.getmMattaThumbUrl();
-		}
+
+//		if (mMattaPackageListRequest != null) {
+//			mMattaThumbUrl = mMattaPackageListRequest.getmMattaThumbUrl();
+//		}
 
 		if (mMattaPackageListRequest != null && !StringUtil.isNullOrEmpty(mMattaPackageListRequest.getPostJsonPayload())) {
 			try {
@@ -281,33 +277,6 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 			}
 		}
 
-		/*		if (mMattaPackageListRequest.isBySearch()) {
-			if (mIsFreshSearch) {
-				if (mMattaPackageListResponse.getCategoryList() != null 
-						&& mMattaPackageListResponse.getCategoryList().size() == 1) {
-					mIsFreshSearch 				= 		false;
-					CategoryRefine tempCatref 	= 		mMattaPackageListResponse.getCategoryList().get(0);
-					mMattaPackageListRequest.setSelectedCategoryBySearch(tempCatref.getCategoryId(), tempCatref.getCategoryTitle());
-				} else
-					mRefineSearchView.setText(getResources().getString(R.string.cl_filter_by));
-			}
-			if (mMattaPackageListRequest != null && !StringUtil.isNullOrEmpty(mMattaPackageListRequest.getKeywordOrCategoryId())) {
-				mHeaderTitle.setText(Html.fromHtml(mMattaPackageListRequest.getKeywordOrCategoryId()));
-				mSearchEditText.setText(Html.fromHtml(mMattaPackageListRequest.getKeywordOrCategoryId()));
-			}
-		} else if ((mMattaPackageListRequest.getGroupActionType().trim().equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_CATEGORY_LIST_FOR_GROUP) 
-				&& (mMattaPackageListRequest.getGroupType().trim().equalsIgnoreCase(AppConstants.GROUP_TYPE_CATEGORY)))) {
-			if (mIsFreshSearch) {
-				if (mMattaPackageListResponse.getCategoryList() != null && mMattaPackageListResponse.getCategoryList().size() == 1) {
-					mIsFreshSearch 				= 		false;
-					CategoryRefine tempCatref 	= 		mMattaPackageListResponse.getCategoryList().get(0);
-					mMattaPackageListRequest.setSelectedCategoryBySearch(tempCatref.getCategoryId(),tempCatref.getCategoryTitle());
-				} else
-					mRefineSearchView.setText(getResources().getString(R.string.cl_filter_by));
-			}
-		} else
-			mHeaderTitle.setVisibility(View.VISIBLE);*/
-
 		mRecordsFoundView.setText(mMattaPackageListResponse.getResults().getTotal_Records_Found() + " " + getResources().getString(R.string.matta_record_found));
 
 		ArrayList<PackageModel> boothInfo 			= 		mMattaPackageListResponse.getResults().getPackage();
@@ -323,8 +292,8 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 				} else {
 					MattaPackageDetailController packageDetailcontroller = new MattaPackageDetailController(MattaPackageListActivity.this, MattaEvents.MATTA_PACKAGE_DETAIL_EVENT);
 					mMattaPackageDetailRequest = new MattaPackageDetailRequest();
-					mMattaPackageDetailRequest.setPackageId(((PackageModel) mMattaPackageListAdapter.getItem(arg2)).getId());
-					mMattaPackageDetailRequest.setSource(((PackageModel) mMattaPackageListAdapter.getItem(arg2)).getSource());
+					mMattaPackageDetailRequest.setPackageId(!StringUtil.isNullOrEmpty(((PackageModel) mMattaPackageListAdapter.getItem(arg2)).getId()) ? ((PackageModel) mMattaPackageListAdapter.getItem(arg2)).getId() : "");
+					mMattaPackageDetailRequest.setSource(!StringUtil.isNullOrEmpty(((PackageModel) mMattaPackageListAdapter.getItem(arg2)).getSource()) ? ((PackageModel) mMattaPackageListAdapter.getItem(arg2)).getSource() : "");
 					startSppiner();
 					packageDetailcontroller.requestService(mMattaPackageDetailRequest);
 				}
@@ -346,9 +315,9 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 						if (loadingNextPageData)
 							return;
 						loadingNextPageData = true;
-						if (mMattaPackageListResponse.getResults().getPage_Number() < AppConstants.MAX_RECORD_COUNT / 10)
+						if (mMattaPackageListResponse.getResults().getPage_Number() < MattaConstants.MAX_RECORD_COUNT / 10)
 							loadPageData(mMattaPackageListResponse.getResults().getPage_Number() + 1);
-					} else if (number >= AppConstants.MAX_RECORD_COUNT && !isModifySearchDialogOpen && mScrollUp && Integer.parseInt(mMattaPackageListResponse.getResults().getTotal_Records_Found()) > 100) {
+					} else if (number >= MattaConstants.MAX_RECORD_COUNT && !isModifySearchDialogOpen && mScrollUp && Integer.parseInt(mMattaPackageListResponse.getResults().getTotal_Records_Found()) > 100) {
 						showConfirmationDialog(CustomDialog.CONFIRMATION_DIALOG, getResources().getString(R.string.modify_to_filter));
 						isModifySearchDialogOpen = true;
 						AnalyticsHelper.logEvent(FlurryEventsConstants.COMBINED_LIST_VISITED_ITEMS_EXCEEDED_70);
@@ -525,15 +494,6 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 		indicatorchange(flipperVisibleItemPosition);
 	}
 
-	/*	private void addAnEmptyRow() {
-		if (Integer.parseInt(mMattaPackageListResponse.getResults().getTotalRecordsFound()) <= Integer.parseInt(mMattaPackageListResponse.getResults().getRecords_Per_Page()) 
-				&& Integer.parseInt(mMattaPackageListResponse.getResults().getTotalRecordsFound()) > 4) {
-			PackageModel PackageModel = new PackageModel();
-			PackageModel.setCId("-1");
-			mMattaPackageListResponse.getResults().getBooth().add(PackageModel);
-		}
-	}*/
-
 	@Override
 	protected void onResume() {
 		showHideBanner();
@@ -559,7 +519,7 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 				|| event == Events.BANNER_LANDING_SEARCH_EVENT ) {
 			super.setScreenData(screenData, event, time);
 			return;
-		} else if (event == Events.REFINE_ATTRIBUTES) {
+		} else if (event == MattaEvents.MATTA_FILTER_SEARCH_EVENT) {
 			Message catRefine = (Message) screenData;
 			handler.sendMessage(catRefine);
 			return;
@@ -567,13 +527,20 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 			Message message = (Message) screenData;
 			handler.sendMessage(message);
 			return;
-		} else if (/*event == Events.COMBIND_LISTING_NEW_LISTING_PAGE || */event == MattaEvents.MATTA_PACKAGE_LIST_EVENT) {
+		} else if (event == MattaEvents.MATTA_PACKAGE_LIST_EVENT) {
 			MattaPackageListResponse packageListResponse = (MattaPackageListResponse) screenData;
 			Message message = new Message();
 			message.arg2 = event;
 			if ((packageListResponse.getResults() != null) && (!StringUtil.isNullOrEmpty(packageListResponse.getResults().getError_Code())) && (packageListResponse.getResults().getError_Code().equals("0"))) {
-				message.arg1 = 0;
-				message.obj = packageListResponse;
+				if (packageListResponse.getResults().getPackage().size() < 1 
+						|| StringUtil.isNullOrEmpty(packageListResponse.getResults().getTotal_Records_Found()) 
+						|| packageListResponse.getResults().getTotal_Records_Found().equals("0")) {
+					message.arg1 = 1;
+					message.obj = new String("No Result Found");
+				} else {
+					message.arg1 = 0;
+					message.obj = packageListResponse;
+				}
 			} else {
 				message.arg1 = 1;
 				message.obj = getResources().getString(R.string.communication_failure);
@@ -585,8 +552,14 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 			Message message = new Message();
 			message.arg2 = event;
 			if ((packageDetailResponse.getResults() != null) && (!StringUtil.isNullOrEmpty(packageDetailResponse.getResults().getError_Code())) && (packageDetailResponse.getResults().getError_Code().equals("0"))) {
-				message.arg1 = 0;
-				message.obj = packageDetailResponse;
+				if (packageDetailResponse.getResults().getPackage() == null 
+						|| StringUtil.isNullOrEmpty(packageDetailResponse.getResults().getPackage().getCName())) {
+					message.arg1 = 1;
+					message.obj = new String("No Result Found");
+				} else {
+					message.arg1 = 0;
+					message.obj = packageDetailResponse;
+				}
 			} else {
 				message.arg1 = 1;
 				message.obj = getResources().getString(R.string.communication_failure);
@@ -601,13 +574,13 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 			if (response.isError()) {
 				message.obj = response.getErrorText();
 			} else {
-				if (response.getPayload() instanceof MattaBoothDetailActivity) {
-					CompanyDetail compDetail = (CompanyDetail) response.getPayload();
-					if (compDetail.getErrorCode() != 0) {
+				if (response.getPayload() instanceof MattaPackageListResponse) {
+					MattaPackageListResponse packageListResponse = (MattaPackageListResponse) response.getPayload();
+					if (Integer.parseInt(packageListResponse.getResults().getError_Code()) != 0) {
 						message.obj = getResources().getString(R.string.communication_failure);
 					} else {
 						message.arg1 = 0;
-						message.obj = compDetail;
+						message.obj = packageListResponse;
 					}
 				} else {
 					message.obj = new String(getResources().getString(R.string.communication_failure));
@@ -656,14 +629,11 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 				mMattaPackageListAdapter.notifyDataSetChanged();
 			}
 			stopSppiner();
-		} else if (msg.arg2 == Events.REFINE_ATTRIBUTES) {
+		} else if (msg.arg2 == MattaEvents.MATTA_FILTER_SEARCH_EVENT) {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
 			} else {
-				//				if (mMattaPackageListRequest.isBySearch())
-				displayRefineWithAttributeSpinnersPreloaded((RefineSelectorResponse) msg.obj/*,MattaFilterSearchActivity.ATTR_SELECTION_BY_SEARCH*/);
-				//				else
-				//					displayRefineWithAttributeSpinnersPreloaded((RefineSelectorResponse) msg.obj,MattaFilterSearchActivity.ATTR_SELECTION);
+				displayRefineWithAttributeSpinnersPreloaded((RefineSelectorResponse) msg.obj, MattaFilterSearchActivity.ATTR_SELECTION);
 			}
 			stopSppiner();
 		} else if (msg.arg2 == Events.CITY_LISTING) {
@@ -703,16 +673,6 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 				intent.putExtra("SELECTED_LOCALITIES", selectedLocalityItemsforHeader);
 				startActivityForResult(intent, AppConstants.LOCALITY_REQUEST);
 			}
-		} else if (msg.arg2 == Events.DEALCATEGORY_EVENT) {
-			if (msg.arg1 == 1) {
-				showInfoDialog((String) msg.obj);
-			} else {
-				SubCategoryResponse categoriesResp = (SubCategoryResponse) msg.obj;
-				Intent intent = new Intent(MattaPackageListActivity.this, MattaPackageListActivity.class);
-				intent.putExtra(AppConstants.DATA_SUBCAT_RESPONSE, categoriesResp);
-				startActivity(intent);
-			}
-			stopSppiner();
 		} else if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE && isFromSearch) {
 			isFromSearch = false;
 			super.updateUI(msg);
@@ -752,7 +712,12 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 			this.finish();
 			break;
 		case R.id.col_refine_search:
-			refineSearch();
+			if (StringUtil.isNullOrEmpty(mMattaPackageListResponse.getResults().getTotal_Records_Found()) 
+					|| mMattaPackageListResponse.getResults().getTotal_Records_Found().equals("0") ) {
+				showInfoDialog(getResources().getString(R.string.no_result_found));
+			} else {
+				refineSearch();
+			}
 			AnalyticsHelper.logEvent(FlurryEventsConstants.MODIFY_SEARCH_CLICK);
 			break;
 		case R.id.mainSearchButton:
@@ -821,42 +786,27 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 
 	private void refineSearch() {
 		if (mSelctorResp != null) 
-			displayRefineWithAttributeSpinnersPreloaded(mSelctorResp/*, MattaFilterSearchActivity.ATTR_SELECTION_BY_SEARCH*/);
+			displayRefineWithAttributeSpinnersPreloaded(mSelctorResp, MattaFilterSearchActivity.ATTR_SELECTION);
 		else 
 			fetchRefineAttribute();
 	} 
 
 	private void fetchRefineAttribute() {
-		RefineAttributeController refineController = new RefineAttributeController(MattaPackageListActivity.this, Events.REFINE_ATTRIBUTES);
+		RefineAttributeController refineController = new RefineAttributeController(MattaPackageListActivity.this, MattaEvents.MATTA_FILTER_SEARCH_EVENT);
 		startSppiner();
 		MattaFilterSearchRequest refineSearchRequest = new MattaFilterSearchRequest(MattaPackageListActivity.this);
-		refineSearchRequest.setId(mMattaPackageListRequest.getHallId());
-		refineSearchRequest.setsearchType(MattaConstants.MattaFilterBooth);
-		/*	if(mMattaPackageListRequest.isBySearch()) {
-			if((!StringUtil.isNullOrEmpty(mMattaPackageListRequest.getSearchCriteria()) 
-					&& ("Stamp".equalsIgnoreCase(mMattaPackageListRequest.getSearchCriteria())))) {
-				refineSearchRequest.setStampId(mMattaPackageListRequest.getStampId());
-			} else {
-				refineSearchRequest.setSearchKeyword(mMattaPackageListRequest.getKeywordOrCategoryId());
-				refineSearchRequest.setSearchIn(mMattaPackageListRequest.getSearchIn());
-			}
-		}*/
-		//		else { 
-		//			refineSearchRequest.setSearchKeyword("");
-		//		}
-		//		refineSearchRequest.setDeal(!mMattaPackageListRequest.isCompanyListing());
+		refineSearchRequest.setHallId(mMattaPackageListRequest.getHallId());
+		refineSearchRequest.setId(mMattaPackageListRequest.getCompanyId());
+		refineSearchRequest.setSource(mMattaPackageListResponse.getResults().getPackage().get(0).getSource());
+		refineSearchRequest.setsearchType(MattaConstants.MattaFilterPackage);
 		refineController.requestService(refineSearchRequest);
 	}
 
-	private void displayRefineWithAttributeSpinnersPreloaded(RefineSelectorResponse selectorRes/*, int selectionMode*/) {
+	private void displayRefineWithAttributeSpinnersPreloaded(RefineSelectorResponse selectorRes, int selectionMode) {
 		Intent intent = new Intent(MattaPackageListActivity.this, MattaFilterSearchActivity.class);
-		intent.putExtra(MattaConstants.DATA_MATTA_SEARCH_FILTER_RESPONSE, selectorRes);
-		//		intent.putExtra(MattaFilterSearchActivity.SELECTOR_MODE, selectionMode);
+		intent.putExtra(AppConstants.REFINE_ATTR_RESPONSE, selectorRes);
+		intent.putExtra(MattaFilterSearchActivity.SELECTOR_MODE, selectionMode);
 		intent.putExtra(MattaConstants.DATA_MATTA_PACKAGE_LIST_REQUEST, mMattaPackageListRequest);
-		intent.putExtra(AppConstants.THUMB_URL, mMattaThumbUrl);
-		intent.putExtra(AppConstants.LOCALITY_DAO_DATA, mLocalitySelectorDao);
-		//		if(mMattaPackageListResponse.getCategoryList().size() > 0) 
-		//			intent.putExtra("categoryId", mMattaPackageListResponse.getCategoryList().get(0).getCategoryId());
 		startActivityForResult(intent, 1);
 	}
 

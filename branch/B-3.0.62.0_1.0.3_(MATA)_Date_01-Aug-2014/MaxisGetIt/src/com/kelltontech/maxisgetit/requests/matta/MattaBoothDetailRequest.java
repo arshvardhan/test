@@ -2,14 +2,12 @@ package com.kelltontech.maxisgetit.requests.matta;
 
 import java.io.Serializable;
 
-import android.content.Context;
-
 /**
  * @author arsh.vardhan
- * @modified 08-Aug-2014
+ * @modified 19-Aug-2014
  */
 
-public class MattaBoothDetailRequest /*extends MattaRequest */implements Serializable {
+public class MattaBoothDetailRequest implements Serializable {
 	
 	/**
 	 * Auto-generated serialVersionUID
@@ -19,11 +17,8 @@ public class MattaBoothDetailRequest /*extends MattaRequest */implements Seriali
 	private String companyId;
 	private String keyword;
 	private String categoryTitle;
-
-	/*public MattaBoothDetailRequest(Context context, String companyId) {
-//		super(context);
-		this.companyId = companyId;
-	}*/
+	private String source;
+	private String hallId;
 
 	public String getCompanyId() {
 		return companyId;
@@ -47,6 +42,22 @@ public class MattaBoothDetailRequest /*extends MattaRequest */implements Seriali
 
 	public void setCategoryTitle(String categoryTitle) {
 		this.categoryTitle = categoryTitle;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public String getHallId() {
+		return hallId;
+	}
+
+	public void setHallId(String hallId) {
+		this.hallId = hallId;
 	}
 	
 }

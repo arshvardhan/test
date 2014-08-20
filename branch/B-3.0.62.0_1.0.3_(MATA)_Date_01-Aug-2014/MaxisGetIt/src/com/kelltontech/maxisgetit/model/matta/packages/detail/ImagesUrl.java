@@ -1,7 +1,7 @@
 package com.kelltontech.maxisgetit.model.matta.packages.detail;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 
 public class ImagesUrl implements Serializable {
 	/**
@@ -9,13 +9,13 @@ public class ImagesUrl implements Serializable {
 	 */
 	private static final long serialVersionUID = 2017337979349954217L;
 	
-	private ArrayList<String> Image;
+	private List<String> Image;
 
-	public ArrayList<String> getImage() {
+	public List<String> getImage() {
 		return Image;
 	}
 
-	public void setImage(ArrayList<String> image) {
+	public void setImage(List<String> image) {
 		this.Image = image;
 	}
 	

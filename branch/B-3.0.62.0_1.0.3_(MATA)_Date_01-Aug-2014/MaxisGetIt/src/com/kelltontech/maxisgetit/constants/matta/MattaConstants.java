@@ -2,7 +2,7 @@ package com.kelltontech.maxisgetit.constants.matta;
 
 /**
  * @author arsh.vardhan
- * @modified 08-Aug-2014
+ * @modified 20-Aug-2014
  */
 
 public interface MattaConstants {
@@ -40,5 +40,7 @@ public interface MattaConstants {
 	
 	String MattaFilterBooth 					= "B";
 	String MattaFilterPackage					= "P";
+	
+	int MAX_RECORD_COUNT = 100000;
 
 }

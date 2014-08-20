@@ -18,7 +18,7 @@ import com.kelltontech.maxisgetit.response.matta.MattaHallListResponse;
 
 /**
  * @author arsh.vardhan
- * @modified 02-Aug-2014
+ * @modified 19-Aug-2014
  */
 public class MattaHallListParser extends AbstractSAXParser {
 	public static final String TAG_ERROR_CODE = "Error_Code";
@@ -54,92 +54,52 @@ public class MattaHallListParser extends AbstractSAXParser {
 	}
 
 	@Override
-	public void onStartElement(String namespaceURI, String localName,
-			String qName, Attributes atts) throws SAXException,
-			IllegalArgumentException {
+	public void onStartElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException, IllegalArgumentException {
 		if (localName.equalsIgnoreCase(TAG_HALL_ROOT)) {
 			hallList = new MattaHallList();
-		} else if (localName.equalsIgnoreCase(TAG_BANNER)
-				&& parent.equalsIgnoreCase("Results," + TAG_BANNERS)) {
+		} else if (localName.equalsIgnoreCase(TAG_BANNER) && parent.equalsIgnoreCase("Results," + TAG_BANNERS)) {
 			banner = new MattaBanner();
 		}
 	}
 
 	@Override
-	public void onEndElement(String namespaceURI, String localName, String qName)
-			throws SAXException {
+	public void onEndElement(String namespaceURI, String localName, String qName) throws SAXException {
 		if (localName.equalsIgnoreCase(TAG_ERROR_CODE)) {
-			Log.d(AppConstants.FINDIT_DEBUG_TAG, getNodeValue());
 			response.setErrorCode(getInt(getNodeValue(), 0));
 		} else if (localName.equalsIgnoreCase(TAG_ERROR_MESSAGE)) {
-			Log.d(AppConstants.FINDIT_DEBUG_TAG, getNodeValue());
 			response.setServerMessage(getNodeValue());
-		} else if (localName.equalsIgnoreCase(TAG_BANNER_ID)
-				&& parent.equalsIgnoreCase("Results," + TAG_BANNERS + ","
-						+ TAG_BANNER)) {
+		} else if (localName.equalsIgnoreCase(TAG_BANNER_ID) && parent.equalsIgnoreCase("Results," + TAG_BANNERS + "," + TAG_BANNER)) {
 			banner.setId(getNodeValue());
-		} else if (localName.equalsIgnoreCase(TAG_BANNER_IMAGE_URL)
-				&& parent.equalsIgnoreCase("Results," + TAG_BANNERS + ","
-						+ TAG_BANNER)) {
+		} else if (localName.equalsIgnoreCase(TAG_BANNER_IMAGE_URL) && parent.equalsIgnoreCase("Results," + TAG_BANNERS + "," + TAG_BANNER)) {
 			banner.setImage(getNodeValue());
-		} else if (localName.equalsIgnoreCase(TAG_BANNER_LANDING_URL)
-				&& parent.equalsIgnoreCase("Results," + TAG_BANNERS + ","
-						+ TAG_BANNER)) {
+		} else if (localName.equalsIgnoreCase(TAG_BANNER_LANDING_URL) && parent.equalsIgnoreCase("Results," + TAG_BANNERS + "," + TAG_BANNER)) {
 			banner.setLandingUrl(getNodeValue());
-		} else if (localName.equalsIgnoreCase(TAG_BANNER_SCREEN_NAME)
-				&& parent.equalsIgnoreCase("Results," + TAG_BANNERS + ","
-						+ TAG_BANNER)) {
+		} else if (localName.equalsIgnoreCase(TAG_BANNER_SCREEN_NAME) && parent.equalsIgnoreCase("Results," + TAG_BANNERS + "," + TAG_BANNER)) {
 			banner.setScreenName(getNodeValue());
-		} else if (localName.equalsIgnoreCase(TAG_BANNER_CATEGORY_ID)
-				&& parent.equalsIgnoreCase("Results," + TAG_BANNERS + ","
-						+ TAG_BANNER)) {
+		} else if (localName.equalsIgnoreCase(TAG_BANNER_CATEGORY_ID) && parent.equalsIgnoreCase("Results," + TAG_BANNERS + "," + TAG_BANNER)) {
 			banner.setCategoryId(getNodeValue());
-		} else if (localName.equalsIgnoreCase(TAG_BANNER_ITEM_ID)
-				&& parent.equalsIgnoreCase("Results," + TAG_BANNERS + ","
-						+ TAG_BANNER)) {
+		} else if (localName.equalsIgnoreCase(TAG_BANNER_ITEM_ID) && parent.equalsIgnoreCase("Results," + TAG_BANNERS + "," + TAG_BANNER)) {
 			banner.setItemId(getNodeValue());
-		} else if (localName.equalsIgnoreCase(TAG_BANNER)
-				&& parent.equalsIgnoreCase("Results," + TAG_BANNERS)) {
-			if (banner != null && !StringUtil.isNullOrEmpty(banner.getId())
-					&& !StringUtil.isNullOrEmpty(banner.getImage()))
+		} else if (localName.equalsIgnoreCase(TAG_BANNER) && parent.equalsIgnoreCase("Results," + TAG_BANNERS)) {
+			if (banner != null && !StringUtil.isNullOrEmpty(banner.getId()) && !StringUtil.isNullOrEmpty(banner.getImage()))
 				response.addBanner(banner);
-		} else if (localName.equalsIgnoreCase(TAG_HALL_ID)
-				&& parent.equalsIgnoreCase("Results," + TAG_HALL_ROOT)) {
-			Log.d(AppConstants.FINDIT_DEBUG_TAG, TAG_HALL_ID + getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_HALL_ID) && parent.equalsIgnoreCase("Results," + TAG_HALL_ROOT)) {
 			hallList.setmHallId(getNodeValue());
-		} else if (localName.equalsIgnoreCase(TAG_HALL_NAME)
-				&& parent.equalsIgnoreCase("Results," + TAG_HALL_ROOT)) {
-			Log.d(AppConstants.FINDIT_DEBUG_TAG, TAG_HALL_NAME + getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_HALL_NAME) && parent.equalsIgnoreCase("Results," + TAG_HALL_ROOT)) {
 			hallList.setmHallName(getNodeValue());
-		} else if (localName.equalsIgnoreCase(TAG_HALL_BUILDING_NAME)
-				&& parent.equalsIgnoreCase("Results," + TAG_HALL_ROOT)) {
-			Log.d(AppConstants.FINDIT_DEBUG_TAG, TAG_HALL_BUILDING_NAME
-					+ getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_HALL_BUILDING_NAME) && parent.equalsIgnoreCase("Results," + TAG_HALL_ROOT)) {
 			hallList.setmHallBuildingName(getNodeValue());
-		} else if (localName.equalsIgnoreCase(TAG_HALL_THEME)
-				&& parent.equalsIgnoreCase("Results," + TAG_HALL_ROOT)) {
-			Log.d(AppConstants.FINDIT_DEBUG_TAG, TAG_HALL_THEME
-					+ getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_HALL_THEME) && parent.equalsIgnoreCase("Results," + TAG_HALL_ROOT)) {
 			hallList.setmHallTheme(getNodeValue());
-		} else if (localName.equalsIgnoreCase(TAG_HALL_IMAGE)
-				&& parent.equalsIgnoreCase("Results," + TAG_HALL_ROOT)) {
-			Log.d(AppConstants.FINDIT_DEBUG_TAG, getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_HALL_IMAGE) && parent.equalsIgnoreCase("Results," + TAG_HALL_ROOT)) {
 			hallList.setmHallImage(getNodeValue());
-		} else if (localName.equalsIgnoreCase(TAG_HALL_LIST_TYPE)
-				&& parent.equalsIgnoreCase("Results," + TAG_HALL_ROOT)) {
-			Log.d(AppConstants.FINDIT_DEBUG_TAG, TAG_HALL_LIST_TYPE
-					+ getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_HALL_LIST_TYPE) && parent.equalsIgnoreCase("Results," + TAG_HALL_ROOT)) {
 			hallList.setmHallListType(getNodeValue());
-		} else if (localName.equalsIgnoreCase(TAG_HALL_SOURCE)
-				&& parent.equalsIgnoreCase("Results," + TAG_HALL_ROOT)) {
-			Log.d(AppConstants.FINDIT_DEBUG_TAG, TAG_HALL_SOURCE
-					+ getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_HALL_SOURCE) && parent.equalsIgnoreCase("Results," + TAG_HALL_ROOT)) {
 			hallList.setmHallSource(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_HALL_ROOT)) {
 			if (!StringUtil.isNullOrEmpty(hallList.getmHallId()))
 				response.addMattaHallList(hallList);
 		}
-
 	}
-
 }

@@ -26,10 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
                 android:layout_gravity="center_horizontal"
-                android:paddingBottom="9dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:paddingTop="4dp"
+                android:padding="5dp"
                 android:src="@drawable/detail_cross" />
 
             <LinearLayout
@@ -37,14 +34,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/rounded_layout"
+                android:layout_marginBottom="5dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
-                android:paddingBottom="5dp"
+                android:paddingBottom="0dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="5dp"
-                android:paddingTop="5dp"
+                android:paddingTop="0dp"
                 android:visibility="gone" >
             </LinearLayout>
 
@@ -108,7 +104,6 @@
                         android:layout_centerVertical="true"
                         android:ellipsize="end"
                         android:paddingLeft="7dp"
-                        android:singleLine="true"
                         android:textColor="@color/title_dark_grey"
                         android:textSize="@dimen/sp_13" />
                 </RelativeLayout>
@@ -191,9 +186,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight=".19"
-                    android:ellipsize="end"
                     android:gravity="center"
-                    android:singleLine="true"
                     android:text="@string/website"
                     android:textColor="@color/title_dark_grey"
                     android:textSize="@dimen/sp_13" />
@@ -210,11 +203,9 @@
                     android:layout_height="35dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight=".78"
-                    android:ellipsize="end"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:paddingTop="5dp"
-                    android:singleLine="true"
                     android:textColor="@color/hyperlink_blue"
                     android:textSize="@dimen/sp_13" />
             </LinearLayout>
@@ -238,9 +229,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight=".19"
-                    android:ellipsize="end"
                     android:gravity="center"
-                    android:singleLine="true"
                     android:text="@string/email"
                     android:textColor="@color/title_dark_grey"
                     android:textSize="@dimen/sp_13" />
@@ -257,12 +246,10 @@
                     android:layout_height="35dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight=".78"
-                    android:ellipsize="end"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:paddingTop="5dp"
-                    android:singleLine="true"
-                    android:textColor="@color/title_dark_grey"
+                    android:textColor="@color/hyperlink_blue"
                     android:textSize="@dimen/sp_13" />
             </LinearLayout>
 
@@ -306,10 +293,12 @@
                     android:layout_height="wrap_content"
                     android:divider="@drawable/company_list_seprator"
                     android:fadingEdge="none"
+                    android:focusableInTouchMode="true"
                     android:gravity="center_vertical"
                     android:numColumns="2"
                     android:padding="0px"
-                    android:scrollbars="none" />
+                    android:scrollbars="none"
+                    android:smoothScrollbar="true" />
 
                 <ImageView
                     android:layout_width="match_parent"

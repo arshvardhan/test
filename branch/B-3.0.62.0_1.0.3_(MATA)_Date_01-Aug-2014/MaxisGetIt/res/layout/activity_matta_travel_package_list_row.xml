@@ -20,6 +20,7 @@
         android:layout_alignParentLeft="true"
         android:ellipsize="end"
         android:padding="10dp"
+        android:textAllCaps="true"
         android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_18"

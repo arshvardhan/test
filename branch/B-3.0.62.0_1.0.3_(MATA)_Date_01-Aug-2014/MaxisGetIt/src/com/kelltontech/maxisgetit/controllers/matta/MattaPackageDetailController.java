@@ -18,12 +18,11 @@ import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.model.matta.packages.detail.MattaPackageDetailResponse;
 import com.kelltontech.maxisgetit.requests.matta.MattaPackageDetailRequest;
 import com.kelltontech.maxisgetit.requests.matta.MattaRequest;
-import com.kelltontech.maxisgetit.utils.JSONHandler;
-import com.kelltontech.maxisgetit.utils.JSONParser;
+import com.kelltontech.maxisgetit.utils.GsonUtil;
 
 /**
  * @author arsh.vardhan
- * @modified 02-Aug-2014
+ * @modified 20-Aug-2014
  */
 public class MattaPackageDetailController extends BaseServiceController {
 	private Activity mActivity;
@@ -33,8 +32,7 @@ public class MattaPackageDetailController extends BaseServiceController {
 	}
 
 	@Override
-	public void initService() {
-	}
+	public void initService() { }
 
 	@Override
 	public void requestService(Object requestData) {
@@ -72,11 +70,10 @@ public class MattaPackageDetailController extends BaseServiceController {
 
 	@Override
 	public void responseService(Object object) {
-		JSONParser jsonParser = JSONHandler.getInstanse();
 		if (object instanceof Response) {
 			try {
 				String responseStr = ((Response) object).getResponseText();
-				MattaPackageDetailResponse packageDetailResponse = jsonParser.mapFromJSON(responseStr, MattaPackageDetailResponse.class);
+				MattaPackageDetailResponse packageDetailResponse = GsonUtil.mapFromJSONHanldeObject(responseStr, MattaPackageDetailResponse.class);
 				mScreen.setScreenData(packageDetailResponse, mEventType, 0);
 			} catch (Exception e) {
 				logResponseException(e, "MattaPackageDetailController");

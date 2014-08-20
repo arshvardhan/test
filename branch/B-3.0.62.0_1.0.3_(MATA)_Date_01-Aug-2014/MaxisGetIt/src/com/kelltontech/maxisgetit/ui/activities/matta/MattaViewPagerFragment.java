@@ -42,8 +42,10 @@ public class MattaViewPagerFragment extends Fragment {
 				|| MattaConstants.FLOW_FROM_MATTA_HALL_LIST.equals(mFlowFrom)) {
 			dummyDrawable=getActivity().getResources().getDrawable(R.drawable.banner_load);
 			errorDrawable=getActivity().getResources().getDrawable(R.drawable.banner_cross);
-		} else if (MattaConstants.FLOW_FROM_MATTA_BOOTH_DETAIL.equals(mFlowFrom) 
-				|| MattaConstants.FLOW_FROM_MATTA_PACKAGE_DETAIL.equals(mFlowFrom)) {
+		} else if (MattaConstants.FLOW_FROM_MATTA_BOOTH_DETAIL.equals(mFlowFrom)) {
+			dummyDrawable=getActivity().getResources().getDrawable(R.drawable.floor_plan_loading);
+			errorDrawable=getActivity().getResources().getDrawable(R.drawable.floor_plan_cross);
+		} else if (MattaConstants.FLOW_FROM_MATTA_PACKAGE_DETAIL.equals(mFlowFrom)) {
 			dummyDrawable=getActivity().getResources().getDrawable(R.drawable.detail_loading);
 			errorDrawable=getActivity().getResources().getDrawable(R.drawable.detail_cross);
 		} else {
@@ -51,7 +53,7 @@ public class MattaViewPagerFragment extends Fragment {
 			errorDrawable=getActivity().getResources().getDrawable(R.drawable.group_cross);			
 		}
 		ImageView imageView = new ImageView(getActivity());
-		if (MattaConstants.FLOW_FROM_MATTA_BOOTH_LIST.equals(mFlowFrom) 
+		if (MattaConstants.FLOW_FROM_MATTA_BOOTH_LIST.equals(mFlowFrom)
 				|| MattaConstants.FLOW_FROM_MATTA_PACKAGE_LIST.equals(mFlowFrom) 
 				|| MattaConstants.FLOW_FROM_MATTA_HALL_LIST.equals(mFlowFrom)) {
 			imageView.setScaleType(ImageView.ScaleType.FIT_XY);

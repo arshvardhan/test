@@ -25,59 +25,10 @@
             android:paddingTop="0dp"
             android:weightSum="1" >
 
-            <!--
-                 <ImageView
-                android:id="@+id/cd_category_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="5dp"
-                android:src="@drawable/cat_thumb" />               
-                <TextView
-                android:id="@+id/cd_comp_title"
-                android:layout_width="295dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="5dp"
-                android:gravity="center"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp"
-                android:singleLine="true"
-                android:text="@string/test_string"
-                android:textColor="@color/rainbow_green"
-                android:textSize="@dimen/sp_16"
-                android:textStyle="bold" />
-            -->
-
-
-            <!-- android:background="@drawable/shape_box" -->
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal" >
-
-                <!--
-                     <TextView
-                    android:id="@+id/cd_map_btn"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="left"
-                    android:layout_weight=".25"
-                    android:background="@drawable/call_btn"
-                    android:clickable="true"
-                    android:drawableTop="@drawable/map"
-                    android:gravity="center_horizontal"
-                    android:paddingBottom="3dp"
-                    android:paddingTop="5dp"
-                    android:text="@string/map" />
-                -->
-                <!--
-                     <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight=".04" />
-                -->
 
                 <ImageView
                     android:id="@+id/cd_fav_btn"
@@ -123,26 +74,8 @@
                      <TextView
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_weight=".04" />                  -->
-                <!--
-                     <TextView
-                    android:id="@+id/cd_sms_btn"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight=".25"
-                    android:background="@drawable/call_btn"
-                    android:clickable="true"
-                    android:drawableTop="@drawable/sms"
-                    android:gravity="center_horizontal"
-                    android:paddingBottom="3dp"
-                    android:paddingTop="5dp"
-                    android:text="@string/sms" />                -->
-                <!--
-                      <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight=".04" />                -->
+                    android:layout_weight=".04" />
+                -->
                 <!--
                      <TextView
                     android:id="@+id/cd_sms_btn"
@@ -158,6 +91,27 @@
                     android:paddingTop="5dp"
                     android:text="@string/sms" />
                 -->
+                <!--
+                      <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight=".04" />
+                -->
+                <!--
+                     <TextView
+                    android:id="@+id/cd_sms_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight=".25"
+                    android:background="@drawable/call_btn"
+                    android:clickable="true"
+                    android:drawableTop="@drawable/sms"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="3dp"
+                    android:paddingTop="5dp"
+                    android:text="@string/sms" />
+                -->
             </LinearLayout>
 
             <!--
@@ -172,7 +126,8 @@
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:paddingTop="4dp"
-                android:src="@drawable/detail_cross" />            -->
+                android:src="@drawable/detail_cross" />
+            -->
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/comp_image_pager"
@@ -224,7 +179,8 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:clickable="true"
-                    android:src="@drawable/add_contact" />                -->
+                    android:src="@drawable/add_contact" />
+                -->
                 <!--
                      <ImageView
                     android:id="@+id/cd_img_profile_bar"
@@ -236,7 +192,8 @@
                     android:layout_marginRight="7dp"
                     android:layout_marginTop="3dp"
                     android:layout_toLeftOf="@+id/img_add_profile"
-                    android:background="@color/pink" />                -->
+                    android:background="@color/pink" />
+                -->
 
                 <LinearLayout
                     android:id="@+id/cd_layout_comp_detail"
@@ -320,15 +277,6 @@
                                 android:textSize="@dimen/sp_12" />
                         </RelativeLayout>
                     </RelativeLayout>
-                    <!--
-                         <TextView
-                        android:id="@+id/cd_title_distance"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|right"
-                        android:layout_weight="0.3"
-                        android:textSize="@dimen/sp_12" />
-                    -->
                 </LinearLayout>
             </RelativeLayout>
 
@@ -586,41 +534,13 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginRight="10dp"
-                    android:src="@drawable/more"
                     android:clickable="true"
                     android:padding="2dp"
+                    android:src="@drawable/more"
                     android:textColor="@color/maxis_green"
-                    android:textStyle="italic" 
-                    android:visibility="gone"/>
+                    android:textStyle="italic"
+                    android:visibility="gone" />
             </LinearLayout>
-            <!--
-            <LinearLayout
-                android:id="@+id/cd_distance_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:weightSum="1" >
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".32"
-                    android:text="@string/distance"
-                    android:textColor="@color/title_dark_grey"
-                    android:textSize="@dimen/sp_13"
-                    android:textStyle="bold" />
-                <ImageView
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/bar_light_grey" />
-                <TextView
-                    android:id="@+id/cd_distance"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".65"
-                    android:padding="5dp"
-                    android:textColor="@color/text_light_grey"
-                    android:textSize="@dimen/sp_13" />           </LinearLayout>
-            -->
 
             <ImageView
                 android:layout_width="match_parent"

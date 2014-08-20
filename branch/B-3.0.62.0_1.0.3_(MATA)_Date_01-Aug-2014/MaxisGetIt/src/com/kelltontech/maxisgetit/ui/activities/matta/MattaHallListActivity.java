@@ -94,8 +94,8 @@ public class MattaHallListActivity extends MaxisMainActivity  implements Animati
 	ArrayList<String> ids = new ArrayList<String>();
 	TextView mainSearchButton;
 	ArrayList<String> selectedLocalityindex;
-//	private Animation inAnimation;
-//	private Animation outAnimation;
+	//	private Animation inAnimation;
+	//	private Animation outAnimation;
 
 	private ViewPager bannerView;
 	private int totalBanners;
@@ -114,13 +114,13 @@ public class MattaHallListActivity extends MaxisMainActivity  implements Animati
 		ImageLoader.initialize(MattaHallListActivity.this);
 
 		// loading the animation
-//        inAnimation 	= 	AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
-//        outAnimation 	= 	AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
-        
-        // set animation listener
-//        inAnimation.setAnimationListener(this);
-//        outAnimation.setAnimationListener(this);
-        
+		//        inAnimation 	= 	AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
+		//        outAnimation 	= 	AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
+
+		// set animation listener
+		//        inAnimation.setAnimationListener(this);
+		//        outAnimation.setAnimationListener(this);
+
 		AnalyticsHelper.logEvent(FlurryEventsConstants.MATTA_HALL_LISTING);
 
 		if(getIntent().getExtras() != null) {
@@ -137,8 +137,8 @@ public class MattaHallListActivity extends MaxisMainActivity  implements Animati
 		mSearchBtn.setOnClickListener(MattaHallListActivity.this);
 		mSearchEditText = (EditText) findViewById(R.id.search_box);
 		mSearchContainer = (AnimatedLinearLayout) findViewById(R.id.search_box_container);
-//		mSearchContainer.setInAnimation(inAnimation);
-//		mSearchContainer.setOutAnimation(outAnimation);
+		//		mSearchContainer.setInAnimation(inAnimation);
+		//		mSearchContainer.setOutAnimation(outAnimation);
 		mSearchToggler = (ImageView) findViewById(R.id.search_toggler);
 		mSearchToggler.setOnClickListener(this);
 		mHeaderBackButton = (ImageView) findViewById(R.id.header_btn_back);
@@ -151,8 +151,8 @@ public class MattaHallListActivity extends MaxisMainActivity  implements Animati
 
 		advanceSearchLayout = (AnimatedLinearLayout) findViewById(R.id.advanceSearch);
 		advanceSearchLayout.setVisibility(View.GONE);
-//		advanceSearchLayout.setInAnimation(inAnimation);
-//		advanceSearchLayout.setOutAnimation(outAnimation);
+		//		advanceSearchLayout.setInAnimation(inAnimation);
+		//		advanceSearchLayout.setOutAnimation(outAnimation);
 
 		upArrow = (ImageView) findViewById(R.id.upArrow);
 		upArrow.setOnClickListener(this);
@@ -170,8 +170,8 @@ public class MattaHallListActivity extends MaxisMainActivity  implements Animati
 		mainSearchButton.setOnClickListener(this);
 
 		wholeSearchBoxContainer = (AnimatedLinearLayout) findViewById(R.id.whole_search_box_container);
-//		wholeSearchBoxContainer.setInAnimation(inAnimation);
-//		wholeSearchBoxContainer.setOutAnimation(outAnimation);
+		//		wholeSearchBoxContainer.setInAnimation(inAnimation);
+		//		wholeSearchBoxContainer.setOutAnimation(outAnimation);
 
 
 
@@ -209,7 +209,6 @@ public class MattaHallListActivity extends MaxisMainActivity  implements Animati
 					case MotionEvent.ACTION_CANCEL:
 						break;
 					case MotionEvent.ACTION_UP:
-						// calls when touch release on ViewPager
 						circleIndicator.setVisibility(View.GONE);
 						if (((ImageView) findViewById(R.id.play_pasue_icon)).getBackground() != null 
 								&& ((ImageView) findViewById(R.id.play_pasue_icon)).getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.banner_pause).getConstantState())) {
@@ -219,7 +218,6 @@ public class MattaHallListActivity extends MaxisMainActivity  implements Animati
 						}
 						break;
 					case MotionEvent.ACTION_MOVE:
-						// calls when ViewPager touch
 						circleIndicator.setVisibility(View.VISIBLE);
 						if (bannerHandler != null && stopSliding == false 
 								&& ((ImageView) findViewById(R.id.play_pasue_icon)).getBackground() != null 
@@ -367,7 +365,7 @@ public class MattaHallListActivity extends MaxisMainActivity  implements Animati
 		packageListReq = new MattaPackageListRequest();
 		packageListReq.setSource(hallList.getmHallSource());
 		packageListReq.setListType(hallList.getmHallListType());
-		packageListReq.setHallId(hallList.getmHallId());
+		//		packageListReq.setHallId(hallList.getmHallId()); // this node is removed after discussion with Ankesh and Arvind Gupta
 		packageListReq.setmHallTitle(hallList.getmHallName());
 		packageListReq.setmMattaThumbUrl(hallList.getmHallImage());
 		packageListController.requestService(packageListReq);
@@ -390,8 +388,15 @@ public class MattaHallListActivity extends MaxisMainActivity  implements Animati
 			Message message = new Message();
 			message.arg2 = event;
 			if ((boothListRes.getResults() != null) && (!StringUtil.isNullOrEmpty(boothListRes.getResults().getError_Code())) && (boothListRes.getResults().getError_Code().equals("0"))) {
-				message.arg1 = 0;
-				message.obj = boothListRes;
+				if (boothListRes.getResults().getBooth().size() < 1 
+						|| StringUtil.isNullOrEmpty(boothListRes.getResults().getTotalRecordsFound()) 
+						|| boothListRes.getResults().getTotalRecordsFound().equals("0")) {
+					message.arg1 = 1;
+					message.obj = new String("No Result Found");
+				} else {
+					message.arg1 = 0;
+					message.obj = boothListRes;
+				}
 			} else {
 				message.arg1 = 1;
 				message.obj = getResources().getString(R.string.communication_failure);
@@ -403,8 +408,15 @@ public class MattaHallListActivity extends MaxisMainActivity  implements Animati
 			Message message = new Message();
 			message.arg2 = event;
 			if ((packageListRes.getResults() != null) && (!StringUtil.isNullOrEmpty(packageListRes.getResults().getError_Code())) && (packageListRes.getResults().getError_Code().equals("0"))) {
-				message.arg1 = 0;
-				message.obj = packageListRes;
+				if (packageListRes.getResults().getPackage().size() < 1 
+						|| StringUtil.isNullOrEmpty(packageListRes.getResults().getTotal_Records_Found()) 
+						|| packageListRes.getResults().getTotal_Records_Found().equals("0")) {
+					message.arg1 = 1;
+					message.obj = new String("No Result Found");
+				} else {
+					message.arg1 = 0;
+					message.obj = packageListRes;
+				}
 			} else {
 				message.arg1 = 1;
 				message.obj = getResources().getString(R.string.communication_failure);
@@ -499,10 +511,10 @@ public class MattaHallListActivity extends MaxisMainActivity  implements Animati
 			AnalyticsHelper.logEvent(FlurryEventsConstants.HOME_SEARCH_CLICK);
 			if (wholeSearchBoxContainer.getVisibility() == View.VISIBLE) {
 				wholeSearchBoxContainer.setVisibility(View.GONE);
-//				overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
+				//				overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
 			} else {
 				wholeSearchBoxContainer.setVisibility(View.VISIBLE);
-//				overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
+				//				overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
 			}
 			if (mSearchContainer.getVisibility() == View.VISIBLE) {
 				mSearchContainer.setVisibility(View.GONE);

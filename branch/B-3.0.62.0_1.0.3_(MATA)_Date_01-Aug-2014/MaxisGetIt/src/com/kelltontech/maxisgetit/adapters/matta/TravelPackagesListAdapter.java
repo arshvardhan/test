@@ -28,7 +28,7 @@ public class TravelPackagesListAdapter extends BaseAdapter implements OnClickLis
 	public TravelPackagesListAdapter(Context context) {
 		this.mContext = context;
 		ImageLoader.initialize(mContext);
-		dummyDrawable = mContext.getResources().getDrawable(R.drawable.travel_package_default);
+		dummyDrawable = mContext.getResources().getDrawable(R.drawable.travel_package_loading);
 		errorDrawable = mContext.getResources().getDrawable(R.drawable.travel_package_default);
 	}
 

@@ -148,10 +148,8 @@ public class HomeActivity extends MaxisMainActivity {
 		Log.d("maxis", "HomeActivity.onCreate()");
 		AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_HOME);
 		setContentView(R.layout.activity_home);
-		UiUtils.hideKeyboardOnTappingOutside(
-				findViewById(R.id.home_root_layout), this);
-		mLocationServiceIntent = new Intent(HomeActivity.this,
-				LocationFinderService.class);
+		UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.home_root_layout), this);
+		mLocationServiceIntent = new Intent(HomeActivity.this, LocationFinderService.class);
 		startService(mLocationServiceIntent);
 		IntentFilter filterSend = new IntentFilter();
 		filterSend.addAction("location");
@@ -190,10 +188,6 @@ public class HomeActivity extends MaxisMainActivity {
 
 		mSearchEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS); 
 
-		// uncomment for displaying banner also uncomment start flipping in
-		// onResume as well set visibility on in layout
-		// imgGallery = (CustomGallery) findViewById(R.id.home_gallery);
-		// imgGallery.setAdapter(new ImageAdapter(HomeActivity.this));
 		Bundle bundle = getIntent().getExtras();
 		ArrayList<CategoryGroup> categories = bundle
 				.getParcelableArrayList(AppConstants.DATA_CAT_LIST);
@@ -210,12 +204,6 @@ public class HomeActivity extends MaxisMainActivity {
 				gotoScreen(position);
 			}
 		});
-		// showDialogWithTitle(getResources().getString(R.string.disclaimer),
-		// getResources().getString(R.string.disclaimer_text));
-
-		//		View btnPhotoContest = findViewById(R.id.btn_photo_contest);
-		//		btnPhotoContest.setOnClickListener(this);
-		// btnPhotoContest.setVisibility(View.GONE);
 
 		if (isLocationAware()) {
 			setCurrrentLocation();
@@ -685,12 +673,6 @@ public class HomeActivity extends MaxisMainActivity {
 			AnalyticsHelper.logEvent(FlurryEventsConstants.TWITTER_CLICK);
 			checkPreferenceAndOpenBrowser(AppConstants.TWITTER_PAGE_URL);
 			break;
-			/*		case R.id.btn_photo_contest:
-			AnalyticsHelper.logEvent(FlurryEventsConstants.PHOTO_CONTEST_CLICK);
-			startActivity(new Intent(HomeActivity.this,
-					ContestHomeActivity.class));
-			break;*/
-
 		case R.id.logo:
 			startActivity(new Intent(HomeActivity.this, GetItInfoActivity.class));
 			break;
@@ -777,7 +759,6 @@ public class HomeActivity extends MaxisMainActivity {
 	@Override
 	protected void onActivityResult(int reqCode, int resultCode, Intent data) {
 		super.onActivityResult(reqCode, resultCode, data);
-		// TODO Auto-generated method stub
 		if (resultCode == RESULT_OK && reqCode == AppConstants.CITY_REQUEST) {
 			if (!selectedCity.equalsIgnoreCase(data.getStringExtra("CITY_NAME"))) {
 				localityItems = null;
@@ -829,9 +810,7 @@ public class HomeActivity extends MaxisMainActivity {
 							.getId()));
 				}
 			}
-
 		}
-
 	}
 
 	public String jsonForSearch() {
@@ -857,20 +836,15 @@ public class HomeActivity extends MaxisMainActivity {
 					}
 					jArray.put("locality", jsonArray);
 				}
-
 				return jArray.toString();
-
 			}
 
 			else {
 				return null;
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
-
 	}
-
 }
