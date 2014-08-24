@@ -18,6 +18,7 @@ import com.kelltontech.framework.db.MyApplication;
 import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.network.HttpHelper;
 import com.kelltontech.framework.utils.NativeHelper;
+import com.kelltontech.maxisgetit.BuildConfig;
 import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
@@ -123,36 +124,40 @@ public class AnalyticsHelper {
 
 		// To measure total installs (through Adds on Facebook) and total times your app is launched.
 		if (AppConstants.PRODUCTION) {
-			com.facebook.AppEventsLogger.activateApp(activity, AppConstants.FACEBOOK_APP_ID);
-		}
 
-		// To track session on server side.
-		try {
-			if (!NativeHelper.isDataConnectionAvailable(activity)) {
-				Response res = new Response();
-				res.setErrorCode(101);
-				res.setErrorText(activity.getResources().getString(R.string.network_unavailable));
-				return;
-			}
-			SessionTrackingRequest request = new SessionTrackingRequest(activity, SESSION_IDENTIFIER, screenName);
-			String url = HttpHelper.getURLWithPrams(AppConstants.BASE_URL + request.getMethodName(), request.getRequestHeaders(screenName));
-			Log.d("maxis", "url " + url);
-			SimpleXmlRequest<Response> serviceRequest = new SimpleXmlRequest<Response>(Request.Method.GET, url, Response.class, new Listener<Response>() {
-				@Override
-				public void onResponse(Response response) {
-					Log.d("FINDIT MALAYSIA", "SESSION TRACKING MSG: Success");
-				}
-			}, 
-			new ErrorListener() {
-				@Override
-				public void onErrorResponse(VolleyError error) {                                
-				}
-			}
-					);  
+			if(isFacebookAvailable(activity))
+				com.facebook.AppEventsLogger.activateApp(activity, AppConstants.FACEBOOK_APP_ID);
 
-			MyApplication.getInstance().addToRequestQueue(serviceRequest);
-		} catch (Exception e) {
-			AnalyticsHelper.onError(FlurryEventsConstants.REQUEST_SERVICE_ERR, MyApplication.class.getSimpleName() + " : " + AppConstants.REQUEST_SERVICE_ERROR_MSG, e);
+			// To track session on server side.
+			try {
+				if (!NativeHelper.isDataConnectionAvailable(activity)) {
+					Response res = new Response();
+					res.setErrorCode(101);
+					res.setErrorText(activity.getResources().getString(R.string.network_unavailable));
+					return;
+				}
+				SessionTrackingRequest request = new SessionTrackingRequest(activity, SESSION_IDENTIFIER, screenName);
+				String url = HttpHelper.getURLWithPrams(AppConstants.BASE_URL + request.getMethodName(), request.getRequestHeaders(screenName));
+				if(BuildConfig.DEBUG) 
+					Log.d("maxis", "url " + url);
+				SimpleXmlRequest<Response> serviceRequest = new SimpleXmlRequest<Response>(Request.Method.GET, url, Response.class, new Listener<Response>() {
+					@Override
+					public void onResponse(Response response) {
+						if(BuildConfig.DEBUG) 
+							Log.d("FINDIT MALAYSIA", "SESSION TRACKING MSG: Success");
+					}
+				}, 
+				new ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {                                
+					}
+				}
+						);  
+
+				MyApplication.getInstance().addToRequestQueue(serviceRequest);
+			} catch (Exception e) {
+				AnalyticsHelper.onError(FlurryEventsConstants.REQUEST_SERVICE_ERR, MyApplication.class.getSimpleName() + " : " + AppConstants.REQUEST_SERVICE_ERROR_MSG, e);
+			}
 		}
 	}
 

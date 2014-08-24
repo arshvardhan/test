@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * @author arsh.vardhan
- * @modified 12-Aug-2014
+ * @modified 24-Aug-2014
  */
 public class BoothModel implements Serializable {
 	/**
@@ -12,6 +12,7 @@ public class BoothModel implements Serializable {
 	 */
 	private static final long serialVersionUID = 9164063875659249012L;
 	private String BoothLocation;
+	private String BoothLocationLabel;
 	private String CName;
 	private String HallId;
 	private String CId;
@@ -36,6 +37,14 @@ public class BoothModel implements Serializable {
 
 	public void setBoothLocation(String BoothLocation) {
 		this.BoothLocation = BoothLocation;
+	}
+	
+	public String getBoothLocationLabel() {
+		return BoothLocationLabel;
+	}
+
+	public void setBoothLocationLabel(String boothLocationLabel) {
+		BoothLocationLabel = boothLocationLabel;
 	}
 
 	public String getCName() {

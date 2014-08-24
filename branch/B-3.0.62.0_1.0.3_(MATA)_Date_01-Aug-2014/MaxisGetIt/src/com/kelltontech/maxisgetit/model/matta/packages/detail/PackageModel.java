@@ -26,6 +26,7 @@ public class PackageModel implements Serializable {
 	private List<ItineraryTab> Itinerary;
 	private List<HighlightsTab> Highlights;
 	private String Source;
+	private String ExhibitionId;
 
 	public String getId() {
 		return Id;
@@ -121,6 +122,14 @@ public class PackageModel implements Serializable {
 
 	public void setSource(String source) {
 		this.Source = source;
+	}
+
+	public String getExhibitionId() {
+		return ExhibitionId;
+	}
+
+	public void setExhibitionId(String exhibitionId) {
+		this.ExhibitionId = exhibitionId;
 	}
 	
 }

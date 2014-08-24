@@ -24,10 +24,10 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/comp_image_pager"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:layout_gravity="center_horizontal"
+                android:layout_height="230dp"
+                android:layout_gravity="center"
                 android:padding="5dp"
-                android:src="@drawable/detail_cross" />
+                android:src="@drawable/floor_plan_cross" />
 
             <LinearLayout
                 android:id="@+id/indicatorlinearlayout"
@@ -61,7 +61,7 @@
                     android:layout_gravity="center_vertical"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
-                    android:singleLine="true"
+                    android:maxLines="2"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_13" />
             </LinearLayout>
@@ -204,7 +204,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight=".78"
                     android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
+                    android:paddingLeft="5dp"
                     android:paddingTop="5dp"
                     android:textColor="@color/hyperlink_blue"
                     android:textSize="@dimen/sp_13" />
@@ -247,7 +247,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight=".78"
                     android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
+                    android:paddingLeft="5dp"
                     android:paddingTop="5dp"
                     android:textColor="@color/hyperlink_blue"
                     android:textSize="@dimen/sp_13" />

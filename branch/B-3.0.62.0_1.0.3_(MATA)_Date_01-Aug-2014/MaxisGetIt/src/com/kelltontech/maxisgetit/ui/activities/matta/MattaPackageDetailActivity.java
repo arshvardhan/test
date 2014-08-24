@@ -21,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebSettings;
+import android.webkit.WebSettings.RenderPriority;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
@@ -39,7 +40,9 @@ import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
 import com.kelltontech.maxisgetit.constants.matta.MattaConstants;
 import com.kelltontech.maxisgetit.constants.matta.MattaEvents;
 import com.kelltontech.maxisgetit.controllers.matta.MattaBoothDetailController;
+import com.kelltontech.maxisgetit.controllers.matta.MattaPackageCallLogController;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
+import com.kelltontech.maxisgetit.dao.MaxisStore;
 import com.kelltontech.maxisgetit.model.matta.booths.detail.MattaBoothDetailResponse;
 import com.kelltontech.maxisgetit.model.matta.packages.detail.MattaPackageDetailResponse;
 import com.kelltontech.maxisgetit.requests.matta.MattaBoothDetailRequest;
@@ -94,6 +97,7 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 	private TextView mainSearchButton;
 	private ArrayList<String> selectedLocalityindex;
 	private LinearLayout wholeSearchBoxContainer;
+	private MaxisStore mStore;
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -156,11 +160,12 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		mStore = MaxisStore.getStore(MattaPackageDetailActivity.this);
 		AnalyticsHelper.logEvent(FlurryEventsConstants.MATTA_PACKAGE_DETAIL);
 		setContentView(R.layout.activity_matta_package_detail);
 
@@ -172,7 +177,9 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 		highlightsDesc = (WebView) findViewById(R.id.highlights_desc);
 		WebSettings settings = highlightsDesc.getSettings();
 		settings.setJavaScriptEnabled(true);
+		highlightsDesc.getSettings().setRenderPriority(RenderPriority.HIGH);
 		highlightsDesc.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+		highlightsDesc.setScrollContainer(false);
 		highlightsDesc.setWebViewClient(new WebViewClient() {
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				return overrideWebViewUrlLoading(url);
@@ -182,9 +189,11 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 		});
 
 		itineraryDesc = (WebView) findViewById(R.id.itinerary_desc);
-		WebSettings ItinerarySettings = itineraryDesc.getSettings();
-		ItinerarySettings.setJavaScriptEnabled(true);
+		WebSettings itinerarySettings = itineraryDesc.getSettings();
+		itinerarySettings.setJavaScriptEnabled(true);
+		itineraryDesc.getSettings().setRenderPriority(RenderPriority.HIGH);
 		itineraryDesc.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+		itineraryDesc.setScrollContainer(false);
 		itineraryDesc.setWebViewClient(new WebViewClient() {
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				return overrideWebViewUrlLoading(url);
@@ -324,11 +333,48 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 	}
 
 	private void makeCall() {
-		if (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getPTCMo()))
-			NativeHelper.makeCall(MattaPackageDetailActivity.this, mMattaPackageDetailResponse.getResults().getPackage().getPTCMo());
-		else
+		if (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getPTCMo())) {
+			if (NativeHelper.isDataConnectionAvailable(MattaPackageDetailActivity.this)) {
+				String postJsonData = jsonForCallLog();
+				MattaPackageCallLogController controller = new MattaPackageCallLogController(MattaPackageDetailActivity.this, MattaEvents.MATTA_PACKAGE_CALL_LOG_EVENT);
+				controller.requestService(postJsonData);
+				NativeHelper.makeCall(MattaPackageDetailActivity.this, mMattaPackageDetailResponse.getResults().getPackage().getPTCMo());
+			} else {
+				return;
+			}
+		} else
 			showAlertDialog(getResources().getString(R.string.mobile_no_not_available));
 	} 
+
+	public String jsonForCallLog() {
+		try {
+			JSONObject jArray = new JSONObject();
+			String callerNo = getCallerNumber();
+			String alternateCallerNo = (!StringUtil.isNullOrEmpty(mStore.getUserMobileNumber())) ? mStore.getUserMobileNumber() : "";
+			jArray.put("caller_no", (!StringUtil.isNullOrEmpty(callerNo)) ? callerNo : alternateCallerNo);
+			jArray.put("exhibition_id", (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getExhibitionId())) ? mMattaPackageDetailResponse.getResults().getPackage().getExhibitionId() : "");
+			jArray.put("source", (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getSource())) ? mMattaPackageDetailResponse.getResults().getPackage().getSource() : "");
+			jArray.put("package_id", (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getId())) ? mMattaPackageDetailResponse.getResults().getPackage().getId() : "");
+			jArray.put("auth_no", (!StringUtil.isNullOrEmpty(mStore.getAuthMobileNumber())) ? mStore.getAuthMobileNumber() : "");
+			jArray.put("called_no", (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getPTCMo())) ? mMattaPackageDetailResponse.getResults().getPackage().getPTCMo() : "");
+			return jArray.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	private String getCallerNumber() {
+		String callerNumber = "";
+		try {
+			if (NativeHelper.isTelephonyAvailable(MattaPackageDetailActivity.this)) 
+				callerNumber = NativeHelper.getMyPhoneNumber(MattaPackageDetailActivity.this);
+			return callerNumber;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	private void viewBoothDetail() {
 		MattaBoothDetailController boothDetailcontroller = new MattaBoothDetailController(MattaPackageDetailActivity.this, MattaEvents.MATTA_BOOTH_DETAIL_EVENT);
@@ -362,13 +408,6 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 		highlightsDesc.setVisibility(View.GONE);
 		itineraryDesc.setVisibility(View.VISIBLE);
 		contactContainer.setVisibility(View.GONE);
-		/*	if (mMattaPackageDetailResponse.getResults().getPackage().getItinerary() != null 
-				&& mMattaPackageDetailResponse.getResults().getPackage().getItinerary().size() > 0
-				&& mMattaPackageDetailResponse.getResults().getPackage().getItinerary().get(0) != null
-				&& !StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getItinerary().get(0).getValue())) {
-		} else {
-			showInfoDialog(getResources().getString(R.string.no_result_found));
-		}*/
 	}
 
 	private void onViewHighlightsClick() {
@@ -381,13 +420,6 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 		highlightsDesc.setVisibility(View.VISIBLE);
 		itineraryDesc.setVisibility(View.GONE);
 		contactContainer.setVisibility(View.GONE);
-		/*		if (mMattaPackageDetailResponse.getResults().getPackage().getHighlights() != null
-				&& mMattaPackageDetailResponse.getResults().getPackage().getHighlights().size() > 0
-				&& mMattaPackageDetailResponse.getResults().getPackage().getHighlights().get(0) != null
-				&& !StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().get(0).getValue())) {
-		}  else {
-			showInfoDialog(getResources().getString(R.string.no_result_found));
-		}*/
 	}
 
 	private void indicatorchange(int pos) {
@@ -531,9 +563,9 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 				&& mMattaPackageDetailResponse.getResults().getPackage().getHighlights().size() > 0
 				&& mMattaPackageDetailResponse.getResults().getPackage().getHighlights().get(0) != null
 				&& !StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().get(0).getLabel())) {
-			highlightsTab.setVisibility(View.VISIBLE);
-			highlightsTab.setText(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().get(0).getLabel());
 			highlightsDesc.loadDataWithBaseURL("", !StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().get(0).getValue()) ? mMattaPackageDetailResponse.getResults().getPackage().getHighlights().get(0).getValue() : "", "text/html", "UTF-8","");
+			highlightsTab.setVisibility(View.VISIBLE);
+			highlightsTab.setText(Html.fromHtml(mMattaPackageDetailResponse.getResults().getPackage().getHighlights().get(0).getLabel()));
 		} else {
 			highlightsTab.setVisibility(View.GONE);
 		}
@@ -541,16 +573,15 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 				&& mMattaPackageDetailResponse.getResults().getPackage().getItinerary().size() > 0
 				&& mMattaPackageDetailResponse.getResults().getPackage().getItinerary().get(0) != null
 				&& !StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getItinerary().get(0).getLabel())) {
-			itineraryTab.setVisibility(View.VISIBLE);
-			itineraryTab.setText(mMattaPackageDetailResponse.getResults().getPackage().getItinerary().get(0).getLabel());
 			itineraryDesc.loadDataWithBaseURL("", !StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getItinerary().get(0).getValue()) ? mMattaPackageDetailResponse.getResults().getPackage().getItinerary().get(0).getValue() : "", "text/html", "UTF-8","");
+			itineraryTab.setVisibility(View.VISIBLE);
+			itineraryTab.setText(Html.fromHtml(mMattaPackageDetailResponse.getResults().getPackage().getItinerary().get(0).getLabel()));
 		} else {
 			itineraryTab.setVisibility(View.GONE);
 		}
 
-		mHeaderText.setText(!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getTitle()) ? mMattaPackageDetailResponse.getResults().getPackage().getTitle() : "");
-		mDealTitle.setText(!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getTitle()) ? mMattaPackageDetailResponse.getResults().getPackage().getTitle() : "");
-
+		mHeaderText.setText(!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getCName()) ? Html.fromHtml(mMattaPackageDetailResponse.getResults().getPackage().getCName()) : "");
+		mDealTitle.setText(!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getTitle()) ? Html.fromHtml(mMattaPackageDetailResponse.getResults().getPackage().getTitle()) : "");
 		highlightsDesc.setVisibility(View.VISIBLE);
 
 		mSearchBtn = (ImageView) findViewById(R.id.search_icon_button);

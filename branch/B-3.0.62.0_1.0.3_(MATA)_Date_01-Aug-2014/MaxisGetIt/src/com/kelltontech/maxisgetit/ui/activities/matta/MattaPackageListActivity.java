@@ -47,7 +47,6 @@ import com.kelltontech.maxisgetit.controllers.RefineAttributeController;
 import com.kelltontech.maxisgetit.controllers.matta.MattaPackageDetailController;
 import com.kelltontech.maxisgetit.controllers.matta.MattaPackageListController;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
-import com.kelltontech.maxisgetit.dao.CompanyDetail;
 import com.kelltontech.maxisgetit.model.matta.packages.detail.MattaPackageDetailResponse;
 import com.kelltontech.maxisgetit.model.matta.packages.list.MattaPackageListResponse;
 import com.kelltontech.maxisgetit.model.matta.packages.list.PackageListBanner;
@@ -92,7 +91,7 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 	private RefineSelectorResponse 			mSelctorResp;
 	//	private RefineCategoryResponse 			mCatResponse;
 	private MattaPackageListResponse 		mMattaPackageListResponse;
-//	private SelectorDAO 					mLocalitySelectorDao;
+	//	private SelectorDAO 					mLocalitySelectorDao;
 	ArrayList<CityOrLocality> 				localityList;
 	ArrayList<String> 						ids = new ArrayList<String>();
 	ArrayList<String> 						selectedLocalityindex;
@@ -106,7 +105,7 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 	private PackageListBannerViewAdapter 	mMattaBannerViewAdapter;
 	private String 							selectedCityforHeader = "Entire Malaysia";
 	private String 							selectedCity = "Entire Malaysia";
-//	private String 							mMattaThumbUrl;
+	//	private String 							mMattaThumbUrl;
 	private boolean 						loadingNextPageData;
 	private boolean 						isModifySearchDialogOpen;
 	private boolean 						mScrollUp;
@@ -234,9 +233,9 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 
 		mHeaderTitle.setText(Html.fromHtml("Tour & Travel Packages"));
 
-//		if (mMattaPackageListRequest != null) {
-//			mMattaThumbUrl = mMattaPackageListRequest.getmMattaThumbUrl();
-//		}
+		//		if (mMattaPackageListRequest != null) {
+		//			mMattaThumbUrl = mMattaPackageListRequest.getmMattaThumbUrl();
+		//		}
 
 		if (mMattaPackageListRequest != null && !StringUtil.isNullOrEmpty(mMattaPackageListRequest.getPostJsonPayload())) {
 			try {
@@ -288,15 +287,12 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 		mCompanyList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				if (arg2 == (mMattaPackageListAdapter.getCount() - 1) && arg2 != 0 && Integer.parseInt(mMattaPackageListResponse.getResults().getTotal_Records_Found()) > 10) { 
-				} else {
-					MattaPackageDetailController packageDetailcontroller = new MattaPackageDetailController(MattaPackageListActivity.this, MattaEvents.MATTA_PACKAGE_DETAIL_EVENT);
-					mMattaPackageDetailRequest = new MattaPackageDetailRequest();
-					mMattaPackageDetailRequest.setPackageId(!StringUtil.isNullOrEmpty(((PackageModel) mMattaPackageListAdapter.getItem(arg2)).getId()) ? ((PackageModel) mMattaPackageListAdapter.getItem(arg2)).getId() : "");
-					mMattaPackageDetailRequest.setSource(!StringUtil.isNullOrEmpty(((PackageModel) mMattaPackageListAdapter.getItem(arg2)).getSource()) ? ((PackageModel) mMattaPackageListAdapter.getItem(arg2)).getSource() : "");
-					startSppiner();
-					packageDetailcontroller.requestService(mMattaPackageDetailRequest);
-				}
+				MattaPackageDetailController packageDetailcontroller = new MattaPackageDetailController(MattaPackageListActivity.this, MattaEvents.MATTA_PACKAGE_DETAIL_EVENT);
+				mMattaPackageDetailRequest = new MattaPackageDetailRequest();
+				mMattaPackageDetailRequest.setPackageId(!StringUtil.isNullOrEmpty(((PackageModel) mMattaPackageListAdapter.getItem(arg2)).getId()) ? ((PackageModel) mMattaPackageListAdapter.getItem(arg2)).getId() : "");
+				mMattaPackageDetailRequest.setSource(!StringUtil.isNullOrEmpty(((PackageModel) mMattaPackageListAdapter.getItem(arg2)).getSource()) ? ((PackageModel) mMattaPackageListAdapter.getItem(arg2)).getSource() : "");
+				startSppiner();
+				packageDetailcontroller.requestService(mMattaPackageDetailRequest);
 			}
 		});
 

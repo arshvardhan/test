@@ -907,14 +907,15 @@ public class CombindListActivity extends MaxisMainActivity implements OnClickLis
 
 				mIsFreshSearch = (mClResponse != null && mClResponse.getCategoryList() != null && mClResponse.getCategoryList().size() > 1) ? true : false;
 
-				if (mIsFreshSearch) {
+//				if (mIsFreshSearch || !StringUtil.isNullOrEmpty(mClRequest.getSearchIn())) {
 					if (mClResponse.getCategoryList() != null && mClResponse.getCategoryList().size() == 1) {
 						mIsFreshSearch 				= 		false;
 						CategoryRefine tempCatref 	= 		mClResponse.getCategoryList().get(0);
 						mClRequest.setSelectedCategoryBySearch(tempCatref.getCategoryId(), tempCatref.getCategoryTitle());
+						mRefineSearchView.setText(getResources().getString(R.string.cl_modify_search));
 					} else
 						mRefineSearchView.setText(getResources().getString(R.string.cl_filter_by));
-				}
+//				}
 
 				if (mClResponse.getPageNumber() == 10 || mClResponse.getTotalrecordFound() == mClResponse.getCompanyArrayList().size()) { }
 				mRecordsFoundView.setText(mClResponse.getTotalrecordFound() + " " + getResources().getString(R.string.record_found));

@@ -23,6 +23,7 @@ public class MattaRequest extends MaxisBaseRequest {
 	public static final String MATTA_PACKAGE_LIST_METHOD 		= "getPackages.json";
 	public static final String MATTA_PACKAGE_DETAIL_METHOD 		= "viewPackage.json";
 	public static final String MATTA_FILTER_SEARCH_METHOD 		= "getSearchAttributes.xml";
+	public static final String MATTA_PACKAGE_CALL_LOG_METHOD 	= "packageCallLog.json";
 
 	public static final String KEY_HALL_ID 						= "hall_id";
 	public static final String KEY_COMPANY_ID 					= "company_id";
@@ -99,6 +100,14 @@ public class MattaRequest extends MaxisBaseRequest {
 		return ht;
 	}
 
+	public Hashtable<String, String> getCallerTrackerHeaders() {
+
+		Hashtable<String, String> ht = getDefaultHeadersWithGPS();
+		ht.put(AppConstants.KEY_PAGE_REVIEW, "");
+
+		return ht;
+	}
+	
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Hashtable getRequestHeaders(String screenName) {

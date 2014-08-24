@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/travel_pkg_image"
-        android:layout_width="2560dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
         android:layout_gravity="center_vertical"
         android:scaleType="fitXY"
         android:src="@drawable/travel_package_default"

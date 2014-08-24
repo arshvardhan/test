@@ -92,7 +92,8 @@ public class SubCategoryParser extends AbstractSAXParser {
 		}else if (localName.equalsIgnoreCase(TAG_GROUP_TYPE)) {
 			category.setMgroupType(getNodeValue());
 		}else if (localName.equalsIgnoreCase(TAG_CAT_ROOT)) {
-			response.addSubCategory(category);
+			if (category != null && !StringUtil.isNullOrEmpty(category.getCategoryId()))
+				response.addSubCategory(category);
 		}
 
 	}

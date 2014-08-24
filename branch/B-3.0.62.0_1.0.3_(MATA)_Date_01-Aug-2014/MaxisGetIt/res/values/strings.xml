@@ -435,7 +435,7 @@
     <string name="itinerary_tab">Itinerary</string>
     <string name="contacts_tab">Contacts</string>
     <string name="highlights_tab">Highlights</string>
-    <string name="mobile_no_not_available">Mobile number not available</string>
+    <string name="mobile_no_not_available">Mobile number not available.</string>
     
 
 </resources>

@@ -221,9 +221,8 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 
 		mSearchToggler.setOnClickListener(this);
 
-		mHeaderTitle.setText(Html.fromHtml(mMattaBoothDetailResponse.getResults().getCompany().getCName()));
-		mTxtTitle.setText(Html.fromHtml(mMattaBoothDetailResponse.getResults().getCompany().getCName()));
-
+		mHeaderTitle.setText((!StringUtil.isNullOrEmpty(mMattaBoothDetailResponse.getResults().getCompany().getCName())) ? Html.fromHtml(mMattaBoothDetailResponse.getResults().getCompany().getCName()) : "");
+		mTxtTitle.setText((!StringUtil.isNullOrEmpty(mMattaBoothDetailResponse.getResults().getCompany().getCName())) ? Html.fromHtml(mMattaBoothDetailResponse.getResults().getCompany().getCName()) : "");
 		mWebContainer 						= (LinearLayout) 		findViewById(R.id.cd_website_container);
 		mAddContainer 						= (LinearLayout) 		findViewById(R.id.cd_address_container);
 		mEmailContainer 					= (LinearLayout) 		findViewById(R.id.cd_email_container);
@@ -241,7 +240,7 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 			mWebContainer.setVisibility(View.GONE);
 		if (StringUtil.isNullOrEmpty(mMattaBoothDetailResponse.getResults().getCompany().getPTCEmail()))
 			mEmailContainer.setVisibility(View.GONE);
-		mAddressView.setText(getAddressText());
+		mAddressView.setText(Html.fromHtml(getAddressText()));
 
 		if (StringUtil.isNullOrEmpty(getAddressText())) 
 			mAddContainer.setVisibility(View.GONE);

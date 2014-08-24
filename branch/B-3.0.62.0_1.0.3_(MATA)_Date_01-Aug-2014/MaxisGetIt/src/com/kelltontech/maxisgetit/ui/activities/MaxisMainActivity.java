@@ -3,6 +3,7 @@ package com.kelltontech.maxisgetit.ui.activities;
 import java.util.HashMap;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
@@ -278,6 +279,9 @@ public abstract class MaxisMainActivity extends BaseMainActivity/* implements An
 						if(!StringUtil.isNullOrEmpty(logBannerReportResponse.getResults().getKeyword())) {
 							performSearch(logBannerReportResponse.getResults().getKeyword().trim(), null, Events.BANNER_LANDING_SEARCH_EVENT);
 						} 
+					} else {
+						stopSppiner();
+						showInfoDialog(getResources().getString(R.string.no_result_found));
 					}
 				}
 				Log.e("FINDIT MALAYSIA", ":" + msg.obj);
@@ -331,7 +335,8 @@ public abstract class MaxisMainActivity extends BaseMainActivity/* implements An
 			LogBannerReportResponse bannerReportResponse = (LogBannerReportResponse) screenData;
 			Message message = new Message();
 			message.arg2 = event;
-			if ((bannerReportResponse.getResults() != null) 
+			if ((bannerReportResponse != null) 
+					&& (bannerReportResponse.getResults() != null) 
 					&& (!StringUtil.isNullOrEmpty(bannerReportResponse.getResults().getError_Code())) 
 					&& (bannerReportResponse.getResults().getError_Code().equals("0"))) {
 				message.arg1 = 0;

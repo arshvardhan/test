@@ -119,7 +119,7 @@ public class MattaBoothListAdapter extends BaseAdapter implements OnClickListene
 				model.compTitle.setText(Html.fromHtml(""));
 
 			if (!StringUtil.isNullOrEmpty(mBoothInfo.getBoothLocation()))
-				model.boothLocationTxv.setText(Html.fromHtml("<b>" + "Booth Location" + " : </b>" + mBoothInfo.getBoothLocation()));
+				model.boothLocationTxv.setText(Html.fromHtml("<b>" + mBoothInfo.getBoothLocationLabel() + " : </b>" + mBoothInfo.getBoothLocation()));
 			else
 				model.boothLocationTxv.setText("");
 

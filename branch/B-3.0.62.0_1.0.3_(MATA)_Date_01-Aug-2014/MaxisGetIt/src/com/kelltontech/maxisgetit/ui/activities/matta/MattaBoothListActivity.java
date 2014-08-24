@@ -100,7 +100,7 @@ public class MattaBoothListActivity extends MaxisMainActivity implements OnClick
 	ArrayList<String> 					selectedLocalityindex;
 	ArrayList<CityOrLocality> 			cityList;
 	private ArrayList<String> 			selectedLocalityItemsforHeader = new ArrayList<String>();
-//	private ArrayList<String> 			selectedLocalityItems = new ArrayList<String>();
+	//	private ArrayList<String> 			selectedLocalityItems = new ArrayList<String>();
 	private ArrayList<String> 			cityListString	= new ArrayList<String>();
 	private ArrayList<String> 			localityItems;
 	private int 						totalBanners;
@@ -108,7 +108,7 @@ public class MattaBoothListActivity extends MaxisMainActivity implements OnClick
 	private BoothListBannerViewAdapter 	mMattaBannerViewAdapter;
 	private String 						selectedCityforHeader = "Entire Malaysia";
 	private String 						selectedCity = "Entire Malaysia";
-//	private String 						mMattaThumbUrl;
+	//	private String 						mMattaThumbUrl;
 	private boolean 					loadingNextPageData;
 	private boolean 					isModifySearchDialogOpen;
 	private boolean 					mScrollUp;
@@ -164,7 +164,7 @@ public class MattaBoothListActivity extends MaxisMainActivity implements OnClick
 		} else if (resultCode == RESULT_OK && requestCode == AppConstants.LOCALITY_REQUEST) {
 			String locality = "";
 			selectedLocalityItemsforHeader = data.getStringArrayListExtra("SELECTED_LOCALITIES");
-//			selectedLocalityItems = selectedLocalityItemsforHeader;
+			//			selectedLocalityItems = selectedLocalityItemsforHeader;
 			selectedLocalityindex = data.getStringArrayListExtra("SELECTED_LOCALITIES_INDEX");
 			if (selectedLocalityItemsforHeader != null && selectedLocalityItemsforHeader.size() > 0) {
 				for (int i = 0; i < selectedLocalityItemsforHeader.size(); i++) {
@@ -235,7 +235,7 @@ public class MattaBoothListActivity extends MaxisMainActivity implements OnClick
 		}
 		if (mMattaBoothListRequest != null && !StringUtil.isNullOrEmpty(mMattaBoothListRequest.getmHallTitle())) {
 			mHeaderTitle.setText(Html.fromHtml(mMattaBoothListRequest.getmHallTitle()));
-//			mMattaThumbUrl = mMattaBoothListRequest.getmMattaThumbUrl();
+			//			mMattaThumbUrl = mMattaBoothListRequest.getmMattaThumbUrl();
 		}
 
 		mRecordsFoundView.setText((!StringUtil.isNullOrEmpty(mMattaBoothListResponse.getResults().getTotalRecordsFound()) ? mMattaBoothListResponse.getResults().getTotalRecordsFound() : "0") + " " + getResources().getString(R.string.matta_record_found));
@@ -249,16 +249,13 @@ public class MattaBoothListActivity extends MaxisMainActivity implements OnClick
 		mCompanyList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				if (arg2 == (mMattaBoothListAdapter.getCount() - 1) && arg2 != 0 && Integer.parseInt(mMattaBoothListResponse.getResults().getTotalRecordsFound()) > 10) { 
-				} else {
-					MattaBoothDetailController boothDetailcontroller = new MattaBoothDetailController(MattaBoothListActivity.this, MattaEvents.MATTA_BOOTH_DETAIL_EVENT);
-					detailRequest = new MattaBoothDetailRequest();
-					detailRequest.setCompanyId(!StringUtil.isNullOrEmpty(((BoothModel) mMattaBoothListAdapter.getItem(arg2)).getCId()) ? ((BoothModel) mMattaBoothListAdapter.getItem(arg2)).getCId() : "");
-					detailRequest.setSource(!StringUtil.isNullOrEmpty(((BoothModel) mMattaBoothListAdapter.getItem(arg2)).getSource()) ? ((BoothModel) mMattaBoothListAdapter.getItem(arg2)).getSource() : "");
-					detailRequest.setHallId(!StringUtil.isNullOrEmpty(((BoothModel) mMattaBoothListAdapter.getItem(arg2)).getHallId()) ? ((BoothModel) mMattaBoothListAdapter.getItem(arg2)).getHallId() : "");
-					startSppiner();
-					boothDetailcontroller.requestService(detailRequest);
-				}
+				MattaBoothDetailController boothDetailcontroller = new MattaBoothDetailController(MattaBoothListActivity.this, MattaEvents.MATTA_BOOTH_DETAIL_EVENT);
+				detailRequest = new MattaBoothDetailRequest();
+				detailRequest.setCompanyId(!StringUtil.isNullOrEmpty(((BoothModel) mMattaBoothListAdapter.getItem(arg2)).getCId()) ? ((BoothModel) mMattaBoothListAdapter.getItem(arg2)).getCId() : "");
+				detailRequest.setSource(!StringUtil.isNullOrEmpty(((BoothModel) mMattaBoothListAdapter.getItem(arg2)).getSource()) ? ((BoothModel) mMattaBoothListAdapter.getItem(arg2)).getSource() : "");
+				detailRequest.setHallId(!StringUtil.isNullOrEmpty(((BoothModel) mMattaBoothListAdapter.getItem(arg2)).getHallId()) ? ((BoothModel) mMattaBoothListAdapter.getItem(arg2)).getHallId() : "");
+				startSppiner();
+				boothDetailcontroller.requestService(detailRequest);
 			}
 		});
 

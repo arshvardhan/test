@@ -2,7 +2,7 @@ package com.kelltontech.maxisgetit.constants;
 
 /**
  * @author arsh.vardhan
- * @modified 30-Jul-2014
+ * @modified 24-Aug-2014
  */
 
 public interface AppConstants {
@@ -10,7 +10,7 @@ public interface AppConstants {
 	boolean PRODUCTION = false;
 	
 	/**
-	* API_VERSION = "1.8" is given for App Version 1.28 (Global Search Enhancement, Tappable Featured Banner, Paid companies Ad on Free Companies Detail Page)
+	* API_VERSION : "1.8" is given for App Version 1.28 (Global Search Enhancement, Tappable Featured Banner, Paid companies Ad on Free Companies Detail Page)
 	* API_VERSION : "1.71" is given for App Version 1.27 (Vserv Integration)
 	* API_VERSION : "1.7" is given for App version 1.26 and provided force update on Splash Screen
 	* API_VERSION : "1.6" is given for App version 1.25 and provided force update on DealListing Screen
@@ -33,10 +33,10 @@ public interface AppConstants {
 	// String BASE_SERVER 			= "http://192.168.13.16/webservice/trunk/";						// local diwakar
 	// String BASE_SERVER 			= "http://192.168.13.22/webserviceNew/dev_build_ver1.1/"; 		// local ankesh for deal
 	// String BASE_SERVER 			= "http://192.168.13.63/webservice/trunk/";   					// Session Tracking Test
-//	 String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch1.5/";
-	 String BASE_SERVER 			= "http://203.115.222.103/"; 									// staging
-//	 String BASE_SERVER 			= "http://203.115.222.57/"; 									// pre-production
-//	 String BASE_SERVER 			= "https://webservice.findit.com.my/";							// Production
+	// String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch1.5/";
+	// String BASE_SERVER 			= "http://203.115.222.103/"; 									// dev
+//	 String BASE_SERVER 			= "http://203.115.222.57/"; 									// staging
+	String BASE_SERVER 				= "https://webservice.findit.com.my/";							// production
 	String BASE_URL 				= BASE_SERVER + "restapi/";
 	String BASE_URL_CONTEST 		= BASE_SERVER + "restapicontest/";
 	String BASE_URL_VIDEOS 			= "http://";
