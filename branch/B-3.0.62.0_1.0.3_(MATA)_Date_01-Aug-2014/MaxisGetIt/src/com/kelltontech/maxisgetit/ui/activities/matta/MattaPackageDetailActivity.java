@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.RenderPriority;
@@ -203,6 +204,40 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 		});
 		itineraryDesc.setVisibility(View.GONE);
 
+		try {
+
+			if(mMattaPackageDetailResponse.getResults().getPackage().getImages() != null 
+					&& mMattaPackageDetailResponse.getResults().getPackage().getImages().get(0) != null
+					&& mMattaPackageDetailResponse.getResults().getPackage().getImages().get(0).getImage() != null) {
+				ViewGroup.LayoutParams hvc=highlightsDesc.getLayoutParams();
+				ViewGroup.LayoutParams ivc=itineraryDesc.getLayoutParams();
+				if ( mMattaPackageDetailResponse.getResults().getPackage().getImages().get(0).getImage().size() == 0) {
+					hvc.width = LayoutParams.MATCH_PARENT;
+					hvc.height = 1010;
+					highlightsDesc.setLayoutParams(hvc);
+					ivc.width = LayoutParams.MATCH_PARENT;
+					ivc.height = 1010;
+					highlightsDesc.setLayoutParams(ivc);
+				} else if ( mMattaPackageDetailResponse.getResults().getPackage().getImages().get(0).getImage().size() == 1) {
+					hvc.width = LayoutParams.MATCH_PARENT;
+					hvc.height = 500;
+					highlightsDesc.setLayoutParams(hvc);
+					ivc.width = LayoutParams.MATCH_PARENT;
+					ivc.height = 500;
+					highlightsDesc.setLayoutParams(ivc);
+				} else if ( mMattaPackageDetailResponse.getResults().getPackage().getImages().get(0).getImage().size() > 1) {
+					hvc.width = LayoutParams.MATCH_PARENT;
+					hvc.height = 478;
+					highlightsDesc.setLayoutParams(hvc);
+					ivc.width = LayoutParams.MATCH_PARENT;
+					ivc.height = 478;
+					highlightsDesc.setLayoutParams(ivc);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		setdata();
 
 		advanceSearchLayout = (LinearLayout) findViewById(R.id.advanceSearch);
@@ -351,6 +386,7 @@ public class MattaPackageDetailActivity extends MaxisMainActivity implements OnC
 			JSONObject jArray = new JSONObject();
 			String callerNo = getCallerNumber();
 			String alternateCallerNo = (!StringUtil.isNullOrEmpty(mStore.getUserMobileNumber())) ? mStore.getUserMobileNumber() : "";
+			alternateCallerNo = (!alternateCallerNo.startsWith("+")) ? "+" + alternateCallerNo : alternateCallerNo;
 			jArray.put("caller_no", (!StringUtil.isNullOrEmpty(callerNo)) ? callerNo : alternateCallerNo);
 			jArray.put("exhibition_id", (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getExhibitionId())) ? mMattaPackageDetailResponse.getResults().getPackage().getExhibitionId() : "");
 			jArray.put("source", (!StringUtil.isNullOrEmpty(mMattaPackageDetailResponse.getResults().getPackage().getSource())) ? mMattaPackageDetailResponse.getResults().getPackage().getSource() : "");

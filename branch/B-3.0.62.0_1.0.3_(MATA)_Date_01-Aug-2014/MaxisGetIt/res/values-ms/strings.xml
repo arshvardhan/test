@@ -407,19 +407,17 @@
     <string name="title_activity_did_life_cycle">DidLifeCycleActivity</string>
     <string name="title_activity_company_or_category_filter">CompanyOrCategoryFilterActivity</string>
     <string name="title_activity_search_criteria_chooser">SearchCriteriaChooserActivity</string>
-    
+
     <!-- ViewDealMap Activity -->
     <string name="route">Route</string>
-    
-    
-    <!--Matta Module Strings  -->
+
+    <!-- Matta Module Strings -->
     <string name="title_activity_matta_hall_listing">MattaHallListActivity</string>
     <string name="title_activity_matta_booth_listing">MattaBoothListActivity</string>
     <string name="title_activity_matta_booth_detail">MattaBoothDetailActivity</string>
     <string name="title_activity_matta_package_list">MattaPackageListActivity</string>
     <string name="title_activity_matta_package_detail">MattaPackageDetailActivity</string>
     <string name="title_activity_matta_filter_search">MattaFilterSearchActivity</string>
-    
     <string name="imv_booth_detail_image">Booth Detail Image</string>
     <string name="imv_play_pause_image">Play Pause Image</string>
     <string name="imv_separator">Separator Image</string>
@@ -433,9 +431,15 @@
     <string name="call_us_btn_lbl">Call Us</string>
     <string name="locate_us_btn_lbl">Locate Us</string>
     <string name="itinerary_tab">Itinerary</string>
-    <string name="contacts_tab">Contacts</string>
+    <string name="contacts_tab">Contact</string>
     <string name="highlights_tab">Highlights</string>
-    <string name="mobile_no_not_available">Mobile number not available</string>
-    
+    <string name="mobile_no_not_available">Mobile number not available.</string>
+
+    <!-- Rate Us dialog Strings -->
+    <string name="dialog_title">Rate us on the Play Store</string>
+    <string name="dialog_title_text">If you had a great experience using FINDIT Malaysia then please take a moment to rate our app on the play store. Don’t forget to leave us a review, your feedback is valuable to us. Thanks for your support.</string>
+    <string name="dialog_no_thanks_btn">No, Thanks</string>
+    <string name="dialog_rate_us_btn">Rate Now</string>
+    <string name="dialog_remind_me_btn">Remind me later</string>
 
 </resources>

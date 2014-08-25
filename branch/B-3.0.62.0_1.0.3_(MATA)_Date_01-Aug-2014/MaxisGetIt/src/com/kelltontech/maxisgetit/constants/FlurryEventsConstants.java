@@ -145,6 +145,10 @@ public class FlurryEventsConstants {
 	public static final String MATTA_PACKAGE_DETAIL = "MattaPackageDetail Screen";
 	public static final String MATTA_FILTER_SEARCH = "MattaFilterSearch Screen";
 
+	// Rate Us Dialog Events
+	public static final String RATE_US_CLICK = "Rate us button is clicked";
+
+	
 	/*
 	 * Error constants for flurry
 	 */

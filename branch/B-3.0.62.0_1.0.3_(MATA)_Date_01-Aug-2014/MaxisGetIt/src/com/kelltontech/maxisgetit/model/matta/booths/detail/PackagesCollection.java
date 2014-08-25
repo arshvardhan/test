@@ -1,7 +1,7 @@
 package com.kelltontech.maxisgetit.model.matta.booths.detail;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author arsh.vardhan
@@ -14,13 +14,13 @@ public class PackagesCollection implements Serializable {
 	 */
 	private static final long serialVersionUID = -8643786718662823713L;
 	
-	private ArrayList<PackageList> Package;
+	private List<PackageList> Package;
 
-	public ArrayList<PackageList> getPackage() {
+	public List<PackageList> getPackage() {
 		return Package;
 	}
 
-	public void setPackage(ArrayList<PackageList> Package) {
+	public void setPackage(List<PackageList> Package) {
 		this.Package = Package;
 	}
 

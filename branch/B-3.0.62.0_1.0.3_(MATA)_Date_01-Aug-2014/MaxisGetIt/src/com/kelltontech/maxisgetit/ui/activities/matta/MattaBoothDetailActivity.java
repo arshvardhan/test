@@ -147,57 +147,64 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 		currentCity.setOnClickListener(this);
 		currentLocality.setOnClickListener(this);
 		mainSearchButton.setOnClickListener(this);
-		if(getIntent().getExtras() != null) {
-			Bundle bundle 					= getIntent().getExtras();
-			mMattaBoothDetailResponse 		= (MattaBoothDetailResponse) bundle.getSerializable(MattaConstants.DATA_MATTA_BOOTH_DETAIL_RESPONSE);
-			mMattaBoothDetailRequest 		= (MattaBoothDetailRequest) bundle.getSerializable(MattaConstants.DATA_MATTA_BOOTH_DETAIL_REQUEST);
-		}
-		mMattaBoothDetailRequest.setSource(!StringUtil.isNullOrEmpty(mMattaBoothDetailResponse.getResults().getCompany().getSource()) ? mMattaBoothDetailResponse.getResults().getCompany().getSource() : "");
-		advanceSearchLayout.setVisibility(View.GONE);
-		currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity + "</b>"));
 
-		mSearchEditText.setText((!StringUtil.isNullOrEmpty(mSearchKeyword)) ? mSearchKeyword.trim() : "");
-
-		setData();
-
-		mSearchEditText.setOnTouchListener(new OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (!isAdvanceSearchLayoutOpen) {
-					isAdvanceSearchLayoutOpen = true;
-					advanceSearchLayout.setVisibility(View.VISIBLE);
-				}
-				return false;
+		try {
+			if(getIntent().getExtras() != null) {
+				Bundle bundle 					= getIntent().getExtras();
+				mMattaBoothDetailResponse 		= (MattaBoothDetailResponse) bundle.getSerializable(MattaConstants.DATA_MATTA_BOOTH_DETAIL_RESPONSE);
+				mMattaBoothDetailRequest 		= (MattaBoothDetailRequest) bundle.getSerializable(MattaConstants.DATA_MATTA_BOOTH_DETAIL_REQUEST);
 			}
-		});
+			mMattaBoothDetailRequest.setSource(!StringUtil.isNullOrEmpty(mMattaBoothDetailResponse.getResults().getCompany().getSource()) ? mMattaBoothDetailResponse.getResults().getCompany().getSource() : "");
+			advanceSearchLayout.setVisibility(View.GONE);
+			currentCity.setText(Html.fromHtml("in " + "<b>" + selectedCity + "</b>"));
 
-		if (mMattaBoothDetailResponse.getResults().getCompany().getPackages().getPackage() != null 
-				&& mMattaBoothDetailResponse.getResults().getCompany().getPackages().getPackage().size() > 0) {
-			packageList = mMattaBoothDetailResponse.getResults().getCompany().getPackages().getPackage();
+			mSearchEditText.setText((!StringUtil.isNullOrEmpty(mSearchKeyword)) ? mSearchKeyword.trim() : "");
 
-			mTravelPackagesListView		=	(ExpandableListView)  findViewById(R.id.cd_paid_company_list);
+			setData();
 
-			setPackageListData();
-			mPackageListContainer.setVisibility(View.VISIBLE);
-			mTravelPackagesListView.setOnItemClickListener(new OnItemClickListener() {
+			mSearchEditText.setOnTouchListener(new OnTouchListener() {
+
 				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					String companyId = ((PackageList)mTravelPackagesListAdapter.getItem(position)).getId() ;
-					String postJsonPayload = jsonForPkg(((PackageList)mTravelPackagesListAdapter.getItem(position)).getKey(), ((PackageList)mTravelPackagesListAdapter.getItem(position)).getValue());
-					MattaPackageListController packageListController = new MattaPackageListController(MattaBoothDetailActivity.this, MattaEvents.MATTA_PACKAGE_LIST_EVENT);
-					packageListReq = new MattaPackageListRequest();
-					packageListReq.setCompanyId(!StringUtil.isNullOrEmpty(companyId) ? companyId : "");
-					packageListReq.setPostJsonPayload(!StringUtil.isNullOrEmpty(postJsonPayload) ? postJsonPayload : "");
-					packageListReq.setHallId(!StringUtil.isNullOrEmpty(mMattaBoothDetailResponse.getResults().getCompany().getHallId()) ? mMattaBoothDetailResponse.getResults().getCompany().getHallId() : "");
-					packageListReq.setSource(!StringUtil.isNullOrEmpty(mMattaBoothDetailResponse.getResults().getCompany().getSource()) ? mMattaBoothDetailResponse.getResults().getCompany().getSource() : "");
-					packageListController.requestService(packageListReq);
-					startSppiner();
+				public boolean onTouch(View v, MotionEvent event) {
+					if (!isAdvanceSearchLayoutOpen) {
+						isAdvanceSearchLayoutOpen = true;
+						advanceSearchLayout.setVisibility(View.VISIBLE);
+					}
+					return false;
 				}
 			});
 
-		} else {
-			mPackageListContainer.setVisibility(View.GONE);
+			if (mMattaBoothDetailResponse.getResults().getCompany().getPackages() != null
+					&& mMattaBoothDetailResponse.getResults().getCompany().getPackages().get(0) != null
+					&& mMattaBoothDetailResponse.getResults().getCompany().getPackages().get(0).getPackage() != null
+					&& mMattaBoothDetailResponse.getResults().getCompany().getPackages().get(0).getPackage().size() > 0) {
+				packageList = (ArrayList<PackageList>) mMattaBoothDetailResponse.getResults().getCompany().getPackages().get(0).getPackage();
+
+				mTravelPackagesListView		=	(ExpandableListView)  findViewById(R.id.cd_paid_company_list);
+
+				setPackageListData();
+				mPackageListContainer.setVisibility(View.VISIBLE);
+				mTravelPackagesListView.setOnItemClickListener(new OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+						String companyId = ((PackageList)mTravelPackagesListAdapter.getItem(position)).getId() ;
+						String postJsonPayload = jsonForPkg(((PackageList)mTravelPackagesListAdapter.getItem(position)).getKey(), ((PackageList)mTravelPackagesListAdapter.getItem(position)).getValue());
+						MattaPackageListController packageListController = new MattaPackageListController(MattaBoothDetailActivity.this, MattaEvents.MATTA_PACKAGE_LIST_EVENT);
+						packageListReq = new MattaPackageListRequest();
+						packageListReq.setCompanyId(!StringUtil.isNullOrEmpty(companyId) ? companyId : "");
+						packageListReq.setPostJsonPayload(!StringUtil.isNullOrEmpty(postJsonPayload) ? postJsonPayload : "");
+						packageListReq.setHallId(!StringUtil.isNullOrEmpty(mMattaBoothDetailResponse.getResults().getCompany().getHallId()) ? mMattaBoothDetailResponse.getResults().getCompany().getHallId() : "");
+						packageListReq.setSource(!StringUtil.isNullOrEmpty(mMattaBoothDetailResponse.getResults().getCompany().getSource()) ? mMattaBoothDetailResponse.getResults().getCompany().getSource() : "");
+						packageListController.requestService(packageListReq);
+						startSppiner();
+					}
+				});
+
+			} else {
+				mPackageListContainer.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -297,7 +304,9 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 
 	@Override
 	public void updateUI(Message msg) {
-		if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE || msg.arg2 == Events.USER_DETAIL) {
+		if (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE 
+				|| msg.arg2 == Events.USER_DETAIL
+				|| msg.arg2 == MattaEvents.MATTA_BANNER_LANDING_BOOTH_DETAIL_EVENT) {
 			super.updateUI(msg);
 		} else if (msg.arg2 == MattaEvents.MATTA_BOOTH_DETAIL_EVENT) {
 			if (msg.arg1 == 1) {
@@ -359,7 +368,9 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 
 	@Override
 	public void setScreenData(Object screenData, int event, long time) {
-		if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE || event == Events.USER_DETAIL) {
+		if (event == Events.COMBIND_LISTING_NEW_LISTING_PAGE 
+				|| event == Events.USER_DETAIL
+				|| event == MattaEvents.MATTA_BANNER_LANDING_BOOTH_DETAIL_EVENT) {
 			super.setScreenData(screenData, event, time);
 			return;
 		} else if (event == Events.CITY_LISTING || event == Events.LOCALITY_LISTING) {

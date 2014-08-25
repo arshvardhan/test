@@ -2,7 +2,7 @@ package com.kelltontech.maxisgetit.constants;
 
 /**
  * @author arsh.vardhan
- * @modified 24-Aug-2014
+ * @modified 25-Aug-2014
  */
 
 public interface AppConstants {
@@ -33,10 +33,10 @@ public interface AppConstants {
 	// String BASE_SERVER 			= "http://192.168.13.16/webservice/trunk/";						// local diwakar
 	// String BASE_SERVER 			= "http://192.168.13.22/webserviceNew/dev_build_ver1.1/"; 		// local ankesh for deal
 	// String BASE_SERVER 			= "http://192.168.13.63/webservice/trunk/";   					// Session Tracking Test
-	// String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch1.5/";
-	// String BASE_SERVER 			= "http://203.115.222.103/"; 									// dev
+//	 String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch1.5/";
+	 String BASE_SERVER 			= "http://203.115.222.103/"; 									// dev
 //	 String BASE_SERVER 			= "http://203.115.222.57/"; 									// staging
-	String BASE_SERVER 				= "https://webservice.findit.com.my/";							// production
+//	String BASE_SERVER 				= "https://webservice.findit.com.my/";							// production
 	String BASE_URL 				= BASE_SERVER + "restapi/";
 	String BASE_URL_CONTEST 		= BASE_SERVER + "restapicontest/";
 	String BASE_URL_VIDEOS 			= "http://";
@@ -129,6 +129,8 @@ public interface AppConstants {
 	String COMPANY_DETAIL_SCREEN 	= "companyDetail";
 	String COMPANY_LISTING_SCREEN 	= "companyListing";
 	String SEARCH_SCREEN 			= "search";
+	String PACKAGE_LIST_SCREEN 		= "packageList";
+	String BOOTH_DETAIL_SCREEN 		= "boothDetail";
 	// TnC Extra
 	String TNC_FROM 				= "TNC_FROM";
 

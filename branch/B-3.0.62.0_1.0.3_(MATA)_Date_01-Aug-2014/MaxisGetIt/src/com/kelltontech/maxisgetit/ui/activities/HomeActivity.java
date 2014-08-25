@@ -22,6 +22,7 @@ import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.Html;
@@ -56,6 +57,7 @@ import com.kelltontech.maxisgetit.controllers.matta.MattaHallListingController;
 import com.kelltontech.maxisgetit.dao.CategoryGroup;
 import com.kelltontech.maxisgetit.dao.CityOrLocality;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
+import com.kelltontech.maxisgetit.dao.MaxisStore;
 import com.kelltontech.maxisgetit.db.CityTable;
 import com.kelltontech.maxisgetit.requests.CombinedListRequest;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
@@ -64,8 +66,10 @@ import com.kelltontech.maxisgetit.response.matta.MattaHallListResponse;
 import com.kelltontech.maxisgetit.service.AppSharedPreference;
 import com.kelltontech.maxisgetit.service.LocationFinderService;
 import com.kelltontech.maxisgetit.ui.activities.matta.MattaHallListActivity;
+import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
 import com.kelltontech.maxisgetit.ui.widgets.CustomGallery;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
+import com.kelltontech.maxisgetit.utils.Utility;
 
 public class HomeActivity extends MaxisMainActivity {
 	private ListView mListView;
@@ -101,6 +105,8 @@ public class HomeActivity extends MaxisMainActivity {
 	public static boolean fromHomeClick = false;
 	public String countryName = "";
 	private CategoryGroup cat;
+	private MaxisStore mStore;
+
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -148,6 +154,7 @@ public class HomeActivity extends MaxisMainActivity {
 		Log.d("maxis", "HomeActivity.onCreate()");
 		AnalyticsHelper.logEvent(FlurryEventsConstants.APPLICATION_HOME);
 		setContentView(R.layout.activity_home);
+		mStore = MaxisStore.getStore(HomeActivity.this);
 		UiUtils.hideKeyboardOnTappingOutside(findViewById(R.id.home_root_layout), this);
 		mLocationServiceIntent = new Intent(HomeActivity.this, LocationFinderService.class);
 		startService(mLocationServiceIntent);
@@ -283,6 +290,27 @@ public class HomeActivity extends MaxisMainActivity {
 				// "You are outside the country", Toast.LENGTH_SHORT).show();
 			}
 		}
+		showHideRateUsDialog();
+	}
+
+	private void showHideRateUsDialog() {
+		if (!mStore.isAppRated()) {
+			if (mStore.getHomeVisitCount() == 0) {
+				mStore.setHomeVisitCount(mStore.getHomeVisitCount() + 1);
+				return;
+			} else if (mStore.getHomeVisitCount() == 1) {
+				mStore.setHomeVisitCount(mStore.getHomeVisitCount() + 1);
+				showImageUploadDialog(CustomDialog.RATE_US_DIALOG, "");
+				return;
+			} else if (mStore.isReminderSelected()) {
+				mStore.setHomeVisitCount(mStore.getHomeVisitCount() + 1);
+				if (mStore.getHomeVisitCount() == 11) {
+					showImageUploadDialog(CustomDialog.RATE_US_DIALOG, "");
+					mStore.setReminderSelected(false);
+				}
+				return;
+			} 
+		}
 	}
 
 	protected void gotoScreen(int position) {
@@ -307,7 +335,7 @@ public class HomeActivity extends MaxisMainActivity {
 		}
 		if (cat.getMgroupType().trim().equalsIgnoreCase(AppConstants.GROUP_TYPE_CATEGORY)) {
 			if (cat.getmGroupActionType().trim().equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_LIST)) {
-//				 showHallListing(cat);
+				//				 showHallListing(cat);
 				showSubcategories(cat);
 			} else if (cat.getmGroupActionType().trim().equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_DEAL)) {
 				// TODO : for Hot Deals.
@@ -749,7 +777,7 @@ public class HomeActivity extends MaxisMainActivity {
 		controller.requestService(cat);
 		startSppiner();
 	}
-	
+
 	protected void showHallListing(CategoryGroup cat) {
 		MattaHallListingController hallListingController = new MattaHallListingController(HomeActivity.this, MattaEvents.MATTA_HALL_LIST_EVENT);
 		hallListingController.requestService(cat);
@@ -846,5 +874,56 @@ public class HomeActivity extends MaxisMainActivity {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public void onPositiveDialogButton(int id) {
+		if (id == CustomDialog.RATE_US_DIALOG) {
+			openPlayStore();
+		} else {
+			super.onPositiveDialogButton(id);
+		}
+	}
+
+	@Override
+	public void onNegativeDialogbutton(int id) {
+		if(id == CustomDialog.RATE_US_DIALOG){
+			updateHomeVisitCount();
+		} else {
+			super.onNegativeDialogbutton(id);
+		}
+	}
+
+	private void updateHomeVisitCount() {
+		mStore.setHomeVisitCount(2);
+		mStore.setReminderSelected(true);
+	}
+
+	private void openPlayStore() {
+		if (!StringUtil.isNullOrEmpty(AppConstants.API_VERSION)) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put(FlurryEventsConstants.Current_API_Version, AppConstants.API_VERSION);
+			AnalyticsHelper.logEvent(FlurryEventsConstants.RATE_US_CLICK, map);
+		} else {
+			AnalyticsHelper.logEvent(FlurryEventsConstants.RATE_US_CLICK);
+		}
+		runOnUiThread(new Runnable()
+		{           
+			@Override
+			public void run()
+			{
+				String appUri;
+				String appName =  Utility.getPackageName(HomeActivity.this) != null ? Utility.getPackageName(HomeActivity.this) : "";
+				try {
+					appUri = "market://details?id=" + appName;
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appUri)));
+					mStore.setAppRated(true);
+				} catch (android.content.ActivityNotFoundException anfe) {
+					appUri = "http://play.google.com/store/apps/details?id=" + appName;
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appUri)));
+					mStore.setAppRated(true);
+				} 
+			}
+		});
 	}
 }

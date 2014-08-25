@@ -1,6 +1,7 @@
 package com.kelltontech.maxisgetit.model.matta.booths.detail;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author arsh.vardhan
@@ -22,7 +23,7 @@ public class CompanyModel implements Serializable {
 	private String Website;
 	private String Image;
 	private String Source;
-	private PackagesCollection Packages;
+	private List<PackagesCollection> Packages;
 
 	public String getPTCEmail() {
 		return PTCEmail;
@@ -80,16 +81,24 @@ public class CompanyModel implements Serializable {
 		this.Location = location;
 	}
 
-	public PackagesCollection getPackages() {
+/*	public PackagesCollection getPackages() {
 		return Packages;
 	}
 
 	public void setPackages(PackagesCollection Packages) {
 		this.Packages = Packages;
-	}
+	}*/
 
 	public String getImage() {
 		return Image;
+	}
+
+	public List<PackagesCollection> getPackages() {
+		return Packages;
+	}
+
+	public void setPackages(List<PackagesCollection> packages) {
+		this.Packages = packages;
 	}
 
 	public void setImage(String image) {

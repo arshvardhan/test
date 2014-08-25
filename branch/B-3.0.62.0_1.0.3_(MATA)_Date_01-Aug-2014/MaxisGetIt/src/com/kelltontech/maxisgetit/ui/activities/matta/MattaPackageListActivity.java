@@ -512,7 +512,9 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 				|| event == Events.BANNER_LANDING_DEAL_DETAIL_EVENT
 				|| event == Events.BANNER_LANDING_COMPANY_DETAIL_EVENT
 				|| event == Events.BANNER_LANDING_COMPANY_LISTING_EVENT
-				|| event == Events.BANNER_LANDING_SEARCH_EVENT ) {
+				|| event == Events.BANNER_LANDING_SEARCH_EVENT
+				|| event == MattaEvents.MATTA_BANNER_LANDING_PKG_LIST_EVENT
+				|| event == MattaEvents.MATTA_BANNER_LANDING_BOOTH_DETAIL_EVENT) {
 			super.setScreenData(screenData, event, time);
 			return;
 		} else if (event == MattaEvents.MATTA_FILTER_SEARCH_EVENT) {
@@ -593,7 +595,9 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 				|| msg.arg2 == Events.BANNER_LANDING_COMPANY_DETAIL_EVENT
 				|| msg.arg2 == Events.BANNER_LANDING_DEAL_DETAIL_EVENT
 				|| msg.arg2 == Events.BANNER_LANDING_COMPANY_LISTING_EVENT
-				|| msg.arg2 == Events.BANNER_LANDING_SEARCH_EVENT) {
+				|| msg.arg2 == Events.BANNER_LANDING_SEARCH_EVENT
+				|| msg.arg2 == MattaEvents.MATTA_BANNER_LANDING_PKG_LIST_EVENT
+				|| msg.arg2 == MattaEvents.MATTA_BANNER_LANDING_BOOTH_DETAIL_EVENT ) {
 			super.updateUI(msg);
 		} else if (msg.arg2 == MattaEvents.MATTA_PACKAGE_DETAIL_EVENT) {
 			if (msg.arg1 == 1) {

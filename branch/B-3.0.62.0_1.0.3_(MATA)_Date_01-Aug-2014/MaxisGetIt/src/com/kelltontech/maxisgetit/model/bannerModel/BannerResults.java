@@ -15,6 +15,9 @@ public class BannerResults implements Parcelable {
 	private String keyword;
 	private String actionType;
 	private String type;
+	private String Source;
+	private String HallId;
+	private String CId;
 
 	public String getError_Code() {
 		return Error_Code;
@@ -96,6 +99,30 @@ public class BannerResults implements Parcelable {
 		this.type = type;
 	}
 
+	public String getSource() {
+		return Source;
+	}
+
+	public void setSource(String source) {
+		this.Source = source;
+	}
+
+	public String getHallId() {
+		return HallId;
+	}
+
+	public void setHallId(String hallId) {
+		this.HallId = hallId;
+	}
+
+	public String getCId() {
+		return CId;
+	}
+
+	public void setCId(String cId) {
+		this.CId = cId;
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;
@@ -113,6 +140,9 @@ public class BannerResults implements Parcelable {
 		dest.writeString(keyword);
 		dest.writeString(actionType);
 		dest.writeString(type);
+		dest.writeString(Source);
+		dest.writeString(HallId);
+		dest.writeString(CId);
 	}
 
 	public BannerResults (Parcel in)
@@ -127,6 +157,9 @@ public class BannerResults implements Parcelable {
 		keyword = in.readString();
 		actionType = in.readString();
 		type = in.readString();
+		Source = in.readString();
+		HallId = in.readString();
+		CId = in.readString();
 	}
 	
 	public static final Creator<BannerResults> CREATOR = new Creator<BannerResults>() {

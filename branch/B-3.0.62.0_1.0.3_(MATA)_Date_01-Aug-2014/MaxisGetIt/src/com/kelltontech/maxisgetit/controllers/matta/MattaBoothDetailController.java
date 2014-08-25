@@ -18,6 +18,7 @@ import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.model.matta.booths.detail.MattaBoothDetailResponse;
 import com.kelltontech.maxisgetit.requests.matta.MattaBoothDetailRequest;
 import com.kelltontech.maxisgetit.requests.matta.MattaRequest;
+import com.kelltontech.maxisgetit.utils.GsonUtil;
 import com.kelltontech.maxisgetit.utils.JSONHandler;
 import com.kelltontech.maxisgetit.utils.JSONParser;
 
@@ -73,11 +74,10 @@ public class MattaBoothDetailController extends BaseServiceController {
 
 	@Override
 	public void responseService(Object object) {
-		JSONParser jsonParser = JSONHandler.getInstanse();
 		if (object instanceof Response) {
 			try {
 				String responseStr = ((Response) object).getResponseText();
-				MattaBoothDetailResponse boothDetailResponse = jsonParser.mapFromJSON(responseStr, MattaBoothDetailResponse.class);
+				MattaBoothDetailResponse boothDetailResponse = GsonUtil.mapFromJSONHanldeObject(responseStr, MattaBoothDetailResponse.class);
 				mScreen.setScreenData(boothDetailResponse, mEventType, 0);
 			} catch (Exception e) {
 				logResponseException(e, "MattaBoothDetailController");
