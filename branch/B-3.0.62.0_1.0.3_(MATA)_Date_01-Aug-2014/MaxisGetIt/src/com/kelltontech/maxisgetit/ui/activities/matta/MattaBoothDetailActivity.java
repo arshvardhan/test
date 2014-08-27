@@ -216,7 +216,7 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 
 	@Override
 	protected void onDestroy() {
-		ImageLoader.clearCache();
+//		ImageLoader.clearCache();
 		super.onDestroy();
 	}
 

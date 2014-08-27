@@ -611,7 +611,7 @@ public class MattaHallListActivity extends MaxisMainActivity  implements Animati
 
 	@Override
 	protected void onDestroy() {
-		ImageLoader.clearCache();
+//		ImageLoader.clearCache();
 		super.onDestroy();
 	}
 

@@ -127,7 +127,7 @@ public class AnalyticsHelper {
 
 			if(isFacebookAvailable(activity))
 				com.facebook.AppEventsLogger.activateApp(activity, AppConstants.FACEBOOK_APP_ID);
-
+		}
 			// To track session on server side.
 			try {
 				if (!NativeHelper.isDataConnectionAvailable(activity)) {
@@ -158,7 +158,6 @@ public class AnalyticsHelper {
 			} catch (Exception e) {
 				AnalyticsHelper.onError(FlurryEventsConstants.REQUEST_SERVICE_ERR, MyApplication.class.getSimpleName() + " : " + AppConstants.REQUEST_SERVICE_ERROR_MSG, e);
 			}
-		}
 	}
 
 	public static boolean isFacebookAvailable(Activity activity) {

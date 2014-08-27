@@ -617,6 +617,10 @@ public abstract class MaxisMainActivity extends BaseMainActivity/* implements An
 	 */
 	protected void checkPreferenceAndOpenBrowser(String url) {
 		url = StringUtil.getFormattedURL(url);
+		if (url.toLowerCase().contains("findit.com.my")) {
+			openDeviceBrowser(url, true);
+			return;
+		} 
 		int dialogIdTobeShown = CustomDialog.DATA_USAGE_DIALOG_FOR_WEBSITE;
 		if( url.indexOf("facebook") != -1 ) {
 			dialogIdTobeShown = CustomDialog.DATA_USAGE_DIALOG_FOR_FACEBOOK;

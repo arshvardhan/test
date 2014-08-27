@@ -10,20 +10,21 @@ public interface AppConstants {
 	boolean PRODUCTION = false;
 	
 	/**
+	* Version Name 1.9 is skipped to cater similar API_VERSION as in iOS App
 	* API_VERSION : "1.8" is given for App Version 1.28 (Global Search Enhancement, Tappable Featured Banner, Paid companies Ad on Free Companies Detail Page)
 	* API_VERSION : "1.71" is given for App Version 1.27 (Vserv Integration)
 	* API_VERSION : "1.7" is given for App version 1.26 and provided force update on Splash Screen
 	* API_VERSION : "1.6" is given for App version 1.25 and provided force update on DealListing Screen
 	*/	
 	
-	String API_VERSION = "1.9"; // Given for App Version 1.29 (MATTA Module Integration)
+	String API_VERSION = "2.0"; // Given for App Version 1.30 (MATTA Module Integration) // App Version 1.29 is skipped as par discussion with Client
 	
 	// String BASE_SERVER 			= "http://192.168.13.3/webservice/trunk/"; 						// local Aaditya
 	// String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch_search1.3/";
 	// String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch1.4/";
 	// String BASE_SERVER 			= "http://192.168.13.22/webservice/trunk/"; 					// local Ankesh
 	// String BASE_SERVER 			= "http://192.168.13.16/webservice/trunk/"; 					// local Ankesh
-//	   String BASE_SERVER 			= "http://192.168.13.22/webservice/dev_build_ver1.5/";			// local Ankesh for MATTA Module
+	 String BASE_SERVER 			= "http://192.168.13.22/webservice/dev_build_ver1.5/";			// local Ankesh for MATTA Module
 	// String BASE_SERVER 			= "http://192.168.13.22/webservice/dev1.2/"; 					// local Ankesh for Force Update
 	// String BASE_SERVER 			= "http://test.kelltontech.com/getitfms/"; 						// live dev
 	// String BASE_SERVER 			= "http://test.kelltontech.com/getitfms_qa/"; 					// QA
@@ -33,10 +34,11 @@ public interface AppConstants {
 	// String BASE_SERVER 			= "http://192.168.13.16/webservice/trunk/";						// local diwakar
 	// String BASE_SERVER 			= "http://192.168.13.22/webserviceNew/dev_build_ver1.1/"; 		// local ankesh for deal
 	// String BASE_SERVER 			= "http://192.168.13.63/webservice/trunk/";   					// Session Tracking Test
-//	 String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch1.5/";
-	 String BASE_SERVER 			= "http://203.115.222.103/"; 									// dev
-//	 String BASE_SERVER 			= "http://203.115.222.57/"; 									// staging
-//	String BASE_SERVER 				= "https://webservice.findit.com.my/";							// production
+	// String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch1.5/";
+//	 String BASE_SERVER 			= "http://203.115.222.103/"; 									// dev
+	// String BASE_SERVER 			= "http://203.115.222.57/"; 									// staging
+//	   String BASE_SERVER 			= "https://webservice.findit.com.my/";							// production
+	   
 	String BASE_URL 				= BASE_SERVER + "restapi/";
 	String BASE_URL_CONTEST 		= BASE_SERVER + "restapicontest/";
 	String BASE_URL_VIDEOS 			= "http://";
@@ -57,9 +59,9 @@ public interface AppConstants {
 	// String GMAP_DEBUG_KEY_V2="AIzaSyCyjqUmApNKfUjjlrrsnGiFNMEi17I7obM";
 	// String GMAP_API_KEY_V2="AIzaSyCANUlQsVTaAop_W3GDFWQ72U3VJzwYOcU";
 	
-	String GMAP_API_KEY_V2 = "AIzaSyD_YqXS8m5-0B6KJNo6ALDZSgDKNXy-VSM";
-	String FLURRY_KEY = "TGQV9Y2G8C9Y5P4C367P";
-	int MAX_RECORD_COUNT = 100;
+	String GMAP_API_KEY_V2 	= "AIzaSyD_YqXS8m5-0B6KJNo6ALDZSgDKNXy-VSM";
+	String FLURRY_KEY 		= "TGQV9Y2G8C9Y5P4C367P";
+	int MAX_RECORD_COUNT 	= 100;
 	
 	/**
 	 * FACEBOOK_APP_ID: "254393288080868" (To track App installations through Android App Ads on Facebook)	
