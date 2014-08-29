@@ -24,7 +24,7 @@ public interface AppConstants {
 	// String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch1.4/";
 	// String BASE_SERVER 			= "http://192.168.13.22/webservice/trunk/"; 					// local Ankesh
 	// String BASE_SERVER 			= "http://192.168.13.16/webservice/trunk/"; 					// local Ankesh
-	 String BASE_SERVER 			= "http://192.168.13.22/webservice/dev_build_ver1.5/";			// local Ankesh for MATTA Module
+//	 String BASE_SERVER 			= "http://192.168.13.22/webservice/dev_build_ver1.5/";			// local Ankesh for MATTA Module
 	// String BASE_SERVER 			= "http://192.168.13.22/webservice/dev1.2/"; 					// local Ankesh for Force Update
 	// String BASE_SERVER 			= "http://test.kelltontech.com/getitfms/"; 						// live dev
 	// String BASE_SERVER 			= "http://test.kelltontech.com/getitfms_qa/"; 					// QA
@@ -34,9 +34,9 @@ public interface AppConstants {
 	// String BASE_SERVER 			= "http://192.168.13.16/webservice/trunk/";						// local diwakar
 	// String BASE_SERVER 			= "http://192.168.13.22/webserviceNew/dev_build_ver1.1/"; 		// local ankesh for deal
 	// String BASE_SERVER 			= "http://192.168.13.63/webservice/trunk/";   					// Session Tracking Test
-	// String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch1.5/";
-//	 String BASE_SERVER 			= "http://203.115.222.103/"; 									// dev
-	// String BASE_SERVER 			= "http://203.115.222.57/"; 									// staging
+//	 String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch1.5/";
+	 String BASE_SERVER 			= "http://203.115.222.103/"; 									// dev
+//	 String BASE_SERVER 			= "http://203.115.222.57/"; 									// staging
 //	   String BASE_SERVER 			= "https://webservice.findit.com.my/";							// production
 	   
 	String BASE_URL 				= BASE_SERVER + "restapi/";
@@ -218,6 +218,7 @@ public interface AppConstants {
 	String REDEEM_PRICE_ERROR_MSG 						= "Invalid redeem price.";
 	String POST_DEAL_UPLOAD_IMG_NOT_FOUND_ERROR_MSG 	= "Post deal upload image not found.";
 	String CURRENT_LOCATION_NOT_SET_ERROR_MSG 			= "Current location is not set successfully.";
+	String SHOW_HIDE_BANNER_ERROR_MSG 					= "SHow-hide banner method generated an error on resuming activity.";
 
 	// Error messages for Controllers
 	String REQUEST_SERVICE_ERROR_MSG 					= "Request service generated an error.";

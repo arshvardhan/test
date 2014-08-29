@@ -262,6 +262,7 @@ public class MattaHallListActivity extends MaxisMainActivity  implements Animati
 	}
 
 	private void showHideBanner() {
+		try {
 		if (mMattaHallListResponse != null && mMattaHallListResponse.getBannerList() != null && mMattaHallListResponse.getBannerList().size() > 0) {
 			ArrayList<MattaBanner> bannerList = mMattaHallListResponse.getBannerList();
 			totalBanners = bannerList.size();
@@ -280,6 +281,9 @@ public class MattaHallListActivity extends MaxisMainActivity  implements Animati
 			}
 		} else {
 			bannerViewLayout.setVisibility(View.GONE);
+		}
+		} catch (Exception e) {
+			AnalyticsHelper.onError(FlurryEventsConstants.SHOW_HIDE_BANNER_ERROR, " MattaHallListActivity: " + AppConstants.SHOW_HIDE_BANNER_ERROR_MSG, e);
 		}
 	}
 

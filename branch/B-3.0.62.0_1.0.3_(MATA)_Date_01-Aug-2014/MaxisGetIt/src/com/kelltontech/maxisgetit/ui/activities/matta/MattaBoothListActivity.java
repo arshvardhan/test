@@ -403,6 +403,7 @@ public class MattaBoothListActivity extends MaxisMainActivity implements OnClick
 	}
 
 	private void showHideBanner() {
+		try {
 		if (mMattaBoothListResponse != null 
 				&& mMattaBoothListResponse.getResults().getBanners() != null 
 				&& mMattaBoothListResponse.getResults().getBanners().size() > 0
@@ -428,6 +429,9 @@ public class MattaBoothListActivity extends MaxisMainActivity implements OnClick
 		} else {
 			bannerViewLayout.setVisibility(View.GONE);
 		}
+	} catch (Exception e) {
+		AnalyticsHelper.onError(FlurryEventsConstants.SHOW_HIDE_BANNER_ERROR, " MattaBoothListActivity: " + AppConstants.SHOW_HIDE_BANNER_ERROR_MSG, e);
+	}
 	}
 
 	public void runnable(final int size) {

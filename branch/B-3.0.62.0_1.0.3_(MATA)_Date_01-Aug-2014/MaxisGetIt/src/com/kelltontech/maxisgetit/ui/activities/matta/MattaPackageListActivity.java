@@ -426,30 +426,34 @@ public class MattaPackageListActivity extends MaxisMainActivity implements OnCli
 	}
 
 	private void showHideBanner() {
-		if (mMattaPackageListResponse != null 
-				&& mMattaPackageListResponse.getResults().getBanners() != null 
-				&& mMattaPackageListResponse.getResults().getBanners().size() > 0
-				&& mMattaPackageListResponse.getResults().getBanners().get(0) != null
-				&& mMattaPackageListResponse.getResults().getBanners().get(0).getBanner() != null 
-				&& mMattaPackageListResponse.getResults().getBanners().get(0).getBanner().size() > 0) {
-			ImageLoader.initialize(MattaPackageListActivity.this);
-			ArrayList<PackageListBanner> bannerList = (ArrayList<PackageListBanner>) mMattaPackageListResponse.getResults().getBanners().get(0).getBanner();
-			totalBanners = bannerList.size();
-			bannerViewLayout.setVisibility(View.VISIBLE);
-			mMattaBannerViewAdapter = new PackageListBannerViewAdapter(getSupportFragmentManager(), bannerList, this, MattaConstants.FLOW_FROM_MATTA_PACKAGE_LIST);
-			mMattaBannerViewAdapter.notifyDataSetChanged();
-			bannerView.removeAllViews();
-			bannerView.setAdapter(mMattaBannerViewAdapter);
-			if (totalBanners > 1) {
-				addImage();
-				((ImageView) findViewById(R.id.play_pasue_icon)).setVisibility(View.VISIBLE);
-				runnable(bannerList.size());
-				bannerHandler.postDelayed(animateViewPager, ANIM_VIEWPAGER_DELAY);
+		try {
+			if (mMattaPackageListResponse != null 
+					&& mMattaPackageListResponse.getResults().getBanners() != null 
+					&& mMattaPackageListResponse.getResults().getBanners().size() > 0
+					&& mMattaPackageListResponse.getResults().getBanners().get(0) != null
+					&& mMattaPackageListResponse.getResults().getBanners().get(0).getBanner() != null 
+					&& mMattaPackageListResponse.getResults().getBanners().get(0).getBanner().size() > 0) {
+				ImageLoader.initialize(MattaPackageListActivity.this);
+				ArrayList<PackageListBanner> bannerList = (ArrayList<PackageListBanner>) mMattaPackageListResponse.getResults().getBanners().get(0).getBanner();
+				totalBanners = bannerList.size();
+				bannerViewLayout.setVisibility(View.VISIBLE);
+				mMattaBannerViewAdapter = new PackageListBannerViewAdapter(getSupportFragmentManager(), bannerList, this, MattaConstants.FLOW_FROM_MATTA_PACKAGE_LIST);
+				mMattaBannerViewAdapter.notifyDataSetChanged();
+				bannerView.removeAllViews();
+				bannerView.setAdapter(mMattaBannerViewAdapter);
+				if (totalBanners > 1) {
+					addImage();
+					((ImageView) findViewById(R.id.play_pasue_icon)).setVisibility(View.VISIBLE);
+					runnable(bannerList.size());
+					bannerHandler.postDelayed(animateViewPager, ANIM_VIEWPAGER_DELAY);
+				} else {
+					((ImageView) findViewById(R.id.play_pasue_icon)).setVisibility(View.GONE);
+				}
 			} else {
-				((ImageView) findViewById(R.id.play_pasue_icon)).setVisibility(View.GONE);
+				bannerViewLayout.setVisibility(View.GONE);
 			}
-		} else {
-			bannerViewLayout.setVisibility(View.GONE);
+		} catch (Exception e) {
+			AnalyticsHelper.onError(FlurryEventsConstants.SHOW_HIDE_BANNER_ERROR, " MattaPackageListActivity: " + AppConstants.SHOW_HIDE_BANNER_ERROR_MSG, e);
 		}
 	}
 

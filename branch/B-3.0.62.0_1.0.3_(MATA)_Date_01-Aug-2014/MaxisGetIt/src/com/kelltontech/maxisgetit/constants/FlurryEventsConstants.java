@@ -165,7 +165,8 @@ public class FlurryEventsConstants {
 	public static final String REDEEM_PRICE_ERR = "REDEEM PRICE";
 	public static final String POST_DEAL_UPLOAD_IMG_NOT_FOUND_ERR = "IMG NOT FOUND";
 	public static final String CURRENT_LOCATION_NOT_SET_ERR = "LOCATION NOT SET";
-
+	public static final String SHOW_HIDE_BANNER_ERROR = "SHOW HIDE BANNER ERROR";
+	
 	// Controllers Errors
 	public static final String REQUEST_SERVICE_ERR = "REQUEST SERVICE";
 	public static final String RESPONSE_SERVICE_ERR = "RESPONSE SERVICE";
