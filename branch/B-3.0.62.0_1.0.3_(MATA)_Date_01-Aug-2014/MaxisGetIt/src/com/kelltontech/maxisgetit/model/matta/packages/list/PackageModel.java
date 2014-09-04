@@ -19,7 +19,7 @@ public class PackageModel implements Serializable {
 	private String L2Cat;
 	private String L3Cat;
 	private String Image;
-	private String source;
+	private String Source;
 	private PackageAttributeGroup Attribute_Group;
 	
 	public String getId() {
@@ -59,10 +59,10 @@ public class PackageModel implements Serializable {
 		Image = image;
 	}
 	public String getSource() {
-		return source;
+		return Source;
 	}
-	public void setSource(String source) {
-		this.source = source;
+	public void setSource(String Source) {
+		this.Source = Source;
 	}
 	public PackageAttributeGroup getAttribute_Group() {
 		return Attribute_Group;

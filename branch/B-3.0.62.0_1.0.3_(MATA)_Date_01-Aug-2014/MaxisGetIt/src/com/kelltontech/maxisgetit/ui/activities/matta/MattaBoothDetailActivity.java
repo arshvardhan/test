@@ -238,10 +238,10 @@ public class MattaBoothDetailActivity extends MaxisMainActivity {
 		mEmailView 							= (TextView) 			findViewById(R.id.cd_email);
 
 		mWebsiteView.setOnClickListener(this);
-		mWebsiteView.setText(Html.fromHtml(mMattaBoothDetailResponse.getResults().getCompany().getWebsite()));
+		mWebsiteView.setText((!StringUtil.isNullOrEmpty(mMattaBoothDetailResponse.getResults().getCompany().getWebsite())) ? Html.fromHtml(mMattaBoothDetailResponse.getResults().getCompany().getWebsite()) : "");
 
 		mEmailView.setOnClickListener(this);
-		mEmailView.setText(Html.fromHtml(mMattaBoothDetailResponse.getResults().getCompany().getPTCEmail()));
+		mEmailView.setText((!StringUtil.isNullOrEmpty(mMattaBoothDetailResponse.getResults().getCompany().getPTCEmail())) ? Html.fromHtml(mMattaBoothDetailResponse.getResults().getCompany().getPTCEmail()) : "");
 
 		if (StringUtil.isNullOrEmpty(mMattaBoothDetailResponse.getResults().getCompany().getWebsite()))
 			mWebContainer.setVisibility(View.GONE);

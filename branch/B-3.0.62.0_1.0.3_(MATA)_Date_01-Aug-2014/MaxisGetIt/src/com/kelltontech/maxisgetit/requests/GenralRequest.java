@@ -321,6 +321,7 @@ public class GenralRequest extends MaxisBaseRequest {
 		Hashtable<String, String> ht = getDefaultHeadersWithGPS();
 		ht.put(AppConstants.KEY_PAGE_REVIEW, screenName + "");
 		ht.put(KEY_L3CATEGORY_ID, l3CatId);
+		ht.put(KEY_PAID_CATEGORY_ID, l3CatId);
 		return ht;
 	}
 }
