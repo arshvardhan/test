@@ -137,7 +137,18 @@ public class FlurryEventsConstants {
 	public static final String UPDATE_CLICK = "Force update performed";
 	public static final String Current_API_Version = "Current API version";
 	
+	// MattaHallListing Screen Events
+	public static final String MATTA_HALL_LISTING = "MattaHallList Screen";
+	public static final String MATTA_BOOTH_LISTING = "MattaBoothList Screen";
+	public static final String MATTA_BOOTH_DETAIL = "MattaBoothDetail Screen";
+	public static final String MATTA_PACKAGE_LISTING = "MattaPackageList Screen";
+	public static final String MATTA_PACKAGE_DETAIL = "MattaPackageDetail Screen";
+	public static final String MATTA_FILTER_SEARCH = "MattaFilterSearch Screen";
 
+	// Rate Us Dialog Events
+	public static final String RATE_US_CLICK = "Rate us button is clicked";
+
+	
 	/*
 	 * Error constants for flurry
 	 */
@@ -154,7 +165,8 @@ public class FlurryEventsConstants {
 	public static final String REDEEM_PRICE_ERR = "REDEEM PRICE";
 	public static final String POST_DEAL_UPLOAD_IMG_NOT_FOUND_ERR = "IMG NOT FOUND";
 	public static final String CURRENT_LOCATION_NOT_SET_ERR = "LOCATION NOT SET";
-
+	public static final String SHOW_HIDE_BANNER_ERROR = "SHOW HIDE BANNER ERROR";
+	
 	// Controllers Errors
 	public static final String REQUEST_SERVICE_ERR = "REQUEST SERVICE";
 	public static final String RESPONSE_SERVICE_ERR = "RESPONSE SERVICE";

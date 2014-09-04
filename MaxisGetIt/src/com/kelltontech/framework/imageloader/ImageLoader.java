@@ -414,7 +414,7 @@ public class ImageLoader implements Runnable {
 	// expire images after a day
 	// TODO: this currently only affects the in-memory cache, so it's quite
 	// pointless
-	private static final int DEFAULT_TTL_MINUTES = 10;//2*60;//5 * 24 * 60; // 5day
+	private static final int DEFAULT_TTL_MINUTES = 12*60; //10;//2*60;//5 * 24 * 60; // 5day
 	private static final int DEFAULT_RETRY_HANDLER_SLEEP_TIME = 1000;
 	private static final int DEFAULT_NUM_RETRIES = 1;
 	private static ThreadPoolExecutor executor;

@@ -56,6 +56,7 @@ public abstract class MaxisBaseRequest {
 	public static final String KEY_SEARCH_RESULTS_IN = "search_in";
 	public static final String KEY_STAMP_COMPANY_ID = "stampId";
 	public static final String KEY_L3CATEGORY_ID = "l3cat_id";
+	public static final String KEY_PAID_CATEGORY_ID = "category_id";
 			
 	private Context mContext;
 	protected String mLocaleCode;

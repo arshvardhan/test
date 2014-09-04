@@ -42,7 +42,8 @@ public class ViewPagerFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		ImageLoader.initialize(getActivity());
-		if (AppConstants.FLOW_FROM_COMBIND_LIST.equals(mFlowFrom) || AppConstants.FLOW_FROM_SUB_CATEGORY_LIST.equals(mFlowFrom)) {
+		if (AppConstants.FLOW_FROM_COMBIND_LIST.equals(mFlowFrom) 
+				|| AppConstants.FLOW_FROM_SUB_CATEGORY_LIST.equals(mFlowFrom)) {
 			dummyDrawable=getActivity().getResources().getDrawable(R.drawable.banner_load);
 			errorDrawable=getActivity().getResources().getDrawable(R.drawable.banner_cross);
 		} else if (AppConstants.FLOW_FROM_COMPANY_DETAIL.equals(mFlowFrom) || AppConstants.FLOW_FROM_DEAL_DETAIL.equals(mFlowFrom)) {
@@ -53,7 +54,8 @@ public class ViewPagerFragment extends Fragment {
 			errorDrawable=getActivity().getResources().getDrawable(R.drawable.group_cross);			
 		}
 		ImageView imageView = new ImageView(getActivity());
-		if (AppConstants.FLOW_FROM_COMBIND_LIST.equals(mFlowFrom) || AppConstants.FLOW_FROM_SUB_CATEGORY_LIST.equals(mFlowFrom)) {
+		if (AppConstants.FLOW_FROM_COMBIND_LIST.equals(mFlowFrom) 
+				|| AppConstants.FLOW_FROM_SUB_CATEGORY_LIST.equals(mFlowFrom)) {
 			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 		} else {
 			imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -61,9 +63,9 @@ public class ViewPagerFragment extends Fragment {
 
 		imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
 		Log.i("Image path", "Imag path " + imgPath);
-//		imageView.setTag(imgPath);
+		//		imageView.setTag(imgPath);
 		ImageLoader.start(imgPath, imageView, dummyDrawable, errorDrawable);
-		
+
 		imageView.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -95,7 +97,7 @@ public class ViewPagerFragment extends Fragment {
 		this.mFlowFrom = flowFrom;
 		this.mActivity = activity;
 	}
-	
+
 	public void setImagePath(String imgPath , String flowFrom , Activity activity, int position, String bannerId) {
 		this.imgPath = imgPath;
 		this.mFlowFrom = flowFrom;

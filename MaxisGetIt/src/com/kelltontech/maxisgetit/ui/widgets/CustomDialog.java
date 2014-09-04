@@ -61,6 +61,7 @@ public class CustomDialog implements OnKeyListener {
 	public static final int		ADD_NEW_POI_CONFIRMATION_DIALOG		= 21;
 	public static final int		PLAY_VIDEO_DIALOG					= 22;
 	public static final int		UPLOAD_CONTEST_IMAGE_DIALOG			= 23;
+	public static final int		RATE_US_DIALOG						= 24;
 
 
 	private BaseMainActivity mActivity;
@@ -109,6 +110,35 @@ public class CustomDialog implements OnKeyListener {
 						mActivity.onNegativeDialogbutton(mId);
 						dialog.dismiss();
 					} else if (options[item].equals("Cancel")) {
+						dialog.dismiss();
+					} else{
+						dialog.dismiss();
+					}
+				}
+			});
+			builder.show();
+			break;
+		case RATE_US_DIALOG:
+			final CharSequence[] dialogBtns = { 
+					mActivity.getResources().getString(R.string.dialog_rate_us_btn), 
+					mActivity.getResources().getString(R.string.dialog_remind_me_btn),
+					mActivity.getResources().getString(R.string.dialog_no_thanks_btn)
+					};
+			builder = new AlertDialog.Builder(mActivity);
+//			View customTitle = mActivity.getLayoutInflater().inflate(R.layout.rate_us_dialog_title, null);
+//			builder.setCustomTitle(customTitle);
+			builder.setTitle(mActivity.getResources().getString(R.string.dialog_title));
+//			builder.setMessage(mActivity.getResources().getString(R.string.dialog_title_text));
+			builder.setItems(dialogBtns, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int item) {
+					if (dialogBtns[item].equals(mActivity.getResources().getString(R.string.dialog_rate_us_btn))) {
+						mActivity.onPositiveDialogButton(mId);
+						dialog.dismiss();
+					} else if (dialogBtns[item].equals(mActivity.getResources().getString(R.string.dialog_remind_me_btn))) {
+						mActivity.onNegativeDialogbutton(mId);
+						dialog.dismiss();
+					} else if (dialogBtns[item].equals(mActivity.getResources().getString(R.string.dialog_no_thanks_btn))) {
 						dialog.dismiss();
 					} else{
 						dialog.dismiss();
