@@ -867,6 +867,7 @@ public class CombindListActivity extends MaxisMainActivity implements OnClickLis
 			stopSppiner();
 		} else if ((msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE && !isFromSearch) || (msg.arg2 == Events.COMBIND_LISTING_NEW_LISTING_PAGE && isFromNearMe)) {
 			isFromNearMe = false;
+			mClRequest.setFromNearMe(isFromNearMe);
 
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
@@ -906,14 +907,15 @@ public class CombindListActivity extends MaxisMainActivity implements OnClickLis
 
 				mIsFreshSearch = (mClResponse != null && mClResponse.getCategoryList() != null && mClResponse.getCategoryList().size() > 1) ? true : false;
 
-				if (mIsFreshSearch) {
+//				if (mIsFreshSearch || !StringUtil.isNullOrEmpty(mClRequest.getSearchIn())) {
 					if (mClResponse.getCategoryList() != null && mClResponse.getCategoryList().size() == 1) {
 						mIsFreshSearch 				= 		false;
 						CategoryRefine tempCatref 	= 		mClResponse.getCategoryList().get(0);
 						mClRequest.setSelectedCategoryBySearch(tempCatref.getCategoryId(), tempCatref.getCategoryTitle());
+						mRefineSearchView.setText(getResources().getString(R.string.cl_modify_search));
 					} else
 						mRefineSearchView.setText(getResources().getString(R.string.cl_filter_by));
-				}
+//				}
 
 				if (mClResponse.getPageNumber() == 10 || mClResponse.getTotalrecordFound() == mClResponse.getCompanyArrayList().size()) { }
 				mRecordsFoundView.setText(mClResponse.getTotalrecordFound() + " " + getResources().getString(R.string.record_found));
@@ -1115,8 +1117,10 @@ public class CombindListActivity extends MaxisMainActivity implements OnClickLis
 				mClRequest.setSearch_distance("");
 				mClRequest.setPageNumber(1);
 				mClRequest.setPostJsonPayload("");
+				
 				MaxisMainActivity.isCitySelected = false;
 				isFromNearMe = true;
+				mClRequest.setFromNearMe(isFromNearMe);
 				CombindListingController listingController = new CombindListingController(CombindListActivity.this, Events.COMBIND_LISTING_NEW_LISTING_PAGE);
 				startSppiner();
 				listingController.requestService(mClRequest);

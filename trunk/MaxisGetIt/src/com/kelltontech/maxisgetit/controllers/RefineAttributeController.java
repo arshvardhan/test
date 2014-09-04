@@ -5,11 +5,9 @@ import java.util.Hashtable;
 import org.apache.http.entity.ByteArrayEntity;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Message;
 import android.util.Log;
 
-import com.kelltontech.maxisgetit.R;
 import com.kelltontech.framework.controller.BaseServiceController;
 import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.network.HttpClientConnection;
@@ -18,16 +16,23 @@ import com.kelltontech.framework.network.ServiceRequest;
 import com.kelltontech.framework.ui.IActionController;
 import com.kelltontech.framework.utils.NativeHelper;
 import com.kelltontech.framework.utils.StringUtil;
+import com.kelltontech.maxisgetit.BuildConfig;
+import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
+import com.kelltontech.maxisgetit.constants.matta.MattaEvents;
 import com.kelltontech.maxisgetit.parsers.RefineAttributeParser;
 import com.kelltontech.maxisgetit.requests.GenralRequest;
 import com.kelltontech.maxisgetit.requests.RefineSearchRequest;
+import com.kelltontech.maxisgetit.requests.matta.MattaFilterSearchRequest;
+import com.kelltontech.maxisgetit.requests.matta.MattaRequest;
 import com.kelltontech.maxisgetit.response.RefineSelectorResponse;
 
 public class RefineAttributeController extends BaseServiceController {
 	private Context mActivity;
 	private String screenName;
+	private RefineSearchRequest refineSearchRequest;
+	private MattaFilterSearchRequest mMattaFilterSearchRequest;
 
 	public RefineAttributeController(IActionController screen, int eventType) {
 		super(screen, eventType);
@@ -47,9 +52,11 @@ public class RefineAttributeController extends BaseServiceController {
 				responseService(res);
 				return;
 			}
-
-			RefineSearchRequest refineSearchRequest = (RefineSearchRequest) requestData;
-
+			if (mEventType == MattaEvents.MATTA_FILTER_SEARCH_EVENT) {
+				mMattaFilterSearchRequest = (MattaFilterSearchRequest) requestData;
+			} else {
+				refineSearchRequest = (RefineSearchRequest) requestData;	
+			}
 			ServiceRequest serviceRq = new ServiceRequest();
 			serviceRq.setRequestData(requestData);
 			serviceRq.setServiceController(this);
@@ -100,8 +107,15 @@ public class RefineAttributeController extends BaseServiceController {
 				}
 				serviceRq.setUrl(url);
 				serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
+			} else if (mEventType == MattaEvents.MATTA_FILTER_SEARCH_EVENT) {
+				url += MattaRequest.MATTA_FILTER_SEARCH_METHOD;
+				MattaRequest mattaRequest = new MattaRequest(mActivity);
+				Hashtable<String, String> urlParams = mattaRequest.getFilterSearchHeaders(mMattaFilterSearchRequest);
+				serviceRq.setUrl(HttpHelper.getURLWithPrams(url, urlParams));
+				serviceRq.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
 			}
-			Log.d("maxis", "url " + url);
+			if(BuildConfig.DEBUG) 
+				Log.d("maxis", "url " + url);
 			HttpClientConnection.getInstance().addRequest(serviceRq);
 		} catch (Exception e) {
 			logRequestException(e, "RefineAttributeController");

@@ -973,6 +973,10 @@ OnGlobalLayoutListener, OnClickListener {
 		} else if (event == Events.TYPE_BY_CATEGORY_EVENT
 				|| event == Events.SUBCATEGORY_EVENT) {
 			handler.sendMessage((Message) screenData);
+		} else if (event == Events.CITY_LISTING || event == Events.LOCALITY_LISTING) {
+			Message message = (Message) screenData;
+			handler.sendMessage(message);
+			return;
 		} else {
 			System.out.println(screenData);
 			Response response = (Response) screenData;

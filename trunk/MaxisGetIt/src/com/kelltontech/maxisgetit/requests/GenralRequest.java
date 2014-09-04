@@ -64,7 +64,7 @@ public class GenralRequest extends MaxisBaseRequest {
 	public static final String MY_ACCOUNT_DASHBOARD_LIFECYCLE = "mydashboard.json";
 	public static final String BANNER_NAVIGATION_METHOD = "logBannerReport.json";
 	public static final String PAID_COMPANY_LIST_METHOD = "getAssociatedPaidCompanies.json";
-	
+
 	private String deviceId = MyApplication.getDeviceId();
 
 	private static final String KEY_APP_CODE = "app_code";
@@ -95,8 +95,7 @@ public class GenralRequest extends MaxisBaseRequest {
 		return ht;
 	}
 
-	public Hashtable<String, String> getSubCategoryheaders(CatgoryBase cat,
-			boolean isForDeal) {
+	public Hashtable<String, String> getSubCategoryheaders(CatgoryBase cat, boolean isForDeal) {
 		Hashtable<String, String> ht = getDefaultHeadersWithGPS();
 		ht.put(KEY_CATEGORY_ID, cat.getCategoryId());
 		ht.put(KEY_GROUP_ACTION_TYPE, cat.getmGroupActionType());
@@ -322,6 +321,7 @@ public class GenralRequest extends MaxisBaseRequest {
 		Hashtable<String, String> ht = getDefaultHeadersWithGPS();
 		ht.put(AppConstants.KEY_PAGE_REVIEW, screenName + "");
 		ht.put(KEY_L3CATEGORY_ID, l3CatId);
+		ht.put(KEY_PAID_CATEGORY_ID, l3CatId);
 		return ht;
 	}
 }

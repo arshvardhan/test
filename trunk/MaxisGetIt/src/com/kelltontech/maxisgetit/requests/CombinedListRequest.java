@@ -57,6 +57,7 @@ public class CombinedListRequest implements Parcelable {
 	private String stampId = "";
 	private String searchCriteria = "";
 	private boolean isSearchRefined;
+	private boolean isFromNearMe;
 
 	public CombinedListRequest(Parcel in) {
 		pageNumber = in.readInt();
@@ -79,6 +80,7 @@ public class CombinedListRequest implements Parcelable {
 		stampId = in.readString();
 		searchCriteria = in.readString();
 		isSearchRefined = in.readInt() == 0 ? false : true;
+		isFromNearMe = in.readInt() == 0 ? false : true;
 	}
 
 	@Override
@@ -103,6 +105,7 @@ public class CombinedListRequest implements Parcelable {
 		dest.writeString(stampId);
 		dest.writeString(searchCriteria);
 		dest.writeInt(isSearchRefined ? 1 : 0);
+		dest.writeInt(isFromNearMe ? 1 : 0);
 	}
 
 	public String getSearch_distance() {
@@ -196,16 +199,16 @@ public class CombinedListRequest implements Parcelable {
 				+ MaxisBaseRequest.VALUE_PLATFORM);
 		ht.append("&" + MaxisBaseRequest.KEY_SCREEN_TYPE + "=" + mScreenType);
 		ht.append("&" + MaxisBaseRequest.KEY_LANGUAGE + "=" + localeCode);
-				ht.append("&" + MaxisBaseRequest.KEY_LATITUDE + "="
+		ht.append("&" + MaxisBaseRequest.KEY_LATITUDE + "="
 				+ GPS_Data.getLatitude() + "");
 		ht.append("&" + MaxisBaseRequest.KEY_LONGITUDE + "="
 				+ GPS_Data.getLongitude() + "");
 
-	/*	ht.append("&" + MaxisBaseRequest.KEY_LATITUDE + "="
+		/*ht.append("&" + MaxisBaseRequest.KEY_LATITUDE + "="
 				+ "3.1357399471" + "");
 		ht.append("&" + MaxisBaseRequest.KEY_LONGITUDE + "="
-				+ "101.6880963379" + "");
-*/
+				+ "101.6880963379" + "");*/
+
 		ht.append("&" + MaxisBaseRequest.DEVICE_ID + "=" + deviceId + "");
 
 		if (isBySearch) {
@@ -216,13 +219,19 @@ public class CombinedListRequest implements Parcelable {
 			} else {
 				if (!StringUtil.isNullOrEmpty(keywordOrCategoryId))
 					ht.append("&" + "keyword" + "=" + keywordOrCategoryId);
-				if (!StringUtil.isNullOrEmpty(searchIn))
+				if (!StringUtil.isNullOrEmpty(searchIn) && isFromNearMe && isSearchRefined) {  // Need to review
 					ht.append("&" + KEY_SEARCH_IN + "=" + searchIn);
+				} else if (!StringUtil.isNullOrEmpty(searchIn) && !isFromNearMe) {
+					ht.append("&" + KEY_SEARCH_IN + "=" + searchIn);
+				}
 				ht.append("&" + AppConstants.KEY_PAGE_REVIEW + "=" + AppConstants.Company_listing + "");
 				ht.append("&" + KEY_SEARCH_DISTANCE + "=" + search_distance + "");
 			}
-			if (!StringUtil.isNullOrEmpty(selectedCategoryBySearch) && !selectedCategoryBySearch.equalsIgnoreCase("-1") && isSearchRefined)
+			if (!StringUtil.isNullOrEmpty(selectedCategoryBySearch) && !selectedCategoryBySearch.equalsIgnoreCase("-1") && isSearchRefined) {
 				ht.append("&" + "category_id" + "=" + selectedCategoryBySearch);
+				//				if(isFromNearMe)
+				//					ht.append("&" + KEY_SEARCH_IN + "=" + "");
+			}
 		} else if (!StringUtil.isNullOrEmpty(groupActionType)
 				&& groupActionType.equalsIgnoreCase(AppConstants.GROUP_ACTION_TYPE_CATEGORY_LIST_FOR_GROUP)
 				&& !StringUtil.isNullOrEmpty(groupType)
@@ -251,11 +260,11 @@ public class CombinedListRequest implements Parcelable {
 		ht.put(MaxisBaseRequest.KEY_PLATFORM, MaxisBaseRequest.VALUE_PLATFORM);
 		ht.put(MaxisBaseRequest.KEY_SCREEN_TYPE, mScreenType);
 		ht.put(MaxisBaseRequest.KEY_LANGUAGE, localeCode);
-				 ht.put(MaxisBaseRequest.KEY_LATITUDE, GPS_Data.getLatitude() + "");
-				 ht.put(MaxisBaseRequest.KEY_LONGITUDE, GPS_Data.getLongitude() + "");
+		ht.put(MaxisBaseRequest.KEY_LATITUDE, GPS_Data.getLatitude() + "");
+		ht.put(MaxisBaseRequest.KEY_LONGITUDE, GPS_Data.getLongitude() + "");
 
-//		ht.put(MaxisBaseRequest.KEY_LATITUDE, "3.1357399471"); 
-//		ht.put(MaxisBaseRequest.KEY_LONGITUDE, "101.6880963379");
+		//		ht.put(MaxisBaseRequest.KEY_LATITUDE, "3.1357399471"); 
+		//		ht.put(MaxisBaseRequest.KEY_LONGITUDE, "101.6880963379");
 
 		ht.put(MaxisBaseRequest.DEVICE_ID, deviceId + "");
 		// ht.put(AppConstants.KEY_PAGE_REVIEW, AppConstants.Company_listing);
@@ -271,7 +280,7 @@ public class CombinedListRequest implements Parcelable {
 			} else {
 				if (!StringUtil.isNullOrEmpty(keywordOrCategoryId))
 					ht.put("keyword", keywordOrCategoryId + "");
-				if (!StringUtil.isNullOrEmpty(searchIn))
+				if (!StringUtil.isNullOrEmpty(searchIn) && !isFromNearMe)
 					ht.put(KEY_SEARCH_IN, searchIn);
 				ht.put(AppConstants.KEY_PAGE_REVIEW, AppConstants.Company_listing);
 				ht.put(KEY_SEARCH_DISTANCE, search_distance + "");
@@ -439,6 +448,14 @@ public class CombinedListRequest implements Parcelable {
 
 	public void setSearchRefined(boolean isSearchRefined) {
 		this.isSearchRefined = isSearchRefined;
+	}
+
+	public boolean isFromNearMe() {
+		return isFromNearMe;
+	}
+
+	public void setFromNearMe(boolean isFromNearMe) {
+		this.isFromNearMe = isFromNearMe;
 	}
 
 	public String getSearchCriteria() {

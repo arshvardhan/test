@@ -36,7 +36,7 @@ public class Response {
 	}
 
 	public boolean isError() {
-		return getErrorCode() > 0;
+		return getErrorCode() != 0;
 	}
 
 	public int getErrorCode() {

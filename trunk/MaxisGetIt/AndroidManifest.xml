@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kelltontech.maxisgetit"
-    android:versionCode="11"
-    android:versionName="1.28" >
+    android:versionCode="12"
+    android:versionName="1.30" >
 
     <!-- above version are updated | Package should be com.findit333 -->
-    <!-- Current version code/name on play store as on 23-Jul-2014: code:10, name:1.27 -->
-    <!-- Previous version code/name on play store as on 25-June-2014: code:9, name:1.26 -->
+    <!-- Current version code/name on play store as on  05-Aug-2014:  code:11, name:1.28 -->
+    <!-- Previous version code/name on play store as on 23-Jul-2014:  code:10, name:1.27 -->
+    <!-- Previous version code/name on play store as on 25-June-2014: code:09, name:1.26 -->
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="9"
         android:targetSdkVersion="19" />
     <!-- for card.io card scanning -->
     <uses-permission android:name="android.permission.CAMERA" />
@@ -50,7 +51,6 @@
     <application
         android:name="com.kelltontech.framework.db.MyApplication"
         android:allowBackup="true"
-        android:debuggable="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
@@ -75,16 +75,6 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-
-        <!--
-             <receiver
-            android:name=".receiver.VSERVCustomReceiver"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
-        -->
 
         <activity android:name="com.paypal.android.sdk.payments.PaymentActivity" />
         <activity android:name="com.paypal.android.sdk.payments.LoginActivity" />
@@ -212,14 +202,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
-        <!--
-        <activity
-            android:name=".ui.activities.ClassifiedListActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar" >
-        </activity>
-        -->
         <activity
             android:name="com.kelltontech.maxisgetit.ui.activities.ClassifiedScrollActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -466,6 +448,58 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SemiTransparent" >
         </activity>
+        <activity
+            android:name="com.kelltontech.maxisgetit.ui.activities.matta.MattaHallListActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/title_activity_matta_hall_listing"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name="com.kelltontech.maxisgetit.ui.activities.matta.MattaBoothListActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/title_activity_matta_booth_listing"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name="com.kelltontech.maxisgetit.ui.activities.matta.MattaBoothDetailActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/title_activity_matta_booth_detail"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name="com.kelltontech.maxisgetit.ui.activities.matta.MattaPackageListActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/title_activity_matta_package_list"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name="com.kelltontech.maxisgetit.ui.activities.matta.MattaPackageDetailActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/title_activity_matta_package_detail"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name="com.kelltontech.maxisgetit.ui.activities.matta.MattaFilterSearchActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/title_activity_matta_filter_search"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name="com.kelltontech.maxisgetit.ui.activities.matta.MattaPhotoSlideActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenLayout|screenSize"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
+        </activity>
     </application>
-
 </manifest>

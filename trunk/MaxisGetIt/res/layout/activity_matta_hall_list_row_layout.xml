@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/root_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_home_list_item_bg"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:weightSum="100" >
+
+        <ImageView
+            android:id="@+id/home_icon_view"
+            android:layout_width="0dp"
+            android:layout_height="33dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="21.5"
+            android:contentDescription="@string/hall_img"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/hall_loading" />
+
+        <TextView
+            android:id="@+id/home_title_field"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="78.5"
+            android:ellipsize="end"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:textColor="@color/head_title_col"
+            android:textSize="@dimen/sp_16" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/seprator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/single_line_seprator"
+        android:visibility="visible" />
+
+</LinearLayout>

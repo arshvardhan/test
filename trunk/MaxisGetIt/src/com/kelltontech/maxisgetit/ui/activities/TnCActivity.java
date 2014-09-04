@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebSettings.RenderPriority;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
@@ -35,6 +36,7 @@ public class TnCActivity extends MaxisMainActivity{
 	private RelativeLayout mErrorLayout;
 	protected boolean isErrorOccured = false;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,6 +58,8 @@ public class TnCActivity extends MaxisMainActivity{
 		WebSettings settings = mWebview.getSettings();
 		settings.setJavaScriptEnabled(true);
 		mWebview.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+		mWebview.getSettings().setRenderPriority(RenderPriority.HIGH);
+		mWebview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 		hideNavigationButtons();
 		startSppiner();
 

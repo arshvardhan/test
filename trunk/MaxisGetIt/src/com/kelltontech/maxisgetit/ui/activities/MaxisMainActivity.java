@@ -25,26 +25,36 @@ import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.constants.Events;
 import com.kelltontech.maxisgetit.constants.FlurryEventsConstants;
+import com.kelltontech.maxisgetit.constants.matta.MattaConstants;
+import com.kelltontech.maxisgetit.constants.matta.MattaEvents;
 import com.kelltontech.maxisgetit.controllers.BannerNavigationController;
 import com.kelltontech.maxisgetit.controllers.CityAreaListController;
 import com.kelltontech.maxisgetit.controllers.CombindListingController;
 import com.kelltontech.maxisgetit.controllers.CompanyDetailController;
 import com.kelltontech.maxisgetit.controllers.UserDetailController;
+import com.kelltontech.maxisgetit.controllers.matta.MattaBoothDetailController;
+import com.kelltontech.maxisgetit.controllers.matta.MattaPackageListController;
 import com.kelltontech.maxisgetit.dao.CompanyDetail;
 import com.kelltontech.maxisgetit.dao.GPS_Data;
 import com.kelltontech.maxisgetit.dao.MaxisStore;
 import com.kelltontech.maxisgetit.model.bannerModel.LogBannerReportResponse;
+import com.kelltontech.maxisgetit.model.matta.booths.detail.MattaBoothDetailResponse;
+import com.kelltontech.maxisgetit.model.matta.packages.list.MattaPackageListResponse;
 import com.kelltontech.maxisgetit.requests.CombinedListRequest;
 import com.kelltontech.maxisgetit.requests.DetailRequest;
+import com.kelltontech.maxisgetit.requests.matta.MattaBoothDetailRequest;
+import com.kelltontech.maxisgetit.requests.matta.MattaPackageListRequest;
 import com.kelltontech.maxisgetit.response.CompanyListResponse;
 import com.kelltontech.maxisgetit.response.UserDetailResponse;
+import com.kelltontech.maxisgetit.ui.activities.matta.MattaBoothDetailActivity;
+import com.kelltontech.maxisgetit.ui.activities.matta.MattaPackageListActivity;
 import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
 /**
  * Base class for all Activity of application.
  */
-public abstract class MaxisMainActivity extends BaseMainActivity {
+public abstract class MaxisMainActivity extends BaseMainActivity/* implements AnimationListener*/ {
 	private CompanyListResponse mClResponse;
 	private CombinedListRequest mListRequest;
 	private static MaxisStore mStore;
@@ -52,7 +62,8 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 	protected String mSearchKeyword;
 	public static boolean isCitySelected= false;
 	private Activity tapEventTriggeringActivity;
-
+	private MattaPackageListRequest mMattaPackageListRequest;
+	private MattaBoothDetailRequest mMattaBoothDetailRequest;
 	protected boolean isLocationAware() {
 		return mStore.isLocalized();
 	}
@@ -278,11 +289,31 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 						if(!StringUtil.isNullOrEmpty(logBannerReportResponse.getResults().getKeyword())) {
 							performSearch(logBannerReportResponse.getResults().getKeyword().trim(), null, Events.BANNER_LANDING_SEARCH_EVENT);
 						} 
+					} else if(AppConstants.PACKAGE_LIST_SCREEN.equals(logBannerReportResponse.getResults().getScreenName().trim())) {
+
+						MattaPackageListController packageListController = new MattaPackageListController(MaxisMainActivity.this, MattaEvents.MATTA_BANNER_LANDING_PKG_LIST_EVENT);
+						mMattaPackageListRequest = new MattaPackageListRequest();
+						mMattaPackageListRequest.setSource(!StringUtil.isNullOrEmpty(logBannerReportResponse.getResults().getSource()) ? logBannerReportResponse.getResults().getSource(): "");
+						mMattaPackageListRequest.setCompanyId(!StringUtil.isNullOrEmpty(logBannerReportResponse.getResults().getCId()) ? logBannerReportResponse.getResults().getCId() : "");
+						mMattaPackageListRequest.setHallId(!StringUtil.isNullOrEmpty(logBannerReportResponse.getResults().getHallId()) ? logBannerReportResponse.getResults().getHallId() : "");
+						packageListController.requestService(mMattaPackageListRequest);
+						startSppiner();
+					} else if(AppConstants.BOOTH_DETAIL_SCREEN.equals(logBannerReportResponse.getResults().getScreenName().trim())) {
+
+						MattaBoothDetailController boothDetailcontroller = new MattaBoothDetailController(MaxisMainActivity.this, MattaEvents.MATTA_BANNER_LANDING_BOOTH_DETAIL_EVENT);
+						mMattaBoothDetailRequest = new MattaBoothDetailRequest();
+						mMattaBoothDetailRequest.setCompanyId(!StringUtil.isNullOrEmpty(logBannerReportResponse.getResults().getCId()) ? logBannerReportResponse.getResults().getCId() : "");
+						mMattaBoothDetailRequest.setSource(!StringUtil.isNullOrEmpty(logBannerReportResponse.getResults().getSource()) ? logBannerReportResponse.getResults().getSource(): "");
+						mMattaBoothDetailRequest.setHallId(!StringUtil.isNullOrEmpty(logBannerReportResponse.getResults().getHallId()) ? logBannerReportResponse.getResults().getHallId() : "");
+						startSppiner();
+						boothDetailcontroller.requestService(mMattaBoothDetailRequest);
+					} else {
+						stopSppiner();
+						showInfoDialog(getResources().getString(R.string.no_result_found));
 					}
 				}
 				Log.e("FINDIT MALAYSIA", ":" + msg.obj);
 			}
-			//			stopSppiner();
 		} else if (msg.arg2 == Events.BANNER_LANDING_DEAL_DETAIL_EVENT) {
 			if (msg.arg1 == 1) {
 				showInfoDialog(getResources().getString(R.string.network_unavailable));
@@ -293,6 +324,34 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 					//				if (mClRequest.isBySearch())
 					//					intent.putExtra(AppConstants.GLOBAL_SEARCH_KEYWORD, mClRequest.getKeywordOrCategoryId());
 					intent.putExtra(AppConstants.COMP_DETAIL_DATA, fromBannerDealDetailResp);
+					startActivity(intent);
+				} else {
+					showInfoDialog(getResources().getString(R.string.no_result_found));
+				}
+			}
+			stopSppiner();
+		} else if (msg.arg2 == MattaEvents.MATTA_BANNER_LANDING_PKG_LIST_EVENT) {
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+			} else {
+				MattaPackageListResponse packageResponse = (MattaPackageListResponse) msg.obj;
+				Intent packageListIntent = new Intent(MaxisMainActivity.this, MattaPackageListActivity.class);
+				packageListIntent.putExtra(MattaConstants.DATA_MATTA_PACKAGE_LIST_REQUEST, mMattaPackageListRequest);
+				packageListIntent.putExtra(MattaConstants.DATA_MATTA_PACKAGE_LIST_RESPONSE, packageResponse);
+				startActivity(packageListIntent);
+			}
+			stopSppiner();
+		} else if (msg.arg2 == MattaEvents.MATTA_BANNER_LANDING_BOOTH_DETAIL_EVENT) {
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+			} else {
+				MattaBoothDetailResponse detailResponse = (MattaBoothDetailResponse) msg.obj;
+				if (!StringUtil.isNullOrEmpty(detailResponse.getResults().getCompany().getCName())) {
+					Intent intent = new Intent(MaxisMainActivity.this, MattaBoothDetailActivity.class);
+					if (!StringUtil.isNullOrEmpty(mMattaBoothDetailRequest.getKeyword()))
+						intent.putExtra(AppConstants.GLOBAL_SEARCH_KEYWORD,mMattaBoothDetailRequest.getKeyword());
+					intent.putExtra(MattaConstants.DATA_MATTA_BOOTH_DETAIL_RESPONSE, detailResponse);
+					intent.putExtra(MattaConstants.DATA_MATTA_BOOTH_DETAIL_REQUEST, mMattaBoothDetailRequest);
 					startActivity(intent);
 				} else {
 					showInfoDialog(getResources().getString(R.string.no_result_found));
@@ -331,7 +390,8 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 			LogBannerReportResponse bannerReportResponse = (LogBannerReportResponse) screenData;
 			Message message = new Message();
 			message.arg2 = event;
-			if ((bannerReportResponse.getResults() != null) 
+			if ((bannerReportResponse != null) 
+					&& (bannerReportResponse.getResults() != null) 
 					&& (!StringUtil.isNullOrEmpty(bannerReportResponse.getResults().getError_Code())) 
 					&& (bannerReportResponse.getResults().getError_Code().equals("0"))) {
 				message.arg1 = 0;
@@ -342,7 +402,45 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 			}
 			handler.sendMessage(message);
 			return;
-		}
+		} else if (event == MattaEvents.MATTA_BANNER_LANDING_PKG_LIST_EVENT) {
+			MattaPackageListResponse packageListRes = (MattaPackageListResponse) screenData;
+			Message message = new Message();
+			message.arg2 = event;
+			if ((packageListRes.getResults() != null) && (!StringUtil.isNullOrEmpty(packageListRes.getResults().getError_Code())) && (packageListRes.getResults().getError_Code().equals("0"))) {
+				if (packageListRes.getResults().getPackage().size() < 1 
+						|| StringUtil.isNullOrEmpty(packageListRes.getResults().getTotal_Records_Found()) 
+						|| packageListRes.getResults().getTotal_Records_Found().equals("0")) {
+					message.arg1 = 1;
+					message.obj = new String("No Result Found");
+				} else {
+					message.arg1 = 0;
+					message.obj = packageListRes;
+				}
+			} else {
+				message.arg1 = 1;
+				message.obj = getResources().getString(R.string.communication_failure);
+			}
+			handler.sendMessage(message);
+			return;			
+		} else if (event == MattaEvents.MATTA_BANNER_LANDING_BOOTH_DETAIL_EVENT) {
+			MattaBoothDetailResponse boothDetail = (MattaBoothDetailResponse) screenData;
+			Message message = new Message();
+			message.arg2 = event;
+			if ((boothDetail.getResults() != null) && (!StringUtil.isNullOrEmpty(boothDetail.getResults().getError_Code())) && (boothDetail.getResults().getError_Code().equals("0"))) {
+				if (boothDetail.getResults().getCompany() == null || StringUtil.isNullOrEmpty(boothDetail.getResults().getCompany().getCName())) {
+					message.arg1 = 1;
+					message.obj = new String("No Result Found");
+				} else {
+					message.arg1 = 0;
+					message.obj = boothDetail;
+				}
+			} else {
+				message.arg1 = 1;
+				message.obj = getResources().getString(R.string.communication_failure);
+			}
+			handler.sendMessage(message);
+			return;	
+		} 
 		System.out.println(screenData);
 		Response response = (Response) screenData;
 		Message message = new Message();
@@ -519,6 +617,10 @@ public abstract class MaxisMainActivity extends BaseMainActivity {
 	 */
 	protected void checkPreferenceAndOpenBrowser(String url) {
 		url = StringUtil.getFormattedURL(url);
+		if (url.toLowerCase().contains("findit.com.my")) {
+			openDeviceBrowser(url, true);
+			return;
+		} 
 		int dialogIdTobeShown = CustomDialog.DATA_USAGE_DIALOG_FOR_WEBSITE;
 		if( url.indexOf("facebook") != -1 ) {
 			dialogIdTobeShown = CustomDialog.DATA_USAGE_DIALOG_FOR_FACEBOOK;

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cl_row_viewgroup"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp" >
+
+        <TextView
+            android:id="@+id/cl_company_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/head_title_col"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/cl_row_base_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_home_list_item_bg"
+        android:weightSum="100" >
+
+        <ImageView
+            android:id="@+id/cl_company_image"
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="21"
+            android:contentDescription="@string/imv_booth_detail_image"
+            android:src="@drawable/comp_list_loading" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="74"
+            android:orientation="vertical"
+            android:paddingLeft="5dp" >
+
+            <TextView
+                android:id="@+id/cl_company_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/app_txt"
+                android:textSize="@dimen/sp_12" />
+
+            <TextView
+                android:id="@+id/cl_comp_addi_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:ellipsize="end"
+                android:maxEms="20"
+                android:singleLine="true"
+                android:textColor="@color/app_txt"
+                android:textSize="@dimen/sp_12" />
+
+            <TextView
+                android:id="@+id/cl_comp_addi_info2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:singleLine="true"
+                android:textColor="@color/app_txt"
+                android:textSize="@dimen/sp_12" />
+
+            <TextView
+                android:id="@+id/cl_comp_addi_info3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="3dp"
+                android:textColor="@color/app_txt"
+                android:textSize="@dimen/sp_12" 
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:contentDescription="@string/package_list_arrow_img"
+            android:paddingLeft="2dp"
+            android:layout_gravity="center_vertical"
+            android:paddingRight="2dp"
+            android:src="@drawable/arrow" />
+    </LinearLayout>
+
+</LinearLayout>

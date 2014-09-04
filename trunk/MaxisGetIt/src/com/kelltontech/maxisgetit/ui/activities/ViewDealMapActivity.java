@@ -330,6 +330,7 @@ OnGlobalLayoutListener, OnClickListener {
 
 	private void showMapActivity() {
 		if (isLocationAvailable()) {
+			try {
 			String url = "http://maps.google.com/maps?saddr="
 					+ GPS_Data.getLatitude() + "," + GPS_Data.getLongitude()
 					+ "&daddr=" + outLets.get(indexOfOutlet).getLat() + ","
@@ -339,6 +340,9 @@ OnGlobalLayoutListener, OnClickListener {
 			intent.setClassName("com.google.android.apps.maps",
 					"com.google.android.maps.MapsActivity");
 			startActivity(intent);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

@@ -31,8 +31,8 @@ public class CompanyListDealAdapter extends BaseAdapter {
 	private Drawable errorDrawable;
 	private boolean isCompanyListing;
 	public CompanyListDealAdapter(Context context,boolean isCompanyType) {
-		mContext = context;
-		isCompanyListing = isCompanyType;
+		this.mContext = context;
+		this.isCompanyListing = isCompanyType;
 		ImageLoader.initialize(mContext);
 		if(isCompanyType){
 			dummyDrawable=mContext.getResources().getDrawable(R.drawable.comp_list_loading);
@@ -43,7 +43,7 @@ public class CompanyListDealAdapter extends BaseAdapter {
 		}
 	}
 	public void setData(ArrayList<CompanyDesc> compDescList) {
-		list=compDescList;
+		this.list=compDescList;
 	}
 	@Override
 	public int getCount() {

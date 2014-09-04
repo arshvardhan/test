@@ -2,7 +2,6 @@ package com.kelltontech.maxisgetit.adapters;
 
 import java.util.ArrayList;
 
-import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
@@ -11,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;

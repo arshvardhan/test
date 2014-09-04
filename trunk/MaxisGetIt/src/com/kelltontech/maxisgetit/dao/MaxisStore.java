@@ -28,7 +28,12 @@ public class MaxisStore {
 	private static final String KEY_TnC_STATUS = "TnC_STATUS";
 	private static final String KEY_USER_DIALOG_DECISION = "USER_DIALOG_DECISION";
 	
-	private static final String AUTH_USER_NUMBER ="AUTH_USER_NUMBER";
+	private static final String AUTH_USER_NUMBER ="AUTH_USER_NO";
+	private static final String KEY_HOME_VISIT = "HOME_VISIT_COUNT";
+	private static final String KEY_IS_APP_RATED = "IS_APP_RATED";
+	private static final String KEY_IS_REMINDER_SELECTED = "IS_REMINDER_SELECTED";
+	
+	
 	// private static final String KEY_USER_FAV_COMPANYS = "USER_FAV_COMPANY_ID_CATEGORY_ID";
 	
 	public static MaxisStore getStore(Context context) {
@@ -237,5 +242,35 @@ public class MaxisStore {
 	public String getAuthMobileNumber()
 	{
 		return sharedPreferences.getString(AUTH_USER_NUMBER, null);
+	}
+	
+	public int getHomeVisitCount() {
+		return sharedPreferences.getInt(KEY_HOME_VISIT, 0);
+	}
+
+	public void setHomeVisitCount(int homeVisitCount) {
+		Editor editor = sharedPreferences.edit();
+		editor.putInt(KEY_HOME_VISIT, homeVisitCount);
+		editor.commit();
+	}
+	
+	public boolean isAppRated() {
+		return sharedPreferences.getBoolean(KEY_IS_APP_RATED, false);
+	}
+
+	public void setAppRated(boolean appRated) {
+		Editor editor = sharedPreferences.edit();
+		editor.putBoolean(KEY_IS_APP_RATED, appRated);
+		editor.commit();
+	}
+	
+	public boolean isReminderSelected() {
+		return sharedPreferences.getBoolean(KEY_IS_REMINDER_SELECTED, false);
+	}
+
+	public void setReminderSelected(boolean reminderSelected) {
+		Editor editor = sharedPreferences.edit();
+		editor.putBoolean(KEY_IS_REMINDER_SELECTED, reminderSelected);
+		editor.commit();
 	}
 }

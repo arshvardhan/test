@@ -22,10 +22,11 @@ public class LogBannerReportResponse implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-
+		dest.writeParcelable(Results, PARCELABLE_WRITE_RETURN_VALUE);
 	}
 
 	public LogBannerReportResponse(Parcel in) {
+		Results = in.readParcelable(BannerResults.class.getClassLoader());
 	}
 
 	public static final Creator<LogBannerReportResponse> CREATOR = new Creator<LogBannerReportResponse>() {
