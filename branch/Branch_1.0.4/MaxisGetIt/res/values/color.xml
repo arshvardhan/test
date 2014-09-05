@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="header_bg_color">#eeeeee</color>
+    <color name="head_title_col">#494949</color>
+    <color name="app_txt">#676767</color>
+    <color name="vertical_line_seprator">#c6c6c6</color>
+    <color name="home_list_row_bg_selected">#f7ffc9</color>
+    <color name="comp_list_record_found_bg">#4db848</color>
+    <color name="grey_greenTxt_bg">#cccccc</color>
+    <color name="app_bg_base_col">#f2f2f2</color>
+    <color name="rainbow_green">#008651</color>
+	 <color name="sea_blue_bgcol">#4cb847</color>
+    <color name="maxis_green">#008651</color>
+    <color name="search_bg_green">#12af8e</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="blue">#0000FF</color>
+    <color name="dark_blue">#164A65</color>
+    <color name="red">#ff0000</color>
+    <color name="yellow">#ffda4d</color>
+    <color name="fast_yellow">#E5FF8E</color>
+    <color name="grey">#d8cad4</color>
+    <color name="pink">#fba497</color>
+    <color name="fully_transparent">#00000000</color>
+    <color name="transparent">#72000000</color>
+    <color name="transparent4">#b2000000</color>
+    <color name="almost_full_transparent">#02000000</color>
+    <color name="transparent2">#e6000000</color>
+    <color name="little_transparent">#10000000</color>
+    <color name="search_criteria_dialog_header_bg">#4db848</color>
+    <color name="view_more_company_txv">#D9D9D9</color>
+    <!-- Text color -->
+    <color name="text_color_red">#e3222a</color>
+    <color name="text_color_green">#58f00f</color>
+    <color name="text_color_map_route_green">#4DB848</color>    
+    <color name="breadcrumbs_bg">#a6e5ff</color>
+    <!-- company detail -->
+    <color name="btn_grey_color">#f0eef0</color>
+    <color name="hyperlink_blue">#004282</color>
+    <color name="title_dark_grey">#494949</color>
+    <color name="text_light_grey">#676767</color>
+    <color name="bar_light_grey">#c6c6c6</color>
+    <color name="cd_name_header">#32598a</color>
+    <color name="green">#7bc978</color>
+    <color name="light_green">#e5ffe4</color>
+
+    <!-- Contest App AddNewPOI -->
+    <color name="edit_txt_border_grey">#999999</color>
+    <color name="button_dark_bule">#145D86</color>
+    
+    <!-- Country Code TextView color -->
+    <color name="grey_country_code">#494949</color>
+    
+    <color name="login_shape_dark_grey">#cccccc</color>
+    <color name="login_shape_light_grey">#ededed</color>
+    <color name="transparent_footer_blue">#c8004282</color>
+    <color name="transparent_white">#c8FFFFFF</color>
+    <color name="transparent_blue_map_route">#c80081c2</color>
+    <color name ="new_footer_color">#3980f4</color>
+    
+    <color name="more_btn">#F58909</color>
+
+    <!-- Home screen -->
+    <color name="sky_blue_bg">#0075a5</color>
+    <color name="category_list_horizontal_grey_divider">#dcdcdc</color>
+    <color name="category_list_inner_row_bg">#d0e9f7</color>
+    <color name="category_list_inner_row_txt">#6e6f70</color>
+    <color name="category_list_row_bg">#a6e5ff</color>
+    <!-- product list -->
+    <color name="yellow_light">#fdfbed</color>
+    <color name="grey_light"> #f4f4f4</color>
+    <!-- Checkout -->
+    <color name="seek_bar_progress_startcolor">#ff4100</color>
+    <color name="seek_bar_progress_endcolor">#ff2500</color>
+    <color name="dialog_btn_grey_color">#d7d7d7</color>
+    <color name="dialog_btn_yellow_color">#ffda4d</color>
+    <color name="app_green_color">#009a26</color>
+    <color name="app_green_light_color">#4db848</color>
+    <color name="black_light">#666666</color>
+    <color name ="light_color_black">#585858</color>
+    <color name="footer_bg_color">#f2f2f2</color>
+    <color name ="section_side_text_color">#2899DB</color>
+    <color name="dark_green_stroke_color">#2E6D2B</color>
+    <color name="orange_color">#FFC000</color>
+    
+    <color name="common_bg_color_for_beta_version">#396091</color>
+    <color name="common_text_color_yellow">#fff000</color>
+</resources>

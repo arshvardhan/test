@@ -1,0 +1,79 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    tools:context=".SearchCriteriaChooserActivity" >
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/search_criteria_dialog_header_bg"
+        android:gravity="left"
+        android:paddingBottom="10dp"
+        android:paddingLeft="25dp"
+        android:paddingTop="10dp"
+        android:text="@string/search_criteria_dialog_header"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold" />
+
+    <ListView
+        android:id="@+id/search_criteria_ListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:divider="@color/bar_light_grey"
+        android:dividerHeight="1dp" >
+    </ListView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/bar_light_grey" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@color/white"
+        android:padding="10dp"
+        android:weightSum="100" >
+
+        <Button
+            android:id="@+id/dialog_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="10dp"
+            android:layout_weight="50"
+            android:background="@drawable/selector_dialog_positive"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/see_results"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/dialog_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"
+            android:layout_weight="50"
+            android:background="@drawable/selector_dialog_positive"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>
