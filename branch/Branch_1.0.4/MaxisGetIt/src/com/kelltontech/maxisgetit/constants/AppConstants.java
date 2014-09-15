@@ -2,7 +2,7 @@ package com.kelltontech.maxisgetit.constants;
 
 /**
  * @author arsh.vardhan
- * @modified 25-Aug-2014
+ * @modified 05-Sep-2014
  */
 
 public interface AppConstants {
@@ -10,14 +10,15 @@ public interface AppConstants {
 	boolean PRODUCTION = false;
 	
 	/**
-	* Version Name 1.9 is skipped to cater similar API_VERSION as in iOS App
+	* API_VERSION = "2.0" is given for App Version 1.30 (MATTA Module Integration) // App Version 1.29 is skipped as par discussion with Client
+	* API_VERSION : "1.9" is skipped to cater similar API_VERSION as in iOS App
 	* API_VERSION : "1.8" is given for App Version 1.28 (Global Search Enhancement, Tappable Featured Banner, Paid companies Ad on Free Companies Detail Page)
 	* API_VERSION : "1.71" is given for App Version 1.27 (Vserv Integration)
 	* API_VERSION : "1.7" is given for App version 1.26 and provided force update on Splash Screen
 	* API_VERSION : "1.6" is given for App version 1.25 and provided force update on DealListing Screen
 	*/	
 	
-	String API_VERSION = "2.0"; // Given for App Version 1.30 (MATTA Module Integration) // App Version 1.29 is skipped as par discussion with Client
+	String API_VERSION = "2.1"; // 
 	
 	// String BASE_SERVER 			= "http://192.168.13.3/webservice/trunk/"; 						// local Aaditya
 	// String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch_search1.3/";
@@ -34,7 +35,7 @@ public interface AppConstants {
 	// String BASE_SERVER 			= "http://192.168.13.16/webservice/trunk/";						// local diwakar
 	// String BASE_SERVER 			= "http://192.168.13.22/webserviceNew/dev_build_ver1.1/"; 		// local ankesh for deal
 	// String BASE_SERVER 			= "http://192.168.13.63/webservice/trunk/";   					// Session Tracking Test
-//	 String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch1.5/";
+//	 String BASE_SERVER 			= "http://192.168.13.144/webservice_dev/branch1.5/";			// local Aditya
 	 String BASE_SERVER 			= "http://203.115.222.103/"; 									// dev
 //	 String BASE_SERVER 			= "http://203.115.222.57/"; 									// staging
 //	   String BASE_SERVER 			= "https://webservice.findit.com.my/";							// production
@@ -120,6 +121,8 @@ public interface AppConstants {
 	String CATEGORY_ID 				= "CATEGORY_ID";
 	String KEYWORD_DESTINATION_CITY	= "field_1";
 	String LIFE_CYCLE_URL 			= "LIFE_CYCLE_URL";
+	String PAID_COMPANY_LIST_DATA 	= "PAID_COMPANY_LIST_DATA";
+	String PAID_COMPANY_LIST_REQUEST= "PAID_COMPANY_LIST_REQUEST";
 	
 	
 	String FLOW_FROM_COMBIND_LIST 	= "CombindListActivity";
@@ -288,5 +291,6 @@ public interface AppConstants {
 	String Screen_DealTnC 								= "DealTnCScreen";									//TermsAndConditionActivity
 	String Mall_listing 								= "MallListScreen";									//MallListActivity
 	String Stamp_Company_listing 						= "StampCompanyListScreen";							//CombinedListActivity
+	String PaidCompanyListScreen 						= "PaidCompanyListScreen";							//PaidCompanyListActivity
 
 }

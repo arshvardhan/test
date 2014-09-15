@@ -5,7 +5,7 @@ import com.kelltontech.framework.model.IModel;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Address implements IModel, Parcelable {
+public class CompanyAddress implements IModel, Parcelable {
 
 	private String City;
 	private String State;
@@ -16,10 +16,9 @@ public class Address implements IModel, Parcelable {
 	private String SubLocality;
 	private String Landmark;
 
-	public Address() {
-	}
+	public CompanyAddress() { }
 
-	public Address(Parcel in) {
+	public CompanyAddress(Parcel in) {
 		City = in.readString();
 		State = in.readString();
 		Locality = in.readString();
@@ -30,16 +29,16 @@ public class Address implements IModel, Parcelable {
 		Landmark = in.readString();
 	}
 
-	public static final Creator<Address> CREATOR = new Creator<Address>() {
+	public static final Creator<CompanyAddress> CREATOR = new Creator<CompanyAddress>() {
 
 		@Override
-		public Address createFromParcel(Parcel source) {
-			return new Address(source);
+		public CompanyAddress createFromParcel(Parcel source) {
+			return new CompanyAddress(source);
 		}
 
 		@Override
-		public Address[] newArray(int size) {
-			return new Address[size];
+		public CompanyAddress[] newArray(int size) {
+			return new CompanyAddress[size];
 		}
 	};
 

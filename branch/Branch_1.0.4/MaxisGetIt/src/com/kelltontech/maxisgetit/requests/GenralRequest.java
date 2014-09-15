@@ -317,11 +317,13 @@ public class GenralRequest extends MaxisBaseRequest {
 		return ht;
 	}
 
-	public Hashtable<String, String> getPaidCompListHeaders(String l3CatId, String screenName) {
+	public Hashtable<String, String> getPaidCompListHeaders(PaidCompanyListRequest request) {
 		Hashtable<String, String> ht = getDefaultHeadersWithGPS();
-		ht.put(AppConstants.KEY_PAGE_REVIEW, screenName + "");
-		ht.put(KEY_L3CATEGORY_ID, l3CatId);
-		ht.put(KEY_PAID_CATEGORY_ID, l3CatId);
+		ht.put(AppConstants.KEY_PAGE_REVIEW, AppConstants.PaidCompanyListScreen);
+		ht.put(KEY_L3CATEGORY_ID, request.getCategoryId() + "");
+		ht.put(KEY_PAID_CATEGORY_ID, request.getCategoryId() + "");
+		ht.put(KEY_PER_PAGE_RECORD, request.getPerPageRecord() + "");
+		ht.put(KEY_PAGE_NUMBER, request.getPageNumber() + "");
 		return ht;
 	}
 }

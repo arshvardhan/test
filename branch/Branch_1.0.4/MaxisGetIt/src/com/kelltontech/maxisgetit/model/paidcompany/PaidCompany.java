@@ -12,7 +12,7 @@ public class PaidCompany implements IModel, Parcelable {
 	private String 	L3Cat;
 	private String 	Icon_Url;
 	private String 	Distance;
-	private Address Address;
+	private CompanyAddress Address;
 	private String  Is_Paid;
 
 	public PaidCompany(Parcel in) {
@@ -22,7 +22,7 @@ public class PaidCompany implements IModel, Parcelable {
 		Icon_Url 	= in.readString();
 		Distance 	= in.readString();
 		L3Catid 	= in.readString();
-		Address		= in.readParcelable(Address.class.getClassLoader());
+		Address		= in.readParcelable(CompanyAddress.class.getClassLoader());
 		Is_Paid 	= in.readString();
 	}
 
@@ -56,8 +56,8 @@ public class PaidCompany implements IModel, Parcelable {
 		return Icon_Url;
 	}
 
-	public void setIconUrl(String Icon_Url) {
-		this.Icon_Url = Icon_Url;
+	public void setIconUrl(String IconUrl) {
+		this.Icon_Url = IconUrl;
 	}
 
 	public String getDistance() {
@@ -76,12 +76,20 @@ public class PaidCompany implements IModel, Parcelable {
 		this.L3Catid = L3Catid;
 	}
 
-	public Address getAddress() {
+	public CompanyAddress getAddress() {
 		return Address;
 	}
 
-	public void setAddress(Address address) {
+	public void setAddress(CompanyAddress address) {
 		this.Address = address;
+	}
+	
+	public String getIs_Paid() {
+		return Is_Paid;
+	}
+
+	public void setIs_Paid(String isPaid) {
+		this.Is_Paid = isPaid;
 	}
 
 	public boolean IsPaid() {

@@ -82,5 +82,6 @@ public class Events {
 	
 	public static final int PAID_COMPANY_LIST_EVENT = 67;
 	public static final int PAID_COMPANY_DETAIL_EVENT = 68;
+	public static final int PAID_COMPANY_VIEW_MORE_EVENT = 69;
 	
 }

@@ -6,6 +6,9 @@ import com.kelltontech.framework.model.IModel;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * @modified 08-Sep-2014
+ */
 public class CompanyDetail extends MaxisResponse implements Parcelable,IModel{
 	private String id;
 	private String title;
@@ -51,6 +54,8 @@ public class CompanyDetail extends MaxisResponse implements Parcelable,IModel{
 	
 	private String source;
 	private String dealDetailUrl;
+	
+	private ArrayList<CertifiedCompany> certifiedCompany = new ArrayList<CertifiedCompany>();
 	
 	
 	public String getSource() {
@@ -223,7 +228,7 @@ public class CompanyDetail extends MaxisResponse implements Parcelable,IModel{
 		videoUrl = in.readString();
 		source = in.readString();
 		dealDetailUrl = in.readString();
-		
+		in.readTypedList(certifiedCompany, CertifiedCompany.CREATOR);
 		
 	}
 
@@ -240,9 +245,7 @@ public class CompanyDetail extends MaxisResponse implements Parcelable,IModel{
 		}
 	};
 
-	public CompanyDetail() {
-		// TODO Auto-generated constructor stub
-	}
+	public CompanyDetail() { }
 
 	public String getId() {
 		return id;
@@ -371,6 +374,7 @@ public class CompanyDetail extends MaxisResponse implements Parcelable,IModel{
 		dest.writeString(videoUrl);
 		dest.writeString(source);
 		dest.writeString(dealDetailUrl);
+		dest.writeTypedList(certifiedCompany);
 		}
 
 	public ArrayList<AttributeGroup> getAttrGroups() {
@@ -510,6 +514,14 @@ public class CompanyDetail extends MaxisResponse implements Parcelable,IModel{
 
 	public void setRecordType(String recordType) {
 		this.recordType = recordType;
+	}
+	
+	public ArrayList<CertifiedCompany> getCertifiedCompany() {
+		return certifiedCompany;
+	}
+
+	public void addCertifiedCompany(CertifiedCompany certifiedComp) {
+		this.certifiedCompany.add(certifiedComp);
 	}
 
 }

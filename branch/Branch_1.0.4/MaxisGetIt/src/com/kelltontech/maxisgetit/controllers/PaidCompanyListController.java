@@ -17,6 +17,7 @@ import com.kelltontech.maxisgetit.R;
 import com.kelltontech.maxisgetit.constants.AppConstants;
 import com.kelltontech.maxisgetit.model.paidcompany.PaidCompanyResponse;
 import com.kelltontech.maxisgetit.requests.GenralRequest;
+import com.kelltontech.maxisgetit.requests.PaidCompanyListRequest;
 import com.kelltontech.maxisgetit.utils.JSONHandler;
 import com.kelltontech.maxisgetit.utils.JSONParser;
 
@@ -33,7 +34,8 @@ public class PaidCompanyListController extends BaseServiceController {
 
 	@Override
 	public void requestService(Object requestData) {
-		String l3CatId = requestData.toString();
+
+		PaidCompanyListRequest paidCompReq = (PaidCompanyListRequest) requestData;
 		try {
 			if (!NativeHelper.isDataConnectionAvailable(mActivity)) {
 				Response res = new Response();
@@ -43,7 +45,7 @@ public class PaidCompanyListController extends BaseServiceController {
 				return;
 			}
 			GenralRequest genralRequest = new GenralRequest(mActivity);
-			Hashtable<String, String> urlParams = genralRequest.getPaidCompListHeaders(l3CatId, AppConstants.Company_detail);
+			Hashtable<String, String> urlParams = genralRequest.getPaidCompListHeaders(paidCompReq);
 
 			ServiceRequest serviceRq = new ServiceRequest();
 			serviceRq.setRequestData(requestData);

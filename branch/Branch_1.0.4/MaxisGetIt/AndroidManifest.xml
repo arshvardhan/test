@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kelltontech.maxisgetit"
-    android:versionCode="12"
-    android:versionName="1.30" >
+    android:versionCode="13"
+    android:versionName="1.31" >
 
     <!-- above version are updated | Package should be com.findit333 -->
-    <!-- Current version code/name on play store as on  05-Aug-2014:  code:11, name:1.28 -->
+    <!-- Current version code/name on play store as on  27-Aug-2014:  code:12, name:1.30 -->
+    <!-- Previous version code/name on play store as on  05-Aug-2014:  code:11, name:1.28 -->
     <!-- Previous version code/name on play store as on 23-Jul-2014:  code:10, name:1.27 -->
     <!-- Previous version code/name on play store as on 25-June-2014: code:09, name:1.26 -->
 
@@ -501,5 +502,14 @@
             android:configChanges="orientation|keyboard|keyboardHidden|screenLayout|screenSize"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
+        <activity
+            android:name="com.kelltontech.maxisgetit.ui.activities.PaidCompanyListActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/title_activity_paid_company_list"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
     </application>
+
 </manifest>

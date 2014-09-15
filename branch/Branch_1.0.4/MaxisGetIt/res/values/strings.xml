@@ -57,13 +57,15 @@
     <string name="cd_error_location_not_found">Unable to find your location. Please try again.</string>
     <string name="cd_error_sensor_not_found">Your device does not support this feature.</string>
     <string name="txt_tnc"><u>Terms &amp; Conditions</u></string>
-    <string name="cd_view_more">View more</string>
+    <string name="cd_view_more">View More</string>
     <string name="cd_write_review"><u>write a review</u></string>
-    <string name="cd_no_review">No review(s) yet, </string>
+    <!-- <string name="cd_no_review">No review(s) yet, </string> -->
+    <string name="cd_no_review">Be the first one to </string>
     <string name="cd_msg_data_usage">You might incur data charges for use beyond this point.</string>
     <string name="cd_msg_add_to_fav">Please log in first to add this company to your favourite list.</string>
     <string name="cd_msg_remove_from_fav">Please log in first to remove this company to your favourite list.</string>
     <string name="cd_you_may_also_browse">Featured Companies</string>
+    <string name="cd_certified_comp_title">Certification(s)</string>
 
     <!-- FavCompanyList activity -->
     <string name="fav_companies_found"><u>listing(s) added as your favourites.</u></string>
@@ -408,6 +410,9 @@
     <string name="title_activity_company_or_category_filter">CompanyOrCategoryFilterActivity</string>
     <string name="title_activity_search_criteria_chooser">SearchCriteriaChooserActivity</string>
 
+    <!-- PaidCompanyList Activity -->
+    <string name="title_activity_paid_company_list">PaidCompanyListActivity</string>
+    
     <!-- ViewDealMap Activity -->
     <string name="route">Route</string>
 

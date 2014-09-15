@@ -5,13 +5,13 @@ import android.os.Parcelable;
 
 public class PaidCompanyResponse implements Parcelable {
 
-	private Results Results;
+	private CompanyResults Results;
 
-	public Results getResults() {
+	public CompanyResults getResults() {
 		return Results;
 	}
 
-	public void setResults(Results Results) {
+	public void setResults(CompanyResults Results) {
 		this.Results = Results;
 	}
 
@@ -22,10 +22,11 @@ public class PaidCompanyResponse implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-
+		dest.writeParcelable(Results, PARCELABLE_WRITE_RETURN_VALUE);
 	}
 
 	public PaidCompanyResponse(Parcel in) {
+		Results = in.readParcelable(CompanyResults.class.getClassLoader());
 	}
 
 	public static final Creator<PaidCompanyResponse> CREATOR = new Creator<PaidCompanyResponse>() {

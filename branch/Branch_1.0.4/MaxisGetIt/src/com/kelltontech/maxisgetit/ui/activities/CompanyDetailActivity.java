@@ -44,6 +44,7 @@ import com.kelltontech.framework.model.Response;
 import com.kelltontech.framework.utils.NativeHelper;
 import com.kelltontech.framework.utils.StringUtil;
 import com.kelltontech.maxisgetit.R;
+import com.kelltontech.maxisgetit.adapters.CertifiedCompanyListAdapter;
 import com.kelltontech.maxisgetit.adapters.PaidCompanyListAdapter;
 import com.kelltontech.maxisgetit.adapters.ViewPagerAdapter;
 import com.kelltontech.maxisgetit.constants.AppConstants;
@@ -65,9 +66,11 @@ import com.kelltontech.maxisgetit.db.FavCompanysTable;
 import com.kelltontech.maxisgetit.model.paidcompany.PaidCompany;
 import com.kelltontech.maxisgetit.model.paidcompany.PaidCompanyResponse;
 import com.kelltontech.maxisgetit.requests.DetailRequest;
+import com.kelltontech.maxisgetit.requests.PaidCompanyListRequest;
 import com.kelltontech.maxisgetit.response.GenralListResponse;
 import com.kelltontech.maxisgetit.ui.widgets.CustomDialog;
 import com.kelltontech.maxisgetit.ui.widgets.EllipsizingTextView;
+import com.kelltontech.maxisgetit.ui.widgets.ExpandableListView;
 import com.kelltontech.maxisgetit.utils.AnalyticsHelper;
 
 public class CompanyDetailActivity extends MaxisMainActivity {
@@ -115,7 +118,8 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 	private LinearLayout 				wholeSearchBoxContainer;
 	private LinearLayout 				videoContainer;
 	private LinearLayout 				mPaidCompanyListContainer;
-	
+
+	private ListView 					mCertifiedCompanyListView;
 	private ListView 					mPaidCompanyListView;
 	
 	private int 						flipperVisibleItemPosition = 0;
@@ -143,9 +147,11 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 	private ArrayList<String> 			selectedLocalityindex;
 
 	private CompanyDetail 				mCompanyDetail;
+	private PaidCompanyListRequest 		mPaidCompanyListRequest;
 	private PaidCompanyResponse			mPaidCompanyResponse;
 	private PaidCompanyListAdapter 		mPaidCompListAdapter;
-
+	private CertifiedCompanyListAdapter	mCertifiedCompListAdapter;
+	
 	private MaxisStore 					store;
 
 	@Override
@@ -315,7 +321,11 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			
 			PaidCompanyListController listContrller = new PaidCompanyListController(CompanyDetailActivity.this, Events.PAID_COMPANY_LIST_EVENT);
 			if((!StringUtil.isNullOrEmpty(mCompanyDetail.getCatId()))) {
-				listContrller.requestService(mCompanyDetail.getCatId());
+				PaidCompanyListRequest request = new PaidCompanyListRequest();
+				request.setCategoryId(mCompanyDetail.getCatId());
+				request.setPageNumber(1);
+				request.setPerPageRecord(4);
+				listContrller.requestService(request);
 				startSppiner();
 			}
 		} else {
@@ -439,6 +449,19 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			@Override
 			public void onPageScrollStateChanged(int arg0) { }
 		});
+		
+
+		if (mCompanyDetail != null && mCompanyDetail.getCertifiedCompany() != null && mCompanyDetail.getCertifiedCompany().size() > 0) {
+			mCertifiedCompanyListView		=	(ExpandableListView) findViewById(R.id.cd_certified_company_list);
+		
+			mCertifiedCompListAdapter = new CertifiedCompanyListAdapter(CompanyDetailActivity.this);
+			mCertifiedCompListAdapter.setData(mCompanyDetail.getCertifiedCompany());
+			mCertifiedCompListAdapter.notifyDataSetChanged();
+			mCertifiedCompanyListView.setAdapter(mCertifiedCompListAdapter);
+			((LinearLayout)findViewById(R.id.cd_layout_certified_comp_list)).setVisibility(View.VISIBLE);
+		} else {
+			((LinearLayout)findViewById(R.id.cd_layout_certified_comp_list)).setVisibility(View.GONE);
+		}
 
 	}
 
@@ -557,6 +580,25 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 				}
 			}
 			stopSppiner();
+		} else if (msg.arg2 == Events.PAID_COMPANY_VIEW_MORE_EVENT) {
+			if (msg.arg1 == 1) {
+				showInfoDialog((String) msg.obj);
+			} else {
+				PaidCompanyResponse paidCompResp = (PaidCompanyResponse) msg.obj;
+				if (paidCompResp != null && paidCompResp.getResults() != null) {
+					if (paidCompResp.getResults().getCompany() != null && paidCompResp.getResults().getCompany().size() > 0) {
+						Intent intent = new Intent(CompanyDetailActivity.this, PaidCompanyListActivity.class);
+						intent.putExtra(AppConstants.GLOBAL_SEARCH_KEYWORD, mSearchKeyword);
+						intent.putExtra(AppConstants.PAID_COMPANY_LIST_DATA, paidCompResp);
+						intent.putExtra(AppConstants.PAID_COMPANY_LIST_REQUEST, mPaidCompanyListRequest);
+						startActivity(intent);
+					} else
+						mPaidCompanyListContainer.setVisibility(View.GONE);
+				} else {
+					showInfoDialog(getResources().getString(R.string.no_result_found));
+				}
+			}
+			stopSppiner();
 		} else if (msg.arg2 == Events.PAID_COMPANY_DETAIL_EVENT) {
 			if (msg.arg1 == 1) {
 				showInfoDialog((String) msg.obj);
@@ -615,11 +657,11 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 		} else if (event == Events.CITY_LISTING || event == Events.LOCALITY_LISTING) {
 			Message message = (Message) screenData;
 			handler.sendMessage(message);
-		} else if (event == Events.PAID_COMPANY_LIST_EVENT) {
+		} else if (event == Events.PAID_COMPANY_LIST_EVENT ||event == Events.PAID_COMPANY_VIEW_MORE_EVENT) {
 			PaidCompanyResponse paidCompanyResponse = (PaidCompanyResponse) screenData;
 			Message message = new Message();
 			message.arg2 = event;
-			if (paidCompanyResponse.getResults().getError_Code().equals("1")) {
+			if (paidCompanyResponse.getResults().getErrorCode().equals("1")) {
 				message.arg1 = 1;
 				message.obj = getResources().getString(R.string.communication_failure);
 			} else {
@@ -950,6 +992,18 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 			else
 				playVideo();
 			break;
+			
+		case R.id.cd_view_more_paid_company:
+			PaidCompanyListController listContrller = new PaidCompanyListController(CompanyDetailActivity.this, Events.PAID_COMPANY_VIEW_MORE_EVENT);
+			if((!StringUtil.isNullOrEmpty(mCompanyDetail.getCatId()))) {
+				mPaidCompanyListRequest = new PaidCompanyListRequest();
+				mPaidCompanyListRequest.setCategoryId(mCompanyDetail.getCatId());
+				mPaidCompanyListRequest.setPageNumber(1);
+				mPaidCompanyListRequest.setPerPageRecord(10);
+				listContrller.requestService(mPaidCompanyListRequest);
+				startSppiner();
+			}
+			break;
 		}
 	}
 
@@ -1263,6 +1317,13 @@ public class CompanyDetailActivity extends MaxisMainActivity {
 	}
 	
 	private void setPaidCompanyListData() {
+		if ((!StringUtil.isNullOrEmpty(mPaidCompanyResponse.getResults().getTotalRecordsFound())) 
+				&& (Integer.parseInt(mPaidCompanyResponse.getResults().getTotalRecordsFound()) > 4)) {
+			((TextView) findViewById(R.id.cd_view_more_paid_company)).setVisibility(View.VISIBLE);
+			((TextView) findViewById(R.id.cd_view_more_paid_company)).setOnClickListener(this);
+		} else {
+			((TextView) findViewById(R.id.cd_view_more_paid_company)).setVisibility(View.GONE);
+		}
 		mPaidCompListAdapter = 	new PaidCompanyListAdapter(CompanyDetailActivity.this);
 		mPaidCompListAdapter.setData(paidCompanyListData);
 		mPaidCompListAdapter.notifyDataSetChanged();

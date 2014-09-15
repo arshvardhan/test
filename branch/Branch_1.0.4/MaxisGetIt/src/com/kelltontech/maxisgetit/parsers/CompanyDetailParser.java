@@ -11,11 +11,11 @@ import android.util.Log;
 import com.kelltontech.framework.model.IModel;
 import com.kelltontech.framework.parser.AbstractSAXParser;
 import com.kelltontech.maxisgetit.dao.AttributeGroup;
+import com.kelltontech.maxisgetit.dao.CertifiedCompany;
 import com.kelltontech.maxisgetit.dao.CompanyDetail;
 import com.kelltontech.maxisgetit.dao.CompanyReview;
 import com.kelltontech.maxisgetit.dao.IconUrl;
 import com.kelltontech.maxisgetit.dao.NearOutLets;
-import com.kelltontech.maxisgetit.dao.OutLetsinDetail;
 
 public class CompanyDetailParser extends AbstractSAXParser {
 	private CompanyDetail compdDetail = new CompanyDetail();
@@ -26,6 +26,7 @@ public class CompanyDetailParser extends AbstractSAXParser {
 	private ArrayList<NearOutLets> nearOutLets;
 	private ArrayList<IconUrl> urls;
 	private IconUrl iconUrl;
+	private CertifiedCompany certifiedCompany;
 
 	public static final String TAG_ERROR_CODE = "Error_Code";
 	public static final String TAG_ERROR_MESSAGE = "Error_Message";
@@ -77,10 +78,10 @@ public class CompanyDetailParser extends AbstractSAXParser {
 	private static final String TAG_TILL_DATE = "Till_Date";
 	private static final String TAG_ICON_URL = "Icon_Url";
 	private static final String TAG_DEAL_ICON_URL = "Deal_Icon_Url";
-	
+
 	private static final String TAG_DETAIL_IMAGES = "Detail_Imgs";
 	private static final String TAG_DETAIL_IMAGE_URL ="Detail_Img";
-	
+
 	private static final String TAG_OUTLETS = "Outlets";
 	private static final String TAG_NEAR_OUTLET = "NearOutlet";
 	private static final String TAG_NEAR_OUTLET_LAT = "Outlet_Latitude";
@@ -97,6 +98,16 @@ public class CompanyDetailParser extends AbstractSAXParser {
 	private static final String TAG_SOURCE = "Source";
 
 	private static String TAG_DEAL_DETAIL_URL = "DealDetailsUrl";
+
+	private static final String TAG_STAMPS_ROOT = "Stamps";
+	private static final String TAG_STAMP_DATA = "StampData";
+	private static final String TAG_STAMP_ID = "StampId";
+	private static final String TAG_STAMP_URL = "Stamp";
+	private static final String TAG_STAMP_TITLE = "StampTitle";
+	private static final String TAG_STAMP_CODE_LABEL = "StampCodeLabel";
+	private static final String TAG_STAMP_CODE = "StampCode";
+	private static final String TAG_STAMP_EXP_DATE = "StampExpDate";
+	private static final String TAG_STAMP_EXP_DATE_LABEL = "StampExpDateLabel";
 
 	@Override
 	public IModel parse(String payload) throws Exception {
@@ -116,6 +127,8 @@ public class CompanyDetailParser extends AbstractSAXParser {
 		}
 		if (localName.equalsIgnoreCase(TAG_GROUP_VAL)) {
 			attrGroup = new AttributeGroup();
+		} else if (localName.equalsIgnoreCase(TAG_STAMP_DATA) && parent.equalsIgnoreCase("Results,Company_Info,"+TAG_STAMPS_ROOT)) {
+			certifiedCompany = new CertifiedCompany();
 		} else if (localName.equalsIgnoreCase(TAG_CONTACT_CHANNEL)) {
 			compdDetail.setContactChannelExists(true);
 		} else if (localName.equalsIgnoreCase(TAG_REVIEW)) {
@@ -271,6 +284,23 @@ public class CompanyDetailParser extends AbstractSAXParser {
 			compdDetail.setSource(getNodeValue());
 		} else if (localName.equalsIgnoreCase(TAG_DEAL_DETAIL_URL)) {
 			compdDetail.setDealDetailUrl(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_STAMP_ID)  && parent.equalsIgnoreCase("Results,Company_Info,"+TAG_STAMPS_ROOT+","+TAG_STAMP_DATA)) {
+			certifiedCompany.setStampId(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_STAMP_URL)  && parent.equalsIgnoreCase("Results,Company_Info,"+TAG_STAMPS_ROOT+","+TAG_STAMP_DATA)) {
+			certifiedCompany.setStampImage(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_STAMP_TITLE)  && parent.equalsIgnoreCase("Results,Company_Info,"+TAG_STAMPS_ROOT+","+TAG_STAMP_DATA)) {
+			certifiedCompany.setStampTitle(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_STAMP_CODE)  && parent.equalsIgnoreCase("Results,Company_Info,"+TAG_STAMPS_ROOT+","+TAG_STAMP_DATA)) {
+			certifiedCompany.setStampCodeValue(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_STAMP_EXP_DATE)  && parent.equalsIgnoreCase("Results,Company_Info,"+TAG_STAMPS_ROOT+","+TAG_STAMP_DATA)) {
+			certifiedCompany.setStampExpDateValue(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_STAMP_CODE_LABEL)  && parent.equalsIgnoreCase("Results,Company_Info,"+TAG_STAMPS_ROOT+","+TAG_STAMP_DATA)) {
+			certifiedCompany.setStampCodeLabel(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_STAMP_EXP_DATE_LABEL)  && parent.equalsIgnoreCase("Results,Company_Info,"+TAG_STAMPS_ROOT+","+TAG_STAMP_DATA)) {
+			certifiedCompany.setStampExpDateLabel(getNodeValue());
+		} else if (localName.equalsIgnoreCase(TAG_STAMP_DATA) && parent.equalsIgnoreCase("Results,Company_Info,"+TAG_STAMPS_ROOT)) {
+			if (certifiedCompany != null)
+				compdDetail.addCertifiedCompany(certifiedCompany);
 		}
 
 	}
